@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-server-env",
   "license": "OSL-3.0",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "homepage": "https://falcon.deity.io/docs/falcon-server/falcon-server-env",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-server-env",
   "main": "dist/index.js",

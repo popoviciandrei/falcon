@@ -1,6 +1,6 @@
 {
   "name": "@deity/falcon-client",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "homepage": "https://falcon.deity.io/docs/falcon-client/basics",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-client",
   "license": "OSL-3.0",
@@ -109,7 +109,7 @@
     "workbox-routing": "4.3.1"
   },
   "devDependencies": {
-    "@deity/falcon-server": "^0.3.0",
+    "@deity/falcon-server": "^0.3.1",
     "@types/fs-extra": "8.0.0",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.9.2",
