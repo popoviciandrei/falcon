@@ -18,7 +18,7 @@ const { AuthScope, IntegrationAuthType, setAuthScope, OAuth1Auth } = require('./
 class Magento2ApiBase extends ApiDataSource {
   /**
    * Create Magento api wrapper instance
-   * @param {Object} params configuration params
+   * @param {object} params configuration params
    */
   constructor(params) {
     super(params);
@@ -33,7 +33,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized GET request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} params object representation of query string
+   * @param {object} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -44,7 +44,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized POST request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} body body
+   * @param {object} body body
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -55,7 +55,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PATCH request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} body body
+   * @param {object} body body
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -66,7 +66,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PUT request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} body body
+   * @param {object} body body
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -77,7 +77,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized DELETE request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} params object representation of query string
+   * @param {object} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -88,7 +88,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized GET request, for `integration` scope
    * @param {string} path path
-   * @param {Object} params object representation of query string
+   * @param {object} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -99,7 +99,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized POST request, for `integration` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -110,7 +110,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PATCH request, for `integration` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -121,7 +121,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PUT request, for `integration` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -132,7 +132,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized DELETE request, for `integration` scope
    * @param {string} path path
-   * @param {Object} params object representation of query string
+   * @param {object} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -143,7 +143,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized GET request, for `customer` scope
    * @param {string} path path
-   * @param {Object} params object representation of query string
+   * @param {object} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -154,7 +154,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized POST request, for `customer` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -165,7 +165,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PATCH request, for `customer` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -176,7 +176,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PUT request, for `customer` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -187,7 +187,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized DELETE request, for `customer` scope
    * @param {string} path path
-   * @param {Object} params object representation of query string
+   * @param {object} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -202,22 +202,16 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Makes sure that context required for http calls exists
    * Gets basic store configuration from Magento
-   * @returns {Object} Magento config
+   * @returns {object} Magento config
    */
   async fetchBackendConfig() {
-    const getCachedValue = async url => {
-      const value = await this.cache.get([this.name, this.getStoreCode(), url].join(':'), {
-        fetchData: async () => {
-          const rawValue = await this.getForIntegration(url);
-
-          return JSON.stringify(rawValue);
-        },
+    const getCachedValue = async url =>
+      this.cache.get([this.name, this.getStoreCode(), url].join(':'), {
+        fetchData: async () => this.getForIntegration(url),
         options: {
           ttl: 10 * 60 // 10 min
         }
       });
-      return JSON.parse(value);
-    };
 
     const [storeConfigs, storeViews, storeGroups, storeWebsites] = await Promise.all([
       getCachedValue('/store/storeConfigs'),
@@ -333,7 +327,7 @@ class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Setting up authorization handler for Integration requests
-   * @param {Object} authConfig configuration
+   * @param {object} authConfig configuration
    * @returns {IAuthorizeRequest} authorization handler
    */
   setupIntegrationScopeAuth(authConfig) {
@@ -362,7 +356,7 @@ class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Setting up authorization handler for Customer requests
-   * @param {Object} session session
+   * @param {object} session session
    * @param {CustomerToken} session.customerToken customer token
    * @returns {IAuthorizeRequest} authorization handler
    */
@@ -390,7 +384,7 @@ class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Determines if Customer's session is expired (Customer needs to be signed out)
-   * @param {Object} session the session
+   * @param {object} session the session
    * @param {CustomerToken} session.customerToken the Customer token
    * @returns {boolean} `true` if the session is expired, `false` otherwise
    */
@@ -401,8 +395,8 @@ class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Helper method to recursively change key naming from underscore (snake case) to camelCase
-   * @param {Object} data argument to process
-   * @returns {Object} converted object
+   * @param {object} data argument to process
+   * @returns {object} converted object
    */
   convertKeys(data) {
     // handle simple types
@@ -488,7 +482,7 @@ class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Check if Customer authentication token is valid
-   * @param {Object} authToken authentication token
+   * @param {object} authToken authentication token
    * @param {string} authToken.token value
    * @param {Date} authToken.expirationTime expiration time
    * @returns {boolean} true if token is valid
@@ -559,7 +553,7 @@ class Magento2ApiBase extends ApiDataSource {
    * Process received response data
    * @param {Response} response received response from the api
    * @param {Request} request request
-   * @returns {Object} processed response data
+   * @returns {object} processed response data
    */
   async didReceiveResponse(response, request) {
     const cookies = (response.headers.get('set-cookie') || '').split('; ');
@@ -591,7 +585,7 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Handle error occurred during http response
    * @param {Error} error Error to process
-   * @param {Object} req Request object
+   * @param {object} req Request object
    */
   didEncounterError(error, req) {
     const { extensions = {} } = error;

@@ -79,8 +79,8 @@ module.exports = class GraphQLCacheInvalidatorDirective extends SchemaDirectiveV
    * Invalidate cache from the result using the provided idPath entry
    * @param {mixed} result Resolver result
    * @param {IdPathEntry} idPathEntry ID Path entry
-   * @param {Object} parent GraphQL Resolver parent value
-   * @param {Object} context GraphQL context object
+   * @param {object} parent GraphQL Resolver parent value
+   * @param {object} context GraphQL context object
    * @param {GraphQLResolveInfo} info GraphQL Info object
    * @returns {void}
    */

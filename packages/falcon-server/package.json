@@ -2,7 +2,7 @@
   "name": "@deity/falcon-server",
   "license": "OSL-3.0",
   "main": "src/index.js",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "homepage": "https://falcon.deity.io/docs/falcon-server/basics",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-server",
   "publishConfig": {
@@ -35,8 +35,8 @@
   },
   "dependencies": {
     "@deity/falcon-errors": "^0.1.2",
-    "@deity/falcon-logger": "^1.0.1",
-    "@deity/falcon-server-env": "^0.1.8",
+    "@deity/falcon-logger": "^1.0.2",
+    "@deity/falcon-server-env": "^0.1.9",
     "@koa/cors": "2.2.2",
     "apollo-server-cache-memcached": "0.3.1",
     "apollo-server-cache-redis": "0.3.1",
@@ -50,6 +50,7 @@
     "graphql-type-json": "0.2.4",
     "koa": "2.7.0",
     "koa-body": "4.0.8",
+    "koa-compress": "^3.0.0",
     "koa-router": "7.4.0",
     "koa-session": "5.10.1",
     "lodash": "4.17.15",

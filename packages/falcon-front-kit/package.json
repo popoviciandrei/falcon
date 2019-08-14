@@ -36,7 +36,7 @@
     "formik": "1.5.8"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^0.0.2",
+    "@deity/falcon-scripts": "^0.0.3",
     "@types/react": "16.8.22",
     "@types/react-router-dom": "4.3.4",
     "enzyme": "^3.10.0",

@@ -1,5 +1,4 @@
-import { GraphQLResolveInfo, GraphQLSchema, GraphQLObjectType } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import { DocumentNode, Kind, GraphQLResolveInfo, parse } from 'graphql';
 import { EventEmitter2 } from 'eventemitter2';
 import Logger, { Logger as LoggerType } from '@deity/falcon-logger';
 import {
@@ -72,10 +71,15 @@ export abstract class Extension {
     if (!typeDefs) {
       this.logger.warn(`typeDefs is empty! Make sure you call "super.getGraphQLConfig(typeDefs)" properly`);
     }
-    const rootTypes: RootFieldTypes = this.getRootTypeFields(typeDefs);
+    const rootTypes: RootFieldTypes = await this.logger.traceTime(`Processing schema fields`, () =>
+      Promise.resolve(this.getRootTypeFields(typeDefs))
+    );
     const resolvers: GraphQLResolverMap = {};
 
     Object.keys(rootTypes).forEach((typeName: string) => {
+      if (!rootTypes[typeName].length) {
+        return;
+      }
       resolvers[typeName] = {};
       rootTypes[typeName].forEach((fieldName: string) => {
         this.logger.debug(
@@ -156,44 +160,34 @@ export abstract class Extension {
    * @returns {RootFieldTypes} Map of GQL type-fields
    */
   protected getRootTypeFields(typeDefs: string | Array<string>): RootFieldTypes {
-    const result: RootFieldTypes = {};
+    const result: RootFieldTypes = {
+      Query: [],
+      Mutation: []
+    };
     if (!typeDefs) {
       return result;
     }
     try {
-      const executableSchema: GraphQLSchema = makeExecutableSchema({
-        typeDefs: [
-          Array.isArray(typeDefs)
-            ? typeDefs.join('\n')
-            : typeDefs
-                // Removing "extend type X" to avoid "X type missing" errors
-                .replace(/extend\s+type/gm, 'type')
-                // Removing directives and their definitions
-                .replace(/(directive @(.*))/gm, '')
-                .replace(/@(.*[^{\n])/gm, '')
-                // Removing type references from the base schema types
-                .replace(/:\s*(\w+)/gm, ': Int')
-                .replace(/\[\s*(\w+)\s*]/gm, '[Int]')
-        ],
-        resolverValidationOptions: {
-          requireResolversForResolveType: false
+      const docNode: DocumentNode = parse(Array.isArray(typeDefs) ? typeDefs.join('\n') : typeDefs);
+      docNode.definitions.forEach(definition => {
+        if (definition.kind !== Kind.OBJECT_TYPE_DEFINITION && definition.kind !== Kind.OBJECT_TYPE_EXTENSION) {
+          return;
         }
-      });
 
-      [executableSchema.getQueryType(), executableSchema.getMutationType()].forEach(
-        (type: GraphQLObjectType | undefined | null) => {
-          if (!type) {
-            return;
-          }
-          const typeName: string = (type as GraphQLObjectType).name;
-          Object.keys((type as GraphQLObjectType).getFields()).forEach((field: string) => {
-            if (!(typeName in result)) {
-              result[typeName] = [];
+        const typeName: string = definition.name.value;
+        if (!['Query', 'Mutation'].includes(typeName)) {
+          return;
+        }
+
+        if (definition.fields) {
+          definition.fields.forEach(field => {
+            const fieldName = field.name.value;
+            if (!result[typeName].includes(fieldName)) {
+              result[typeName].push(fieldName);
             }
-            result[typeName].push(field as string);
           });
         }
-      );
+      });
     } catch (error) {
       error.message = `${this.name}: Failed to get root type fields - ${error.message}`;
       throw error;

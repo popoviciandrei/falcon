@@ -14,7 +14,7 @@ module.exports = class EndpointContainer extends BaseContainer {
 
   /**
    * Instantiates endpoints based on the passed configuration and registers event handlers for them
-   * @param {Object} config Configuration object of endpoints
+   * @param {object} config Configuration object of endpoints
    */
   async registerEndpoints(config) {
     for (const endpointKey in config) {

@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-ecommerce-uikit",
   "license": "OSL-3.0",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-ecommerce-uikit",
   "publishConfig": {
     "access": "public"
@@ -45,11 +45,11 @@
     "react-powerplug": "1.0.0"
   },
   "devDependencies": {
-    "@deity/falcon-i18n": "^0.2.6",
-    "@deity/falcon-scripts": "^0.0.2",
-    "@deity/falcon-server": "^0.3.3",
-    "@deity/falcon-shop-extension": "^0.4.4",
-    "@deity/falcon-ui": "^0.2.3",
+    "@deity/falcon-i18n": "^0.2.7",
+    "@deity/falcon-scripts": "^0.0.3",
+    "@deity/falcon-server": "^0.4.0",
+    "@deity/falcon-shop-extension": "^0.4.5",
+    "@deity/falcon-ui": "^0.2.4",
     "@types/enzyme": "3.10.3",
     "@types/enzyme-adapter-react-16": "1.0.5",
     "@types/i18next": "12.1.0",
@@ -77,8 +77,8 @@
     "regenerator-runtime": "0.13.3"
   },
   "peerDependencies": {
-    "@deity/falcon-i18n": "^0.2.5",
-    "@deity/falcon-ui": "^0.2.2",
+    "@deity/falcon-i18n": "^0.2.7",
+    "@deity/falcon-ui": "^0.2.4",
     "apollo-client": "2.5.1",
     "formik": "^1.5.8",
     "graphql-tag": "^2.10.1",

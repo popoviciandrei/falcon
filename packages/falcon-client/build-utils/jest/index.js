@@ -1,16 +1,16 @@
-const jest = require('jest');
+const paths = require('./../paths');
+const { buildClientEnv } = require('./../webpack/config/env');
 
-module.exports = () => {
-  process.env.BABEL_ENV = process.env.BABEL_ENV || 'test';
-  process.env.NODE_ENV = process.env.NODE_ENV || 'test';
-  process.env.PORT = process.env.PORT || 3000;
-  process.env.PUBLIC_PATH = process.env.PUBLIC_PATH || '/';
-  process.env.BUILD_TARGET = process.env.BUILD_TARGET || '';
-  process.env.WEBPACK_ASSETS = process.env.WEBPACK_ASSETS || 'assets/manifest.json';
-  process.env.PUBLIC_DIR = process.env.PUBLIC_DIR || 'public/dir';
-  process.env.SW_DIR = process.env.SW_DIR || 'sw/dir';
+const mockEnvVariables = () => {
+  const envMock = buildClientEnv('web', 'test', '/', paths);
+  Object.keys(envMock).forEach(x => {
+    process.env[x] = process.env[x] || envMock[x];
+  });
+};
 
-  const paths = require('./../paths');
+const run = () => {
+  mockEnvVariables();
+
   const createConfig = require('./config/create');
   const config = createConfig(paths);
 
@@ -21,5 +21,10 @@ module.exports = () => {
   }
   argv.push('--config', JSON.stringify(config));
 
-  jest.run(argv);
+  require('jest').run(argv);
+};
+
+module.exports = {
+  run,
+  mockEnvVariables
 };

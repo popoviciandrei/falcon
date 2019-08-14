@@ -5,7 +5,7 @@ import { Router, NavigationRoute } from 'workbox-routing';
 import { precacheAndRoute, getCacheKeyForURL } from 'workbox-precaching';
 
 /**
- * @typedef {Object} FalconSWBuildConfig
+ * @typedef {object} FalconSWBuildConfig
  * @property {boolean} precache if Workbox precache
  */
 /** @type {FalconSWBuildConfig} */

@@ -11,6 +11,7 @@ const GraphQLJSON = require('graphql-type-json');
 const cors = require('@koa/cors');
 const Cookies = require('cookies');
 const Koa = require('koa');
+const compress = require('koa-compress');
 const Router = require('koa-router');
 const session = require('koa-session');
 const SessionContext = require('koa-session/lib/context');
@@ -169,6 +170,7 @@ class FalconServer {
 
     this.app.context.components = this.componentContainer.components;
     this.app.use(body());
+    this.app.use(compress());
     this.app.use(
       cors({
         credentials: true

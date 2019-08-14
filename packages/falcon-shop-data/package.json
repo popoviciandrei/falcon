@@ -25,10 +25,10 @@
     "@babel/runtime": "7.5.5",
     "core-js": "3.1.4",
     "@deity/falcon-data": "0.0.1",
-    "@deity/falcon-shop-extension": "0.4.2"
+    "@deity/falcon-shop-extension": "0.4.5"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^0.0.2",
+    "@deity/falcon-scripts": "^0.0.3",
     "@types/react": "16.8.22",
     "apollo-client": "2.5.1",
     "graphql-tag": "2.10.1",

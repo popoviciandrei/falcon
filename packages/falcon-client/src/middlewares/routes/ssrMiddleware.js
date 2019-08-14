@@ -8,7 +8,7 @@ import HtmlHead from '../../components/HtmlHead';
 
 /**
  * Server Side Rendering middleware.
- * @param {Object} params params
+ * @param {object} params params
  * @param {{App: React.Component}} params.App React Component to render
  * @returns {import('koa').Middleware} Koa middleware
  */

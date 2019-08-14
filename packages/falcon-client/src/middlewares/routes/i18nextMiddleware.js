@@ -2,12 +2,12 @@ import { GET_BACKEND_CONFIG } from '@deity/falcon-data';
 import i18nFactory from '../../i18n/i18nServerFactory';
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {string} lng language
  * @property {string[]} ns namespaces to load
  * @property {string} fallbackLng fallback language
  * @property {string[]} whitelist languages whitelist
- * @property {Object} resources Initial internationalization resources
+ * @property {object} resources Initial internationalization resources
  */
 
 /**

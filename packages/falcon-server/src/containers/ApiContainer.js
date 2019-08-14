@@ -27,7 +27,7 @@ module.exports = class ApiContainer extends BaseContainer {
 
   /**
    * Instantiates apis based on passed configuration
-   * @param {Object<string, ApiInstanceConfig>} apis Key-value list of APIs configuration
+   * @param {object<string, ApiInstanceConfig>} apis Key-value list of APIs configuration
    * @returns {undefined}
    */
   async registerApis(apis = {}) {

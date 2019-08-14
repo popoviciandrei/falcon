@@ -30,7 +30,7 @@ export type GetCacheOptions = {
  * Cache-wrapper with extended methods
  */
 export default class Cache<V = any> implements KeyValueCache<V> {
-  constructor(private cacheProvider: KeyValueCache<V>) {}
+  constructor(private cacheProvider: KeyValueCache<string>) {}
 
   async get(key: string): Promise<V>;
 
@@ -44,6 +44,12 @@ export default class Cache<V = any> implements KeyValueCache<V> {
    */
   async get(key: string, setOptions?: GetCacheOptions): Promise<V> {
     let value: GetCacheFetchResult = await this.cacheProvider.get(key);
+    try {
+      value = JSON.parse(value);
+    } catch {
+      // Keep `value` with the original value
+    }
+
     // Validating by cache tags
     if (this.isValueWithOptions(value)) {
       const { tags: tagMap = {} } = value.options as ValueOptions;
@@ -95,6 +101,12 @@ export default class Cache<V = any> implements KeyValueCache<V> {
         }
       };
     }
+
+    if (Array.isArray(cachedValue) || typeof cachedValue === 'object') {
+      // For non-scalar values - JSON.stringify
+      cachedValue = JSON.stringify(cachedValue);
+    }
+
     return this.cacheProvider.set(key, cachedValue, options);
   }
 
@@ -175,12 +187,14 @@ export default class Cache<V = any> implements KeyValueCache<V> {
 
   /**
    * Generating a short and safe enough tag value (second + ms = will ensure a unique value for the same tag name)
-   * @returns {string} Tag value
+   * @returns {number} Tag value
    */
-  private generateTagValue(): string {
-    const date: Date = new Date();
-    return `${Date.now()
-      .toString()
-      .substr(6)}`;
+  private generateTagValue(): number {
+    return parseInt(
+      Date.now()
+        .toString()
+        .substr(6),
+      10
+    );
   }
 }

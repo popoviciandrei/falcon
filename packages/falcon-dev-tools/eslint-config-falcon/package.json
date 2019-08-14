@@ -1,6 +1,6 @@
 {
   "name": "@deity/eslint-config-falcon",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "OSL-3.0",
   "main": "index.js",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-dev-tools/eslint-config-falcon",

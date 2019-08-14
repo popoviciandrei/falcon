@@ -76,5 +76,5 @@ module.exports = {
   startDevServer,
   build,
   size,
-  test: jest
+  test: jest.run
 };

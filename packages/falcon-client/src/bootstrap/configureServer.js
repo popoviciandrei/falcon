@@ -14,7 +14,7 @@ import { ProxyRequest } from '../service/ProxyRequest';
  * @param {koa-router} router KoaRouter object
  * @param {string} serverUrl Falcon-Server URL
  * @param {string[]} endpoints list of endpoints to be proxied to {serverUrl}
- * @param {Object} redirs Map of redirections
+ * @param {object} redirs Map of redirections
  * @param {PaymentRedirectMap} redirs.payment Payment redirects
  * @returns {undefined}
  */
@@ -63,7 +63,7 @@ export const configureProxy = async (router, serverUrl, endpoints, redirs) => {
 /**
  * Fetches a config from Falcon-Server
  * @param {string} serverUrl Falcon-Server URL
- * @returns {Object} Remote server config
+ * @returns {object} Remote server config
  */
 export const fetchRemoteConfig = async serverUrl => {
   if (!serverUrl) {

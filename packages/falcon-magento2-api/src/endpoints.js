@@ -110,9 +110,9 @@ module.exports = class MagentoEndpoints extends EndpointManager {
 
   /**
    * Generates Auth header (if required)
-   * @param {Object} ctx Koa context object
+   * @param {object} ctx Koa context object
    * @param {boolean} isGuest Anonymous flag
-   * @returns {Object} Headers object
+   * @returns {object} Headers object
    */
   getAuthHeaders(ctx, isGuest = true) {
     if (isGuest) {

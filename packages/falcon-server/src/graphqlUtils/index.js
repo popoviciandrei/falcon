@@ -38,7 +38,7 @@ const getRootType = type => {
 
 /**
  * Extract a value by `fieldName` from the provided `sourceValue`
- * @param {Object|Array<Object>} sourceValue Source object to get a field value from
+ * @param {object|Array<object>} sourceValue Source object to get a field value from
  * @param {string} fieldName Name of the field
  * @returns {undefined|string|string[]} Value or list of values (in case of `sourceValue` is an array)
  */
@@ -87,7 +87,7 @@ const generateTagNames = (entityName, entityId) => {
 
 /**
  * Get a list of tags from the provided `sourceValue` using specified `fieldType` and `fieldPathSections` (for nested values)
- * @param {Object} sourceValue Source value to get tags from
+ * @param {object} sourceValue Source value to get tags from
  * @param {GraphQLType} fieldType GraphQL Field Type object
  * @param {string[]} [fieldPathSections=[]] An optional field path sections (example: `["products", "items"]` which are created from a relative `products.items` field path)
  * that are going to be used to get tags from. If not passed or empty - tags will be received from `sourceValue` directly.
@@ -123,9 +123,9 @@ const getTagsForField = (sourceValue, fieldType, fieldPathSections = [], forceTy
 /**
  * Extract cache tags for the provided ID path and return a list of tags
  * @param {string} idPath ID operation path string (like "$parent.items" or "items")
- * @param {Object} result Resolver result
+ * @param {object} result Resolver result
  * @param {GraphQLResolveInfo} info GraphQL info object
- * @param {Object} parent GraphQL parent object
+ * @param {object} parent GraphQL parent object
  * @param {string|undefined} forceTypeName type name to force as a tag name
  * @returns {string[]} List of tags
  */
