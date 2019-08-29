@@ -110,8 +110,7 @@ module.exports = {
         'dot-notation': 'off',
         'react/prop-types': 'off',
         'import/order': 1,
-        'import/prefer-default-export': 'off',
-        'import-name': [1, { react: 'React' }]
+        'import/prefer-default-export': 'off'
       }
     }
   ]

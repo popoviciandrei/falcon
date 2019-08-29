@@ -309,7 +309,7 @@ type ProductTierPrice {
 }
 
 type Product {
-  id: String!
+  id: ID!
   sku: ID!
   name: String!
   image: String
@@ -411,7 +411,7 @@ type Cart {
 }
 
 type CartItem {
-  itemId: Int!
+  itemId: ID!
   sku: String!
   qty: Float!
   name: String
@@ -447,7 +447,7 @@ type CartItemOptionValue {
 }
 
 type OrderItem {
-  itemId: Int!
+  itemId: ID!
   sku: ID!
   qty: Float!
   name: String
@@ -477,14 +477,14 @@ input AddToCartInput {
 }
 
 input UpdateCartItemInput {
-  itemId: Int!
+  itemId: ID!
   # Magento 2 legacy both itemId and sku need to be provided for rest endpoint to work
   sku: String!
   qty: Float!
 }
 
 input RemoveCartItemInput {
-  itemId: Int!
+  itemId: ID!
 }
 
 input ConfigurableOptionInput {
@@ -503,7 +503,7 @@ input CouponInput {
 }
 
 type CartItemPayload {
-  itemId: Int!
+  itemId: ID!
   sku: String
   qty: Float
   name: String
@@ -512,7 +512,7 @@ type CartItemPayload {
 }
 
 type RemoveCartItemResponse {
-  itemId: Int
+  itemId: ID
 }
 
 type Customer {

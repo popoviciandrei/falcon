@@ -2,7 +2,7 @@
   "name": "@deity/falcon-shop-extension",
   "license": "OSL-3.0",
   "main": "src/index.js",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "homepage": "https://falcon.deity.io/docs/falcon-server/extensions#shop-extension",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-shop-extension",
   "publishConfig": {

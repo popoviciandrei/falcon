@@ -26,9 +26,9 @@ export function extractThemableProps(props: any) {
 }
 
 function isMergeableObject(object: any) {
-  // emotion sets anim=1 to keyframes processed by keyframes function
+  // emotion sets `anim=1` to keyframes processed by keyframes function
   // such objects can't be merged but simply replaced
-  return object.anim !== 1 && isPlainObject(object);
+  return isPlainObject(object) && object.anim !== 1;
 }
 
 export function mergeThemes(theme: Theme, themeOverride: RecursivePartial<Theme>): Theme {
@@ -44,7 +44,8 @@ export function mergeThemes(theme: Theme, themeOverride: RecursivePartial<Theme>
     for (let keyframeKey in newTheme.keyframes) {
       // only process keyframes not yet processed by emotion (anim property not et)
       if (!newTheme.keyframes[keyframeKey].anim) {
-        newTheme.keyframes[keyframeKey] = keyframes(newTheme.keyframes[keyframeKey]);
+        // TODO remove `any` when fixed: https://github.com/deity-io/falcon/issues/545
+        newTheme.keyframes[keyframeKey] = keyframes(newTheme.keyframes[keyframeKey] as any) as any;
       }
     }
   }
