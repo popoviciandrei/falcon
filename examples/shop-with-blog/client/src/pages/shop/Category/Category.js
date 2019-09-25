@@ -2,31 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NetworkStatus } from 'apollo-client';
 import { Toggle } from 'react-powerplug';
-import { H1, H3, GridLayout, Box, FlexLayout, Divider, Button } from '@deity/falcon-ui';
+import { CategoryWithProductListQuery } from '@deity/falcon-shop-data';
+import { H1, Box, FlexLayout, Divider, Button } from '@deity/falcon-ui';
+import { SearchConsumer, SortOrderPickerProvider, getFiltersData } from '@deity/falcon-front-kit';
 import {
-  SearchConsumer,
-  CategoryProductsQuery,
+  Loader,
   CategoryLayout,
   CategoryArea,
-  ShowingOutOf,
-  SortOrdersProvider,
-  SortOrderDropdown,
-  getFiltersData,
-  FiltersSummary,
-  ProductList,
-  ShowMore,
-  Responsive,
   Sidebar,
-  Loader
-} from '@deity/falcon-ecommerce-uikit';
+  SidebarLayout,
+  Responsive,
+  SortOrderPicker,
+  FiltersSummary,
+  ProductList
+} from '@deity/falcon-ui-kit';
 import { Filters } from './Filters';
+import { ShowingOutOf } from './ShowingOutOf';
+import { ShowMore } from './ShowMore';
 
 const copy = item => item && JSON.parse(JSON.stringify(item));
 
 const CategoryPage = ({ id }) => (
   <SearchConsumer>
     {({ state }) => (
-      <CategoryProductsQuery
+      <CategoryWithProductListQuery
         variables={{
           categoryId: id,
           sort: state.sort,
@@ -34,13 +33,13 @@ const CategoryPage = ({ id }) => (
         }}
         passLoading
       >
-        {({ category, fetchMore, networkStatus, loading }) => {
+        {({ data: { category }, fetchMore, networkStatus, loading }) => {
           if (!category && loading) {
             return <Loader />;
           }
 
-          const { name, products } = category;
-          const { pagination, items, aggregations } = products;
+          const { name, productList } = category;
+          const { pagination, items, aggregations } = productList;
           const filtersData = getFiltersData(state.filters, aggregations);
 
           return (
@@ -50,9 +49,9 @@ const CategoryPage = ({ id }) => (
                 <H1>{name}</H1>
                 <FlexLayout justifyContent="space-between" alignItems="center">
                   <ShowingOutOf itemsCount={items.length} totalItems={pagination.totalItems} />
-                  <SortOrdersProvider>
-                    {sortOrdersProps => <SortOrderDropdown {...sortOrdersProps} />}
-                  </SortOrdersProvider>
+                  <SortOrderPickerProvider>
+                    {sortOrderPickerProps => <SortOrderPicker {...sortOrderPickerProps} />}
+                  </SortOrderPickerProvider>
                 </FlexLayout>
                 <Divider mt="xs" />
               </Box>
@@ -68,10 +67,9 @@ const CategoryPage = ({ id }) => (
                             <React.Fragment>
                               <Button onClick={toggle}>Filters</Button>
                               <Sidebar isOpen={on} side="left" close={toggle}>
-                                <GridLayout gridRowGap="md">
-                                  <H3 ml="xl">Filters</H3>
+                                <SidebarLayout title="Filters">
                                   <Filters data={filtersData} px="md" />
-                                </GridLayout>
+                                </SidebarLayout>
                               </Sidebar>
                             </React.Fragment>
                           )}
@@ -83,7 +81,7 @@ const CategoryPage = ({ id }) => (
               )}
               <Box gridArea={CategoryArea.content}>
                 <FiltersSummary data={filtersData} />
-                <ProductList products={items} />
+                <ProductList items={items} />
               </Box>
               <FlexLayout gridArea={CategoryArea.footer} flexDirection="column" alignItems="center">
                 {pagination.nextPage && <Divider />}
@@ -94,7 +92,7 @@ const CategoryPage = ({ id }) => (
             </CategoryLayout>
           );
         }}
-      </CategoryProductsQuery>
+      </CategoryWithProductListQuery>
     )}
   </SearchConsumer>
 );

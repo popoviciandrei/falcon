@@ -5,24 +5,25 @@ import 'app-webmanifest';
 import React from 'react';
 import { hydrate, render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/react-common';
 import { loadableReady } from '@loadable/component';
 import { I18nProvider } from '@deity/falcon-i18n';
-import { apolloClientWeb, apolloStateToObject } from './service';
+import { getClientConfig } from '@deity/falcon-front-kit';
+import { apolloClientWeb } from './service';
 import HtmlHead from './components/HtmlHead';
 import App, { clientApolloSchema } from './clientApp';
 import i18nFactory from './i18n/i18nClientFactory';
 
 // eslint-disable-next-line no-underscore-dangle
 const initialState = window.__APOLLO_STATE__ || {};
-const config = apolloStateToObject(initialState, '$ROOT_QUERY.config') || {};
+const clientConfig = getClientConfig(initialState) || {};
 
 const { language } = window.I18NEXT_STATE || {};
-const i18nConfig = { ...config.i18n, lng: language };
-const renderApp = config.serverSideRendering ? hydrate : render;
+const i18nConfig = { ...clientConfig.i18n, lng: language };
+const renderApp = clientConfig.serverSideRendering ? hydrate : render;
 
 loadableReady()
-  .then(() => apolloClientWeb({ initialState, clientApolloSchema, apolloClientConfig: config.apolloClient }))
+  .then(() => apolloClientWeb({ initialState, clientApolloSchema, apolloClientConfig: clientConfig.apolloClient }))
   .then(apolloClient => i18nFactory(i18nConfig).then(i18next => ({ apolloClient, i18next })))
   .then(({ apolloClient, i18next }) => {
     const markup = (

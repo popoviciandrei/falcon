@@ -18,9 +18,13 @@ function triggerChange(element: any, value: any) {
   element.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-class NumberInputInnerDOM extends React.Component<
-  React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
-> {
+type NumberInputInnerDOMProps = {
+  invalid?: boolean;
+} & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+
+class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
+  inputRef = React.createRef<HTMLInputElement>();
+
   getStep() {
     if (this.props.step === undefined) {
       return 1;
@@ -41,8 +45,6 @@ class NumberInputInnerDOM extends React.Component<
     }
     return +this.props.min;
   }
-
-  inputRef = React.createRef<HTMLInputElement>();
 
   stepUp = () => {
     if (!this.inputRef.current) {
@@ -77,7 +79,7 @@ class NumberInputInnerDOM extends React.Component<
   };
 
   render() {
-    const { className, ...remaining } = this.props;
+    const { className, invalid, ...remaining } = this.props;
     const { themableProps, rest } = extractThemableProps(remaining);
 
     return (
@@ -100,6 +102,7 @@ export const NumberInput = themed({
   tag: NumberInputInnerDOM,
 
   defaultProps: {
+    invalid: false,
     readOnly: true
   },
 
@@ -109,7 +112,7 @@ export const NumberInput = themed({
       alignItems: 'center',
       height: 'lg',
 
-      css: ({ theme }) => ({
+      css: ({ theme, invalid }) => ({
         input: {
           flex: 'none',
           width: theme.spacing.lg,
@@ -118,13 +121,17 @@ export const NumberInput = themed({
           MozAppearance: 'textfield',
           userSelect: 'none',
           fontStyle: 'inherit',
-          border: theme.borders.regular,
-          borderColor: theme.colors.secondaryDark,
-          borderRadius: theme.borderRadius.medium,
           textAlign: 'center',
+          border: theme.borders.regular,
+          borderRadius: theme.borderRadius.medium,
+          borderColor: invalid ? theme.colors.error : theme.colors.secondaryDark,
           boxShadow: 'none',
           '::-webkit-outer-spin-button,::-webkit-inner-spin-button': {
             appearance: 'none'
+          },
+          ':focus': {
+            outline: 'none',
+            borderColor: invalid ? theme.colors.error : theme.colors.secondary
           }
         },
 

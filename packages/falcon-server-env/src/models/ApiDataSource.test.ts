@@ -1,10 +1,9 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop, import/no-extraneous-dependencies */
 import 'jest-extended';
+import nock from 'nock';
 import { InMemoryLRUCache } from 'apollo-server-caching';
 import { ContextRequestOptions, ContextData } from '../types';
 import { ApiDataSource } from './ApiDataSource';
-
-import nock = require('nock');
 
 const cache = {
   provider: new InMemoryLRUCache()

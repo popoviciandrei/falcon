@@ -48,7 +48,7 @@ describe('WordPress API', () => {
     });
   });
 
-  it('Should pass pagination data correctly in "blogPosts" method', async () => {
+  it('Should pass pagination data correctly in "blogPostList" method', async () => {
     const correctResponse = {
       success: true
     };
@@ -59,7 +59,7 @@ describe('WordPress API', () => {
 
     await wpApi.initialize({ context: {}, cache });
 
-    const result = await wpApi.blogPosts({}, { query: {}, pagination: { perPage: 3 } }, { session: {} });
+    const result = await wpApi.blogPostList({}, { query: {}, pagination: { perPage: 3 } }, { session: {} });
 
     expect(result).toEqual(correctResponse);
   });

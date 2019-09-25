@@ -1,5 +1,5 @@
 import { KeyValueCache } from 'apollo-server-caching';
-import Cache from './Cache';
+import { Cache } from './Cache';
 
 describe('Cache', () => {
   let provider: KeyValueCache;

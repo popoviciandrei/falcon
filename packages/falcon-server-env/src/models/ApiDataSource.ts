@@ -1,14 +1,15 @@
-import Logger, { Logger as LoggerType } from '@deity/falcon-logger';
+import Logger from '@deity/falcon-logger';
+import { IResolvers } from 'apollo-server-koa';
 import { Body, Request, RESTDataSource } from 'apollo-datasource-rest/dist/RESTDataSource';
 import { URLSearchParams, URLSearchParamsInit } from 'apollo-server-env';
-import { KeyValueCache } from 'apollo-server-caching';
-import { GraphQLResolveInfo, GraphQLSchema } from 'graphql';
 import { EventEmitter2 } from 'eventemitter2';
 import { stringify } from 'qs';
-import Cache from '../cache/Cache';
+import { GraphQLResolveInfo } from 'graphql';
+import { Cache } from '../cache/Cache';
 import { formatUrl } from '../helpers/url';
 import ContextHTTPCache from '../cache/ContextHTTPCache';
 import {
+  ApolloServerConfig,
   ApiContainer,
   ApiUrlPriority,
   ApiDataSourceConfig,
@@ -22,7 +23,7 @@ import {
   FetchUrlParams,
   FetchUrlResult,
   PaginationData,
-  DataSources
+  RemoteBackendConfig
 } from '../types';
 
 export type PaginationValue = number | string | null;
@@ -35,23 +36,48 @@ export type ApiGetter = (
   info: GraphQLResolveInfo
 ) => any;
 
-export interface GqlServerConfig<TContext = any> {
-  schema: GraphQLSchema;
-  formatError?: Function;
-  context?: TContext;
-  formatResponse?: Function;
-  dataSources?: () => DataSources;
-  cache?: KeyValueCache;
-  debug?: boolean;
-  tracing?: boolean;
+export type ApiDataSourceConstructorParams = IConfigurableConstructorParams<ApiDataSourceConfig> & {
+  apiContainer: ApiContainer;
+  gqlServerConfig: ApolloServerConfig;
+};
+
+export interface ApiDataSourceConstructor<T extends ApiDataSource = ApiDataSource> {
+  new (params: ApiDataSourceConstructorParams): T;
+  getExtraResolvers?(apiGetter: ApiGetter): IResolvers<any, any>;
 }
 
-export type ApiDataSourceConstructorParams = IConfigurableConstructorParams<ApiDataSourceConfig> & {
-  /** ApiContainer instance */
-  apiContainer: ApiContainer;
-  /** GqlServerConfig instance */
-  gqlServerConfig: GqlServerConfig<any>;
-};
+export interface ApiDataSource<TContext extends GraphQLContext = GraphQLContext> {
+  /**
+   * Should be implemented if ApiDataSource wants to deliver content via dynamic URLs.
+   * It should return priority value for passed url.
+   * @param url url for which the priority should be returned
+   * @returns Priority index
+   */
+  getFetchUrlPriority?(url: string): number;
+
+  fetchUrl?(
+    obj: null,
+    params: FetchUrlParams,
+    context: TContext,
+    info: GraphQLResolveInfo
+  ): Promise<FetchUrlResult | null>;
+
+  /**
+   * Optional method to get a cache context object which should contain a distinguish data
+   * that must be taken into account while calculating the cache key for this specific DataSource
+   * It could be a storeCode, selected locale etc.
+   */
+  getCacheContext?(): Record<string, any>;
+
+  fetchBackendConfig?(obj: any, params: any, context: TContext, info: GraphQLResolveInfo): RemoteBackendConfig;
+
+  /**
+   * Hook that is going to be executed for every REST request if authorization is required
+   * @param req request
+   * @returns promise
+   */
+  authorizeRequest?(req: ContextRequestOptions): Promise<void>;
+}
 
 export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLContext> extends RESTDataSource<TContext> {
   public name: string;
@@ -68,12 +94,12 @@ export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLCon
 
   protected cache?: Cache;
 
-  protected gqlServerConfig: GqlServerConfig<TContext>;
+  protected gqlServerConfig: ApolloServerConfig;
 
-  protected logger: LoggerType;
+  protected logger: typeof Logger;
 
   /**
-   * @param {ApiDataSourceConstructorParams} params Constructor params
+   * @param params Constructor params
    */
   constructor(params: ApiDataSourceConstructorParams) {
     super();
@@ -97,6 +123,8 @@ export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLCon
     // Remove once there's an option for using an external logger.
     this['trace'] = this.traceLog.bind(this);
   }
+
+  static getExtraResolvers?(apiGetter: ApiGetter): IResolvers<any, any>;
 
   initialize(config: DataSourceConfig<TContext>): void {
     super.initialize(config);
@@ -122,8 +150,7 @@ export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLCon
 
   /**
    * Wrapper-method to set an API-scoped session data
-   * @param {any} value Value to be set to the API session
-   * @returns {undefined}
+   * @param value Value to be set to the API session
    */
   set session(value: any) {
     if (!this.context.session) {
@@ -134,34 +161,8 @@ export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLCon
   }
 
   /**
-   * Should be implemented if ApiDataSource wants to deliver content via dynamic URLs.
-   * It should return priority value for passed url.
-   * @param url url for which the priority should be returned
-   * @returns {number} Priority index
-   */
-  getFetchUrlPriority?(url: string): number;
-
-  async fetchUrl?(
-    obj: object,
-    args: FetchUrlParams,
-    context: TContext,
-    info: GraphQLResolveInfo
-  ): Promise<FetchUrlResult>;
-
-  static getExtraResolvers?(apiGetter: ApiGetter): object;
-
-  /**
-   * Optional method to get a cache context object which should contain a distinguish data
-   * that must be taken into account while calculating the cache key for this specific DataSource
-   * It could be a storeCode, selected locale etc.
-   */
-  getCacheContext?(): object;
-
-  async fetchBackendConfig?(obj: object, args: object, context: TContext, info: GraphQLResolveInfo): Promise<object>;
-
-  /**
    * Hook that is going to be executed for every REST request before calling `resolveURL` method
-   * @param {ContextRequestOptions} request request
+   * @param request request
    * @returns {Promise<void>} promise
    */
   protected async willSendRequest(request: ContextRequestOptions): Promise<void> {
@@ -172,18 +173,11 @@ export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLCon
   }
 
   /**
-   * Hook that is going to be executed for every REST request if authorization is required
-   * @param {ContextRequestOptions} request request
-   * @returns {Promise<void>} promise
-   */
-  async authorizeRequest?(req: ContextRequestOptions): Promise<void>;
-
-  /**
    * Calculates "pagination" data
-   * @param {PaginationValue} totalItems Total amount of entries
-   * @param {PaginationValue} [currentPage=null] Current page index
-   * @param {PaginationValue} [perPage=null] Limit entries per page
-   * @returns {PaginationData} Calculated result
+   * @param totalItems Total amount of entries
+   * @param [currentPage=null] Current page index
+   * @param [perPage=null] Limit entries per page
+   * @returns Calculated result
    */
   protected processPagination(
     totalItems: PaginationValue,

@@ -1,6 +1,7 @@
 const url = require('url');
 const qs = require('qs');
 const urlJoin = require('proper-url-join');
+const snakeCase = require('lodash/snakeCase');
 const isEmpty = require('lodash/isEmpty');
 const pick = require('lodash/pick');
 const has = require('lodash/has');
@@ -20,12 +21,21 @@ const FALCON_CART_ACTIONS = [
   '/place-order'
 ];
 
+/** Magento visibility settings */
+const ProductVisibility = {
+  notVisible: 1,
+  catalog: 2,
+  search: 3,
+  catalogAndSearch: 4
+};
+
 /**
  * API for Magento2 store - provides resolvers for shop schema.
  */
 module.exports = class Magento2Api extends Magento2ApiBase {
   /**
    * Adds additional resolve functions to the stitched GQL schema for the sake of data-splitting
+   * @param {Function} apiGetter
    */
   static getExtraResolvers(apiGetter) {
     return {
@@ -37,17 +47,20 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         currencies: apiGetter(api => api.getActiveCurrencies()),
         baseCurrency: apiGetter(api => api.session.baseCurrency),
         timezone: apiGetter(api => api.session.timezone),
-        weightUnit: apiGetter(api => api.session.weightUnit)
+        weightUnit: apiGetter(api => api.session.weightUnit),
+        activeCurrency: apiGetter(api => api.session.currency),
+        activeStore: apiGetter(api => api.session.storeCode),
+        sortOrderList: apiGetter(api => api.getSortOrderList())
       },
       Product: {
         price: apiGetter((api, ...args) => api.productPrice(...args)),
         tierPrices: apiGetter((api, ...args) => api.productTierPrices(...args)),
-        configurableOptions: apiGetter((api, ...args) => api.configurableProductOptions(...args)),
+        options: apiGetter((api, ...args) => api.productOptions(...args)),
         breadcrumbs: apiGetter((api, ...args) => api.breadcrumbs(...args))
       },
       Category: {
         breadcrumbs: apiGetter((api, ...args) => api.breadcrumbs(...args)),
-        products: apiGetter((api, ...args) => api.categoryProducts(...args)),
+        productList: apiGetter((api, ...args) => api.categoryProductList(...args)),
         children: apiGetter((api, ...args) => api.categoryChildren(...args))
       },
       PaymentMethod: {
@@ -72,6 +85,52 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       }
     });
     return currencies;
+  }
+
+  getSortOrderList() {
+    return [
+      {
+        name: 'Position',
+        value: undefined,
+        __typename: 'SortOrder'
+      },
+      {
+        name: 'Price ascending',
+        value: {
+          field: 'price',
+          direction: 'asc',
+          __typename: 'SortOrderValue'
+        },
+        __typename: 'SortOrder'
+      },
+      {
+        name: 'Price descending',
+        value: {
+          field: 'price',
+          direction: 'desc',
+          __typename: 'SortOrderValue'
+        },
+        __typename: 'SortOrder'
+      },
+      {
+        name: 'Name ascending',
+        value: {
+          field: 'name',
+          direction: 'asc',
+          __typename: 'SortOrderValue'
+        },
+        __typename: 'SortOrder'
+      },
+      {
+        name: 'Name descending',
+        value: {
+          field: 'name',
+          direction: 'desc',
+          __typename: 'SortOrderValue'
+        },
+        __typename: 'SortOrder'
+      }
+    ];
   }
 
   /**
@@ -116,34 +175,26 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * Fetch products for fetched category
    * @param {object} obj fetched category
    * @param {object} params query params
-   * @returns {Promise<ProductList>} - fetched list of products
+   * @returns {Promise<CategoryProductList>} - fetched list of products
    */
-  async categoryProducts(obj, params) {
-    const query = this.createSearchParams(params);
+  async categoryProductList(obj, { input = {} }) {
+    const { pagination = {} } = input;
 
-    /**
-     * Magento visibility settings
-     *
-     * VISIBILITY_NOT_VISIBLE = 1;
-     * VISIBILITY_IN_CATALOG = 2;
-     * VISIBILITY_IN_SEARCH = 3;
-     * VISIBILITY_BOTH = 4;
-     */
-    this.addSearchFilter(params, 'visibility', '4', 'eq');
-
-    if (!this.isFilterSet('status', params)) {
-      this.addSearchFilter(params, 'status', '1');
+    const searchCriteria = this.createSearchCriteria(input);
+    this.addSearchFilter(searchCriteria, 'visibility', ProductVisibility.catalogAndSearch, 'eq');
+    if (!this.isFilterSet('status', input)) {
+      this.addSearchFilter(searchCriteria, 'status', '1');
     }
-
     // removed virtual products as we're not supporting it
-    this.addSearchFilter(params, 'type_id', 'simple,configurable,bundle', 'in');
+    this.addSearchFilter(searchCriteria, 'type_id', 'simple,configurable,bundle', 'in');
 
-    const { pagination = {} } = params;
     let response;
     try {
-      response = await this.getForIntegration(`/falcon/categories/${obj.id}/products`, query, {
-        context: { pagination }
-      });
+      response = await this.getForIntegration(
+        `/falcon/categories/${obj.id}/products`,
+        { searchCriteria },
+        { context: { pagination } }
+      );
     } catch (ex) {
       // if is_anchor is set to "0" then we cannot fetch category contents (as it doesn't have products)
       // in that case if Magento returns error "Bucked does not exist" we return empty array to avoid displaying errors
@@ -265,35 +316,27 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {string[]} params.skus skus of products that search should be narrowed to
    * @returns {Promise<Product[]>}  response with list of products
    */
-  async products(obj, params) {
-    const { filters: simpleFilters = [], categoryId, skus } = params;
-    // params.filters =  contains "simple" key-value filters (will be transpiled to Magento-like filters)
-    const filtersToCheck = {};
+  async productList(obj, { input }) {
+    const { withAttributeFilters = [] } = input;
+    const searchCriteria = this.createSearchCriteria(input);
 
-    if (simpleFilters.length) {
-      simpleFilters.forEach(item => {
-        filtersToCheck[item.field] = item.value;
-      });
+    this.addSearchFilter(searchCriteria, 'visibility', ProductVisibility.catalogAndSearch, 'eq');
+    if (!this.isFilterSet('status', searchCriteria)) {
+      this.addSearchFilter(searchCriteria, 'status', '1');
     }
+    // removed virtual products as we're not supporting it - feature request: RG-1086
+    this.addSearchFilter(searchCriteria, 'type_id', 'simple,configurable,bundle', 'in');
 
-    if (categoryId) {
-      filtersToCheck.category_id = categoryId;
-    }
-
-    // remove filters which are not in format acceptable by Magento
-    params.filters = [];
-
-    Object.keys(filtersToCheck).forEach(key => {
-      if (filtersToCheck[key]) {
-        this.addSearchFilter(params, key, filtersToCheck[key]);
-      }
+    const response = await this.getForIntegration('/products', {
+      includeSubcategories: true,
+      withAttributeFilters,
+      searchCriteria
     });
 
-    if (skus) {
-      this.addSearchFilter(params, 'sku', skus.join(','), 'in');
-    }
-
-    return this.fetchProductList(params);
+    return {
+      items: response.items.map(x => this.reduceProduct(x, this.session.currency)),
+      pagination: this.processPagination(response.total_count, searchCriteria.currentPage, searchCriteria.pageSize)
+    };
   }
 
   /**
@@ -301,33 +344,23 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {object} params parameters passed to the resolver
    * @returns {object} params converted to format acceptable by Magento
    */
-  createSearchParams(params) {
+  createSearchCriteria(params) {
     const { filters = [], pagination, sort = {} } = params;
-    const processedFilters = {};
 
-    if (filters.length) {
-      filters.forEach(item => {
-        if (item.value) {
-          this.addSearchFilter(processedFilters, item.field, item.value, item.operator);
-        }
-      });
-    }
-
-    const searchCriteria = {
-      filterGroups: processedFilters.filterGroups,
-      sortOrders: [sort]
+    const processedFilters = {
+      filterGroups: params.filterGroups
     };
-
-    searchCriteria.currentPage = parseInt(pagination && pagination.page, 10) || 0;
-
-    if (pagination && pagination.perPage) {
-      searchCriteria.pageSize = pagination.perPage;
-    } else {
-      searchCriteria.pageSize = this.perPage;
-    }
+    filters.forEach(item => {
+      if (item.value) {
+        this.addSearchFilter(processedFilters, snakeCase(item.field), item.value, item.operator);
+      }
+    });
 
     return {
-      searchCriteria
+      filterGroups: processedFilters.filterGroups,
+      sortOrders: Array.isArray(sort) ? sort : [sort],
+      currentPage: parseInt(pagination && pagination.page, 10) || 1,
+      pageSize: parseInt(pagination && pagination.perPage, 10) || this.perPage
     };
   }
 
@@ -439,32 +472,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   }
 
   /**
-   * Fetch list of the products based on passed criteria
-   * @param {object} params search criteria
-   * @returns {Promise<Product[]>} - list of product items
-   */
-  fetchProductList(params = {}) {
-    /**
-     * Magento visibility settings
-     *
-     * VISIBILITY_NOT_VISIBLE = 1;
-     * VISIBILITY_IN_CATALOG = 2;
-     * VISIBILITY_IN_SEARCH = 3;
-     * VISIBILITY_BOTH = 4;
-     */
-    this.addSearchFilter(params, 'visibility', '4', 'eq');
-
-    if (!this.isFilterSet('status', params)) {
-      this.addSearchFilter(params, 'status', '1');
-    }
-
-    // removed virtual products as we're not supporting it - feature request: RG-1086
-    this.addSearchFilter(params, 'type_id', 'simple,configurable,bundle', 'in');
-
-    return this.fetchList('/products', params);
-  }
-
-  /**
    * Check if given filter is set in params
    * @param {string} filterName name of the filter
    * @param {object} params params with filters
@@ -479,79 +486,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   }
 
   /**
-   * Generic method for endpoints handling category and product listing
-   * @param {string} path path to magento api endpoint
-   * @param {object} params request params
-   * @param {Array<object>} [params.filters] filters for the collection
-   * @param {boolean} [params.includeSubcategories] use subcategories in the search flag
-   * @param {object} [params.query] request query params
-   * @param {number} [params.query.page] pagination page
-   * @param {number} [params.query.perPage] number of items per page
-   * @param {Array<object>} [params.sortOrders] list of sorting parameters
-   * @param {string[]} [params.withAttributeFilters] list of attributes for layout navigation
-   * @returns {Promise<Product[] | Category[]>} - response from endpoint
-   */
-  async fetchList(path, params) {
-    const {
-      query: { page = 1, perPage } = {},
-      filterGroups = [],
-      includeSubcategories = false,
-      withAttributeFilters = [],
-      sortOrders = {}
-    } = params;
-    const searchCriteria = {
-      sortOrders,
-      currentPage: Number(page),
-      filterGroups
-    };
-
-    if (perPage) {
-      // most list endpoints require int or no param in the request; null will not work
-      searchCriteria.pageSize = perPage;
-    }
-
-    if (sortOrders.length) {
-      searchCriteria.sortOrders = sortOrders;
-    }
-
-    const response = await this.getForIntegration(path, {
-      includeSubcategories,
-      withAttributeFilters,
-      searchCriteria
-    });
-
-    return this.convertList(response, this.session.currency);
-  }
-
-  /**
-   * Process data from listing endpoint
-   * @param {object} response response from Magento2 backend
-   * @param {string} currency selected currency
-   * @returns {object} - processed response
-   */
-  convertList(response = {}, currency = null) {
-    const { items = [], custom_attributes: attributes } = response;
-
-    if (attributes) {
-      this.reduceProduct(response, currency);
-    }
-
-    items.forEach(element => {
-      // If product
-      if (element.sku) {
-        this.reduceProduct(element, currency);
-      }
-
-      // If category
-      if (element.level) {
-        this.convertCategory(element);
-      }
-    });
-
-    return response;
-  }
-
-  /**
    * Reduce product data to what is needed.
    * @param {object} data API response from Magento2 backend
    * @param {string} currency currency code
@@ -561,8 +495,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     this.convertAttributesSet(data);
     data = this.convertKeys(data);
 
-    const { customAttributes = {} } = data;
-
     const resolveGallery = product => {
       const { extensionAttributes: attrs, mediaGallerySizes } = product;
       if (attrs && attrs.mediaGallerySizes) {
@@ -571,16 +503,16 @@ module.exports = class Magento2Api extends Magento2ApiBase {
 
       return mediaGallerySizes || [];
     };
-
+    const { customAttributes = {} } = data;
     const result = {
       ...data,
       id: data.id || data.sku, // temporary workaround until Magento returns product id correctly
       sku: data.sku,
-      urlPath: this.convertPathToUrl(data.urlPath),
+      urlPath: this.convertPathToUrl(data.urlPath || customAttributes.urlKey),
       currency,
       name: htmlHelpers.stripHtml(data.name),
       description: customAttributes.description,
-      thumbnail: data.image,
+      thumbnail: data.image || customAttributes.image,
       gallery: resolveGallery(data),
       seo: {
         title: customAttributes.metaTitle,
@@ -599,7 +531,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         result.stock = pick(stockItem, 'qty', 'isInStock');
       }
 
-      result.configurableOptions = configurableProductOptions || [];
+      result.options = configurableProductOptions || [];
 
       if (bundleProductOptions) {
         // remove extension attributes for option product links
@@ -627,7 +559,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     const { price } = parent;
 
     return {
-      regular: tryParseNumber(price.regularPrice) || 0.0,
+      regular: tryParseNumber(price.regularPrice) || tryParseNumber(price) || 0.0,
       special: tryParseNumber(price.specialPrice),
       minTier: tryParseNumber(price.minTierPrice)
     };
@@ -658,14 +590,14 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   }
 
   /**
-   * Resolve Configurable Product Options from Product
+   * Resolve Product Options from Product
    * @param {object} parent parent (MagentoProduct or MagentoProductListItem)
    * @param {object} args arguments
    * @param {object} context context
    * @param {object} info info
-   * @returns {ConfigurableProductOption} configurable product options
+   * @returns {ProductOption} product options
    */
-  async configurableProductOptions(parent, args, context, info) {
+  async productOptions(parent, args, context, info) {
     // a parent could be an item of Magento Product List, which does not contain necessary data, so we need to fetch Product by its id
     const data = typeResolverPathToString(info.path).startsWith('category.products')
       ? await this.fetchProduct(parent.id)
@@ -765,21 +697,26 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       }
     };
 
-    if (input.configurableOptions) {
+    if (input.options) {
       product.cart_item.product_option = {
         extension_attributes: {
-          configurable_item_options: input.configurableOptions.map(item => ({
-            option_id: item.optionId,
+          configurable_item_options: input.options.map(item => ({
+            option_id: item.id,
             option_value: item.value
           }))
         }
       };
     }
 
+    // TODO: I think we should do `Array.isArray(input.bundleOptions) && input.bundleOptions.length` instead
     if (input.bundleOptions) {
       product.cart_item.product_option = {
         extension_attributes: {
-          bundle_options: input.bundleOptions
+          bundle_options: input.bundleOptions.map(x => ({
+            option_id: x.id,
+            option_qty: x.qty,
+            option_selections: x.selections
+          }))
         }
       };
     }
@@ -956,12 +893,11 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   }
 
   /**
-   * Fetch country data
+   * Fetch country list
    * @returns {CountryList} parsed country list
    */
-  async countries() {
+  async countryList() {
     const response = await this.getAuth('/directory/countries', {}, { context: { isAuthRequired: false } });
-
     const countries = response.map(item => ({
       code: item.id,
       englishName: item.full_name_english,
@@ -1129,26 +1065,26 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   }
 
   /**
-   * Fetch collection of customer orders
+   * Fetch customers order list
    * @param {object} obj Parent object
    * @param {object} params request params
    * @param {object} params.query request query params
    * @param {number} params.query.page pagination page
    * @param {number} params.query.perPage number of items per page
-   * @returns {Orders} parsed orders with pagination info
+   * @returns {OrderList} parsed orders with pagination info
    */
-  async orders(obj, params) {
+  async orderList(obj, params) {
     const { pagination = { perPage: this.perPage, page: 1 } } = params;
-
-    const query = this.createSearchParams({
+    const searchCriteria = this.createSearchCriteria({
       pagination,
       sort: { field: 'created_at', direction: 'desc' }
     });
+    const response = await this.getForCustomer('/falcon/orders/mine', { searchCriteria }, { context: { pagination } });
 
-    const response = await this.getForCustomer('/falcon/orders/mine', query, { context: { pagination } });
-    const result = this.convertKeys(response);
-
-    return result;
+    return {
+      ...response,
+      items: response.items.map(x => this.reduceOrder(x))
+    };
   }
 
   /**
@@ -1166,9 +1102,8 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       throw new Error('Failed to load an order.');
     }
 
-    const result = await this.getForCustomer(`/falcon/orders/${id}/order-info`);
-
-    return this.convertOrder(result);
+    const response = await this.getForCustomer(`/falcon/orders/${id}/order-info`);
+    return this.reduceOrder(response);
   }
 
   /**
@@ -1176,28 +1111,20 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {object} response response from Magento2 backend
    * @returns {Order} processed order
    */
-  convertOrder(response) {
-    if (!response || isEmpty(response)) {
-      return response;
-    }
-
+  reduceOrder(response) {
     const order = this.convertKeys(response);
-    order.items = this.convertItemsResponse(order.items);
-    response = this.convertTotals(order);
 
-    const { extensionAttributes, payment } = order;
+    const { extensionAttributes = {}, payment = {}, entityId, incrementId, items, ...orderRest } = order;
+    const result = {
+      ...orderRest,
+      id: entityId,
+      referenceNo: incrementId,
+      items: this.convertItemsResponse(items),
+      shippingAddress: extensionAttributes.shippingAddress,
+      paymentMethodName: payment.extensionAttributes ? payment.extensionAttributes.methodName : undefined
+    };
 
-    if (extensionAttributes) {
-      order.shippingAddress = extensionAttributes.shippingAddress;
-      delete order.extensionAttributes;
-    }
-
-    if (payment && payment.extensionAttributes) {
-      order.paymentMethodName = payment.extensionAttributes.methodName;
-      delete order.payment;
-    }
-
-    return order;
+    return result;
   }
 
   /**
@@ -1211,41 +1138,19 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     return products.map(item => {
       // If product is configurable ask for parent_item price otherwise price is equal to 0
       const product = item.parentItem || item;
+      const { urlPath, options, extensionAttributes } = product;
 
-      product.itemOptions = product.options ? JSON.parse(product.options) : [];
-      product.qty = product.qtyOrdered;
-      product.rowTotalInclTax = product.basePriceInclTax;
-      product.link = this.convertPathToUrl(product.urlPath);
-      product.thumbnailUrl = product.extensionAttributes.thumbnailUrl;
+      const result = {
+        ...product,
+        itemOptions: options ? JSON.parse(options) : [],
+        qty: product.qtyOrdered,
+        rowTotalInclTax: product.basePriceInclTax,
+        link: this.convertPathToUrl(urlPath),
+        thumbnailUrl: extensionAttributes ? extensionAttributes.thumbnailUrl : undefined
+      };
 
-      return product;
+      return result;
     });
-  }
-
-  /**
-   * Process cart totals data
-   * @param {object} response totals response from Magento2 backend
-   * @returns {object} processed response
-   */
-  convertTotals(response) {
-    let totalsData = response;
-    totalsData = this.convertKeys(totalsData);
-
-    const { totalSegments } = totalsData;
-
-    if (totalSegments) {
-      const discountIndex = totalSegments.findIndex(item => item.code === 'discount');
-
-      // todo: Remove it and manage totals order in m2 admin panel
-      if (discountIndex !== -1) {
-        const discountSegment = totalSegments[discountIndex];
-
-        totalSegments.splice(discountIndex, 1);
-        totalSegments.splice(1, 0, discountSegment);
-      }
-    }
-
-    return totalsData;
   }
 
   /**
@@ -1339,7 +1244,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * Request customer addresses
    * @returns {Promise<AddressList>} requested addresses data
    */
-  async addresses() {
+  async addressList() {
     const response = await this.getForCustomer('/falcon/customers/me/address');
     const items = response.items || [];
 
@@ -1377,7 +1282,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {number} params.id address id
    * @returns {boolean} true when removed successfully
    */
-  async removeCustomerAddress(obj, { id }) {
+  async removeAddress(obj, { id }) {
     return this.deleteForCustomer(`/falcon/customers/me/address/${id}`);
   }
 
@@ -1392,13 +1297,13 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     const { token } = params;
 
     try {
-      return this.getAuth(`/falcon/customers/0/password/resetLinkToken/${token}`);
+      // TODO: we need to get customer ID by its email and pass it instead of `0`
+      return this.getForIntegration(`/customers/0/password/resetLinkToken/${token}`);
     } catch (e) {
-      // todo: use new version of error handler
+      // TODO: use new version of error handler
       e.userMessage = true;
       e.noLogging = true;
-
-      // todo check why there's no throw here
+      // TODO: check why there's no throw here
     }
   }
 
@@ -1409,7 +1314,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {string} input.email user email
    * @returns {Promise<boolean>} always true to avoid spying for registered emails
    */
-  async requestCustomerPasswordResetToken(obj, { input }) {
+  async requestPasswordReset(obj, { input }) {
     const { email } = input;
     await this.putAuth('/customers/password', { email, template: 'email_reset' });
     return true;
@@ -1424,7 +1329,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {string} input.password new password to set
    * @returns {Promise<boolean>} true on success
    */
-  async resetCustomerPassword(obj, { input }) {
+  async resetPassword(obj, { input }) {
     const { resetToken, password: newPassword } = input;
     return this.putAuth('/falcon/customers/password/reset', { email: '', resetToken, newPassword });
   }
@@ -1569,7 +1474,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   /**
    * Sets shipping method for the order
    * @param {object} obj Parent object
-   * @param {ShippingInput} input shipping configuration
+   * @param {SetShippingInput} input shipping configuration
    * @returns {Promise<ShippingInformation>} shipping configuration info
    */
   async setShipping(obj, { input }) {

@@ -12,5 +12,7 @@ module.exports = {
   i18n: {
     resourcePackages: ['@deity/falcon-i18n']
   },
-  moduleOverride: {}
+  moduleOverride: {
+    '@deity/falcon-data/dist/Query/Loader': '@deity/falcon-ui-kit/dist/Loader/Loader'
+  }
 };

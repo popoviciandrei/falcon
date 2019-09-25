@@ -71,7 +71,7 @@ function getBabelLoaderOptions(babelRcPath) {
 /**
  * @param {'web' | 'node' } target
  * @param {'development' | 'production'} env
- * @param {Object} cssLoaderOptions
+ * @param {object} cssLoaderOptions
  */
 function getStyleLoaders(target, env, cssLoaderOptions) {
   const { minimize, ...restOptions } = cssLoaderOptions;
@@ -134,7 +134,7 @@ function getStyleLoaders(target, env, cssLoaderOptions) {
  * Webpack configuration factory. It's the juice!
  * @param {'web' | 'node' } target
  * @param {CreateWebpackOptions} options
- * @returns {Object} webpack configuration
+ * @returns {object} webpack configuration
  */
 module.exports = (target = 'web', options) => {
   options = { ...options, publicPath: options.publicPath || '/' };
@@ -368,6 +368,10 @@ module.exports = (target = 'web', options) => {
             enforce: true,
             chunks: 'initial',
             test: moduleFilter([
+              '@apollo/react-common',
+              '@apollo/react-hoc',
+              '@apollo/react-hooks',
+              '@apollo/react-components',
               'apollo-cache-inmemory',
               'apollo-client',
               'apollo-link',

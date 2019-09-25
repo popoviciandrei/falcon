@@ -4,7 +4,6 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import fetch from 'node-fetch';
 import deepMerge from 'deepmerge';
-import { resolvers } from './resolvers';
 
 /**
  * @typedef {object} FalconApolloClientConfig
@@ -35,7 +34,6 @@ export function ApolloClient(config = {}) {
     apolloClientConfig,
     cache
   } = config;
-  clientState.resolvers = deepMerge(clientState.resolvers, resolvers);
   const { httpLink, connectToDevTools, ...restApolloClientConfig } = apolloClientConfig;
 
   const inMemoryCache = cache || new InMemoryCache().restore(initialState);
@@ -62,7 +60,12 @@ export function ApolloClient(config = {}) {
           cache: inMemoryCache,
           link: ApolloLink.from([...extraLinks, apolloHttpLink]),
           connectToDevTools: isBrowser && connectToDevTools,
-          resolvers: clientState.resolvers
+          resolvers: clientState.resolvers,
+          defaultOptions: {
+            mutate: {
+              awaitRefetchQueries: true
+            }
+          }
         },
         restApolloClientConfig
       ],

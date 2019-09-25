@@ -31,7 +31,7 @@ const DEFAULT_TAG_TTL: number = 60 * 60; // 1 hour
 /**
  * Cache-wrapper with extended methods
  */
-export default class Cache<V = any> implements KeyValueCache<V> {
+export class Cache<V = any> implements KeyValueCache<V> {
   protected activeGetRequests: Map<string, Promise<V>> = new Map();
 
   constructor(public provider: KeyValueCache<string>, protected tagTtl: number = DEFAULT_TAG_TTL) {}
@@ -42,9 +42,9 @@ export default class Cache<V = any> implements KeyValueCache<V> {
 
   /**
    * Returns cached value for the provided key and setOptions object
-   * @param key Cache key
-   * @param setOptions Object with params to fetch the data to be cached
-   * @returns Cached value
+   * @param {string} key Cache key
+   * @param {GetCacheOptions} setOptions Object with params to fetch the data to be cached
+   * @returns {Promise<V>} Cached value
    */
   async get(key: string, setOptions?: GetCacheOptions): Promise<V> {
     if (this.activeGetRequests.has(key)) {

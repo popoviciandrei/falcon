@@ -9,6 +9,7 @@ process.on('uncaughtException', ex => {
 
 const fs = require('fs-extra');
 const { paths } = require('../src/tools');
+const test = require('../src/test');
 
 (async () => {
   const script = process.argv[2];
@@ -17,25 +18,21 @@ const { paths } = require('../src/tools');
   try {
     switch (script) {
       case 'build': {
-        const buildDts = require('../src/build-dts');
-        const buildEsm = require('../src/build-esm');
-        const buildCjs = require('../src/build-cjs');
-
-        buildDts({ packagePath });
-        buildEsm({ packagePath });
-        await buildCjs.main({ packagePath });
-
-        if (fs.existsSync(paths.pkgBinSrc)) {
-          await buildCjs.bin({ packagePath });
-        }
+        await Promise.all(
+          [
+            require('../src/build-dts').build({ packagePath }),
+            require('../src/build-esm').build({ packagePath }),
+            require('../src/build-cjs').main({ packagePath }),
+            fs.existsSync(paths.pkgBinSrc) && require('../src/build-cjs').bin({ packagePath })
+          ].filter(x => x)
+        );
 
         break;
       }
 
       case 'watch': {
-        const watchBuild = require('../src/watch-build');
+        await Promise.all([require('../src/build-dts').watch({ packagePath }), require('../src/build-esm').watch()]);
 
-        watchBuild();
         break;
       }
 
@@ -47,16 +44,12 @@ const { paths } = require('../src/tools');
       }
 
       case 'test': {
-        const watchTest = require('../src/watch-test');
-
-        await watchTest({ packagePath });
+        await test.watch({ packagePath });
         break;
       }
 
       case 'test:coverage': {
-        const testCoverage = require('../src/test-coverage');
-
-        await testCoverage({ packagePath });
+        await test.coverage({ packagePath });
         break;
       }
 

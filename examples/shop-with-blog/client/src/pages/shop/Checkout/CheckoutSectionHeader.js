@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, H2, Button, Summary, Icon } from '@deity/falcon-ui';
-import { toGridTemplate } from '@deity/falcon-ecommerce-uikit';
+import { toGridTemplate } from '@deity/falcon-ui-kit';
 
 const ignoreClick = ev => ev.preventDefault();
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { FlexLayout, Checkbox, Label, Details, DetailsContent, Button } from '@deity/falcon-ui';
 import { T } from '@deity/falcon-i18n';
-import { AddressDetails } from '@deity/falcon-ecommerce-uikit';
+import { FlexLayout, Checkbox, Label, Details, DetailsContent, Button } from '@deity/falcon-ui';
+import { AddressDetails } from '@deity/falcon-ui-kit';
 import AddressForm from '../components/AddressForm';
 import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';
