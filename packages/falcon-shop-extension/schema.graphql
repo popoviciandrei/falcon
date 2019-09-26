@@ -4,6 +4,7 @@ extend type Query {
   product(id: ID!): Product @cache(ttl: 5)
   productList(input: ProductListInput): ProductList!
   cart: Cart!
+  country(id: ID!): Country
   countryList: CountryList!
   lastOrder: Order @cacheInvalidator(idPath: [{ path: "items", type: "Product" }])
   order(id: ID!): Order
