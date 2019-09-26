@@ -617,6 +617,7 @@ type Region {
 }
 
 type Country {
+  id: ID
   code: String!
   englishName: String
   localName: String
