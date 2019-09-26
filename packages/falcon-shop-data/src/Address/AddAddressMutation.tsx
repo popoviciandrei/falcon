@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import { Mutation, OperationInput } from '@deity/falcon-data';
 import { AddAddressInput, Address } from '@deity/falcon-shop-extension';
-import { OperationInput } from '../types';
 
 export const ADD_ADDRESS = gql`
   mutation AddAddress($input: AddAddressInput!) {

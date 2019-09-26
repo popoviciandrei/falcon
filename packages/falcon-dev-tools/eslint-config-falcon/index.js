@@ -1,7 +1,7 @@
 module.exports = {
   parser: 'babel-eslint',
-  extends: ['eslint-config-airbnb', 'plugin:prettier/recommended'],
-  plugins: ['react', 'import', 'prettier', 'jsdoc', 'jsx-a11y'],
+  extends: ['eslint-config-airbnb', 'eslint-config-prettier'],
+  plugins: ['react', 'import', 'eslint-plugin-prettier', 'jsdoc', 'jsx-a11y'],
   settings: {
     'import/parser': 'babel-eslint',
     'import/resolver': { node: true },
@@ -83,7 +83,7 @@ module.exports = {
     'jsdoc/newline-after-description': [1, 'never'],
     'jsdoc/require-param': 1,
     'jsdoc/require-param-name': 1,
-    'jsdoc/require-param-type': 1,
+    'jsdoc/require-param-type': 'off',
     'jsdoc/require-returns-check': 1,
     'jsdoc/require-returns-type': 1
   },

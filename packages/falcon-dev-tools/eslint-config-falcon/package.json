@@ -1,12 +1,12 @@
 {
   "name": "@deity/eslint-config-falcon",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "license": "OSL-3.0",
-  "main": "index.js",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-dev-tools/eslint-config-falcon",
   "publishConfig": {
     "access": "public"
   },
+  "main": "index.js",
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "1.13.0",
     "@typescript-eslint/parser": "1.13.0",

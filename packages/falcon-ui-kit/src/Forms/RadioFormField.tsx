@@ -1,10 +1,9 @@
 import React from 'react';
+import { Field, getDefaultInputValidators } from '@deity/falcon-front-kit';
 import { Box, Label, Radio, FlexLayout, extractThemableProps, themed } from '@deity/falcon-ui';
 import { toGridTemplate } from '../helpers';
-import { Field } from './Field';
 import { FormFieldProps } from './FormField';
 import { FormFieldArea } from './FormFieldLayout';
-import { requiredValidator, getDefaultInputTypeValidator } from './validators';
 
 export const RadioFormFieldLayout = themed({
   tag: Box,
@@ -26,18 +25,8 @@ export const RadioFormField: React.SFC<FormFieldProps> = props => {
   const { name, value, validate, required, children, ...restProps } = props;
   const { themableProps, rest } = extractThemableProps(restProps);
 
-  // eslint-disable-next-line
-  let validators = validate || [];
-  if (required) {
-    validators.unshift(requiredValidator);
-  }
-  const defaultInputTypeValidator = !validate && getDefaultInputTypeValidator(restProps.type);
-  if (defaultInputTypeValidator) {
-    validators.push(defaultInputTypeValidator);
-  }
-
   return (
-    <Field name={name} validate={validators} {...rest}>
+    <Field name={name} validate={getDefaultInputValidators(props)} {...rest}>
       {({ field, label }) => (
         <RadioFormFieldLayout {...themableProps}>
           <Radio {...field} value={value} checked={value === field.value} gridArea={FormFieldArea.input} />

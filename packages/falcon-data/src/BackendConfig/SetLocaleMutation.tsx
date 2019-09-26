@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import { Mutation } from '../Mutation';
+import { BackendConfig } from './BackendConfigQuery';
 
 export const SET_LOCALE = gql`
   mutation SetLocale($locale: String!) {
@@ -10,16 +11,14 @@ export const SET_LOCALE = gql`
 `;
 
 export type SetLocaleResponse = {
-  setLocale: {
-    activeLocale: string;
-  };
+  setLocale: Pick<BackendConfig, 'activeLocale'>;
 };
 
-export type SetLocaleVariables = {
+export type SetLocaleInput = {
   locale: string;
 };
 
-export class SetLocaleMutation extends Mutation<SetLocaleResponse, SetLocaleVariables> {
+export class SetLocaleMutation extends Mutation<SetLocaleResponse, SetLocaleInput> {
   static defaultProps = {
     mutation: SET_LOCALE,
     refetchQueries: ['BackendConfig']

@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import { Mutation, OperationInput } from '@deity/falcon-data';
 import { AddToCartInput, CartItemPayload } from '@deity/falcon-shop-extension';
-import { OperationInput } from '../types';
 
 export const ADD_TO_CART = gql`
   mutation AddToCart($input: AddToCartInput!) {

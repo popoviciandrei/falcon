@@ -11,10 +11,10 @@ const AddressBook = () => (
       <T id="addressBook.title" />
     </H1>
     <AddressListQuery>
-      {({ addressList: { items } }) => {
-        const billing = items.find(x => x.defaultBilling);
-        const shipping = items.find(x => x.defaultShipping);
-        const rest = items.filter(x => !x.defaultBilling && !x.defaultShipping) || [];
+      {({ data: { addressList } }) => {
+        const billing = addressList.items.find(x => x.defaultBilling);
+        const shipping = addressList.items.find(x => x.defaultShipping);
+        const rest = addressList.items.filter(x => !x.defaultBilling && !x.defaultShipping) || [];
         const anyDefaults = billing || shipping;
         const defaultsEqual = (billing && billing.id) === (shipping && shipping.id);
         const anyRest = rest.length > 0;

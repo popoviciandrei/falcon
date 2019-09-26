@@ -1,9 +1,9 @@
 const url = require('url');
-const { ApiDataSource, htmlHelpers } = require('@deity/falcon-server-env');
 const qs = require('qs');
 const pick = require('lodash/pick');
 const isEmpty = require('lodash/isEmpty');
 const isObject = require('lodash/isObject');
+const { ApiDataSource, htmlHelpers } = require('@deity/falcon-server-env');
 
 module.exports = class WordpressApi extends ApiDataSource {
   constructor(params) {
@@ -131,9 +131,9 @@ module.exports = class WordpressApi extends ApiDataSource {
    * @param {object} args arguments
    * @param {object} args.query Query object
    * @param {object} args.pagination Pagination
-   * @returns {object[]} posts data
+   * @returns {object[]} blog post list
    */
-  async blogPosts(_, { query, pagination }) {
+  async blogPostList(_, { query, pagination }) {
     const payload = {
       ...query
     };

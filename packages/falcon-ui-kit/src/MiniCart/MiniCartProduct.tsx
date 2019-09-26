@@ -66,7 +66,7 @@ export const MiniCartProduct: React.SFC<any> = ({ product }) => (
                 min="1"
                 name="qty"
                 value={product.qty}
-                aria-label={t('product.quantity')}
+                aria-label={t('product.qtyFieldLabel')}
                 onChange={ev =>
                   updateCartItem({
                     variables: {

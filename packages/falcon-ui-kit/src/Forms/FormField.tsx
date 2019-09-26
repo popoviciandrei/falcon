@@ -1,11 +1,10 @@
 import React from 'react';
 import { FieldProps as FormikFieldProps } from 'formik';
+import { Field, IValidator, getDefaultInputValidators } from '@deity/falcon-front-kit';
 import { Input, extractThemableProps, ThemedComponentProps } from '@deity/falcon-ui';
-import { Field } from './Field';
 import { FormFieldLabel } from './FormFieldLabel';
 import { FormFieldError } from './FormFieldError';
 import { FormFieldArea, FormFieldLayout } from './FormFieldLayout';
-import { Validator, requiredValidator, getDefaultInputTypeValidator } from './validators';
 
 export type FormFieldRenderProps<TValue = any> = {
   form: FormikFieldProps<TValue>['form'] & {
@@ -25,7 +24,7 @@ export type FormFieldProps<TValue = any> = {
   name: string;
   label?: string;
   placeholder?: string;
-  validate?: Validator[];
+  validate?: IValidator[];
   children?: (props: FormFieldRenderProps<TValue>) => React.ReactNode;
 } & React.InputHTMLAttributes<HTMLInputElement> &
   ThemedComponentProps;
@@ -34,18 +33,8 @@ export const FormField: React.SFC<FormFieldProps> = props => {
   const { name, validate, required, children, ...restProps } = props;
   const { themableProps, rest } = extractThemableProps(restProps);
 
-  // eslint-disable-next-line
-  let validators = validate || [];
-  if (required) {
-    validators.unshift(requiredValidator);
-  }
-  const defaultInputTypeValidator = !validate && getDefaultInputTypeValidator(restProps.type);
-  if (defaultInputTypeValidator) {
-    validators.push(defaultInputTypeValidator);
-  }
-
   return (
-    <Field name={name} validate={validators} {...rest}>
+    <Field name={name} validate={getDefaultInputValidators(props)} {...rest}>
       {({ form, field, label, error }) => (
         <FormFieldLayout {...themableProps}>
           {label && <FormFieldLabel htmlFor={field.id}>{label}</FormFieldLabel>}

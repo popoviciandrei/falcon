@@ -27,8 +27,8 @@ export class ProtectedRoute extends React.Component<ProtectedRouteProps> {
         {...rest}
         render={props => (
           <IsAuthenticatedQuery>
-            {({ customer }) => {
-              if (customer) {
+            {({ data }) => {
+              if (data.customer) {
                 return <Component {...props} />;
               }
 

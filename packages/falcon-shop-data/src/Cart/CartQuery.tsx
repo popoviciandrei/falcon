@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { CartItem, CartItemOption, CartTotal } from '@deity/falcon-shop-extension';
+import { Cart, CartItem, CartItemOption } from '@deity/falcon-shop-extension';
 import { Query } from '@deity/falcon-data';
 
 export const GET_CART = gql`
@@ -31,11 +31,7 @@ export const GET_CART = gql`
 `;
 
 export type CartResponse = {
-  cart: {
-    itemsQty: number;
-    quoteCurrency: string;
-    couponCode: string;
-    totals: CartTotal[];
+  cart: Pick<Cart, 'itemsQty' | 'itemsCount' | 'quoteCurrency' | 'couponCode' | 'totals'> & {
     items: Pick<CartItem, 'itemId' | 'sku' | 'qty' | 'name' | 'price' | 'rowTotalInclTax' | 'thumbnailUrl'> & {
       itemOptions: Pick<CartItemOption, 'label' | 'value'>[];
     };

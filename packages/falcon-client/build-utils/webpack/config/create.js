@@ -368,6 +368,10 @@ module.exports = (target = 'web', options) => {
             enforce: true,
             chunks: 'initial',
             test: moduleFilter([
+              '@apollo/react-common',
+              '@apollo/react-hoc',
+              '@apollo/react-hooks',
+              '@apollo/react-components',
               'apollo-cache-inmemory',
               'apollo-client',
               'apollo-link',

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import { adopt } from 'react-adopt';
-import { ApplyCouponMutation, CancelCouponMutation } from '@deity/falcon-ecommerce-uikit';
+import { ApplyCouponMutation, CancelCouponMutation } from '@deity/falcon-shop-data';
 import { toGridTemplate } from '@deity/falcon-ui-kit';
 import { Box, Input, Button, Text, Icon } from '@deity/falcon-ui';
 import { I18n } from '@deity/falcon-i18n';
@@ -26,8 +26,8 @@ const cartSummaryLayout = {
     gridTemplate: {
       xs: toGridTemplate([
         ['1fr'                    ],
-        [CartSummaryArea.coupon   ], 
-        [CartSummaryArea.divider  ], 
+        [CartSummaryArea.coupon   ],
+        [CartSummaryArea.divider  ],
         [CartSummaryArea.totals   ]
       ]),
       md: toGridTemplate([
@@ -100,7 +100,7 @@ const CartSummary = ({ totals, couponCode }) => (
                     name="couponCode"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    defaultValue={couponCode}
+                    defaultValue={couponCode || ''}
                   />
                   <Button
                     type="submit"

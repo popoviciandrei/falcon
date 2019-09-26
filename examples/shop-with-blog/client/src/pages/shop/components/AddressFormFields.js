@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   CheckboxFormField,
-  CountrySelector,
+  CountryPicker,
   TwoColumnsLayout,
   TwoColumnsLayoutArea,
-  CountriesQuery
-} from '@deity/falcon-ecommerce-uikit';
-import { FormField } from '@deity/falcon-ui-kit';
+  FormField
+} from '@deity/falcon-ui-kit';
+import { CountryListQuery } from '@deity/falcon-shop-data';
 import { Box, GridLayout } from '@deity/falcon-ui';
 
 const AddressFormFields = props => {
@@ -36,12 +36,10 @@ const AddressFormFields = props => {
         <FormField name="postcode" required autoComplete={getAutoComplete('postal-code')} />
         <FormField name="city" required autoComplete={getAutoComplete('address-level2')} />
         <FormField name="countryId" required autoComplete={getAutoComplete('country')}>
-          {({ form, field }) => (
-            <CountriesQuery passLoading>
-              {({ countries = { items: [] } }) => (
-                <CountrySelector {...field} items={countries.items} onChange={x => form.setFieldValue(field.name, x)} />
-              )}
-            </CountriesQuery>
+          {({ field }) => (
+            <CountryListQuery passLoading>
+              {({ data }) => <CountryPicker {...field} options={data ? data.countryList.items : []} />}
+            </CountryListQuery>
           )}
         </FormField>
       </GridLayout>

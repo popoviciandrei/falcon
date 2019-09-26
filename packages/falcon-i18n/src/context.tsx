@@ -6,6 +6,8 @@ export const defaultOptions = {
   rerenderOn: ['languageChanged', 'loaded', 'added', 'removed']
 };
 
+export type TranslationFunction = i18next.TranslationFunction;
+
 export type I18nContextValue = {
   updatedAt: Date;
   i18n: i18next.i18n;

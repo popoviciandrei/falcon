@@ -27,8 +27,8 @@ export class OnlyUnauthenticatedRoute extends React.Component<OnlyUnauthenticate
         {...rest}
         render={props => (
           <IsAuthenticatedQuery>
-            {({ customer }) =>
-              customer ? (
+            {({ data }) =>
+              data.customer ? (
                 <Redirect
                   to={{
                     pathname: redirectTo

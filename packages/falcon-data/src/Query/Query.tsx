@@ -1,24 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Query as ApolloQuery, OperationVariables, QueryProps as ApolloQueryProps, QueryResult } from 'react-apollo';
-import { NetworkStatus, ApolloError } from 'apollo-client';
+import { OperationVariables, QueryResult } from '@apollo/react-common';
+import { Query as ApolloQuery, QueryComponentOptions } from '@apollo/react-components';
+import { NetworkStatus } from 'apollo-client';
 import { Loader } from './Loader';
-import { Omit } from '../types';
+import { Error } from './Error';
 
 export type ApolloFetchMore<TData, TVariables> = QueryResult<TData, TVariables>['fetchMore'];
 export type FetchMore<TData, TVariables> = (data: TData, fetchMore: ApolloFetchMore<TData, TVariables>) => any;
 
-export type QueryRenderProps<TData = any> = TData & {
-  loading: boolean;
-  networkStatus: NetworkStatus;
+export type QueryRenderProps<TData = any, TVariables = OperationVariables> = Omit<
+  QueryResult<TData, TVariables>,
+  'fetchMore'
+> & {
   fetchMore: (() => any) | undefined;
 };
 
-export type QueryProps<TData, TVariables> = Omit<ApolloQueryProps<TData, TVariables>, 'children'> & {
-  children: (result: QueryRenderProps<TData>) => React.ReactNode;
+export type QueryProps<TData, TVariables> = QueryComponentOptions<TData, TVariables> & {
   fetchMore?: FetchMore<TData, TVariables>;
   passLoading?: boolean;
-  variables?: TVariables | any;
+  passError?: boolean;
 };
 
 export class Query<TData = any, TVariables = OperationVariables> extends React.Component<
@@ -26,50 +27,31 @@ export class Query<TData = any, TVariables = OperationVariables> extends React.C
 > {
   static propTypes = {
     ...ApolloQuery.propTypes,
-    loader: PropTypes.bool
+    passLoading: PropTypes.bool,
+    passError: PropTypes.bool
   };
 
-  getErrorCode(error?: ApolloError): string | undefined {
-    if (error) {
-      const { graphQLErrors } = error;
-      if (Array.isArray(graphQLErrors) && graphQLErrors.length > 0) {
-        const { extensions = {} } = graphQLErrors[0];
-        const { code } = extensions;
-
-        return code;
-      }
-    }
-
-    return undefined;
-  }
-
   render() {
-    const { children, fetchMore, passLoading, ...restProps } = this.props;
+    const { children, fetchMore, passLoading, passError, ...restProps } = this.props;
 
     return (
       <ApolloQuery {...restProps}>
-        {({ networkStatus, error, data, loading, fetchMore: apolloFetchMore }) => {
-          if (error) {
-            const errorCode = this.getErrorCode(error);
-            // TODO: add passErrors property or check if errorPolicy === 'all' and pass thru render props all extracted/formated errors with errorcodes instead of inline error message
-            return (
-              <p>
-                {`Error!: ${errorCode}`}
-                <br /> {`${error}`}
-              </p>
-            );
+        {(result: QueryResult<TData, TVariables>) => {
+          const { networkStatus, error, data } = result;
+
+          if (!passError && error) {
+            return <Error error={error} />;
           }
 
-          loading = networkStatus === NetworkStatus.loading || (networkStatus !== NetworkStatus.fetchMore && loading);
+          const loading =
+            networkStatus === NetworkStatus.loading || (networkStatus !== NetworkStatus.fetchMore && result.loading);
           if (!passLoading && loading) {
             return <Loader />;
           }
 
           return children({
-            ...data!,
-            loading,
-            networkStatus,
-            fetchMore: fetchMore ? () => fetchMore(data!, apolloFetchMore) : undefined
+            ...result,
+            fetchMore: fetchMore ? () => fetchMore(data!, result.fetchMore) : undefined
           });
         }}
       </ApolloQuery>

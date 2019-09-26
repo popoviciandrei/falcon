@@ -1,33 +1,16 @@
-import fs from 'fs';
-import path from 'path';
-import { Extension } from '@deity/falcon-server-env';
-
-const typeDefs = fs.readFileSync(path.resolve(__dirname, '../src/schema.graphql'), 'utf8');
-
 export * from './types';
-export const Schema = typeDefs;
 
 /**
- * Extension that implements shop features
+ * Shop Extension
  */
-export default class Shop extends Extension {
-  async getGraphQLConfig() {
-    const gqlConfig = await super.getGraphQLConfig(typeDefs);
-
-    Object.assign(gqlConfig.resolvers, {
-      PlaceOrderResult: {
-        __resolveType: obj => (obj.url ? 'PlaceOrder3dSecureResult' : 'PlaceOrderSuccessfulResult')
-      },
-      BackendConfig: {
-        // Returning an empty object to make ShopConfig resolvers work
-        shop: () => ({})
-      },
-      ShopConfig: {
-        activeCurrency: (_, __, context) => this.getApiSession(context).currency,
-        activeStore: (_, __, context) => this.getApiSession(context).storeCode
-      }
-    });
-
-    return gqlConfig;
+export default () => ({
+  resolvers: {
+    PlaceOrderResult: {
+      __resolveType: ({ url }) => (url ? 'PlaceOrder3dSecureResult' : 'PlaceOrderSuccessfulResult')
+    },
+    BackendConfig: {
+      // Returning an empty object to make ShopConfig resolvers work
+      shop: () => ({})
+    }
   }
-}
+});

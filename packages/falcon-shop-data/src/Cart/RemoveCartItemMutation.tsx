@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import { Mutation, OperationInput } from '@deity/falcon-data';
 import { RemoveCartItemInput, RemoveCartItemPayload } from '@deity/falcon-shop-extension';
-import { OperationInput } from '../types';
 import { GET_CART } from './CartQuery';
 
 export const REMOVE_CART_ITEM = gql`

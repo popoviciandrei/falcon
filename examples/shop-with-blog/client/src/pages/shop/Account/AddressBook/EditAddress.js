@@ -3,7 +3,8 @@ import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import { T } from '@deity/falcon-i18n';
 import { H1, GridLayout, FlexLayout, Button } from '@deity/falcon-ui';
-import { AddressQuery, GET_ADDRESS, EditAddressMutation, Loader, Form } from '@deity/falcon-ecommerce-uikit';
+import { Loader, Form } from '@deity/falcon-ui-kit';
+import { AddressQuery, GET_ADDRESS, EditAddressMutation } from '@deity/falcon-shop-data';
 import AddressFormFields from '../../components/AddressFormFields';
 import ErrorList from '../../components/ErrorList';
 

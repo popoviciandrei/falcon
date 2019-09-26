@@ -25,7 +25,7 @@ export const LocaleProvider: React.SFC<LocaleProviderProps> = ({
   ...props
 }) => (
   <BackendConfigQuery>
-    {({ backendConfig }) => {
+    {({ data: { backendConfig } }) => {
       const { activeLocale, shop } = backendConfig;
 
       const locale = activeLocale || 'en';

@@ -3,7 +3,7 @@ import { Query } from '@deity/falcon-data';
 import { Address } from '@deity/falcon-shop-extension';
 
 export const GET_ADDRESS = gql`
-  query Address($id: Int!) {
+  query Address($id: ID!) {
     address(id: $id) {
       id
       firstname

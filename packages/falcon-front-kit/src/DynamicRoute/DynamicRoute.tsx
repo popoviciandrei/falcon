@@ -28,7 +28,7 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
 
         return (
           <UrlQuery variables={{ path }}>
-            {({ url }) => {
+            {({ data: { url } }) => {
               if (!url) {
                 const NotFound = notFound;
 
@@ -54,6 +54,6 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
 };
 DynamicRoute.propTypes = {
   location: PropTypes.any,
-  components: PropTypes.objectOf(PropTypes.func.isRequired).isRequired,
-  notFound: PropTypes.func.isRequired
+  components: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired).isRequired,
+  notFound: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired
 };

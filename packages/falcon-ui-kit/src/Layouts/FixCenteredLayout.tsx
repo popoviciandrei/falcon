@@ -13,6 +13,8 @@ export const FixCenteredLayout = themed<FixCenteredLayoutProps, {}>({
   },
   defaultTheme: {
     fixCenteredLayout: {
+      display: 'grid',
+      gridGap: 'md',
       css: ({ maxWidth }) => ({
         maxWidth,
         width: '100%',

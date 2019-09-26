@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { FlexLayout, Checkbox, Label, Details, DetailsContent, Button } from '@deity/falcon-ui';
 import { T, I18n } from '@deity/falcon-i18n';
-import { AddressDetails, Form } from '@deity/falcon-ecommerce-uikit';
+import { AddressDetails, Form } from '@deity/falcon-ui-kit';
 import AddressFormFields from '../components/AddressFormFields';
 import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';

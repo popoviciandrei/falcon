@@ -3,6 +3,7 @@
   "appName": "falcon-client-demo",
   "port": 3000,
   "serverSideRendering": true,
+  "proxyEndpoints": ["/rest/(.*)"],
   "i18n": {
     "__typename": "I18nConfig",
     "ns": ["translations"],
