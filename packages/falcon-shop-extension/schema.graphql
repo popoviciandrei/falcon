@@ -14,6 +14,8 @@ extend type Query {
   cmsPage(id: Int, identifier: String): CmsPage
   cmsBlock(identifier: String): CmsBlock
   validatePasswordToken(token: String!): Boolean
+  shippingMethodList(input: ShippingMethodListInput!): [ShippingMethod!]!
+  paymentMethodList(input: PaymentMethodListInput): [PaymentMethod!]!
 }
 
 extend type Mutation {
@@ -34,9 +36,6 @@ extend type Mutation {
   editAddress(input: EditAddressInput!): Address
   addAddress(input: AddAddressInput!): Address
   removeAddress(id: Int!): Boolean
-  estimateShippingMethods(input: EstimateShippingMethodsInput!): [ShippingMethod!]!
-  # set current customer order shipping information
-  setShipping(input: SetShippingInput): SetShippingResult!
   placeOrder(input: PlaceOrderInput!): PlaceOrderResult!
 }
 
@@ -65,27 +64,29 @@ input RequestPasswordResetInput {
 }
 
 input PlaceOrderInput {
-  billingAddress: CheckoutAddressInput
-  email: String
-  paymentMethod: PaymentMethodInput!
+  billingAddress: CheckoutAddressInput!
+  shippingAddress: CheckoutAddressInput!
+  paymentMethod: CheckoutDetailsInput!
+  shippingMethod: CheckoutDetailsInput!
 }
 
-input PaymentMethodInput {
-  method: String
+input CheckoutDetailsInput {
   """
-  Selected payment-specific payload (like encrypted credit card info)
+  Payment or shipping method name, defined by the backend
+  """
+  method: String!
+  """
+  Selected details-specific payload (like encrypted credit card info, shipping carrier code etc)
   """
   additionalData: JSON
 }
 
-input SetShippingInput {
+input PaymentMethodListInput {
   billingAddress: CheckoutAddressInput!
-  shippingAddress: CheckoutAddressInput!
-  shippingCarrierCode: String!
-  shippingMethodCode: String!
+  shippingMethod: String!
 }
 
-input EstimateShippingMethodsInput {
+input ShippingMethodListInput {
   address: CheckoutAddressInput!
 }
 
@@ -153,9 +154,6 @@ input EditCustomerInput {
 
 input CheckoutAddressInput {
   id: ID
-  # legacy from Magento 2 for placeOrder billingAddress input field
-  terms: Boolean
-
   firstname: String!
   lastname: String!
   city: String
@@ -325,11 +323,6 @@ type ShippingMethod {
   priceExclTax: Float!
   priceInclTax: Float!
   currency: String
-}
-
-type SetShippingResult {
-  paymentMethods: [PaymentMethod!]!
-  totals: [CartTotal!]!
 }
 
 type PaymentMethod {
