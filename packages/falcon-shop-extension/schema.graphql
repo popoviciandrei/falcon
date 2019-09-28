@@ -15,7 +15,7 @@ extend type Query {
   cmsBlock(identifier: String): CmsBlock
   validatePasswordToken(token: String!): Boolean
   shippingMethodList(input: ShippingMethodListInput!): [ShippingMethod!]!
-  paymentMethodList(input: PaymentMethodListInput): [PaymentMethod!]!
+  paymentMethodList(input: PaymentMethodListInput!): [PaymentMethod!]!
 }
 
 extend type Mutation {
@@ -76,9 +76,9 @@ input CheckoutDetailsInput {
   """
   method: String!
   """
-  Selected details-specific payload (like encrypted credit card info, shipping carrier code etc)
+  Extra payload data object required by the selected entity (like encrypted credit card info, shipping carrier code etc)
   """
-  additionalData: JSON
+  data: JSON
 }
 
 input PaymentMethodListInput {
