@@ -422,14 +422,15 @@ export type OrderItem = {
 };
 
 export type PlaceOrderInput = {
-  billingAddress?: CheckoutAddressInput;
-  email?: string;
-  paymentMethod: PaymentMethodInput;
+  billingAddress: CheckoutAddressInput;
+  shippingAddress: CheckoutAddressInput;
+  paymentMethod: CheckoutDetailsInput;
+  shippingMethod: CheckoutDetailsInput;
 };
 
-export type PaymentMethodInput = {
+export type CheckoutDetailsInput = {
   method: string;
-  additionalData: object;
+  data: object;
 };
 
 export type PlaceOrderResult = PlaceOrderSuccessfulResult | PlaceOrder3dSecureResult;
@@ -450,7 +451,7 @@ export type PlaceOrder3dSecureField = {
   value?: string;
 };
 
-export type EstimateShippingMethodsInput = {
+export type ShippingMethodListInput = {
   address: CheckoutAddressInput;
 };
 
@@ -465,16 +466,9 @@ export type ShippingMethod = {
   currency?: string;
 };
 
-export type SetShippingInput = {
+export type PaymentMethodListInput = {
   billingAddress: CheckoutAddressInput;
-  shippingAddress: CheckoutAddressInput;
-  shippingCarrierCode: string;
-  shippingMethodCode: string;
-};
-
-export type SetShippingResult = {
-  paymentMethods: PaymentMethod[];
-  totals: CartTotal;
+  shippingMethod: string;
 };
 
 export type PaymentMethod = {
