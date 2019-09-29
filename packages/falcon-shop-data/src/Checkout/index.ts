@@ -1,3 +1,3 @@
 export * from './PlaceOrderMutation';
-export * from './EstimateShippingMethodsMutation';
+export * from './ShippingMethodListQuery';
 export * from './SetShippingMutation';
