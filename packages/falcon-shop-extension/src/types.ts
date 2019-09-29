@@ -1,4 +1,11 @@
-import { Pagination, PaginationInput, Aggregation, SortOrderValue, SortOrder } from '@deity/falcon-data';
+import {
+  Pagination,
+  PaginationInput,
+  Aggregation,
+  SortOrderValue,
+  SortOrder,
+  OperationInput
+} from '@deity/falcon-data';
 
 export type GraphQLBase = {
   __typename?: string;
@@ -453,9 +460,9 @@ export type PlaceOrder3dSecureField = {
   value?: string;
 };
 
-export type ShippingMethodListInput = {
+export type ShippingMethodListInput = OperationInput<{
   address: CheckoutAddressInput;
-};
+}>;
 
 export type ShippingMethod = {
   carrierTitle: string;
@@ -468,10 +475,10 @@ export type ShippingMethod = {
   currency?: string;
 };
 
-export type PaymentMethodListInput = {
+export type PaymentMethodListInput = OperationInput<{
   billingAddress: CheckoutAddressInput;
   shippingMethod: string;
-};
+}>;
 
 export type PaymentMethod = {
   /** Internal Payment method code (like "paypal_express") */

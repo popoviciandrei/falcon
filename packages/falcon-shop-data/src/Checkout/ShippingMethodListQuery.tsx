@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { Query, OperationInput } from '@deity/falcon-data';
+import { Query } from '@deity/falcon-data';
 import { ShippingMethodListInput, ShippingMethod } from '@deity/falcon-shop-extension';
 
 export const SHIPPING_METHOD_LIST = gql`
@@ -21,10 +21,7 @@ export type ShippingMethodListResponse = {
   shippingMethodList: ShippingMethod[];
 };
 
-export class ShippingMethodListQuery extends Query<
-  ShippingMethodListResponse,
-  OperationInput<ShippingMethodListInput>
-> {
+export class ShippingMethodListQuery extends Query<ShippingMethodListResponse, ShippingMethodListInput> {
   static defaultProps = {
     query: SHIPPING_METHOD_LIST
   };

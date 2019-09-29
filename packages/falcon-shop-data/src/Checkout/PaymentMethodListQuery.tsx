@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { Query, OperationInput } from '@deity/falcon-data';
+import { Query } from '@deity/falcon-data';
 import { PaymentMethod, PaymentMethodListInput } from '@deity/falcon-shop-extension';
 
 export const PAYMENT_METHOD_LIST = gql`
@@ -16,7 +16,7 @@ export type PaymentMethodListResponse = {
   paymentMethodList: PaymentMethod[];
 };
 
-export class PaymentMethodListQuery extends Query<PaymentMethodListResponse, OperationInput<PaymentMethodListInput>> {
+export class PaymentMethodListQuery extends Query<PaymentMethodListResponse, PaymentMethodListInput> {
   static defaultProps = {
     query: PAYMENT_METHOD_LIST
   };
