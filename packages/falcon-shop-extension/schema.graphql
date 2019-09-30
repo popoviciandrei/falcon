@@ -295,7 +295,7 @@ type ProductTierPrice {
 
 type Product {
   id: ID!
-  sku: ID!
+  sku: ID! @cacheId
   name: String!
   image: String
   urlPath: String!
@@ -341,7 +341,7 @@ type PaymentMethod {
 }
 
 type MenuItem {
-  id: ID!
+  id: ID! @cacheId
   name: String!
   urlPath: String!
   cssClass: String
@@ -349,7 +349,7 @@ type MenuItem {
 }
 
 type Category {
-  id: ID!
+  id: ID! @cacheId
   name: String
   children: [Category]
   description: String

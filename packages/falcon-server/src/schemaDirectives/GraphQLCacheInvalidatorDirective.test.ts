@@ -3,12 +3,15 @@ import { KeyValueCache } from 'apollo-server-caching';
 import { buildSchemaAndRunQuery } from '../utils/testing';
 import { GraphQLCacheInvalidatorDirective } from './GraphQLCacheInvalidatorDirective';
 
-const directiveDefinition = `directive @cacheInvalidator(idPath: [IdPathEntryInput]) on FIELD_DEFINITION
+const directiveDefinition = `
+directive @cacheInvalidator(idPath: [IdPathEntryInput]) on FIELD_DEFINITION
+directive @cacheId on FIELD_DEFINITION
 
 input IdPathEntryInput {
   type: String
   path: String!
-}`;
+}
+`;
 
 const config = {
   cache: {
@@ -39,7 +42,7 @@ describe('@cacheInvalidator directive', () => {
         foo: Foo @cacheInvalidator
       }
       type Foo {
-        id: ID!
+        id: ID! @cacheId
         name: String
       }
     `;
@@ -71,7 +74,7 @@ describe('@cacheInvalidator directive', () => {
         items: [FooItem]
       }
       type FooItem {
-        id: ID!
+        id: ID! @cacheId
         name: String
       }
     `;
