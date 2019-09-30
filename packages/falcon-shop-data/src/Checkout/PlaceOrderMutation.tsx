@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { Mutation, OperationInput } from '@deity/falcon-data';
+import { Mutation } from '@deity/falcon-data';
 import { PlaceOrderResult, PlaceOrderInput } from '@deity/falcon-shop-extension';
 
 export const PLACE_ORDER = gql`
@@ -26,7 +26,7 @@ export type PlaceOrderResponse = {
   placeOrder: PlaceOrderResult;
 };
 
-export class PlaceOrderMutation extends Mutation<PlaceOrderResponse, OperationInput<PlaceOrderInput>> {
+export class PlaceOrderMutation extends Mutation<PlaceOrderResponse, PlaceOrderInput> {
   static defaultProps = {
     mutation: PLACE_ORDER
   };

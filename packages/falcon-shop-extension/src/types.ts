@@ -428,12 +428,12 @@ export type OrderItem = {
   parentItem?: OrderItem;
 };
 
-export type PlaceOrderInput = {
+export type PlaceOrderInput = OperationInput<{
   billingAddress: CheckoutAddressInput;
   shippingAddress: CheckoutAddressInput;
   paymentMethod: CheckoutDetailsInput;
   shippingMethod: CheckoutDetailsInput;
-};
+}>;
 
 export type CheckoutDetailsInput = {
   /** Payment or shipping method name, defined by the backend */
