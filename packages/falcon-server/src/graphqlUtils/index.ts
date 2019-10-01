@@ -2,7 +2,6 @@ import {
   GraphQLType,
   GraphQLNamedType,
   GraphQLResolveInfo,
-  GraphQLScalarType,
   GraphQLObjectType,
   GraphQLOutputType,
   isScalarType,
@@ -13,7 +12,6 @@ import {
 export * from './schema';
 
 export const PATH_SEPARATOR: string = '.';
-export const ID_FIELD_TYPE: string = 'ID';
 export const TAG_SEPARATOR: string = ':';
 export const PARENT_KEYWORD: string = '$parent';
 
@@ -65,9 +63,9 @@ export const getFieldValue: GetFieldValueFn = (sourceValue: object | Array<objec
 };
 
 /**
- * Find a field name with ID_FIELD_TYPE type
+ * Find a field name with `@cacheId` directive applied
  * @param gqlType GQL Object Type
- * @returns Name of the field with
+ * @returns Name of the "ID" field or `undefined` if there is none
  */
 export const findIdFieldName = (gqlType: GraphQLOutputType): string | undefined => {
   const rootType = getRootType(gqlType);
@@ -78,12 +76,19 @@ export const findIdFieldName = (gqlType: GraphQLOutputType): string | undefined 
   }
 
   const fields = (rootType as GraphQLObjectType).getFields();
+  const idFields = Object.keys(fields).filter(
+    fieldName => !!fields[fieldName].astNode.directives.find(directive => directive.name.value === 'cacheId')
+  );
 
-  return Object.keys(fields).find(fieldName => {
-    const { [fieldName]: fieldType } = fields;
-    const { name } = getRootType(fieldType.type) as GraphQLScalarType;
-    return name === ID_FIELD_TYPE;
-  });
+  if (idFields.length > 1) {
+    throw new Error(
+      `Misuse of "@cacheId" directive, only 1 field in ${objectTypeName} type can have this directive, currently being used by: ${idFields.join(
+        ', '
+      )}`
+    );
+  }
+
+  return idFields.length ? idFields[0] : undefined;
 };
 
 /**

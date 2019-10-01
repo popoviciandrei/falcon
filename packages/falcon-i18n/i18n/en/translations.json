@@ -116,6 +116,12 @@
     "billingAddress": "Billing address",
     "useTheSameAddress": "My billing address is the same as shipping"
   },
+  "checkoutConfirmation": {
+    "title": "THANK YOU FOR SHOPPING!",
+    "orderReceived": "We have received your order (No.: {{referenceNo}}) with the following items:",
+    "realizationNotice": "We are working hard on getting your items to you as soon as possible.",
+    "shippingNotice": "We will send you a shipping confirmation email once your order is on the way."
+  },
   "creditCard": {
     "namePlaceholder": "Name on card",
     "numberPlaceholder": "Card number",
