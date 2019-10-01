@@ -97,13 +97,13 @@ extend type Mutation {
   ---
 
   Complete flow:
-  - `Mutation.setShippingAddress`
-  - `Mutation.setBillingAddress`
-  - `Query.shippingMethodList`
-  - `Mutation.setShippingMethod`
-  - `Query.paymentMethodList`
-  - `Mutation.setPaymentMethod`
-  - `Mutation.placeOrder`
+  1. `Mutation.setShippingAddress`
+  2. `Mutation.setBillingAddress`
+  3. `Query.shippingMethodList`
+  4. `Mutation.setShippingMethod`
+  5. `Query.paymentMethodList`
+  6. `Mutation.setPaymentMethod`
+  7. `Mutation.placeOrder`
   """
   placeOrder(input: PlaceOrderInput): PlaceOrderResult!
 }
