@@ -51,6 +51,7 @@ export class Query<TData = any, TVariables = OperationVariables> extends React.C
 
           return children({
             ...result,
+            data: result.data || ({} as TData),
             fetchMore: fetchMore ? () => fetchMore(data!, result.fetchMore) : undefined
           });
         }}

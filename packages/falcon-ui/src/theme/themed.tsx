@@ -203,7 +203,7 @@ function getThemedCss(props: ThemedProps) {
 
   // if props are defined in theme object for themeKey merge them with default ones
   if (themeKey) {
-    const areComponentPropsDefinedInTheme = themeKey && theme.components[themeKey] !== undefined;
+    const areComponentPropsDefinedInTheme = theme.components[themeKey] !== undefined;
     if (areComponentPropsDefinedInTheme) {
       addPropsToMerge(theme.components[themeKey]);
     }
