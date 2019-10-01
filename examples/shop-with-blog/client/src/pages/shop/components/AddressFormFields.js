@@ -38,7 +38,7 @@ const AddressFormFields = props => {
         <FormField name="countryId" required autoComplete={getAutoComplete('country')}>
           {({ field }) => (
             <CountryListQuery passLoading>
-              {({ data }) => <CountryPicker {...field} options={data ? data.countryList.items : []} />}
+              {({ data: { countryList = {} } }) => <CountryPicker {...field} options={countryList.items || []} />}
             </CountryListQuery>
           )}
         </FormField>

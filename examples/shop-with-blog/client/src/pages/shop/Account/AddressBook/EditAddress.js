@@ -26,7 +26,7 @@ const EditAddress = ({ match }) => {
             <T id="editAddress.title" />
           </H1>
           <AddressQuery variables={{ id }}>
-            {({ address }) => (
+            {({ data: { address } }) => (
               <Formik
                 initialValues={{
                   firstname: address.firstname,

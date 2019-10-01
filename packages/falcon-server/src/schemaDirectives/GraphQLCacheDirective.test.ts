@@ -4,7 +4,10 @@ import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { runQuery, buildSchema, buildSchemaAndRunQuery } from '../utils/testing';
 import { GraphQLCacheDirective } from './GraphQLCacheDirective';
 
-const directiveDefinition: string = `directive @cache(ttl: Int, idPath: [String]) on FIELD_DEFINITION`;
+const directiveDefinition: string = `
+directive @cache(ttl: Int, idPath: [String]) on FIELD_DEFINITION
+directive @cacheId on FIELD_DEFINITION
+`;
 
 const config = {
   cache: {
@@ -122,7 +125,7 @@ describe('@cache directive', () => {
         foo: Foo @cache
       }
       type Foo {
-        id: ID!
+        id: ID! @cacheId
         name: String
       }
     `;
@@ -132,7 +135,7 @@ describe('@cache directive', () => {
         foo: Foo @cache(ttl: 0)
       }
       type Foo {
-        id: ID!
+        id: ID! @cacheId
         name: String
       }
     `;
@@ -180,7 +183,7 @@ describe('@cache directive', () => {
           foo: Foo @cache
         }
         type Foo {
-          id: ID!
+          id: ID! @cacheId
           name: String
         }
       `;
@@ -213,7 +216,7 @@ describe('@cache directive', () => {
           foo: Foo @cache
         }
         type Foo {
-          id: ID!
+          id: ID! @cacheId
           name: String
         }
       `;
@@ -259,13 +262,13 @@ describe('@cache directive', () => {
           foo: Foo
         }
         type Foo {
-          id: ID!
+          id: ID! @cacheId
           name: String
           list: [Bar]! @cache(ttl: 1, idPath: ["$parent"])
           barList: BarList @cache(ttl: 1, idPath: ["$parent", "items"])
         }
         type Bar {
-          id: ID!
+          id: ID! @cacheId
           name: String
         }
         type BarList {
@@ -336,6 +339,46 @@ describe('@cache directive', () => {
         tags: ['Bar', 'Bar:1', 'Bar:2', 'Foo:1'],
         ttl: 60
       });
+    });
+
+    it('Should not allow using multiple @cacheId directives within the same Type', async () => {
+      const typeDefs = `
+        ${directiveDefinition}
+        type Query {
+          foo: Foo @cache
+        }
+        type Foo {
+          id: ID! @cacheId
+          name: String @cacheId
+        }
+      `;
+      const resolvers = {
+        Query: {
+          foo: () => ({
+            id: '1',
+            name: 'foo'
+          })
+        }
+      };
+      const query = `query {
+        foo {
+          id
+          name
+        }
+      }`;
+
+      const { data, errors } = await buildSchemaAndRunQuery(
+        typeDefs,
+        resolvers,
+        query,
+        { cache, config },
+        schemaDirectives
+      );
+      expect(data.foo).toBeNull();
+      expect(errors).toHaveLength(1);
+      expect(errors[0].message).toBe(
+        'Misuse of "@cacheId" directive, only 1 field in Foo type can have this directive, currently being used by: id, name'
+      );
     });
   });
 });
