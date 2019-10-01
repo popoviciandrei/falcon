@@ -1113,15 +1113,15 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   reduceOrder(response) {
     const order = this.convertKeys(response);
-
     const { extensionAttributes = {}, payment = {}, entityId, incrementId, items, ...orderRest } = order;
+
     const result = {
       ...orderRest,
       id: entityId,
       referenceNo: incrementId,
       items: this.convertItemsResponse(items),
       shippingAddress: extensionAttributes.shippingAddress,
-      paymentMethodName: payment.extensionAttributes ? payment.extensionAttributes.methodName : undefined
+      paymentMethodName: payment.extensionAttributes ? payment.extensionAttributes.methodName : payment.method
     };
 
     return result;
@@ -1647,10 +1647,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       ? await this.getForCustomer(`/falcon/orders/${orderId}/order-info`)
       : await this.getForIntegration(`/falcon/guest-orders/${orderId}/order-info`);
 
-    const lastOrder = this.convertKeys(response);
-    lastOrder.paymentMethodName = lastOrder.payment.method;
-
-    return lastOrder;
+    return this.reduceOrder(response);
   }
 
   removeCartData() {

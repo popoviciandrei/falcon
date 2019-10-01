@@ -1,4 +1,5 @@
 directive @cache(ttl: Int, idPath: [String]) on FIELD_DEFINITION
+directive @cacheId on FIELD_DEFINITION
 directive @cacheInvalidator(idPath: [IdPathEntryInput]) on FIELD_DEFINITION
 
 schema {
@@ -45,7 +46,7 @@ type ResourceMeta {
   """
   Canonical URL for the found entity
   """
-  path: ID!
+  path: String! @cacheId
   """
   Entity type (this is being used by Dynamic Routing)
   """
