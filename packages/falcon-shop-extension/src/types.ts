@@ -428,12 +428,14 @@ export type OrderItem = {
   parentItem?: OrderItem;
 };
 
-export type PlaceOrderInput = OperationInput<{
-  billingAddress: CheckoutAddressInput;
-  shippingAddress: CheckoutAddressInput;
-  paymentMethod: CheckoutDetailsInput;
-  shippingMethod: CheckoutDetailsInput;
-}>;
+export type PlaceOrderInput = Partial<
+  OperationInput<{
+    billingAddress: CheckoutAddressInput;
+    shippingAddress: CheckoutAddressInput;
+    paymentMethod: CheckoutDetailsInput;
+    shippingMethod: CheckoutDetailsInput;
+  }>
+>;
 
 export type CheckoutDetailsInput = {
   /** Payment or shipping method name, defined by the backend */
@@ -460,9 +462,8 @@ export type PlaceOrder3dSecureField = {
   value?: string;
 };
 
-export type ShippingMethodListInput = OperationInput<{
-  address: CheckoutAddressInput;
-}>;
+export type SetCheckoutAddressInput = OperationInput<CheckoutAddressInput>;
+export type SetCheckoutDetailsInput = OperationInput<CheckoutDetailsInput>;
 
 export type ShippingMethod = {
   carrierTitle: string;
@@ -474,11 +475,6 @@ export type ShippingMethod = {
   priceInclTax: number;
   currency?: string;
 };
-
-export type PaymentMethodListInput = OperationInput<{
-  billingAddress: CheckoutAddressInput;
-  shippingMethod: string;
-}>;
 
 export type PaymentMethod = {
   /** Internal Payment method code (like "paypal_express") */
