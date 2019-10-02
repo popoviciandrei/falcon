@@ -3,7 +3,7 @@ import { Mutation } from '@deity/falcon-data';
 import { PlaceOrderResult, PlaceOrderInput } from '@deity/falcon-shop-extension';
 
 export const PLACE_ORDER = gql`
-  mutation PlaceOrder($input: PlaceOrderInput!) {
+  mutation PlaceOrder($input: PlaceOrderInput) {
     placeOrder(input: $input) {
       __typename
       ... on PlaceOrderSuccessfulResult {
