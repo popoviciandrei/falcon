@@ -27,6 +27,7 @@ const AddressFormFields = props => {
     <React.Fragment>
       <GridLayout gridArea={twoColumns ? TwoColumnsLayoutArea.left : null}>
         {askEmail && <FormField name="email" type="email" required />}
+        <FormField name="company" autoComplete={getAutoComplete('company')} />
         <FormField name="firstname" required autoComplete={getAutoComplete('given-name')} />
         <FormField name="lastname" required autoComplete={getAutoComplete('family-name')} />
         <FormField name="telephone" required autoComplete={getAutoComplete('tel')} />
