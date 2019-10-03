@@ -11,7 +11,7 @@ import { CountryListQuery } from '@deity/falcon-shop-data';
 import { Box, GridLayout } from '@deity/falcon-ui';
 
 const AddressFormFields = props => {
-  const { twoColumns, askDefault, autoCompleteSection } = props;
+  const { twoColumns, askDefault, askEmail, autoCompleteSection } = props;
 
   const getAutoComplete = attribute => [autoCompleteSection, attribute].filter(x => x).join(' ');
 
@@ -26,6 +26,7 @@ const AddressFormFields = props => {
   const mainContent = (
     <React.Fragment>
       <GridLayout gridArea={twoColumns ? TwoColumnsLayoutArea.left : null}>
+        {askEmail && <FormField name="email" type="email" required />}
         <FormField name="firstname" required autoComplete={getAutoComplete('given-name')} />
         <FormField name="lastname" required autoComplete={getAutoComplete('family-name')} />
         <FormField name="telephone" required autoComplete={getAutoComplete('tel')} />
@@ -58,7 +59,14 @@ AddressFormFields.propTypes = {
   // whether to use a two column layout instead of a single column
   twoColumns: PropTypes.bool,
   // whether the form should ask whether the address should be set as default
-  askDefault: PropTypes.bool
+  askDefault: PropTypes.bool,
+  // whether the form should ask for an email address
+  askEmail: PropTypes.bool
+};
+AddressFormFields.defaultProps = {
+  twoColumns: false,
+  askDefault: false,
+  askEmail: true
 };
 
 export default AddressFormFields;
