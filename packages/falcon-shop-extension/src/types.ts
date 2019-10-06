@@ -441,7 +441,7 @@ export type CheckoutDetailsInput = {
   /** Payment or shipping method name, defined by the backend */
   method: string;
   /** Extra payload data object required by the selected entity (like encrypted credit card info, shipping carrier code etc) */
-  data: object;
+  data?: object;
 };
 
 export type PlaceOrderResult = PlaceOrderSuccessfulResult | PlaceOrder3dSecureResult;

@@ -2,33 +2,47 @@ import React from 'react';
 import { MutationFetchResult } from '@apollo/react-common';
 import { withApollo, WithApolloClient } from '@apollo/react-hoc';
 import isEqual from 'lodash.isequal';
-import { OperationInput } from '@deity/falcon-data';
 import {
   PlaceOrderInput,
   PlaceOrderResult,
   CheckoutAddressInput,
-  EstimateShippingMethodsInput,
+  CheckoutDetailsInput,
+  SetCheckoutAddressInput,
+  SetCheckoutDetailsInput,
   ShippingMethod,
-  SetShippingInput,
   PaymentMethod
 } from '@deity/falcon-shop-extension';
 import {
+  // Step 1
+  SET_SHIPPING_ADDRESS,
+  SetShippingAddressResponse,
+  // Step 2
+  SET_BILLING_ADDRESS,
+  SetBillingAddressResponse,
+  // Step 3
+  SHIPPING_METHOD_LIST,
+  ShippingMethodListResponse,
+  // Step 4
+  SET_SHIPPING_METHOD,
+  SetShippingMethodResponse,
+  // Step 5
+  PAYMENT_METHOD_LIST,
+  PaymentMethodListResponse,
+  // Step 6
+  SET_PAYMENT_METHOD,
+  SetPaymentMethodResponse,
+  // Step 7
   PLACE_ORDER,
-  PlaceOrderResponse,
-  ESTIMATE_SHIPPING_METHODS,
-  EstimateShippingMethodsResponse,
-  SET_SHIPPING,
-  SetShippingResponse
+  PlaceOrderResponse
 } from '@deity/falcon-shop-data';
 
-type CheckoutLogicData = {
-  email: string | null;
-  shippingAddress: CheckoutAddressInput | null;
-  billingAddress: CheckoutAddressInput | null;
-  billingSameAsShipping: boolean | null;
-  shippingMethod: ShippingMethod | null;
-  paymentMethod: PaymentMethod | null;
-  paymentAdditionalData: object | null;
+export type CheckoutLogicData = {
+  email?: string;
+  shippingAddress: CheckoutAddressInput;
+  billingAddress?: CheckoutAddressInput;
+  billingSameAsShipping?: boolean;
+  shippingMethod?: CheckoutDetailsInput;
+  paymentMethod?: CheckoutDetailsInput;
 };
 
 type CheckoutLogicError = {
@@ -55,20 +69,14 @@ type CheckoutLogicErrors = {
 };
 
 export type CheckoutLogicRenderProps = {
-  values: CheckoutLogicData;
-  errors: CheckoutLogicErrors;
-  loading: boolean;
-  availableShippingMethods: ShippingMethod[];
-  availablePaymentMethods: PaymentMethod[];
-  result?: PlaceOrderResult;
   setEmail(email: string): void;
   setShippingAddress(address: CheckoutAddressInput): void;
   setBillingSameAsShipping(same: boolean): void;
   setBillingAddress(address: CheckoutAddressInput): void;
-  setShippingMethod(shipping: ShippingMethod): void;
-  setPaymentMethod(payment: PaymentMethod, additionalData?: any): void;
+  setShippingMethod(shipping: CheckoutDetailsInput): void;
+  setPaymentMethod(payment: CheckoutDetailsInput): void;
   placeOrder(): void;
-};
+} & CheckoutLogicState;
 
 export type CheckoutLogicProps = WithApolloClient<{
   initialValues?: CheckoutLogicData;
@@ -106,18 +114,11 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
     this.setPartialState({ loading }, callback);
   }
 
-  getShippingMethodData(shippingMethod: ShippingMethod) {
-    return {
-      shippingCarrierCode: shippingMethod.carrierCode,
-      shippingMethodCode: shippingMethod.methodCode
-    };
-  }
-
   setEmail = (email: string) =>
     this.setLoading(true, () => this.setPartialState({ loading: false, values: { email } }));
 
   // the following setters first set loading to true, and then in the callback actual values is set
-  // and loading flag gets reset to false, so the flow goes through whole proces (loading > set value > loaded)
+  // and loading flag gets reset to false, so the flow goes through whole process (loading > set value > loaded)
   setBillingSameAsShipping = (same: boolean) =>
     this.setLoading(true, () =>
       this.setPartialState({
@@ -129,28 +130,20 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
       })
     );
 
-  setBillingAddress = (billingAddress: CheckoutAddressInput) =>
-    this.setLoading(true, () => this.setPartialState({ loading: false, values: { billingAddress } }));
-
-  setPaymentMethod = (paymentMethod: PaymentMethod, additionalData?: any) =>
-    this.setLoading(true, () =>
-      this.setPartialState({ loading: false, values: { paymentMethod, paymentAdditionalData: additionalData } })
-    );
-
-  setShippingAddress = (shippingAddress: CheckoutAddressInput) => {
+  setShippingAddress = (shippingAddress: CheckoutAddressInput) =>
     this.setLoading(true, () => {
       // trigger mutation that will return available shipping options
       this.props.client
-        .mutate<EstimateShippingMethodsResponse, OperationInput<EstimateShippingMethodsInput>>({
-          mutation: ESTIMATE_SHIPPING_METHODS,
-          variables: { input: { address: shippingAddress } }
+        .mutate<SetShippingAddressResponse, SetCheckoutAddressInput>({
+          mutation: SET_SHIPPING_ADDRESS,
+          variables: { input: shippingAddress }
         })
-        .then(({ errors, data }) => {
+        .then(({ errors }) => {
           if (errors) {
             this.setPartialState({
               loading: false,
               errors: { shippingAddress: errors },
-              availableShippingMethods: null
+              availableShippingMethods: []
             });
           } else {
             const values = { shippingAddress } as CheckoutLogicData;
@@ -159,18 +152,6 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
             if (this.state.values.billingSameAsShipping) {
               values.billingAddress = shippingAddress;
             }
-
-            // if shipping methods has changed then remove already selected shipping method
-            if (!isEqual(data.estimateShippingMethods, this.state.availableShippingMethods)) {
-              values.shippingMethod = null;
-            }
-
-            this.setPartialState({
-              loading: false,
-              errors: {},
-              values,
-              availableShippingMethods: data.estimateShippingMethods
-            });
           }
         })
         .catch(error => {
@@ -180,25 +161,68 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
           });
         });
     });
-  };
 
-  setShippingMethod = (shippingMethod: ShippingMethod) => {
+  setBillingAddress = (billingAddress?: CheckoutAddressInput) =>
     this.setLoading(true, () => {
-      // trigger mutation that will return available payment options
+      if (billingAddress) {
+        this.setPartialState({ errors: {}, values: { billingAddress } });
+      }
       this.props.client
-        .mutate<SetShippingResponse, OperationInput<SetShippingInput>>({
-          mutation: SET_SHIPPING,
+        .mutate<SetBillingAddressResponse, SetCheckoutAddressInput>({
+          mutation: SET_BILLING_ADDRESS,
+          variables: {
+            input: this.state.values.billingAddress
+          }
+        })
+        .then(({ errors }) => {
+          if (errors) {
+            this.setPartialState({
+              loading: false,
+              errors: { billingAddress: errors },
+              availableShippingMethods: []
+            });
+          } else {
+            return this.props.client
+              .query<ShippingMethodListResponse>({
+                query: SHIPPING_METHOD_LIST
+              })
+              .then(({ errors: queryErrors, data }) => {
+                if (queryErrors) {
+                  this.setPartialState({
+                    loading: false,
+                    errors: { shippingMethod: queryErrors }
+                  });
+                } else {
+                  const values = {} as CheckoutLogicData;
+                  // if shipping methods has changed then remove already selected shipping method
+                  if (!isEqual(data.shippingMethodList, this.state.availableShippingMethods)) {
+                    values.shippingMethod = null;
+                  }
+
+                  this.setPartialState({
+                    loading: false,
+                    errors: {},
+                    values,
+                    availableShippingMethods: data.shippingMethodList
+                  });
+                }
+              });
+          }
+        });
+    });
+
+  setShippingMethod = (shippingMethod: CheckoutDetailsInput) =>
+    this.setLoading(true, () => {
+      this.props.client
+        .mutate<SetShippingMethodResponse, SetCheckoutDetailsInput>({
+          mutation: SET_SHIPPING_METHOD,
           // refetch cart because totals have changed once shipping has been selected
           refetchQueries: ['Cart'],
           variables: {
-            input: {
-              billingAddress: this.state.values.billingAddress,
-              shippingAddress: this.state.values.shippingAddress,
-              ...this.getShippingMethodData(shippingMethod)
-            }
+            input: shippingMethod
           }
         })
-        .then(({ errors, data }) => {
+        .then(({ errors }) => {
           if (errors) {
             this.setPartialState({
               loading: false,
@@ -206,18 +230,32 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
               availablePaymentMethods: []
             });
           } else {
-            const values = { shippingMethod } as CheckoutLogicData;
-            // if available payment methods has changed then remove selected payment method
-            if (!isEqual(data.setShipping.paymentMethods, this.state.availablePaymentMethods)) {
-              values.paymentMethod = null;
-            }
+            return this.props.client
+              .query<PaymentMethodListResponse>({
+                query: PAYMENT_METHOD_LIST
+              })
+              .then(({ errors: queryErrors, data }) => {
+                if (queryErrors) {
+                  this.setPartialState({
+                    loading: false,
+                    errors: { paymentMethod: queryErrors }
+                  });
+                } else {
+                  const values = { shippingMethod } as CheckoutLogicData;
 
-            this.setPartialState({
-              loading: false,
-              errors: {},
-              values,
-              availablePaymentMethods: data.setShipping.paymentMethods
-            });
+                  // if available payment methods has changed then remove selected payment method
+                  if (!isEqual(data.paymentMethodList, this.state.availablePaymentMethods)) {
+                    values.paymentMethod = null;
+                  }
+
+                  this.setPartialState({
+                    loading: false,
+                    errors: {},
+                    values,
+                    availablePaymentMethods: data.paymentMethodList
+                  });
+                }
+              });
           }
         })
         .catch(error => {
@@ -227,7 +265,40 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
           });
         });
     });
-  };
+
+  setPaymentMethod = (paymentMethod: CheckoutDetailsInput) =>
+    this.setLoading(true, () => {
+      this.props.client
+        .mutate<SetPaymentMethodResponse, SetCheckoutDetailsInput>({
+          mutation: SET_PAYMENT_METHOD,
+          // refetch cart because totals have changed once payment has been selected
+          refetchQueries: ['Cart'],
+          variables: {
+            input: paymentMethod
+          }
+        })
+        .then(({ errors }) => {
+          if (errors) {
+            this.setPartialState({
+              loading: false,
+              errors: { paymentMethod: errors }
+            });
+          } else {
+            this.setPartialState({
+              loading: false,
+              values: {
+                paymentMethod
+              }
+            });
+          }
+        })
+        .catch(error => {
+          this.setPartialState({
+            loading: false,
+            errors: { paymentMethod: [error] }
+          });
+        });
+    });
 
   placeOrder = () => {
     const handleResponse = ({
@@ -252,18 +323,16 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
 
     this.setLoading(true, () => {
       this.props.client
-        .mutate<PlaceOrderResponse, OperationInput<PlaceOrderInput>>({
+        .mutate<PlaceOrderResponse, PlaceOrderInput>({
           mutation: PLACE_ORDER,
           // update cart once order is placed successfully
           refetchQueries: ['Cart', 'OrderList'],
           variables: {
             input: {
-              email: this.state.values.email,
               billingAddress: this.state.values.billingAddress,
-              paymentMethod: {
-                method: this.state.values.paymentMethod!.code,
-                additionalData: this.state.values.paymentAdditionalData
-              }
+              shippingAddress: this.state.values.shippingAddress,
+              shippingMethod: this.state.values.shippingMethod,
+              paymentMethod: this.state.values.paymentMethod
             }
           }
         })
