@@ -34,7 +34,7 @@ extend type Mutation {
   resetPassword(input: ResetPasswordInput!): Boolean
   editAddress(input: EditAddressInput!): Address
   addAddress(input: AddAddressInput!): Address
-  removeAddress(id: Int!): Boolean
+  removeAddress(id: ID!): Boolean
   estimateShippingMethods(input: EstimateShippingMethodsInput!): [ShippingMethod!]!
   # set current customer order shipping information
   setShipping(input: SetShippingInput): SetShippingResult!
@@ -161,7 +161,7 @@ input CheckoutAddressInput {
   lastname: String!
   city: String
   customerId: Int
-  customerAddressId: Int
+  customerAddressId: ID
   postcode: String
   sameAsBilling: Int
   saveInAddressBook: Int
@@ -191,7 +191,7 @@ input AddAddressInput {
 }
 
 input EditAddressInput {
-  id: Int!
+  id: ID!
   company: String
   firstname: String!
   lastname: String!
