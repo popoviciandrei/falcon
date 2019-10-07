@@ -899,7 +899,8 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   async countryList() {
     const response = await this.getAuth('/directory/countries', {}, { context: { isAuthRequired: false } });
     const countries = response.map(item => ({
-      code: item.id,
+      id: item.id,
+      code: item.two_letter_abbreviation,
       englishName: item.full_name_english,
       localName: item.full_name_locale,
       regions: item.available_regions || []

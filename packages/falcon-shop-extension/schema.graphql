@@ -534,9 +534,8 @@ type Address {
   street: [String!]!
   city: String!
   postcode: String!
-  countryId: String!
-  region: String
-  regionId: Int
+  country: Country!
+  region: Region
   telephone: String
   fax: String
   defaultBilling: Boolean!
@@ -618,10 +617,15 @@ type Region {
 }
 
 type Country {
-  id: ID
-  code: String!
+  # unique identifier of the country
+  id: ID!
+  # abbreviated form of the country name
+  code: String
+  # country name in English
   englishName: String
+  # country name in locale language
   localName: String
+  # regions inside this country
   regions: [Region!]!
 }
 
