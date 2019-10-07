@@ -6,7 +6,6 @@ const isEmpty = require('lodash/isEmpty');
 const pick = require('lodash/pick');
 const has = require('lodash/has');
 const forEach = require('lodash/forEach');
-const isPlainObject = require('lodash/isPlainObject');
 const addMinutes = require('date-fns/add_minutes');
 const { ApiUrlPriority, htmlHelpers } = require('@deity/falcon-server-env');
 const { Magento2ApiBase } = require('./Magento2ApiBase');
@@ -78,9 +77,15 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     return countries.items.find(country => country.id === countryId);
   }
 
-  async region() {
-    // todo
-    return null;
+  async region({ region }) {
+    if (!region || !region.region) {
+      return null;
+    }
+    return {
+      id: region.regionId,
+      code: region.regionCode,
+      name: region.region
+    };
   }
 
   async getActiveStores() {
@@ -1070,10 +1075,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
 
     if (!has(response, 'defaultShipping')) {
       response.defaultShipping = false;
-    }
-
-    if (isPlainObject(response.region)) {
-      response.region = response.region.region;
     }
 
     return response;
