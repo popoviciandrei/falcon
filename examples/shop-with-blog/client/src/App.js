@@ -15,7 +15,6 @@ import {
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
 import loadable from 'src/components/loadable';
 import { ErrorBoundary } from 'src/components/ErrorBoundary';
-import Home from 'src/pages/Home';
 import logo from 'src/assets/logo.png';
 import DynamicRoute from 'src/pages/DynamicRoute';
 import { SidebarContainer } from 'src/components/Sidebar';
@@ -38,7 +37,8 @@ const HeadMetaTags = () => (
   </Helmet>
 );
 
-const Account = loadable(() => import(/* webpackChunkName: "account" */ './pages/shop/Account/Account'));
+const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/Home'));
+const Account = loadable(() => import(/* webpackChunkName: "account/account" */ './pages/shop/Account/Account'));
 const SignIn = loadable(() => import(/* webpackChunkName: "account/sign-in" */ './pages/account/SignIn'));
 const ResetPassword = loadable(() => import(/* webpackChunkName: "shop/resetpassword" */ './pages/shop/ResetPassword'));
 const Blog = loadable(() => import(/* webpackChunkName: "blog/blog" */ './pages/blog/Blog'));
