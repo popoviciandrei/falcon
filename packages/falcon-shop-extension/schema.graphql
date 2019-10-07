@@ -627,7 +627,7 @@ type Country {
   englishName: String
   # country name in locale language
   localName: String
-  # regions inside this country
+  # regions included in the country
   regions: [Region!]!
 }
 
