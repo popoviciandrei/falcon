@@ -72,22 +72,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     };
   }
 
-  async country({ countryId }) {
-    const countries = await this.countryList();
-    return countries.items.find(country => country.id === countryId);
-  }
-
-  async region({ region }) {
-    if (!region || !region.region) {
-      return null;
-    }
-    return {
-      id: region.regionId,
-      code: region.regionCode,
-      name: region.region
-    };
-  }
-
   async getActiveStores() {
     return this.storeList.map(storeWebsite => ({
       name: storeWebsite.name,
@@ -1254,6 +1238,34 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     const response = await this.getForCustomer(`/falcon/customers/me/address/${id}`);
 
     return this.convertAddressData(response);
+  }
+
+  /**
+   * Get country details
+   * @param {object} obj parent object
+   * @param {ID} obj.countryId country ID
+   * @returns {promise<Country>} requested country data
+   */
+  async country({ countryId }) {
+    const countries = await this.countryList();
+    return countries.items.find(country => country.id === countryId);
+  }
+
+  /**
+   * Get region details
+   * @param {object} obj parent object
+   * @param {object} obj.region region object
+   * @returns {promise<Country>} requested region data
+   */
+  async region({ region }) {
+    if (!region || !region.region) {
+      return null;
+    }
+    return {
+      id: region.regionId,
+      code: region.regionCode,
+      name: region.region
+    };
   }
 
   /**
