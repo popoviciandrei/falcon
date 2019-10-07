@@ -65,8 +65,22 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       },
       PaymentMethod: {
         config: apiGetter((api, ...args) => api.getPaymentMethodConfig(...args))
+      },
+      Address: {
+        country: apiGetter((api, ...args) => api.country(...args)),
+        region: apiGetter((api, ...args) => api.region(...args))
       }
     };
+  }
+
+  async country({ countryId }) {
+    const countries = await this.countryList();
+    return countries.items.find(country => country.id === countryId);
+  }
+
+  async region() {
+    // todo
+    return null;
   }
 
   async getActiveStores() {
