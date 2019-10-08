@@ -1,44 +1,33 @@
-import React from 'react';
-import { MutationFetchResult } from '@apollo/react-common';
-import { withApollo, WithApolloClient } from '@apollo/react-hoc';
+import React, { createContext, useState, useEffect } from 'react';
 import isEqual from 'lodash.isequal';
 import {
   PlaceOrderInput,
   PlaceOrderResult,
   CheckoutAddressInput,
   CheckoutDetailsInput,
-  SetCheckoutAddressInput,
-  SetCheckoutDetailsInput,
   ShippingMethod,
   PaymentMethod
 } from '@deity/falcon-shop-extension';
 import {
   // Step 1
-  SET_SHIPPING_ADDRESS,
-  SetShippingAddressResponse,
+  useSetShippingAddressMutation,
   // Step 2
-  SET_BILLING_ADDRESS,
-  SetBillingAddressResponse,
+  useSetBillingAddressMutation,
   // Step 3
-  SHIPPING_METHOD_LIST,
-  ShippingMethodListResponse,
+  useShippingMethodListLazyQuery,
   // Step 4
-  SET_SHIPPING_METHOD,
-  SetShippingMethodResponse,
+  useSetShippingMethodMutation,
   // Step 5
-  PAYMENT_METHOD_LIST,
-  PaymentMethodListResponse,
+  usePaymentMethodListLazyQuery,
   // Step 6
-  SET_PAYMENT_METHOD,
-  SetPaymentMethodResponse,
+  useSetPaymentMethodMutation,
   // Step 7
-  PLACE_ORDER,
-  PlaceOrderResponse
+  usePlaceOrderMutation
 } from '@deity/falcon-shop-data';
 
 export type CheckoutLogicData = {
   email?: string;
-  shippingAddress: CheckoutAddressInput;
+  shippingAddress?: CheckoutAddressInput;
   billingAddress?: CheckoutAddressInput;
   billingSameAsShipping?: boolean;
   shippingMethod?: CheckoutDetailsInput;
@@ -49,7 +38,7 @@ type CheckoutLogicError = {
   message: string;
 };
 
-type CheckoutLogicState = {
+type CheckoutLogicContext = {
   loading: boolean;
   errors: CheckoutLogicErrors;
   values: CheckoutLogicData;
@@ -76,287 +65,297 @@ export type CheckoutLogicRenderProps = {
   setShippingMethod(shipping: CheckoutDetailsInput): void;
   setPaymentMethod(payment: CheckoutDetailsInput): void;
   placeOrder(): void;
-} & CheckoutLogicState;
+} & CheckoutLogicContext;
 
-export type CheckoutLogicProps = WithApolloClient<{
+export type CheckoutProviderProps = {
   initialValues?: CheckoutLogicData;
   children(props: CheckoutLogicRenderProps): React.ReactNode;
-}>;
-class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLogicState> {
-  constructor(props: CheckoutLogicProps) {
-    super(props);
-    this.state = {
-      loading: false,
-      values: props.initialValues || ({ billingSameAsShipping: false } as any),
-      errors: {},
-      availablePaymentMethods: [],
-      availableShippingMethods: []
-    };
-  }
+};
 
-  setPartialState(partial: any, callback?: () => void) {
-    this.setState(
-      state =>
-        // "deep replace" - replace old values with new, don't merge these
-        ({
-          ...state,
-          ...partial,
-          values: {
-            ...state.values,
-            ...(partial.values || {})
-          }
-        }),
-      callback
-    );
-  }
+export type PartialType = Partial<CheckoutLogicContext>;
 
-  setLoading(loading: boolean, callback?: () => void) {
-    this.setPartialState({ loading }, callback);
-  }
+export const CheckoutContext = createContext<Partial<CheckoutLogicRenderProps>>({});
 
-  setEmail = (email: string) =>
-    this.setLoading(true, () => this.setPartialState({ loading: false, values: { email } }));
+export const CheckoutProvider = (props: CheckoutProviderProps) => {
+  const { children } = props;
+  const [state, setState] = useState<CheckoutLogicContext>({
+    loading: false,
+    values: { billingSameAsShipping: false },
+    errors: {},
+    availablePaymentMethods: [],
+    availableShippingMethods: []
+  });
+  const [setShippingAddressMutation] = useSetShippingAddressMutation();
+  const [setBillingAddressMutation] = useSetBillingAddressMutation();
+  const [
+    loadShippingMethodList,
+    {
+      data: shippingMethodListData,
+      called: shippingMethodListCalled,
+      error: shippingMethodListError,
+      loading: shippingMethodListLoading
+    }
+  ] = useShippingMethodListLazyQuery();
+  const [setShippingMethodMutation] = useSetShippingMethodMutation();
+  const [
+    loadPaymentMethodList,
+    {
+      data: paymentMethodListData,
+      called: paymentMethodListCalled,
+      error: paymentMethodListError,
+      loading: paymentMethodListLoading
+    }
+  ] = usePaymentMethodListLazyQuery();
+  const [setPaymentMethodMutation] = useSetPaymentMethodMutation();
+  const [placeOrderMutation] = usePlaceOrderMutation();
 
-  // the following setters first set loading to true, and then in the callback actual values is set
-  // and loading flag gets reset to false, so the flow goes through whole process (loading > set value > loaded)
-  setBillingSameAsShipping = (same: boolean) =>
-    this.setLoading(true, () =>
-      this.setPartialState({
+  // Handling useShippingMethodListLazyQuery hook
+  useEffect(() => {
+    if (!shippingMethodListCalled) return;
+    if (shippingMethodListError) {
+      setPartialState({
         loading: false,
-        values: {
-          billingSameAsShipping: same,
-          billingAddress: same ? this.state.values.shippingAddress : null
-        }
-      })
-    );
-
-  setShippingAddress = (shippingAddress: CheckoutAddressInput) =>
-    this.setLoading(true, () => {
-      // trigger mutation that will return available shipping options
-      this.props.client
-        .mutate<SetShippingAddressResponse, SetCheckoutAddressInput>({
-          mutation: SET_SHIPPING_ADDRESS,
-          variables: { input: shippingAddress }
-        })
-        .then(({ errors }) => {
-          if (errors) {
-            this.setPartialState({
-              loading: false,
-              errors: { shippingAddress: errors },
-              availableShippingMethods: []
-            });
-          } else {
-            const values = { shippingAddress } as CheckoutLogicData;
-
-            // if billing is set to the same as shipping then set it also to received value
-            if (this.state.values.billingSameAsShipping) {
-              values.billingAddress = shippingAddress;
-            }
-          }
-        })
-        .catch(error => {
-          this.setPartialState({
-            loading: false,
-            errors: { shippingAddress: [error] }
-          });
-        });
-    });
-
-  setBillingAddress = (billingAddress?: CheckoutAddressInput) =>
-    this.setLoading(true, () => {
-      if (billingAddress) {
-        this.setPartialState({ errors: {}, values: { billingAddress } });
+        errors: { shippingMethod: [shippingMethodListError] },
+        availableShippingMethods: []
+      });
+      return;
+    }
+    if (shippingMethodListData && shippingMethodListData.shippingMethodList) {
+      const values = {} as CheckoutLogicData;
+      // if shipping methods has changed then remove already selected shipping method
+      if (!isEqual(shippingMethodListData.shippingMethodList, state.availableShippingMethods)) {
+        values.shippingMethod = null;
       }
-      this.props.client
-        .mutate<SetBillingAddressResponse, SetCheckoutAddressInput>({
-          mutation: SET_BILLING_ADDRESS,
-          variables: {
-            input: this.state.values.billingAddress
-          }
-        })
-        .then(({ errors }) => {
-          if (errors) {
-            return this.setPartialState({
-              loading: false,
-              errors: { billingAddress: errors },
-              availableShippingMethods: []
-            });
-          }
-          return this.props.client
-            .query<ShippingMethodListResponse>({
-              query: SHIPPING_METHOD_LIST
-            })
-            .then(({ errors: queryErrors, data }) => {
-              if (queryErrors) {
-                this.setPartialState({
-                  loading: false,
-                  errors: { shippingMethod: queryErrors }
-                });
-              } else {
-                const values = {} as CheckoutLogicData;
-                // if shipping methods has changed then remove already selected shipping method
-                if (!isEqual(data.shippingMethodList, this.state.availableShippingMethods)) {
-                  values.shippingMethod = null;
-                }
 
-                this.setPartialState({
-                  loading: false,
-                  errors: {},
-                  values,
-                  availableShippingMethods: data.shippingMethodList
-                });
-              }
-            });
-        });
-    });
+      setPartialState({
+        loading: false,
+        errors: {},
+        values,
+        availableShippingMethods: shippingMethodListData.shippingMethodList
+      });
+    }
+  }, [shippingMethodListLoading]);
 
-  setShippingMethod = (shippingMethod: CheckoutDetailsInput) =>
-    this.setLoading(true, () => {
-      this.props.client
-        .mutate<SetShippingMethodResponse, SetCheckoutDetailsInput>({
-          mutation: SET_SHIPPING_METHOD,
-          // refetch cart because totals have changed once shipping has been selected
-          refetchQueries: ['Cart'],
-          variables: {
-            input: shippingMethod
-          }
-        })
-        .then(({ errors }) => {
-          if (errors) {
-            return this.setPartialState({
-              loading: false,
-              errors: { shippingMethod: errors },
-              availablePaymentMethods: []
-            });
-          }
-          return this.props.client
-            .query<PaymentMethodListResponse>({
-              query: PAYMENT_METHOD_LIST
-            })
-            .then(({ errors: queryErrors, data }) => {
-              if (queryErrors) {
-                this.setPartialState({
-                  loading: false,
-                  errors: { paymentMethod: queryErrors }
-                });
-              } else {
-                const values = { shippingMethod } as CheckoutLogicData;
-
-                // if available payment methods has changed then remove selected payment method
-                if (!isEqual(data.paymentMethodList, this.state.availablePaymentMethods)) {
-                  values.paymentMethod = null;
-                }
-
-                this.setPartialState({
-                  loading: false,
-                  errors: {},
-                  values,
-                  availablePaymentMethods: data.paymentMethodList
-                });
-              }
-            });
-        })
-        .catch(error => {
-          this.setPartialState({
-            loading: false,
-            errors: { shippingMethod: [error] }
-          });
-        });
-    });
-
-  setPaymentMethod = (paymentMethod: CheckoutDetailsInput) =>
-    this.setLoading(true, () => {
-      this.props.client
-        .mutate<SetPaymentMethodResponse, SetCheckoutDetailsInput>({
-          mutation: SET_PAYMENT_METHOD,
-          // refetch cart because totals have changed once payment has been selected
-          refetchQueries: ['Cart'],
-          variables: {
-            input: paymentMethod
-          }
-        })
-        .then(({ errors }) => {
-          if (errors) {
-            this.setPartialState({
-              loading: false,
-              errors: { paymentMethod: errors }
-            });
-          } else {
-            this.setPartialState({
-              loading: false,
-              values: {
-                paymentMethod
-              }
-            });
-          }
-        })
-        .catch(error => {
-          this.setPartialState({
-            loading: false,
-            errors: { paymentMethod: [error] }
-          });
-        });
-    });
-
-  placeOrder = () => {
-    const handleResponse = ({
-      data,
-      errors
-    }: MutationFetchResult<PlaceOrderResponse, Record<string, any>, Record<string, any>>) => {
-      if (errors) {
-        this.setPartialState({
-          loading: false,
-          errors: {
-            order: errors
-          }
-        });
-      } else {
-        this.setPartialState({
-          loading: false,
-          error: null,
-          result: data.placeOrder
-        });
+  // Handling usePaymentMethodListLazyQuery hook
+  useEffect(() => {
+    if (!paymentMethodListCalled) return;
+    if (paymentMethodListError) {
+      setPartialState({
+        loading: false,
+        errors: { paymentMethod: [paymentMethodListError] },
+        availablePaymentMethods: []
+      });
+      return;
+    }
+    if (paymentMethodListData && paymentMethodListData.paymentMethodList) {
+      const values = {} as CheckoutLogicData;
+      if (!isEqual(paymentMethodListData.paymentMethodList, state.availablePaymentMethods)) {
+        values.paymentMethod = null;
       }
-    };
 
-    this.setLoading(true, () => {
-      this.props.client
-        .mutate<PlaceOrderResponse, PlaceOrderInput>({
-          mutation: PLACE_ORDER,
-          // update cart once order is placed successfully
-          refetchQueries: ['Cart', 'OrderList'],
-          variables: {
-            input: {
-              billingAddress: this.state.values.billingAddress,
-              shippingAddress: this.state.values.shippingAddress,
-              shippingMethod: this.state.values.shippingMethod,
-              paymentMethod: this.state.values.paymentMethod
-            }
-          }
-        })
-        // promise catches the errors which are not passed to update callback
-        .then(handleResponse)
-        .catch(error => handleResponse({ errors: [error] }));
+      setPartialState({
+        loading: false,
+        errors: {},
+        values,
+        availablePaymentMethods: paymentMethodListData.paymentMethodList
+      });
+    }
+  }, [paymentMethodListLoading]);
+
+  const setPartialState = (partial: PartialType) => {
+    setState({
+      // "deep replace" - replace old values with new, don't merge these
+      ...state,
+      ...partial,
+      values: {
+        ...state.values,
+        ...(partial.values || {})
+      }
     });
   };
 
-  render() {
-    return this.props.children({
-      loading: this.state.loading,
-      values: this.state.values,
-      errors: this.state.errors,
-      result: this.state.result,
-      availablePaymentMethods: this.state.availablePaymentMethods,
-      availableShippingMethods: this.state.availableShippingMethods,
-      setEmail: this.setEmail,
-      setShippingAddress: this.setShippingAddress,
-      setBillingAddress: this.setBillingAddress,
-      setBillingSameAsShipping: this.setBillingSameAsShipping,
-      setShippingMethod: this.setShippingMethod,
-      setPaymentMethod: this.setPaymentMethod,
-      placeOrder: this.placeOrder
-    });
-  }
-}
+  const setLoading = (loading: boolean = true) => setPartialState({ loading });
 
-export const CheckoutLogic = withApollo(CheckoutLogicInner);
+  const setEmail = (email: string) => setPartialState({ values: { email } });
+
+  /**
+   * the following setters first set loading to true, and then in the callback actual values is set
+   * and loading flag gets reset to false, so the flow goes through whole process (loading > set value > loaded)
+   */
+  const setBillingSameAsShipping = (same: boolean) =>
+    setPartialState({
+      loading: false,
+      values: {
+        billingSameAsShipping: same,
+        billingAddress: same ? state.values.shippingAddress : null
+      }
+    });
+
+  const setShippingAddress = (shippingAddress: CheckoutAddressInput) => {
+    setLoading(true);
+    setShippingAddressMutation({
+      variables: { input: shippingAddress }
+    })
+      .then(({ errors }) => {
+        if (errors) {
+          setPartialState({
+            loading: false,
+            errors: { shippingAddress: errors },
+            availableShippingMethods: []
+          });
+          return;
+        }
+
+        const values = { shippingAddress } as CheckoutLogicData;
+
+        // if billing is set to the same as shipping then set it also to received value
+        if (state.values.billingSameAsShipping) {
+          values.billingAddress = shippingAddress;
+        }
+        setPartialState({ values });
+      })
+      .catch(error => {
+        setPartialState({
+          loading: false,
+          errors: { shippingAddress: [error] }
+        });
+      });
+  };
+
+  const setBillingAddress = (billingAddress?: CheckoutAddressInput) => {
+    setLoading(true);
+    if (billingAddress) {
+      setPartialState({ errors: {}, values: { billingAddress } });
+    }
+
+    setBillingAddressMutation({
+      variables: {
+        input: billingAddress || state.values.billingAddress
+      }
+    }).then(({ errors }) => {
+      setLoading(false);
+      if (errors) {
+        setPartialState({
+          errors: { billingAddress: errors },
+          availableShippingMethods: []
+        });
+        return;
+      }
+      setPartialState({ errors: {} });
+      loadShippingMethodList();
+    });
+  };
+
+  const setShippingMethod = (shippingMethod: CheckoutDetailsInput) => {
+    setLoading();
+    setShippingMethodMutation({
+      variables: {
+        input: shippingMethod
+      }
+    })
+      .then(({ errors }) => {
+        if (errors) {
+          setPartialState({
+            loading: false,
+            errors: { shippingMethod: errors },
+            availablePaymentMethods: []
+          });
+          return;
+        }
+        setPartialState({
+          loading: false,
+          values: {
+            shippingMethod
+          }
+        });
+        loadPaymentMethodList();
+      })
+      .catch(error => {
+        setPartialState({
+          loading: false,
+          errors: { shippingMethod: [error] }
+        });
+      });
+  };
+
+  const setPaymentMethod = (paymentMethod: CheckoutDetailsInput) => {
+    setLoading();
+    setPaymentMethodMutation({
+      variables: {
+        input: paymentMethod
+      }
+    })
+      .then(({ errors }) => {
+        if (errors) {
+          setPartialState({
+            loading: false,
+            errors: { paymentMethod: errors }
+          });
+          return;
+        }
+        setPartialState({
+          loading: false,
+          values: {
+            paymentMethod
+          }
+        });
+      })
+      .catch(error => {
+        setPartialState({
+          loading: false,
+          errors: { paymentMethod: [error] }
+        });
+      });
+  };
+
+  const placeOrder = () => {
+    setLoading();
+    placeOrderMutation({
+      variables: {
+        input: {
+          billingAddress: state.values.billingAddress,
+          shippingAddress: state.values.shippingAddress,
+          shippingMethod: state.values.shippingMethod,
+          paymentMethod: state.values.paymentMethod
+        }
+      }
+    })
+      .then(({ data, errors }) => {
+        if (errors) {
+          setPartialState({
+            loading: false,
+            errors: {
+              order: errors
+            }
+          });
+          return;
+        }
+        setPartialState({
+          loading: false,
+          errors: {},
+          result: data.placeOrder
+        });
+      })
+      .catch(error => {
+        setPartialState({
+          loading: false,
+          errors: {
+            order: [error]
+          }
+        });
+      });
+  };
+
+  const context: CheckoutLogicRenderProps = {
+    ...state,
+    setEmail,
+    setBillingSameAsShipping,
+    setShippingAddress,
+    setBillingAddress,
+    setShippingMethod,
+    setPaymentMethod,
+    placeOrder
+  };
+
+  return <CheckoutContext.Provider value={context}>{children}</CheckoutContext.Provider>;
+};
