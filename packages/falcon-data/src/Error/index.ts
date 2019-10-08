@@ -1,2 +1,2 @@
-export * from './errorMapper';
+export * from './userError';
 export * from './useThrowError';
