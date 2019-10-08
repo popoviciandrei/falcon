@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { Mutation } from '@deity/falcon-data';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { SetCheckoutDetailsInput } from '@deity/falcon-shop-extension';
 
 export const SET_SHIPPING_METHOD = gql`
@@ -14,6 +15,15 @@ export type SetShippingMethodResponse = {
 
 export class SetShippingMethodMutation extends Mutation<SetShippingMethodResponse, SetCheckoutDetailsInput> {
   static defaultProps = {
-    mutation: SET_SHIPPING_METHOD
+    mutation: SET_SHIPPING_METHOD,
+    refetchQueries: ['Cart']
   };
 }
+
+export const useSetShippingMethodMutation = (
+  options?: MutationHookOptions<SetShippingMethodResponse, SetCheckoutDetailsInput>
+) =>
+  useMutation<SetShippingMethodResponse, SetCheckoutDetailsInput>(SET_SHIPPING_METHOD, {
+    refetchQueries: ['Cart'],
+    ...(options || {})
+  });
