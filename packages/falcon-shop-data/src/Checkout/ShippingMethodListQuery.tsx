@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { Query } from '@deity/falcon-data';
-import { useQuery, QueryHookOptions } from '@apollo/react-hooks';
+import { useQuery, useLazyQuery, LazyQueryHookOptions, QueryHookOptions } from '@apollo/react-hooks';
 import { ShippingMethod } from '@deity/falcon-shop-extension';
 
 export const SHIPPING_METHOD_LIST = gql`
@@ -30,3 +30,6 @@ export class ShippingMethodListQuery extends Query<ShippingMethodListResponse> {
 
 export const useShippingMethodListQuery = (options?: QueryHookOptions<ShippingMethodListResponse>) =>
   useQuery<ShippingMethodListResponse>(SHIPPING_METHOD_LIST, options);
+
+export const useShippingMethodListLazyQuery = (options?: LazyQueryHookOptions<ShippingMethodListResponse>) =>
+  useLazyQuery<ShippingMethodListResponse>(SHIPPING_METHOD_LIST, options);

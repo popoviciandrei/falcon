@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { Query } from '@deity/falcon-data';
-import { useQuery, QueryHookOptions } from '@apollo/react-hooks';
+import { useQuery, useLazyQuery, LazyQueryHookOptions, QueryHookOptions } from '@apollo/react-hooks';
 import { PaymentMethod } from '@deity/falcon-shop-extension';
 
 export const PAYMENT_METHOD_LIST = gql`
@@ -25,3 +25,6 @@ export class PaymentMethodListQuery extends Query<PaymentMethodListResponse> {
 
 export const usePaymentMethodListQuery = (options?: QueryHookOptions<PaymentMethodListResponse>) =>
   useQuery<PaymentMethodListResponse>(PAYMENT_METHOD_LIST, options);
+
+export const usePaymentMethodListLazyQuery = (options?: LazyQueryHookOptions<PaymentMethodListResponse>) =>
+  useLazyQuery<PaymentMethodListResponse>(PAYMENT_METHOD_LIST, options);
