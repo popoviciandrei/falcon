@@ -23,8 +23,7 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
     <Router>
       {router => {
         const location = props.location || router.location;
-        const { pathname } = location;
-        const path = pathname.startsWith('/') ? pathname.substring(1) : pathname;
+        const { pathname: path } = location;
 
         return (
           <UrlQuery variables={{ path }}>
@@ -36,7 +35,7 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
               }
 
               if (url.redirect) {
-                return <Redirect to={`/${url.path}`} />;
+                return <Redirect to={url.path} />;
               }
 
               const Component = components[url.type];

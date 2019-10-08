@@ -52,7 +52,8 @@ function getBuildConfig(buildConfigFileName = 'falcon-client.build.config.js') {
     devServerPort: 3001,
     useWebmanifest: false,
     serviceWorker: {
-      precache: process.env.NODE_ENV === 'production'
+      precache: process.env.NODE_ENV === 'production',
+      blacklistRoutes: ['/sw.js(.*)']
     },
     i18n: {},
     envToBuildIn: [],
@@ -60,7 +61,9 @@ function getBuildConfig(buildConfigFileName = 'falcon-client.build.config.js') {
     moduleOverride: {}
   };
 
-  const config = deepMerge(buildConfigDefaults, buildConfig, { arrayMerge: (destination, source) => source });
+  const config = deepMerge(buildConfigDefaults, buildConfig, {
+    arrayMerge: (destination, source) => [...new Set([...destination, ...source])]
+  });
 
   return config;
 }
