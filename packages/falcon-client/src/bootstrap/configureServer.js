@@ -11,7 +11,7 @@ import { ProxyRequest } from '../service/ProxyRequest';
  */
 
 /**
- * @param {koa-router} router KoaRouter object
+ * @param {import('koa-router')} router KoaRouter object
  * @param {string} serverUrl Falcon-Server URL
  * @param {string[]} endpoints list of endpoints to be proxied to {serverUrl}
  * @param {object} redirects Map of redirects
@@ -36,23 +36,35 @@ export const configureProxy = async (router, serverUrl, endpoints, redirects) =>
     endpoints.forEach(endpoint => {
       // using "endpoint" value as a proxied route name
       router.all(endpoint, async ctx => {
-        const proxyResult = await ProxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
-        const { status } = proxyResult;
+        try {
+          const response = await ProxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
 
-        if (status === 404) {
-          // Hiding "not found" page output from the backend
-          ctx.message = proxyResult.statusText;
-          ctx.status = status;
-          return;
+          response.headers.forEach((value, name) => ctx.set(name, value));
+          /**
+           * node-fetch returns `set-cookie` headers concatenated with `, ` (which is invalid)
+           * for this reason we manually fill `set-cookie` with `raw` headers
+           * @see https://github.com/bitinn/node-fetch/blob/master/src/headers.js#L120
+           */
+          ctx.set('set-cookie', response.headers.raw()['set-cookie'] || []);
+
+          if (response.status === 404) {
+            // Hiding "not found" page output from the backend
+            ctx.message = response.statusText;
+            ctx.status = response.status;
+            return;
+          }
+
+          const { type, result } = await response.json();
+          const { [type]: redirectMap = {} } = redirects;
+          const { [result]: redirectLocation = '/' } = redirectMap;
+
+          // Result redirection
+          ctx.status = 302;
+          ctx.redirect(redirectLocation);
+        } catch (error) {
+          ctx.status = 500;
+          ctx.body = error;
         }
-
-        const { type, result } = await proxyResult.json();
-        const { [type]: redirectMap = {} } = redirects;
-        const { [result]: redirectLocation = '/' } = redirectMap;
-
-        // Result redirection
-        ctx.status = 302;
-        ctx.redirect(redirectLocation);
       });
     });
     Logger.info('Endpoints configured');

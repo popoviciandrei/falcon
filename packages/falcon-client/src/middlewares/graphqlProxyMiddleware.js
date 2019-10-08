@@ -8,10 +8,18 @@ import { ProxyRequest } from '../service/ProxyRequest';
 export default graphQLServerUrl => {
   return async ctx => {
     try {
-      const result = await ProxyRequest(graphQLServerUrl, ctx);
+      const response = await ProxyRequest(graphQLServerUrl, ctx);
 
-      ctx.status = result.status;
-      ctx.body = result.body;
+      response.headers.forEach((value, name) => ctx.set(name, value));
+      /**
+       * node-fetch returns `set-cookie` headers concatenated with `, ` (which is invalid)
+       * for this reason we manually fill `set-cookie` with `raw` headers
+       * @see https://github.com/bitinn/node-fetch/blob/master/src/headers.js#L120
+       */
+      ctx.set('set-cookie', response.headers.raw()['set-cookie'] || []);
+
+      ctx.status = response.status;
+      ctx.body = response.body;
     } catch (error) {
       ctx.status = 200;
       ctx.body = toApolloError(error, error.code);
