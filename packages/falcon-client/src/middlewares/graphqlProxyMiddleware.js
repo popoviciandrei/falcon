@@ -1,5 +1,5 @@
 import { toApolloError } from 'apollo-server-errors';
-import { ProxyRequest } from '../service/ProxyRequest';
+import { proxyRequest } from '../service/proxyRequest';
 
 /**
  * GraphQL requests proxy to (Falcon-Server)
@@ -8,7 +8,7 @@ import { ProxyRequest } from '../service/ProxyRequest';
 export default graphQLServerUrl => {
   return async ctx => {
     try {
-      const response = await ProxyRequest(graphQLServerUrl, ctx);
+      const response = await proxyRequest(graphQLServerUrl, ctx);
 
       response.headers.forEach((value, name) => ctx.set(name, value));
       /**

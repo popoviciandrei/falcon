@@ -1,7 +1,7 @@
 import url from 'url';
 import Logger from '@deity/falcon-logger';
 import fetch from 'node-fetch';
-import { ProxyRequest } from '../service/ProxyRequest';
+import { proxyRequest } from '../service/proxyRequest';
 
 /**
  * @typedef {object} PaymentRedirectMap
@@ -37,7 +37,7 @@ export const configureProxy = async (router, serverUrl, endpoints, redirects) =>
       // using "endpoint" value as a proxied route name
       router.all(endpoint, async ctx => {
         try {
-          const response = await ProxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
+          const response = await proxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
 
           response.headers.forEach((value, name) => ctx.set(name, value));
           /**

@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
  * @param {string} url
  * @param {import('koa').Context} ctx
  */
-export async function ProxyRequest(url, ctx) {
+export async function proxyRequest(url, ctx) {
   const { request, req } = ctx;
 
   return fetch(url, {
