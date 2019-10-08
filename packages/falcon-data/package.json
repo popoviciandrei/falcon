@@ -26,8 +26,8 @@
     "core-js": "3.1.4"
   },
   "devDependencies": {
-    "@apollo/react-common": "3.1.1",
-    "@apollo/react-components": "3.1.1",
+    "@apollo/react-common": "^3.1.2",
+    "@apollo/react-components": "^3.1.2",
     "@deity/falcon-scripts": "^1.0.0",
     "@types/prop-types": "15.7.1",
     "@types/react": "16.8.22",
@@ -37,8 +37,8 @@
     "react": "16.8.6"
   },
   "peerDependencies": {
-    "@apollo/react-common": "^3.1.1",
-    "@apollo/react-components": "^3.1.1",
+    "@apollo/react-common": "^3.1.2",
+    "@apollo/react-components": "^3.1.2",
     "apollo-client": "^2.6.4",
     "graphql-tag": "^2.10.1",
     "react": "^16.8.6"

@@ -80,8 +80,8 @@ export class DynamicRouteResolver {
 
     return {
       redirect: false,
-      ...response,
-      path
+      path,
+      ...response
     };
   };
 }
