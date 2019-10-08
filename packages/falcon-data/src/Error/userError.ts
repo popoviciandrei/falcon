@@ -40,3 +40,11 @@ export const userErrorToErrorModelList = <TError extends Error>(error: TError): 
 
   return [];
 };
+
+export const getUserErrors = <TError extends Error>(error: TError): ErrorModel[] => {
+  if (isUserError(error)) {
+    return userErrorToErrorModelList(error);
+  }
+
+  return [];
+};
