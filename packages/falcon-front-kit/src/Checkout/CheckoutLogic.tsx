@@ -176,38 +176,37 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
         })
         .then(({ errors }) => {
           if (errors) {
-            this.setPartialState({
+            return this.setPartialState({
               loading: false,
               errors: { billingAddress: errors },
               availableShippingMethods: []
             });
-          } else {
-            return this.props.client
-              .query<ShippingMethodListResponse>({
-                query: SHIPPING_METHOD_LIST
-              })
-              .then(({ errors: queryErrors, data }) => {
-                if (queryErrors) {
-                  this.setPartialState({
-                    loading: false,
-                    errors: { shippingMethod: queryErrors }
-                  });
-                } else {
-                  const values = {} as CheckoutLogicData;
-                  // if shipping methods has changed then remove already selected shipping method
-                  if (!isEqual(data.shippingMethodList, this.state.availableShippingMethods)) {
-                    values.shippingMethod = null;
-                  }
-
-                  this.setPartialState({
-                    loading: false,
-                    errors: {},
-                    values,
-                    availableShippingMethods: data.shippingMethodList
-                  });
-                }
-              });
           }
+          return this.props.client
+            .query<ShippingMethodListResponse>({
+              query: SHIPPING_METHOD_LIST
+            })
+            .then(({ errors: queryErrors, data }) => {
+              if (queryErrors) {
+                this.setPartialState({
+                  loading: false,
+                  errors: { shippingMethod: queryErrors }
+                });
+              } else {
+                const values = {} as CheckoutLogicData;
+                // if shipping methods has changed then remove already selected shipping method
+                if (!isEqual(data.shippingMethodList, this.state.availableShippingMethods)) {
+                  values.shippingMethod = null;
+                }
+
+                this.setPartialState({
+                  loading: false,
+                  errors: {},
+                  values,
+                  availableShippingMethods: data.shippingMethodList
+                });
+              }
+            });
         });
     });
 
@@ -224,39 +223,38 @@ class CheckoutLogicInner extends React.Component<CheckoutLogicProps, CheckoutLog
         })
         .then(({ errors }) => {
           if (errors) {
-            this.setPartialState({
+            return this.setPartialState({
               loading: false,
               errors: { shippingMethod: errors },
               availablePaymentMethods: []
             });
-          } else {
-            return this.props.client
-              .query<PaymentMethodListResponse>({
-                query: PAYMENT_METHOD_LIST
-              })
-              .then(({ errors: queryErrors, data }) => {
-                if (queryErrors) {
-                  this.setPartialState({
-                    loading: false,
-                    errors: { paymentMethod: queryErrors }
-                  });
-                } else {
-                  const values = { shippingMethod } as CheckoutLogicData;
-
-                  // if available payment methods has changed then remove selected payment method
-                  if (!isEqual(data.paymentMethodList, this.state.availablePaymentMethods)) {
-                    values.paymentMethod = null;
-                  }
-
-                  this.setPartialState({
-                    loading: false,
-                    errors: {},
-                    values,
-                    availablePaymentMethods: data.paymentMethodList
-                  });
-                }
-              });
           }
+          return this.props.client
+            .query<PaymentMethodListResponse>({
+              query: PAYMENT_METHOD_LIST
+            })
+            .then(({ errors: queryErrors, data }) => {
+              if (queryErrors) {
+                this.setPartialState({
+                  loading: false,
+                  errors: { paymentMethod: queryErrors }
+                });
+              } else {
+                const values = { shippingMethod } as CheckoutLogicData;
+
+                // if available payment methods has changed then remove selected payment method
+                if (!isEqual(data.paymentMethodList, this.state.availablePaymentMethods)) {
+                  values.paymentMethod = null;
+                }
+
+                this.setPartialState({
+                  loading: false,
+                  errors: {},
+                  values,
+                  availablePaymentMethods: data.paymentMethodList
+                });
+              }
+            });
         })
         .catch(error => {
           this.setPartialState({
