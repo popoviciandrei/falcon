@@ -36,35 +36,30 @@ export const configureProxy = async (router, serverUrl, endpoints, redirects) =>
     endpoints.forEach(endpoint => {
       // using "endpoint" value as a proxied route name
       router.all(endpoint, async ctx => {
-        try {
-          const response = await proxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
+        const response = await proxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
 
-          response.headers.forEach((value, name) => ctx.set(name, value));
-          /**
-           * node-fetch returns `set-cookie` headers concatenated with `, ` (which is invalid)
-           * for this reason we manually fill `set-cookie` with `raw` headers
-           * @see https://github.com/bitinn/node-fetch/blob/master/src/headers.js#L120
-           */
-          ctx.set('set-cookie', response.headers.raw()['set-cookie'] || []);
+        response.headers.forEach((value, name) => ctx.set(name, value));
+        /**
+         * node-fetch returns `set-cookie` headers concatenated with `, ` (which is invalid)
+         * for this reason we manually fill `set-cookie` with `raw` headers
+         * @see https://github.com/bitinn/node-fetch/blob/master/src/headers.js#L120
+         */
+        ctx.set('set-cookie', response.headers.raw()['set-cookie'] || []);
 
-          if (response.status === 404) {
-            // Hiding "not found" page output from the backend
-            ctx.message = response.statusText;
-            ctx.status = response.status;
-            return;
-          }
-
-          const { type, result } = await response.json();
-          const { [type]: redirectMap = {} } = redirects;
-          const { [result]: redirectLocation = '/' } = redirectMap;
-
-          // Result redirection
-          ctx.status = 302;
-          ctx.redirect(redirectLocation);
-        } catch (error) {
-          ctx.status = 500;
-          ctx.body = error;
+        if (response.status === 404) {
+          // Hiding "not found" page output from the backend
+          ctx.message = response.statusText;
+          ctx.status = response.status;
+          return;
         }
+
+        const { type, result } = await response.json();
+        const { [type]: redirectMap = {} } = redirects;
+        const { [result]: redirectLocation = '/' } = redirectMap;
+
+        // Result redirection
+        ctx.status = 302;
+        ctx.redirect(redirectLocation);
       });
     });
     Logger.info('Endpoints configured');
