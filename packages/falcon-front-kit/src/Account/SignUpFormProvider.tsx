@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { apolloErrorToErrorModelList } from '@deity/falcon-data';
+import { useGetUserError } from '@deity/falcon-data';
 import { useSignUpMutation } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
@@ -23,6 +23,7 @@ export const SignUpFormProvider: React.SFC<SignUpFormProviderProps> = props => {
   };
 
   const [signUp] = useSignUpMutation();
+  const [getUserError] = useGetUserError();
 
   return (
     <Formik
@@ -35,7 +36,7 @@ export const SignUpFormProvider: React.SFC<SignUpFormProviderProps> = props => {
           })
           .catch(e => {
             formikActions.setSubmitting(false);
-            formikActions.setStatus({ error: apolloErrorToErrorModelList(e) });
+            formikActions.setStatus({ error: getUserError(e) });
           })
       }
       {...formikProps}

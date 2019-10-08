@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { apolloErrorToErrorModelList } from '@deity/falcon-data';
+import { useGetUserError } from '@deity/falcon-data';
 import { Product, ProductOption } from '@deity/falcon-shop-extension';
 import { useAddToCartMutation } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
@@ -27,6 +27,7 @@ export const AddToCartFormProvider: React.SFC<AddToCartFormProviderProps> = prop
   };
 
   const [addToCart] = useAddToCartMutation();
+  const [getUserError] = useGetUserError();
 
   return (
     <Formik
@@ -48,7 +49,7 @@ export const AddToCartFormProvider: React.SFC<AddToCartFormProviderProps> = prop
           })
           .catch(e => {
             formikActions.setSubmitting(false);
-            formikActions.setStatus({ error: apolloErrorToErrorModelList(e) });
+            formikActions.setStatus({ error: getUserError(e) });
           })
       }
       {...formikProps}

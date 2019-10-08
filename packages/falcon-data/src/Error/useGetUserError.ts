@@ -4,7 +4,7 @@ import { useThrowError, ErrorModel, tryGetUserError } from '../Error';
  * React Hook which returns only user errors, and re-throw if any `ApolloError.NetworkError` or unhandled error exist
  * @param {} e error
  */
-export function useGetUserError(e?: Error): [(error: Error) => ErrorModel[], { errors: ErrorModel[] }] {
+export function useGetUserError(e?: Error): [(error: Error) => ErrorModel[], { error: ErrorModel[] }] {
   const throwError = useThrowError();
 
   /**
@@ -21,5 +21,5 @@ export function useGetUserError(e?: Error): [(error: Error) => ErrorModel[], { e
     return result;
   }
 
-  return [tryGet, { errors: e ? tryGet(e) : undefined }];
+  return [tryGet, { error: e ? tryGet(e) : undefined }];
 }

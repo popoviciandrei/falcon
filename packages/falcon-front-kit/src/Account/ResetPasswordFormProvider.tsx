@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { apolloErrorToErrorModelList } from '@deity/falcon-data';
+import { useGetUserError } from '@deity/falcon-data';
 import { ResetPasswordInput } from '@deity/falcon-shop-extension';
 import { useResetPasswordMutation } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
@@ -15,6 +15,7 @@ export const ResetPasswordFormProvider: React.SFC<ResetPasswordFormProviderProps
   };
 
   const [resetPassword] = useResetPasswordMutation();
+  const [getUserError] = useGetUserError();
 
   return (
     <Formik
@@ -27,7 +28,7 @@ export const ResetPasswordFormProvider: React.SFC<ResetPasswordFormProviderProps
           })
           .catch(e => {
             formikActions.setSubmitting(false);
-            formikActions.setStatus({ error: apolloErrorToErrorModelList(e) });
+            formikActions.setStatus({ error: getUserError(e) });
           })
       }
       {...formikProps}
