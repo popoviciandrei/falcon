@@ -12,7 +12,7 @@ describe('DynamicRoute', () => {
       {
         request: {
           query: GET_URL,
-          variables: { path: 'test' }
+          variables: { path: '/test' }
         },
         result: {
           data: {
@@ -20,7 +20,7 @@ describe('DynamicRoute', () => {
               __typename: 'ResourceMeta',
               id: 100,
               type: 'foo',
-              path: 'test',
+              path: '/test',
               redirect: false
             }
           }
