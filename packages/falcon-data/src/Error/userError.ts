@@ -8,6 +8,9 @@ export type ErrorModel = {
   path?: any;
 };
 
+export const isNetworkError = <TError extends Error>(error: TError): boolean =>
+  isApolloError(error) && !!error.networkError;
+
 export const isUserError = <TError extends Error>(error: TError): boolean => {
   if (isApolloError(error)) {
     const { graphQLErrors, networkError } = error;
