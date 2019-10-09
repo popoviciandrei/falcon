@@ -182,17 +182,20 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
    * and loading flag gets reset to false, so the flow goes through whole process (loading > set value > loaded)
    * @param {boolean} same Whether the billing address should be the same as shipping address
    */
-  const setBillingSameAsShipping = (same: boolean) =>
+  const setBillingSameAsShipping = (same: boolean) => {
     setPartialState({
-      loading: false,
+      loading: true,
       values: {
         billingSameAsShipping: same,
         billingAddress: same ? state.values.shippingAddress : null
       }
     });
 
+    setBillingAddress(state.values.shippingAddress);
+  };
+
   const setShippingAddress = (shippingAddress: CheckoutAddressInput) => {
-    setLoading(true);
+    setLoading();
     setShippingAddressMutation({
       variables: { input: shippingAddress }
     })
@@ -212,7 +215,10 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
         if (state.values.billingSameAsShipping) {
           values.billingAddress = shippingAddress;
         }
-        setPartialState({ values });
+        setPartialState({
+          errors: {},
+          values
+        });
       })
       .catch(error => {
         setPartialState({
@@ -223,25 +229,26 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
   };
 
   const setBillingAddress = (billingAddress?: CheckoutAddressInput) => {
-    setLoading(true);
-    if (billingAddress) {
-      setPartialState({ errors: {}, values: { billingAddress } });
-    }
-
+    setLoading();
     setBillingAddressMutation({
       variables: {
         input: billingAddress || state.values.billingAddress
       }
     }).then(({ errors }) => {
-      setLoading(false);
       if (errors) {
         setPartialState({
+          loading: false,
           errors: { billingAddress: errors },
           availableShippingMethods: []
         });
         return;
       }
-      setPartialState({ errors: {} });
+      setPartialState({
+        errors: {},
+        values: {
+          billingAddress: billingAddress || state.values.billingAddress
+        }
+      });
       loadShippingMethodList();
     });
   };
