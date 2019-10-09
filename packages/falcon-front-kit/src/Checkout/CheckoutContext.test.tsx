@@ -8,7 +8,7 @@ import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-common';
 import { PlaceOrderSuccessfulResult } from '@deity/falcon-shop-extension';
 import { wait } from '../../../../test/helpers';
-import { CheckoutLogic, CheckoutLogicRenderProps } from './CheckoutLogic';
+import { CheckoutContext, CheckoutProvider, CheckoutLogicRenderProps } from './CheckoutContext';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
 const Schema = readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');
@@ -125,12 +125,14 @@ describe('CheckoutLogic', () => {
     let renderedProps: CheckoutLogicRenderProps;
     wrapper = mount(
       <ApolloProvider client={client}>
-        <CheckoutLogic>
-          {logicData => {
-            renderedProps = logicData;
-            return <div />;
-          }}
-        </CheckoutLogic>
+        <CheckoutProvider>
+          <CheckoutContext.Consumer>
+            {logicData => {
+              renderedProps = logicData;
+              return <div />;
+            }}
+          </CheckoutContext.Consumer>
+        </CheckoutProvider>
       </ApolloProvider>
     );
 
