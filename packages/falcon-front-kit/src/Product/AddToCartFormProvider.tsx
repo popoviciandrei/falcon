@@ -32,7 +32,7 @@ export const AddToCartFormProvider: React.SFC<AddToCartFormProviderProps> = prop
   return (
     <Formik
       initialValues={initialValues || defaultInitialValues}
-      onSubmit={(values, formikActions) =>
+      onSubmit={(values, { setSubmitting, setStatus }) =>
         addToCart({
           variables: {
             input: {
@@ -44,12 +44,15 @@ export const AddToCartFormProvider: React.SFC<AddToCartFormProviderProps> = prop
           }
         })
           .then(() => {
-            formikActions.setSubmitting(false);
+            setSubmitting(false);
             return onSuccess && onSuccess();
           })
           .catch(e => {
-            formikActions.setSubmitting(false);
-            formikActions.setStatus({ error: getUserError(e) });
+            const error = getUserError(e);
+            if (error.length) {
+              setStatus({ error });
+              setSubmitting(false);
+            }
           })
       }
       {...formikProps}

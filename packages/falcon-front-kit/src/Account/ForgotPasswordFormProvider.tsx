@@ -19,15 +19,18 @@ export const ForgotPasswordFormProvider: React.SFC<ForgotPasswordFormProviderPro
   return (
     <Formik
       initialValues={initialValues || defaultInitialValues}
-      onSubmit={(values, formikActions) =>
+      onSubmit={(values, { setSubmitting, setStatus }) =>
         requestPasswordReset({ variables: { input: values } })
           .then(() => {
-            formikActions.setSubmitting(false);
+            setSubmitting(false);
             return onSuccess && onSuccess();
           })
           .catch(e => {
-            formikActions.setSubmitting(false);
-            formikActions.setStatus({ error: getUserError(e) });
+            const error = getUserError(e);
+            if (error.length) {
+              setStatus({ error });
+              setSubmitting(false);
+            }
           })
       }
       {...formikProps}

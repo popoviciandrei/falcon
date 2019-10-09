@@ -22,15 +22,18 @@ export const SignInFormProvider: React.SFC<SignInFormProvider> = props => {
   return (
     <Formik
       initialValues={initialValues || defaultInitialValues}
-      onSubmit={(values, formikActions) =>
+      onSubmit={(values, { setSubmitting, setStatus }) =>
         signIn({ variables: { input: values } })
           .then(() => {
-            formikActions.setSubmitting(false);
+            setSubmitting(false);
             return onSuccess && onSuccess();
           })
           .catch(e => {
-            formikActions.setSubmitting(false);
-            formikActions.setStatus({ error: getUserError(e) });
+            const error = getUserError(e);
+            if (error.length) {
+              setStatus({ error });
+              setSubmitting(false);
+            }
           })
       }
       {...formikProps}
