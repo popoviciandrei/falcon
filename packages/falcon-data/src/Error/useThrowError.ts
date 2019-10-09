@@ -5,6 +5,7 @@ export function useThrowError() {
 
   useEffect(() => {
     if (error) {
+      setError(error);
       setError(() => {
         throw error;
       });
