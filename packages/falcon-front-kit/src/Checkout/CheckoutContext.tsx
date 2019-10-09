@@ -92,7 +92,8 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
       data: shippingMethodListData,
       called: shippingMethodListCalled,
       error: shippingMethodListError,
-      loading: shippingMethodListLoading
+      loading: shippingMethodListLoading,
+      refetch: shippingMethodListRefetch
     }
   ] = useShippingMethodListLazyQuery();
   const [setShippingMethodMutation] = useSetShippingMethodMutation();
@@ -102,7 +103,8 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
       data: paymentMethodListData,
       called: paymentMethodListCalled,
       error: paymentMethodListError,
-      loading: paymentMethodListLoading
+      loading: paymentMethodListLoading,
+      refetch: paymentMethodListRefetch
     }
   ] = usePaymentMethodListLazyQuery();
   const [setPaymentMethodMutation] = useSetPaymentMethodMutation();
@@ -249,7 +251,11 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
           billingAddress: billingAddress || state.values.billingAddress
         }
       });
-      loadShippingMethodList();
+      if (shippingMethodListRefetch) {
+        shippingMethodListRefetch();
+      } else {
+        loadShippingMethodList();
+      }
     });
   };
 
@@ -271,11 +277,16 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
         }
         setPartialState({
           loading: false,
+          errors: {},
           values: {
             shippingMethod
           }
         });
-        loadPaymentMethodList();
+        if (paymentMethodListRefetch) {
+          paymentMethodListRefetch();
+        } else {
+          loadPaymentMethodList();
+        }
       })
       .catch(error => {
         setPartialState({
