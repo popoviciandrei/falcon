@@ -11,7 +11,7 @@ export function useGetUserError(e?: Error): [(error: Error) => ErrorModel[], { e
    * returns only user errors, and re-throw if any `ApolloError.NetworkError` or unhandled error exist
    * @param {Error} error
    */
-  function tryGet<TError extends Error>(error: TError): ErrorModel[] {
+  function get<TError extends Error>(error: TError): ErrorModel[] {
     const result = tryGetUserError(error);
 
     if (result.length === 0) {
@@ -21,5 +21,5 @@ export function useGetUserError(e?: Error): [(error: Error) => ErrorModel[], { e
     return result;
   }
 
-  return [tryGet, { error: e ? tryGet(e) : undefined }];
+  return [get, { error: e ? get(e) : undefined }];
 }
