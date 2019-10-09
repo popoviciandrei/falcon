@@ -68,7 +68,7 @@ Based on https://conventionalcommits.org/
 - `feat:` - a commit that introduces a new feature to the codebase (this correlates with MINOR in semantic versioning).
 - `improvement:` - a commit that improves a current implementation without adding a new feature or fixing a bug
 - `build:` - a commit that with changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-- `ci:` - a commit that with changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+- `ci:` - a commit that with changes to our CI configuration files and scripts (example scopes: GitHub Actions, Circle, BrowserStack, SauceLabs)
 - `docs:` - a commit that with changes documentation only changes
 - `perf:` - a commit with changes that improve performance
 - `refactor:` - a commit with changes that neither fixes a bug nor adds a feature
