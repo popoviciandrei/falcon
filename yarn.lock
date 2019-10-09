@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@apollo/react-common@^3.1.2":
+"@apollo/react-common@^3.1.1", "@apollo/react-common@^3.1.2":
   version "3.1.2"
   resolved "https://registry.npmjs.org/@apollo/react-common/-/react-common-3.1.2.tgz#19feb1d264c1e82e9610f68298a9dd89513060ea"
   integrity sha512-6+gTeBZoIyCE6VnHD2EI9Wz+Dm05MBxplUTmVgswzvTe05lUO78SxGgB3XJc9GM/TmNexgCc0eS84vUpG/f6Tg==
@@ -29,6 +29,16 @@
     "@apollo/react-common" "^3.1.2"
     "@apollo/react-components" "^3.1.2"
     hoist-non-react-statics "^3.3.0"
+    ts-invariant "^0.4.4"
+    tslib "^1.10.0"
+
+"@apollo/react-hooks@3.1.1":
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/@apollo/react-hooks/-/react-hooks-3.1.1.tgz#8e5a0f281a9778aaf17496ad38a178d23375077c"
+  integrity sha512-LwE4olNlKwqh1hl6iHr/igSDGRVs7c6Ik5MYZm9TzGj01f+ebhM1+Pn+UBNLsb3uRuytZsUOsEDBEXMABzC9Tw==
+  dependencies:
+    "@apollo/react-common" "^3.1.1"
+    "@wry/equality" "^0.1.9"
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
 

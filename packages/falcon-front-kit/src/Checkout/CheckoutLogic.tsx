@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import isEqual from 'lodash.isequal';
 import {
-  PlaceOrderInput,
   PlaceOrderResult,
   CheckoutAddressInput,
   CheckoutDetailsInput,
@@ -181,6 +180,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
   /**
    * the following setters first set loading to true, and then in the callback actual values is set
    * and loading flag gets reset to false, so the flow goes through whole process (loading > set value > loaded)
+   * @param {boolean} same Whether the billing address should be the same as shipping address
    */
   const setBillingSameAsShipping = (same: boolean) =>
     setPartialState({
