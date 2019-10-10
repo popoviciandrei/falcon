@@ -67,7 +67,7 @@ AddressFormFields.propTypes = {
 AddressFormFields.defaultProps = {
   twoColumns: false,
   askDefault: false,
-  askEmail: true
+  askEmail: false
 };
 
 export default AddressFormFields;
