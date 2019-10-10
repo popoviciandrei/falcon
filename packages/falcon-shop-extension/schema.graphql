@@ -136,6 +136,7 @@ input RequestPasswordResetInput {
 Optional input data that can be provided for a 1-step checkout (if supported by the backend).
 """
 input PlaceOrderInput {
+  email: String
   billingAddress: CheckoutAddressInput!
   shippingAddress: CheckoutAddressInput!
   paymentMethod: CheckoutDetailsInput!

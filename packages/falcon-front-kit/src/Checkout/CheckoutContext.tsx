@@ -313,6 +313,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
         }
         setPartialState({
           loading: false,
+          errors: {},
           values: {
             paymentMethod
           }
@@ -331,6 +332,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
     placeOrderMutation({
       variables: {
         input: {
+          email: state.values.email,
           billingAddress: state.values.billingAddress,
           shippingAddress: state.values.shippingAddress,
           shippingMethod: state.values.shippingMethod,

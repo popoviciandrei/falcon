@@ -430,6 +430,7 @@ export type OrderItem = {
 
 export type PlaceOrderInput = Partial<
   OperationInput<{
+    email?: String;
     billingAddress: CheckoutAddressInput;
     shippingAddress: CheckoutAddressInput;
     paymentMethod: CheckoutDetailsInput;
