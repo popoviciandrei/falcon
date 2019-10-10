@@ -1342,7 +1342,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {string} input.currentPassword current password
    * @returns {Promise<boolean>} true on success
    */
-  async changeCustomerPassword(obj, { input }) {
+  async changePassword(obj, { input }) {
     const { password: newPassword, currentPassword } = input;
 
     try {
