@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import isEqual from 'lodash.isequal';
 import {
   PlaceOrderResult,
@@ -206,7 +206,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
           setPartialState({
             loading: false,
             errors: { shippingAddress: errors },
-            availableShippingMethods: []
+            availableShippingMethods: null
           });
           return;
         }
@@ -379,3 +379,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
 
   return <CheckoutContext.Provider value={context}>{children}</CheckoutContext.Provider>;
 };
+
+export const { Consumer: CheckoutConsumer } = CheckoutContext;
+
+export const useCheckoutContext = () => useContext(CheckoutContext);
