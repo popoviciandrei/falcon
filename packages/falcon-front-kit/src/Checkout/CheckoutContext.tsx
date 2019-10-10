@@ -24,7 +24,7 @@ import {
   usePlaceOrderMutation
 } from '@deity/falcon-shop-data';
 
-export type CheckoutLogicData = {
+type CheckoutContextValues = {
   email?: string;
   shippingAddress?: CheckoutAddressInput;
   billingAddress?: CheckoutAddressInput;
@@ -33,30 +33,30 @@ export type CheckoutLogicData = {
   paymentMethod?: CheckoutDetailsInput;
 };
 
-type CheckoutLogicError = {
+type CheckoutContextError = {
   message: string;
 };
 
-type CheckoutLogicContext = {
+type CheckoutContextData = {
   loading: boolean;
-  errors: CheckoutLogicErrors;
-  values: CheckoutLogicData;
+  errors: CheckoutContextErrors;
+  values: CheckoutContextValues;
   result?: PlaceOrderResult;
   availableShippingMethods: ShippingMethod[];
   availablePaymentMethods: PaymentMethod[];
 };
 
-type CheckoutLogicErrors = {
-  email?: CheckoutLogicError[];
-  shippingAddress?: CheckoutLogicError[];
-  billingSameAsShipping?: CheckoutLogicError[];
-  billingAddress?: CheckoutLogicError[];
-  shippingMethod?: CheckoutLogicError[];
-  paymentMethod?: CheckoutLogicError[];
-  order?: CheckoutLogicError[];
+type CheckoutContextErrors = {
+  email?: CheckoutContextError[];
+  shippingAddress?: CheckoutContextError[];
+  billingSameAsShipping?: CheckoutContextError[];
+  billingAddress?: CheckoutContextError[];
+  shippingMethod?: CheckoutContextError[];
+  paymentMethod?: CheckoutContextError[];
+  order?: CheckoutContextError[];
 };
 
-export type CheckoutLogicRenderProps = {
+export type CheckoutProviderRenderProps = {
   setEmail(email: string): void;
   setShippingAddress(address: CheckoutAddressInput): void;
   setBillingSameAsShipping(same: boolean): void;
@@ -64,20 +64,20 @@ export type CheckoutLogicRenderProps = {
   setShippingMethod(shipping: CheckoutDetailsInput): void;
   setPaymentMethod(payment: CheckoutDetailsInput): void;
   placeOrder(): void;
-} & CheckoutLogicContext;
+} & CheckoutContextData;
 
 export type CheckoutProviderProps = {
-  initialValues?: CheckoutLogicData;
-  children(props: CheckoutLogicRenderProps): React.ReactNode;
+  initialValues?: CheckoutContextValues;
+  children(props: CheckoutProviderRenderProps): React.ReactNode;
 };
 
-export type PartialType = Partial<CheckoutLogicContext>;
+export type PartialType = Partial<CheckoutContextData>;
 
-export const CheckoutContext = createContext<Partial<CheckoutLogicRenderProps>>({});
+export const CheckoutContext = createContext<Partial<CheckoutProviderRenderProps>>({});
 
 export const CheckoutProvider = (props: CheckoutProviderProps) => {
   const { children } = props;
-  const [state, setState] = useState<CheckoutLogicContext>({
+  const [state, setState] = useState<CheckoutContextData>({
     loading: false,
     values: { billingSameAsShipping: false },
     errors: {},
@@ -122,7 +122,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
       return;
     }
     if (shippingMethodListData && shippingMethodListData.shippingMethodList) {
-      const values = {} as CheckoutLogicData;
+      const values = {} as CheckoutContextValues;
       // if shipping methods has changed then remove already selected shipping method
       if (!isEqual(shippingMethodListData.shippingMethodList, state.availableShippingMethods)) {
         values.shippingMethod = null;
@@ -149,7 +149,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
       return;
     }
     if (paymentMethodListData && paymentMethodListData.paymentMethodList) {
-      const values = {} as CheckoutLogicData;
+      const values = {} as CheckoutContextValues;
       if (!isEqual(paymentMethodListData.paymentMethodList, state.availablePaymentMethods)) {
         values.paymentMethod = null;
       }
@@ -211,7 +211,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
           return;
         }
 
-        const values = { shippingAddress } as CheckoutLogicData;
+        const values = { shippingAddress } as CheckoutContextValues;
 
         // if billing is set to the same as shipping then set it also to received value
         if (state.values.billingSameAsShipping) {
@@ -366,7 +366,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
       });
   };
 
-  const context: CheckoutLogicRenderProps = {
+  const context: CheckoutProviderRenderProps = {
     ...state,
     setEmail,
     setBillingSameAsShipping,
