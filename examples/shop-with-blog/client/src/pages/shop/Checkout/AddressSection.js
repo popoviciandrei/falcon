@@ -99,7 +99,7 @@ class AddressSection extends React.Component {
     const addressForm = (
       <Formik initialValues={initialAddressValue} onSubmit={this.submitAddress}>
         <Form id={id} i18nId="addressForm" my="sm">
-          <AddressFormFields id={id} submitLabel={submitLabel} autoCompleteSection={id} />
+          <AddressFormFields id={id} askEmail submitLabel={submitLabel} autoCompleteSection={id} />
           <Button type="submit">{submitLabel}</Button>
         </Form>
       </Formik>

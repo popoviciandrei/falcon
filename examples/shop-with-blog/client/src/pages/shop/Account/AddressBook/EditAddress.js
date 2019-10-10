@@ -54,7 +54,7 @@ const EditAddress = ({ match }) => {
                 }
               >
                 <Form id="edit-address" i18nId="addressForm">
-                  <AddressFormFields twoColumns askDefault askEmail={false} onCancel={() => setDone(true)} />
+                  <AddressFormFields twoColumns askDefault onCancel={() => setDone(true)} />
                   <FlexLayout justifyContent="flex-end" alignItems="center" mt="md">
                     <Button onClick={() => setDone(true)} mr="md">
                       <T id="editAddress.cancelButton" />
