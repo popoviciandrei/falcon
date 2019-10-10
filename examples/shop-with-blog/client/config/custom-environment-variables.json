@@ -3,5 +3,6 @@
     "httpLink": {
       "uri": "APOLLO_CLIENT__HTTP_LINK__URI"
     }
-  }
+  },
+  "graphqlUrl": "GRAPHQL_URL"
 }

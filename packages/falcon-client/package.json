@@ -21,9 +21,9 @@
     ]
   },
   "dependencies": {
-    "@apollo/react-common": "3.1.1",
-    "@apollo/react-hoc": "3.1.1",
-    "@apollo/react-ssr": "3.1.1",
+    "@apollo/react-common": "^3.1.2",
+    "@apollo/react-hoc": "^3.1.2",
+    "@apollo/react-ssr": "^3.1.2",
     "@babel/code-frame": "7.5.5",
     "@babel/core": "7.5.5",
     "@babel/preset-env": "7.5.5",
@@ -115,8 +115,8 @@
     "workbox-routing": "4.3.1"
   },
   "devDependencies": {
-    "@apollo/react-testing": "^3.1.1",
-    "@deity/falcon-front-kit": "^0.0.1",
+    "@apollo/react-testing": "^3.1.2",
+    "@deity/falcon-front-kit": "^1.0.0",
     "@deity/falcon-server": "^2.0.0",
     "@types/fs-extra": "8.0.0",
     "@types/prop-types": "15.7.1",

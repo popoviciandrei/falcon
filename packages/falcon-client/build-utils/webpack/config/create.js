@@ -355,37 +355,43 @@ module.exports = (target = 'web', options) => {
 
     config.optimization = {
       splitChunks: {
+        chunks: 'all',
+        automaticNameDelimiter: '-',
+        maxInitialRequests: 4,
         cacheGroups: {
           polyfills: {
             name: 'polyfills',
             enforce: true,
             priority: 100,
-            chunks: 'initial',
             test: moduleFilter(['core-js', 'whatwg-fetch', 'pwacompat'])
           },
           vendor: {
             name: 'vendors',
             enforce: true,
-            chunks: 'initial',
             test: moduleFilter([
               '@apollo/react-common',
+              '@apollo/react-components',
               '@apollo/react-hoc',
               '@apollo/react-hooks',
-              '@apollo/react-components',
+              '@loadable/component',
               'apollo-cache-inmemory',
+              'apollo-cache-persist',
               'apollo-client',
               'apollo-link',
               'apollo-link-http',
+              'apollo-link-http-common',
               'apollo-utilities',
+              'graphql',
+              'graphql-tag',
+              'graphql-tools',
               'i18next',
               'i18next-xhr-backend',
               'react',
               'react-apollo',
               'react-dom',
-              'react-google-tag-manager',
-              `react-helmet`,
               'react-router',
               'react-router-dom',
+              'tslib',
               'history'
             ])
           }

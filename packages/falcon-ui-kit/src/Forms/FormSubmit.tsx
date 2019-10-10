@@ -7,7 +7,7 @@ export const FormSubmit: React.SFC<{ submitting: boolean; value: string } & Them
   children,
   ...rest
 }) => (
-  <Box justifySelf="end" mt="md" {...rest as any}>
+  <Box justifySelf="end" mt="md" {...(rest as any)}>
     {children || (
       <Button type="submit" variant={submitting ? 'loader' : undefined}>
         {value}

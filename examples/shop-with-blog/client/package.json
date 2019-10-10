@@ -21,8 +21,8 @@
     "node": ">=8.10"
   },
   "dependencies": {
-    "@apollo/react-hoc": "3.1.1",
-    "@apollo/react-hooks": "3.1.1",
+    "@apollo/react-hoc": "^3.1.2",
+    "@apollo/react-hooks": "^3.1.2",
     "@deity/falcon-adyen-plugin": "^1.0.0",
     "@deity/falcon-blog-data": "^1.0.0",
     "@deity/falcon-client": "^2.0.0",
@@ -42,7 +42,7 @@
     "apollo-client": "2.6.4",
     "config": "^2.0.1",
     "cross-env": "5.2.0",
-    "formik": "^1.5.8",
+    "formik": "1.5.8",
     "graphql": "^14.5.3",
     "graphql-tag": "2.10.1",
     "i18next": "^12.1.0",
