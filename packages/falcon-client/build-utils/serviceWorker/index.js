@@ -12,7 +12,10 @@ const { getManifestEntries } = require('./workbox');
 
 const getRePatternList = (NODE_ENV, buildConfig, manifestEntries) => [
   { test: 'process.env.NODE_ENV', replace: JSON.stringify(NODE_ENV) },
-  { test: 'const CONFIG = {};', replace: `const CONFIG = ${JSON.stringify(buildConfig, null, 2)};` },
+  {
+    test: 'const CONFIG = {};',
+    replace: `const CONFIG = ${JSON.stringify(buildConfig, null, 2)};`
+  },
   { test: 'const ENTRIES = [];', replace: `const ENTRIES = ${JSON.stringify(manifestEntries, null, 2)};` }
 ];
 
