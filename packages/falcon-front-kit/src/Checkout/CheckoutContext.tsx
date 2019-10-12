@@ -38,7 +38,6 @@ type CheckoutContextError = {
 };
 
 type CheckoutContextData = {
-  loading: boolean;
   errors: CheckoutContextErrors;
   values: CheckoutContextValues;
   result?: PlaceOrderResult;
@@ -57,6 +56,7 @@ type CheckoutContextErrors = {
 };
 
 export type CheckoutProviderRenderProps = {
+  loading: boolean;
   setEmail(email: string): void;
   setShippingAddress(address: CheckoutAddressInput): void;
   setBillingSameAsShipping(same: boolean): void;
@@ -78,7 +78,6 @@ export const CheckoutContext = createContext<Partial<CheckoutProviderRenderProps
 export const CheckoutProvider = (props: CheckoutProviderProps) => {
   const { children } = props;
   const [state, setState] = useState<CheckoutContextData>({
-    loading: false,
     values: { billingSameAsShipping: false },
     errors: {},
     availablePaymentMethods: [],
@@ -91,30 +90,6 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
   const [loadPaymentMethodList, paymentMethodListProps] = usePaymentMethodListLazyQuery();
   const [setPaymentMethodMutation, setPaymentMethodProps] = useSetPaymentMethodMutation();
   const [placeOrderMutation, placeOrderProps] = usePlaceOrderMutation();
-
-  // Handling "loading" state based on Query/Mutation "loading" flags
-  useEffect(() => {
-    setPartialState({
-      loading:
-        [
-          setShippingAddressProps.loading,
-          setBillingAddressProps.loading,
-          shippingMethodListProps.loading,
-          setShippingMethodProps.loading,
-          paymentMethodListProps.loading,
-          setPaymentMethodProps.loading,
-          placeOrderProps.loading
-        ].filter(v => v).length > 0
-    });
-  }, [
-    setShippingAddressProps.loading,
-    setBillingAddressProps.loading,
-    shippingMethodListProps.loading,
-    setShippingMethodProps.loading,
-    paymentMethodListProps.loading,
-    setPaymentMethodProps.loading,
-    placeOrderProps.loading
-  ]);
 
   // Handling "setShippingAddressMutation" hook
   useEffect(() => {
@@ -340,8 +315,22 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
     });
   };
 
+  // Avoiding manual "loading" state key manipulation,
+  // so using Query's/Mutation's "loading" flags instead
+  const isLoading =
+    [
+      setShippingAddressProps.loading,
+      setBillingAddressProps.loading,
+      shippingMethodListProps.loading,
+      setShippingMethodProps.loading,
+      paymentMethodListProps.loading,
+      setPaymentMethodProps.loading,
+      placeOrderProps.loading
+    ].filter(v => v).length > 0;
+
   const context: CheckoutProviderRenderProps = {
     ...state,
+    loading: isLoading,
     setEmail,
     setBillingSameAsShipping,
     setShippingAddress,
