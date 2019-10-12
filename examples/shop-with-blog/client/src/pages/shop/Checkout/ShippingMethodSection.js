@@ -43,10 +43,7 @@ class ShippingSection extends React.Component {
 
   submitShipping = () => {
     const { methodCode: method, ...data } = this.state.selectedShipping;
-    this.props.setShipping({
-      method,
-      data
-    });
+    this.props.setShipping({ method, data });
   };
 
   render() {
