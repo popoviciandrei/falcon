@@ -30,7 +30,7 @@ const MyCheckout = () => {
   const { setEmail } = useContext(CheckoutContext);
 
   return (
-    <button onClick={() => setEmail('my@email.com')}></button>
+    <Button onClick={() => setEmail('my@email.com')}></Button>
   );
 };
 
