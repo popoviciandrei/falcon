@@ -13,7 +13,7 @@ It provides current state of the checkout process and methods for manipulating w
     <CheckoutContext.Consumer>
       {checkoutLogicData => (
         <div>
-          <Button onClick={checkoutLogicData.setEmail('foo@bar.com')}>Set email</Button>
+          <Button onClick={() => checkoutLogicData.setEmail('foo@bar.com')}>Set email</Button>
         </div>
       )}
     <CheckoutContext.Consumer>
@@ -34,7 +34,7 @@ const MyCheckout = () => {
   );
 };
 
-export (
+export default (
   <CheckoutProvider>
     <MyCheckout/>
   </CheckoutProvider>
