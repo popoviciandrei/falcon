@@ -15,11 +15,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      - name: install dependencies
+      - name: Install Falcon dependencies
         run: yarn --non-interactive --frozen-lockfile
-      - name: lint files
+      - name: Lint project files
         run: yarn lint
-      - name: run tests
+      - name: Run Falcon tests
         run: yarn test
-      - name: get coverage
-        run: yarn coverage
+      - name: Collect Code Coverage
+        run: yarn coverage -t ${{ secrets.CODECOV_TOKEN }}

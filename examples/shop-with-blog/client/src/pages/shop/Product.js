@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet-async';
 import { T } from '@deity/falcon-i18n';
 import { ProductQuery } from '@deity/falcon-shop-data';
 import { Box, Text, H1, NumberInput, Button, Icon, FlexLayout } from '@deity/falcon-ui';
@@ -24,6 +25,9 @@ const ProductPage = ({ id, path }) => (
   <ProductQuery variables={{ id, path }}>
     {({ data: { product } }) => (
       <PageLayout>
+        <Helmet>
+          <title>{product.name}</title>
+        </Helmet>
         <Breadcrumbs items={product.breadcrumbs} />
         <OpenSidebarMutation>
           {openSidebar => (

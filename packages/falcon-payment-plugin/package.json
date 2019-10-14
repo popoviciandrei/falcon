@@ -29,16 +29,14 @@
     "@deity/falcon-scripts": "^1.0.0",
     "@types/enzyme": "3.10.3",
     "@types/enzyme-adapter-react-16": "1.0.5",
-    "@types/react": "16.8.22",
-    "@types/react-dom": "16.8.4",
-    "@types/react-test-renderer": "16.8.2",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
-    "react-test-renderer": "16.8.6",
+    "@types/react": "16.9.5",
+    "@types/react-dom": "16.9.1",
+    "react": "16.10.2",
+    "react-dom": "16.10.2",
     "regenerator-runtime": "0.13.3"
   },
   "peerDependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
   }
 }
