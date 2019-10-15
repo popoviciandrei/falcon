@@ -17,7 +17,7 @@ const Order = ({ match }) => {
   const id = parseInt(match.params.id, 10);
 
   return (
-    <GridLayout gridGap="md">
+    <GridLayout>
       <OrderQuery variables={{ id }}>
         {({ data: { order } }) => (
           <LocaleProvider currency={order.orderCurrencyCode}>
@@ -31,7 +31,7 @@ const Order = ({ match }) => {
                 </Text>
                 <T id="order.status" context={order.status || 'na'} />
               </FlexLayout>
-              <GridLayout gridArea={OrderLayoutArea.items} alignContent="flex-start">
+              <GridLayout gridArea={OrderLayoutArea.items} alignContent="flex-start" gridGap="sm">
                 <Divider />
                 {order.items.map(x => (
                   <React.Fragment key={x.sku}>
@@ -56,7 +56,7 @@ const Order = ({ match }) => {
                 </PropertyRowLayout>
               </GridLayout>
               <Divider gridArea={OrderLayoutArea.divider} />
-              <GridLayout gridArea={OrderLayoutArea.summary} alignContent="flex-start">
+              <GridLayout gridArea={OrderLayoutArea.summary} alignContent="flex-start" gridGap="sm">
                 <Box>
                   <Text fontWeight="bold">
                     <T id="order.billingAddressLabel" />

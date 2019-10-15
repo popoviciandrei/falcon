@@ -21,7 +21,7 @@ const EditAddress = ({ match, history }) => {
   return (
     <AddressQuery variables={{ id }}>
       {({ data: { address } }) => (
-        <GridLayout mb="md" gridGap="md">
+        <GridLayout>
           <H1>
             <T id="editAddress.title" />
           </H1>
@@ -64,13 +64,13 @@ const EditAddress = ({ match, history }) => {
                     {!address.defaultBilling && <CheckboxFormField name="defaultBilling" />}
                     {!address.defaultShipping && <CheckboxFormField name="defaultShipping" />}
                     <TwoColumnsLayout>
-                      <GridLayout gridArea={TwoColumnsLayoutArea.left}>
+                      <GridLayout gridArea={TwoColumnsLayoutArea.left} gridGap="sm">
                         <FormField name="company" />
                         <FormField name="firstname" required />
                         <FormField name="lastname" required />
                         <FormField name="telephone" />
                       </GridLayout>
-                      <GridLayout gridArea={TwoColumnsLayoutArea.right}>
+                      <GridLayout gridArea={TwoColumnsLayoutArea.right} gridGap="sm">
                         <FormField name="street1" required />
                         <FormField name="street2" />
                         <FormField name="postcode" required />
