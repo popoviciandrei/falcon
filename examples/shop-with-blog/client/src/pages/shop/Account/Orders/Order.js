@@ -85,7 +85,7 @@ const Order = ({ match }) => {
                   <Text fontWeight="bold">
                     <T id="order.paymentMethodLabel" />
                   </Text>
-                  {order.shippingDescription}
+                  {order.paymentMethodName}
                 </Box>
               </GridLayout>
             </OrderLayout>
