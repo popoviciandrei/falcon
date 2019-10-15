@@ -1,4 +1,5 @@
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
 import { MemoryRouter, Route, RouteComponentProps } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -76,7 +77,9 @@ describe('SearchProvider', () => {
   const getSearchInfo = () => wrapper!.find(SearchProviderInner as any).state();
 
   beforeEach(async () => {
-    await renderSearchProvider();
+    await act(async () => {
+      await renderSearchProvider();
+    });
   });
 
   afterEach(() => {

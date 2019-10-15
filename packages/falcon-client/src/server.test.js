@@ -2,7 +2,7 @@
 import 'jest-extended';
 import { readFileSync } from 'fs';
 import React from 'react';
-import Helmet from 'react-helmet';
+import { HelmetProvider } from 'react-helmet-async';
 import loadable from '@loadable/component';
 import { Route, Switch } from 'react-router-dom';
 import Koa from 'koa';
@@ -92,7 +92,7 @@ describe('Server', () => {
   });
 
   it('Should render Home page (SSR)', async () => {
-    Helmet.canUseDOM = false;
+    HelmetProvider.canUseDOM = false;
     const Home = () => (
       <div>
         <h2>Foo</h2>
