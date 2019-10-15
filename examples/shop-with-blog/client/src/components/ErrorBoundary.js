@@ -4,7 +4,6 @@ import { T } from '@deity/falcon-i18n';
 import { H2, Link } from '@deity/falcon-ui';
 import { PageLayout, FixCenteredLayout } from '@deity/falcon-ui-kit';
 
-// based on https://reactjs.org/docs/error-boundaries.html
 export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
