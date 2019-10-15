@@ -1,15 +1,21 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: # Run tests when PR is merged to one of the following branches
+      - master
+      - dev
+  pull_request:
+    branches: # Run for every pull-request
+      - '**'
 
 jobs:
   build:
     strategy:
       matrix:
-        platform: [ubuntu-latest]
         node: ['12', '10', '8']
-    name: Node ${{ matrix.node }} (${{ matrix.platform }})
-    runs-on: ${{ matrix.platform }}
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
