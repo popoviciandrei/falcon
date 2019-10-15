@@ -14,7 +14,7 @@ import {
 } from '@deity/falcon-ui-kit';
 
 const ChangePassword = ({ history }) => (
-  <GridLayout mb="md" gridGap="md">
+  <GridLayout mb="md">
     <H1>
       <T id="changePassword.title" />
     </H1>

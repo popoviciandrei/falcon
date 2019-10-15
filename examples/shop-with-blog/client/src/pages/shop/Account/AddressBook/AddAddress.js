@@ -15,7 +15,7 @@ import {
 import { AddAddressMutation, CountryListQuery } from '@deity/falcon-shop-data';
 
 const AddAddress = ({ history }) => (
-  <GridLayout mb="md" gridGap="md">
+  <GridLayout mb="md">
     <H1>
       <T id="addAddress.title" />
     </H1>
@@ -51,13 +51,13 @@ const AddAddress = ({ history }) => (
               <CheckboxFormField name="defaultBilling" />
               <CheckboxFormField name="defaultShipping" />
               <TwoColumnsLayout>
-                <GridLayout gridArea={TwoColumnsLayoutArea.left}>
+                <GridLayout gridArea={TwoColumnsLayoutArea.left} gridGap="sm">
                   <FormField name="company" />
                   <FormField name="firstname" required />
                   <FormField name="lastname" required />
                   <FormField name="telephone" />
                 </GridLayout>
-                <GridLayout gridArea={TwoColumnsLayoutArea.right}>
+                <GridLayout gridArea={TwoColumnsLayoutArea.right} gridGap="sm">
                   <FormField name="street1" required />
                   <FormField name="street2" />
                   <FormField name="postcode" required />
