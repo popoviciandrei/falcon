@@ -19,7 +19,7 @@
   "devDependencies": {
     "@deity/eslint-config-falcon": "^1.0.0",
     "chalk": "2.4.1",
-    "codecov": "3.1.0",
+    "codecov": "3.6.1",
     "commander": "2.19.0",
     "cross-env": "5.2.0",
     "eslint": "6.1.0",
@@ -75,9 +75,9 @@
   },
   "resolutions": {
     "apollo-env": "0.5.1",
-    "react": "16.8.6",
+    "react": "16.10.2",
     "prop-types": "15.7.2",
-    "@types/react": "16.8.22",
+    "@types/react": "16.9.5",
     "@types/enzyme": "3.10.3"
   }
 }
