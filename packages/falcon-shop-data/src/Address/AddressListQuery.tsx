@@ -13,9 +13,13 @@ export const GET_ADDRESS_LIST = gql`
         street
         city
         postcode
-        region
-        regionId
-        countryId
+        region {
+          id
+        }
+        country {
+          id
+          code
+        }
         company
         defaultBilling
         defaultShipping
@@ -35,8 +39,8 @@ export type AddressListResponse = {
       | 'city'
       | 'postcode'
       | 'region'
-      | 'regionId'
-      | 'countryId'
+      | 'region'
+      | 'country'
       | 'company'
       | 'defaultBilling'
       | 'defaultShipping'

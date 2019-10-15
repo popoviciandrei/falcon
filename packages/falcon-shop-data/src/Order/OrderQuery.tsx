@@ -69,11 +69,11 @@ export type OrderResponse = {
     items: Pick<OrderItem, 'itemId' | 'sku' | 'name' | 'rowTotalInclTax' | 'qty' | 'thumbnailUrl' | 'link'>[];
     billingAddress: Pick<
       Address,
-      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'countryId' | 'telephone'
+      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'country' | 'telephone'
     >;
     shippingAddress: Pick<
       Address,
-      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'countryId' | 'telephone'
+      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'country' | 'telephone'
     >;
   };
 };

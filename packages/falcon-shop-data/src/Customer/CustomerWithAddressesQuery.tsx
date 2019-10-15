@@ -17,11 +17,15 @@ export const GET_CUSTOMER_WITH_ADDRESSES = gql`
         street
         postcode
         city
-        countryId
+        region {
+          id
+        }
+        country {
+          id
+          code
+        }
         defaultBilling
         defaultShipping
-        region
-        regionId
         telephone
       }
     }
@@ -32,17 +36,17 @@ export type CustomerWithAddressesResponse = {
   customer: Pick<Customer, 'id' | 'firstname' | 'lastname' | 'email'> & {
     addresses: Pick<
       Address,
+      | 'id'
       | 'company'
       | 'firstname'
       | 'lastname'
       | 'street'
       | 'postcode'
       | 'city'
-      | 'countryId'
+      | 'country'
       | 'defaultBilling'
       | 'defaultShipping'
       | 'region'
-      | 'regionId'
       | 'telephone'
     >[];
   };

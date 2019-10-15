@@ -26,15 +26,14 @@ export type AddressBase = {
   street: string[];
   city: string;
   postcode: string;
-  regionId?: number;
-  countryId: string;
   company?: string;
   telephone?: string;
 };
 
 export type Address = AddressBase & {
   id: number;
-  region?: string;
+  region?: Region;
+  country: Country;
   fax?: string;
   defaultBilling: boolean;
   defaultShipping: boolean;
@@ -42,12 +41,16 @@ export type Address = AddressBase & {
 
 export type CheckoutAddressInput = AddressBase & {
   id?: number;
+  regionId?: string;
+  countryId: string;
   email?: string;
   saveInAddressBook?: number;
   sameAsBilling?: number;
 };
 
 export type AddAddressInput = AddressBase & {
+  regionId?: number;
+  countryId: number;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
@@ -362,16 +365,17 @@ export type CountryList = {
 };
 
 export type Country = {
-  code: string;
-  englishName: string;
-  localName: string;
-  regions: Region[];
+  id: number;
+  code?: string;
+  englishName?: string;
+  localName?: string;
+  regions?: Region[];
 };
 
 export type Region = {
   id: string;
-  code: string;
-  name: string;
+  code?: string;
+  name?: string;
 };
 
 export type MenuItem = {
