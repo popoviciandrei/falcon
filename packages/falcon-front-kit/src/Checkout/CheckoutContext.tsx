@@ -181,6 +181,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
 
   // Note: the usage of `useEffect` hook to handle the response is due to a bug with `useLazyQuery.onCompleted` and `setState`
   // causing an infinite loop with calling `onCompleted` infinitely
+  // see: https://github.com/apollographql/react-apollo/issues/3505
   useEffect(() => {
     if (!shippingMethodListProps.loading && shippingMethodListProps.data) {
       const values = {} as CheckoutContextValues;
@@ -199,6 +200,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
 
   // Note: the usage of `useEffect` hook to handle the response is due to a bug with `useLazyQuery.onCompleted` and `setState`
   // causing an infinite loop with calling `onCompleted` infinitely
+  // see: https://github.com/apollographql/react-apollo/issues/3505
   useEffect(() => {
     if (!paymentMethodListProps.loading && paymentMethodListProps.data) {
       const values = {} as CheckoutContextValues;
