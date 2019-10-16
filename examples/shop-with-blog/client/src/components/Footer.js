@@ -70,7 +70,7 @@ const Sitemap = () => (
 );
 
 export const PageFooter = () => (
-  <GridLayout as={Footer} gridGap="md">
+  <GridLayout as={Footer}>
     <Newsletter />
     <Sitemap />
     <LocaleSwitcher>{({ ...props }) => <LocalePicker {...props} />}</LocaleSwitcher>

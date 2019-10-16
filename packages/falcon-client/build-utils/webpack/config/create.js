@@ -254,9 +254,11 @@ module.exports = (target = 'web', options) => {
           exclude: [paths.appBuild],
           use: getStyleLoaders(target, NODE_ENV, {
             importLoaders: 1,
-            modules: 'global',
+            modules: {
+              mode: 'global',
+              getLocalIdent: getCSSModuleLocalIdent
+            },
             minimize: IS_PROD,
-            getLocalIdent: getCSSModuleLocalIdent,
             sourceMap: !!devtool
           }),
           sideEffects: true // remove this when webpack adds a warning / error for this. See https://github.com/webpack/webpack/issues/6571
@@ -279,9 +281,11 @@ module.exports = (target = 'web', options) => {
           use: [
             ...getStyleLoaders(target, NODE_ENV, {
               importLoaders: 2,
-              modules: 'global',
+              modules: {
+                mode: 'global',
+                getLocalIdent: getCSSModuleLocalIdent
+              },
               minimize: IS_PROD,
-              getLocalIdent: getCSSModuleLocalIdent,
               sourceMap: !!devtool
             }),
             IS_WEB && require.resolve('sass-loader')
