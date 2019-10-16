@@ -8,16 +8,22 @@ import { SidebarQuery } from './SidebarQuery';
 export const SidebarContainer = ({ children }) => (
   <EnsureTTI>
     {({ isReady, forceReady }) => (
-      <SidebarQuery onCompleted={({ sidebar }) => sidebar.isOpen && forceReady()}>
-        {({ data: { sidebar } }) => (
-          <OpenSidebarMutation>
-            {open => (
-              <CloseSidebarMutation>
-                {close => (isReady ? children({ ...sidebar, open, close }) : null)}
-              </CloseSidebarMutation>
-            )}
-          </OpenSidebarMutation>
-        )}
+      <SidebarQuery>
+        {({ data: { sidebar } }) => {
+          if (!isReady && sidebar.isOpen) {
+            forceReady();
+          }
+
+          return (
+            <OpenSidebarMutation>
+              {open => (
+                <CloseSidebarMutation>
+                  {close => (isReady ? children({ ...sidebar, open, close }) : null)}
+                </CloseSidebarMutation>
+              )}
+            </OpenSidebarMutation>
+          );
+        }}
       </SidebarQuery>
     )}
   </EnsureTTI>
