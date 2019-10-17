@@ -1,4 +1,3 @@
-import React from 'react';
 import { themed, Box } from '@deity/falcon-ui';
 
 export const EmptyMiniCartLayout = themed({

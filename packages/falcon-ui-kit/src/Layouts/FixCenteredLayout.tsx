@@ -6,7 +6,7 @@ export type FixCenteredLayoutProps = {
   children?: React.ReactNode;
 };
 
-export const FixCenteredLayout = themed<FixCenteredLayoutProps, {}>({
+export const FixCenteredLayout = themed<FixCenteredLayoutProps>({
   tag: Box,
   defaultProps: {
     maxWidth: '70%'

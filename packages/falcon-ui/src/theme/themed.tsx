@@ -13,6 +13,7 @@ import {
   InlineCss
 } from './index';
 
+const NESTED_CSS_OBJECT_SELECTORS = [':', '&', '*', '>', '@'];
 const propsMappingKeys = Object.keys(mappings) as (keyof PropsMappings)[];
 
 const convertPropToCss = (
@@ -98,8 +99,6 @@ const convertThemedPropsToCss = (props: ThemedComponentProps, theme: Theme): CSS
   return targetCss;
 };
 
-const nestedCssObjectSelectors = [':', '&', '*', '>', '@'];
-
 function convertResponsivePropsToMediaQueries(css: CSSObject, theme: Theme) {
   const target: any = {};
   const mediaQueries: any = {};
@@ -112,7 +111,7 @@ function convertResponsivePropsToMediaQueries(css: CSSObject, theme: Theme) {
     }
     // we need to look for responsive props in nested css as well
     // for example in :hover object
-    else if (nestedCssObjectSelectors.indexOf(cssProp[0]) !== -1) {
+    else if (NESTED_CSS_OBJECT_SELECTORS.indexOf(cssProp[0]) !== -1) {
       target[cssProp] = convertResponsivePropsToMediaQueries(cssValue as CSSObject, theme);
     } else {
       // eslint-disable-next-line
@@ -152,7 +151,7 @@ function convertResponsivePropsToMediaQueries(css: CSSObject, theme: Theme) {
   return target;
 }
 
-function getCss(css: InlineCss, props: ThemedProps) {
+function getCss(css: InlineCss<ThemedProps>, props: ThemedProps) {
   return typeof css === 'function' ? css(props) : css;
 }
 
@@ -271,41 +270,34 @@ const filterPropsToForward = (baseComponent: any, props: any, ref: any) => {
   return filteredProps;
 };
 
-export type HtmlTag = string | {}; // TODO: I think type should be at least `JSX.IntrinsicElements | {}`
+type Tag = string | {}; // TODO: it should be `keyof JSX.IntrinsicElements | React.ComponentType ;`
+
 type DynamicHtmlTagProps = {
-  tag: any;
-  as: any;
+  tag: keyof JSX.IntrinsicElements | React.ComponentType;
+  as?: keyof JSX.IntrinsicElements | React.ComponentType;
 };
 /**
- * Handles dynamic html tag rendering via and `as` prop as well as forwards `ref`
- *  and only allowed html props to DOM element
+ * Handles dynamic html tag rendering via and `as` prop as well as forwards `ref` and only allowed html props to DOM element
  */
 const DynamicHtmlTag = React.forwardRef<{}, DynamicHtmlTagProps>((props, ref) => {
-  const Base = props.as || props.tag || 'div';
-  const nextProps = filterPropsToForward(Base, props as any, ref);
+  const Base = props.as || props.tag;
+  const nextProps = filterPropsToForward(Base, props, ref);
 
   return React.createElement(Base, nextProps);
 });
 
-export type BaseProps<TTag extends HtmlTag> = {
-  as?: TTag;
-} & (TTag extends keyof JSX.IntrinsicElements ? JSX.IntrinsicElements[TTag] : {}) &
+type TagProps<TTag extends Tag> = (TTag extends keyof JSX.IntrinsicElements ? JSX.IntrinsicElements[TTag] : {}) &
   (TTag extends React.ComponentType<infer TExtendProps> ? Partial<TExtendProps> : {});
 
-type ThemedDefaultProps<TTag extends HtmlTag> = (TTag extends keyof JSX.IntrinsicElements
-  ? JSX.IntrinsicElements[TTag]
-  : {}) &
-  (TTag extends React.ComponentType<infer TExtendProps> ? Partial<TExtendProps> : {});
-
-type ThemedOptions<TTag extends HtmlTag, TProps> = {
-  tag?: TTag;
+type ThemedOptions<TTag extends Tag, TProps> = {
+  tag: TTag;
   defaultTheme?: { [name: string]: ThemedComponentPropsWithVariants<TProps> };
-  defaultProps?: ThemedDefaultProps<TTag> & TProps;
+  defaultProps?: TagProps<TTag> & TProps;
 };
 
 export type DefaultThemeProps = { [name: string]: ThemedComponentPropsWithVariants };
 
-export function themed<TProps, TTag extends HtmlTag = HtmlTag>(options: ThemedOptions<TTag, TProps>) {
+export function themed<TProps, TTag extends Tag = Tag>(options: ThemedOptions<TTag, TProps>) {
   let label = '';
 
   if (options.defaultTheme) {
@@ -336,12 +328,15 @@ export function themed<TProps, TTag extends HtmlTag = HtmlTag>(options: ThemedOp
     tag: options.tag
   };
 
-  return styledComponentWithThemeProps as <TTagOverride extends HtmlTag = TTag>(
-    props: BaseProps<TTagOverride> &
-      Partial<typeof options['defaultProps']> &
-      ThemedComponentProps &
-      PropsWithVariant & {
+  return styledComponentWithThemeProps as <TAsTag extends Tag = TTag>(
+    props: React.PropsWithChildren<
+      {
+        as?: TAsTag;
         defaultTheme?: DefaultThemeProps;
-      }
+        variant?: string;
+      } & Partial<typeof options['defaultProps']> &
+        TagProps<TAsTag> &
+        ThemedComponentProps
+    >
   ) => JSX.Element;
 }

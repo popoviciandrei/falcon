@@ -74,7 +74,7 @@ module.exports = {
     'react/forbid-prop-types': 'off',
     'react/destructuring-assignment': 'off',
     'jsdoc/check-alignment': 1,
-    'jsdoc/check-indentation': 1,
+    'jsdoc/check-indentation': 'off',
     'jsdoc/check-param-names': 1,
     'jsdoc/check-syntax': 1,
     'jsdoc/check-tag-names': 1,

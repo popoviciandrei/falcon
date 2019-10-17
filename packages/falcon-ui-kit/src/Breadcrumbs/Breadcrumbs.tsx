@@ -1,18 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Breadcrumbs as FalconUiBreadcrumbs, Breadcrumb, ThemedComponentProps } from '@deity/falcon-ui';
+import {
+  Breadcrumbs as FalconUiBreadcrumbs,
+  BreadcrumbsProps as FalconUiBreadcrumbsProps,
+  Breadcrumb
+} from '@deity/falcon-ui';
 import { BreadcrumbLink } from './BreadcrumbLink';
 
 export type BreadcrumbItem = {
   name: string;
   urlPath?: string;
 };
-export type BreadcrumbsProps = {
+export type BreadcrumbsProps = FalconUiBreadcrumbsProps & {
   items: BreadcrumbItem[];
-} & ThemedComponentProps<any>;
+};
 
 export const Breadcrumbs: React.SFC<BreadcrumbsProps> = ({ items, ...rest }) => (
-  <FalconUiBreadcrumbs {...(rest as any)}>
+  <FalconUiBreadcrumbs {...rest}>
     {items.map(item =>
       item.urlPath ? (
         <BreadcrumbLink key={item.name} to={item.urlPath}>

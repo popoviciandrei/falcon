@@ -1,4 +1,3 @@
-import React from 'react';
 import { ListItem, themed } from '@deity/falcon-ui';
 
 export const FilterItemLayout = themed({

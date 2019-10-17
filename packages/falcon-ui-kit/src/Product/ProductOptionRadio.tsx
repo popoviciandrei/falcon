@@ -1,4 +1,3 @@
-import React from 'react';
 import { themed, Radio } from '@deity/falcon-ui';
 
 export const ProductOptionRadio = themed({

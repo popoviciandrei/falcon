@@ -12,6 +12,8 @@ export type Test3dSecurePropsField = {
 };
 
 export class Test3dSecure extends React.Component<Test3dSecureProps> {
+  form: React.RefObject<HTMLFormElement>;
+
   constructor(props: Test3dSecureProps) {
     super(props);
     this.form = React.createRef<HTMLFormElement>();
@@ -26,8 +28,6 @@ export class Test3dSecure extends React.Component<Test3dSecureProps> {
       form.submit();
     }
   }
-
-  form: React.RefObject<HTMLFormElement>;
 
   render() {
     const { url, method = 'POST', fields } = this.props;

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   Theme,
   mappings,
@@ -16,7 +15,6 @@ import {
   H3,
   Input
 } from '@deity/falcon-ui';
-
 import { themeMeta } from './thememeta';
 import { ComponentWithDefaultTheme } from '.';
 

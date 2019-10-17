@@ -10,7 +10,7 @@ export type PriceProps = {
   ellipsis: boolean;
 };
 const PriceInnerDom: React.SFC<PriceProps> = props => {
-  const { value, formatOptions, children, ...rest } = props;
+  const { value, formatOptions, ...rest } = props;
 
   return (
     <Locale>
@@ -26,7 +26,7 @@ PriceInnerDom.propTypes = {
   value: PropTypes.number.isRequired
 };
 
-export const Price = themed<PriceProps, {}>({
+export const Price = themed<PriceProps>({
   tag: PriceInnerDom,
   defaultProps: {
     value: 0.0,

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Summary, themed } from '@deity/falcon-ui';
 
 export const FilterDetailsSummaryLayout = themed({
