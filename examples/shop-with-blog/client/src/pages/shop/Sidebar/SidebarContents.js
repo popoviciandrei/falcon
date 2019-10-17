@@ -38,7 +38,7 @@ export default ({ contentType, open, close }) => {
                   <MiniCartQuery>
                     {({ data: { cart = { items: [] } } }) =>
                       cart.items.length > 0 ? (
-                        <MiniCart items={cart.items} onCheckout={() => close().then(() => history.push('/checkout'))} />
+                        <MiniCart items={cart.items} onCheckout={() => close().then(() => history.push('/cart'))} />
                       ) : (
                         <EmptyMiniCart onGoShopping={() => close().then(() => history.push('/what-is-new.html'))} />
                       )
