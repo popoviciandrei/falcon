@@ -2,6 +2,7 @@ import CSS from 'csstype';
 import { defaultBaseTheme } from './theme';
 import { PropsMappings } from './responsiveprops';
 import { mergeThemes } from './utils';
+import { HtmlTag } from './themed';
 
 export function createTheme(themeOverride: RecursivePartial<Theme> = {}): Theme {
   return mergeThemes(defaultBaseTheme, themeOverride);
@@ -87,7 +88,7 @@ export type ThemedComponentPropsWithCss<TProps = {}> = {
           ? CssProps[PropsMappings[ComponentProp]['cssProp']]
           : (string | number);
       };
-} & { css?: InlineCss<TProps> };
+} & { css?: InlineCss<TProps> } & { as?: HtmlTag };
 
 export interface ThemedComponentProps<TProps = {}> extends ThemedComponentPropsWithCss<TProps> {}
 

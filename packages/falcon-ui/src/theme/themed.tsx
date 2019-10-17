@@ -271,7 +271,7 @@ const filterPropsToForward = (baseComponent: any, props: any, ref: any) => {
   return filteredProps;
 };
 
-type HtmlTag = string | {}; // TODO: I think type should be at least `JSX.IntrinsicElements | {}`
+export type HtmlTag = string | {}; // TODO: I think type should be at least `JSX.IntrinsicElements | {}`
 type DynamicHtmlTagProps = {
   tag: any;
   as: any;

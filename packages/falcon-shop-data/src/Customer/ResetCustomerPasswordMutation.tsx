@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { ResetPasswordInput } from '@deity/falcon-shop-extension';
 
@@ -17,3 +18,7 @@ export class ResetPasswordMutation extends Mutation<ResetPasswordResponse, Opera
     mutation: RESET_PASSWORD_MUTATION
   };
 }
+
+export const useResetPasswordMutation = (
+  options: MutationHookOptions<ResetPasswordResponse, OperationInput<ResetPasswordInput>> = {}
+) => useMutation(RESET_PASSWORD_MUTATION, options);

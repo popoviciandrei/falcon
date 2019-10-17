@@ -45,6 +45,7 @@
     "@types/react-lazyload": "2.5.0",
     "@types/react-responsive": "3.0.3",
     "@types/react-router-dom": "4.3.4",
+    "apollo-client": "2.6.4",
     "formik": "1.5.8",
     "graphql-tag": "2.10.1",
     "prop-types": "15.7.2",
@@ -54,6 +55,7 @@
   "peerDependencies": {
     "@deity/falcon-front-kit": "^1.0.0",
     "@deity/falcon-ui": "^1.0.0",
+    "apollo-client": "^2.6.4",
     "formik": "^1.5.8",
     "graphql-tag": "^2.10.1",
     "prop-types": "^15.7.2",

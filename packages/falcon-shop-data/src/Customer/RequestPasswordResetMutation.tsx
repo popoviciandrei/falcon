@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { RequestPasswordResetInput } from '@deity/falcon-shop-extension';
 
@@ -20,3 +21,7 @@ export class RequestPasswordResetMutation extends Mutation<
     mutation: REQUEST_PASSWORD_RESET_TOKEN_MUTATION
   };
 }
+
+export const useRequestPasswordResetMutation = (
+  options: MutationHookOptions<RequestPasswordResetResponse, OperationInput<RequestPasswordResetInput>> = {}
+) => useMutation(REQUEST_PASSWORD_RESET_TOKEN_MUTATION, options);

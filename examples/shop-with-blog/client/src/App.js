@@ -37,7 +37,7 @@ const HeadMetaTags = () => (
   </Helmet>
 );
 
-const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/Home'));
+const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/home/Home'));
 const Account = loadable(() => import(/* webpackChunkName: "account/account" */ './pages/shop/Account/Account'));
 const SignIn = loadable(() => import(/* webpackChunkName: "account/sign-in" */ './pages/account/SignIn'));
 const ResetPassword = loadable(() => import(/* webpackChunkName: "shop/resetpassword" */ './pages/shop/ResetPassword'));
