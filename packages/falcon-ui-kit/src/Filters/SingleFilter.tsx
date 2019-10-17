@@ -19,7 +19,7 @@ export const SingleFilter: React.SFC<SingleFilterProps & ThemedComponentProps> =
   const selectedOption = selected !== undefined ? options.find(x => x.value === selected) : undefined;
 
   return (
-    <FilterItemListLayout {...rest as any}>
+    <FilterItemListLayout {...(rest as any)}>
       {selectedOption && (
         <SelectedFilterItemLayout onClick={() => onChange()}>{selectedOption!.title}</SelectedFilterItemLayout>
       )}

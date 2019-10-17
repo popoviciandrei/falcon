@@ -3,7 +3,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Location, LocationState } from 'history';
 import PropTypes from 'prop-types';
 import { T } from '@deity/falcon-i18n';
-import { H1, Text, Button, FlexLayout, GridLayout } from '@deity/falcon-ui';
+import { H1, Text, Button, FlexLayout } from '@deity/falcon-ui';
+import { PageLayout } from '../Layouts';
 
 export type NotFoundProps<TState = LocationState> = {
   location: Location<TState>;
@@ -13,7 +14,7 @@ export const NotFound: React.SFC<NotFoundProps> = ({ location }) => {
   const path = pathname.startsWith('/') ? pathname.substring(1) : pathname;
 
   return (
-    <GridLayout mb="md" gridGap="md">
+    <PageLayout>
       <H1>
         <T id="notFound.title" />
       </H1>
@@ -25,7 +26,7 @@ export const NotFound: React.SFC<NotFoundProps> = ({ location }) => {
           <T id="notFound.goHomeButton" />
         </Button>
       </FlexLayout>
-    </GridLayout>
+    </PageLayout>
   );
 };
 NotFound.propTypes = {

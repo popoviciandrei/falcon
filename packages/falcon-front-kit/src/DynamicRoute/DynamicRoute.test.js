@@ -1,4 +1,5 @@
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 import { MemoryRouter, Switch } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -12,7 +13,7 @@ describe('DynamicRoute', () => {
       {
         request: {
           query: GET_URL,
-          variables: { path: 'test' }
+          variables: { path: '/test' }
         },
         result: {
           data: {
@@ -20,7 +21,7 @@ describe('DynamicRoute', () => {
               __typename: 'ResourceMeta',
               id: 100,
               type: 'foo',
-              path: 'test',
+              path: '/test',
               redirect: false
             }
           }
@@ -31,22 +32,28 @@ describe('DynamicRoute', () => {
     const Loader = () => <span>Loading...</span>;
     const Foo = () => <p>foo</p>;
 
-    const App = mount(
-      <MockedProvider mocks={mocks}>
-        <MemoryRouter initialEntries={['/test']}>
-          <Switch>
-            <DynamicRoute loaderComponent={Loader} notFound={() => <span>Not found</span>} components={{ foo: Foo }} />
-          </Switch>
-        </MemoryRouter>
-      </MockedProvider>
-    );
+    await act(async () => {
+      const App = mount(
+        <MockedProvider mocks={mocks}>
+          <MemoryRouter initialEntries={['/test']}>
+            <Switch>
+              <DynamicRoute
+                loaderComponent={Loader}
+                notFound={() => <span>Not found</span>}
+                components={{ foo: Foo }}
+              />
+            </Switch>
+          </MemoryRouter>
+        </MockedProvider>
+      );
 
-    expect(App.find(DynamicRoute).length).toBe(1);
-    expect(App.find(DynamicRoute).find(Loader)).toBeTruthy();
+      expect(App.find(DynamicRoute).length).toBe(1);
+      expect(App.find(DynamicRoute).find(Loader)).toBeTruthy();
 
-    await wait(100);
+      await wait(100);
 
-    expect(App.find(DynamicRoute).length).toBe(1);
-    expect(App.find(DynamicRoute).find(Foo)).toBeTruthy();
+      expect(App.find(DynamicRoute).length).toBe(1);
+      expect(App.find(DynamicRoute).find(Foo)).toBeTruthy();
+    });
   });
 });

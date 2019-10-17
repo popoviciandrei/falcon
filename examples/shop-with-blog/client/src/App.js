@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { ThemeProvider, Box, Button } from '@deity/falcon-ui';
 import { AppLayout, Sidebar } from '@deity/falcon-ui-kit';
 import { ServiceWorkerRegistrar, ServiceWorker } from '@deity/falcon-service-worker';
@@ -37,7 +37,7 @@ const HeadMetaTags = () => (
   </Helmet>
 );
 
-const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/Home'));
+const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/home/Home'));
 const Account = loadable(() => import(/* webpackChunkName: "account/account" */ './pages/shop/Account/Account'));
 const SignIn = loadable(() => import(/* webpackChunkName: "account/sign-in" */ './pages/account/SignIn'));
 const ResetPassword = loadable(() => import(/* webpackChunkName: "shop/resetpassword" */ './pages/shop/ResetPassword'));

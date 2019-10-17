@@ -24,4 +24,4 @@ export class RequestPasswordResetMutation extends Mutation<
 
 export const useRequestPasswordResetMutation = (
   options: MutationHookOptions<RequestPasswordResetResponse, OperationInput<RequestPasswordResetInput>> = {}
-) => useMutation(REQUEST_PASSWORD_RESET_TOKEN_MUTATION, { ...options });
+) => useMutation(REQUEST_PASSWORD_RESET_TOKEN_MUTATION, options);
