@@ -33,7 +33,7 @@ extend type Mutation {
   resetPassword(input: ResetPasswordInput!): Boolean
   editAddress(input: EditAddressInput!): Address
   addAddress(input: AddAddressInput!): Address
-  removeAddress(id: ID!): Boolean
+  removeAddress(id: ID!): Boolean!
   estimateShippingMethods(input: EstimateShippingMethodsInput!): [ShippingMethod!]!
   # set current customer order shipping information
   setShipping(input: SetShippingInput): SetShippingResult!
