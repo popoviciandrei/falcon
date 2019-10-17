@@ -127,6 +127,19 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
         errors: { shippingMethod: [error] },
         availableShippingMethods: []
       });
+    },
+    onCompleted: data => {
+      const values = {} as CheckoutContextValues;
+      // if shipping methods has changed then remove already selected shipping method
+      if (!isEqual(data.shippingMethodList, state.availableShippingMethods)) {
+        values.shippingMethod = null;
+      }
+
+      setPartialState({
+        errors: {},
+        values,
+        availableShippingMethods: data.shippingMethodList
+      });
     }
   });
   const [setShippingMethodMutation, { loading: setShippingMethodLoading }] = useSetShippingMethodMutation({
@@ -154,6 +167,18 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
         errors: { paymentMethod: [error] },
         availablePaymentMethods: []
       });
+    },
+    onCompleted: data => {
+      const values = {} as CheckoutContextValues;
+      if (!isEqual(data.paymentMethodList, state.availablePaymentMethods)) {
+        values.paymentMethod = null;
+      }
+
+      setPartialState({
+        errors: {},
+        values,
+        availablePaymentMethods: data.paymentMethodList
+      });
     }
   });
   const [setPaymentMethodMutation, { loading: setPaymentMethodLoading }] = useSetPaymentMethodMutation({
@@ -178,43 +203,6 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
       });
     }
   });
-
-  // Note: the usage of `useEffect` hook to handle the response is due to a bug with `useLazyQuery.onCompleted` and `setState`
-  // causing an infinite loop with calling `onCompleted` infinitely
-  // see: https://github.com/apollographql/react-apollo/issues/3505
-  useEffect(() => {
-    if (!shippingMethodListProps.loading && shippingMethodListProps.data) {
-      const values = {} as CheckoutContextValues;
-      // if shipping methods has changed then remove already selected shipping method
-      if (!isEqual(shippingMethodListProps.data.shippingMethodList, state.availableShippingMethods)) {
-        values.shippingMethod = null;
-      }
-
-      setPartialState({
-        errors: {},
-        values,
-        availableShippingMethods: shippingMethodListProps.data.shippingMethodList
-      });
-    }
-  }, [shippingMethodListProps.loading]);
-
-  // Note: the usage of `useEffect` hook to handle the response is due to a bug with `useLazyQuery.onCompleted` and `setState`
-  // causing an infinite loop with calling `onCompleted` infinitely
-  // see: https://github.com/apollographql/react-apollo/issues/3505
-  useEffect(() => {
-    if (!paymentMethodListProps.loading && paymentMethodListProps.data) {
-      const values = {} as CheckoutContextValues;
-      if (!isEqual(paymentMethodListProps.data.paymentMethodList, state.availablePaymentMethods)) {
-        values.paymentMethod = null;
-      }
-
-      setPartialState({
-        errors: {},
-        values,
-        availablePaymentMethods: paymentMethodListProps.data.paymentMethodList
-      });
-    }
-  }, [paymentMethodListProps.loading]);
 
   const setPartialState = (partial: PartialType) => {
     setState({
