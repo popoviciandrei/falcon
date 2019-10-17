@@ -12,7 +12,7 @@ export type CacheTagEntry = {
  * Cache middleware for handling web-hooks to flush the cache by tags
  * @example curl -X POST http://localhost:4000/cache -H 'Content-Type: application/json' -d '[{"id": 1, "type": "Product"}]'
  * @param cache Cache component
- * @returns Koa middleware callback
+ * @returns {Middleware} Koa middleware callback
  */
 export const cacheInvalidatorMiddleware = (cache: Cache): Middleware => async ctx => {
   // List of submitted cache tag entries to invalidate

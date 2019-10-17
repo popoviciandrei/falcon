@@ -14,7 +14,7 @@
     "start": "cross-env CI=true lerna run start:dbg --scope=@deity/example-shop-with-blog* --parallel",
     "prepublish": "rimraf node_modules/@emotion/core/types && lerna run --scope=@deity/falcon-ui --stream prepare",
     "prepare": "lerna run --stream prepare",
-    "lint": "eslint ./"
+    "lint": "eslint --ext js,ts,tsx ./"
   },
   "devDependencies": {
     "@deity/eslint-config-falcon": "^1.0.0",

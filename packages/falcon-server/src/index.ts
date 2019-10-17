@@ -282,7 +282,7 @@ export class FalconServer {
 
   /**
    * Cache initializer
-   * @returns Cache instance
+   * @returns {Cache} Cache instance
    */
   protected getCache(): Cache {
     return new Cache(this.getCacheBackend());
@@ -290,7 +290,7 @@ export class FalconServer {
 
   /**
    * Create instance of cache backend based on configuration ("cache" key from config)
-   * @returns Instance of cache backend
+   * @returns {KeyValueCache} Instance of cache backend
    */
   protected getCacheBackend(): KeyValueCache {
     const { type = null, options = {} } = this.config.cache || {};

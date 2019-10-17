@@ -75,7 +75,11 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
 
   /**
    * Initializes each registered extension (in sequence)
-   * @returns Merged config
+   * @param obj
+   * @param args
+   * @param context
+   * @param info
+   * @returns {object} Merged config
    */
   fetchBackendConfig: GraphQLResolver<BackendConfig, null, null, T> = async (obj, args, context, info) => {
     const configs = await Promise.all(
@@ -95,7 +99,7 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
   /**
    * Merges backend configs
    * @param configs List of API config
-   * @returns Merged config
+   * @returns {object} Merged config
    */
   mergeBackendConfigs(configs: Array<RemoteBackendConfig>): BackendConfig {
     return configs.reduce((prev, current) => {
@@ -127,7 +131,7 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
   /**
    * Creates a complete configuration for ApolloServer
    * @param defaultConfig default configuration that should be used
-   * @returns resolved configuration
+   * @returns {object} resolved configuration
    */
   createGraphQLConfig(defaultConfig: GraphQLConfigDefaults = {}): ApolloServerConfig {
     const config = Object.assign(
@@ -237,7 +241,7 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
    * Imports extension's GraphQL Schema (if present in the provided "package")
    * @param basePath Base path of the package
    * @param extKey Extension name
-   * @returns Partial GraphQL Schema (if available)
+   * @returns {string | undefined} Partial GraphQL Schema (if available)
    */
   protected importExtensionGraphQLSchema(basePath: string, extKey: string): string | undefined {
     const packagePath = path.join(basePath, this.schemaFileName);
@@ -261,9 +265,9 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
   /**
    * Performs partial auto-binding for DataSource methods based on the provided `typeDefs`
    * @param typeDefs Extension's GQL schema type definitions
-   * @param dataSource DataSource initializer
+   * @param dataSourceName name of the DataSource
    * @param extKey Extension name
-   * @returns GraphQL configuration object
+   * @returns {Promise<ExtensionGraphQLConfig | undefined>} GraphQL configuration object
    */
   protected async getExtensionGraphQLConfig(
     typeDefs: string | Array<string>,
@@ -312,9 +316,9 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
 
   /**
    * Gets API instance from DataSource by assigned API name
-   * @param context GraphQL Resolver context object
-   * @param apiName Name of ApiDataSource (set via config)
-   * @returns API DataSource instance if found
+   * @param dataSources GraphQL Resolver context object
+   * @param name Name of ApiDataSource (set via config)
+   * @returns {ApiDataSource<GraphQLContext> | null} API DataSource instance if found
    */
   protected getApi(dataSources: DataSources, name: string): ApiDataSource<GraphQLContext> | null {
     return name in dataSources ? dataSources[name] : null;

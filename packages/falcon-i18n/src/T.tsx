@@ -7,6 +7,7 @@ export type TProps = {
   id: string;
 } & i18next.TranslationOptions;
 
+// eslint-disable-next-line id-length
 export class T extends React.Component<TProps> {
   static propTypes = {
     id: PropTypes.string.isRequired,
