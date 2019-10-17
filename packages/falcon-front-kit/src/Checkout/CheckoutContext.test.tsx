@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
 import { makeExecutableSchema, mergeSchemas } from 'graphql-tools';
 import { SchemaLink } from 'apollo-link-schema';
@@ -7,8 +8,7 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-common';
 import { PlaceOrderSuccessfulResult } from '@deity/falcon-shop-extension';
-import { wait } from '../../../../test/helpers';
-import { CheckoutLogic, CheckoutLogicRenderProps } from './CheckoutLogic';
+import { CheckoutConsumer, CheckoutProvider, CheckoutProviderRenderProps } from './CheckoutContext';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
 const Schema = readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');
@@ -65,11 +65,15 @@ const samplePaymentMethod = {
 };
 
 const resolversWithoutErrors = {
+  Query: {
+    shippingMethodList: () => [sampleShippingMethod],
+    paymentMethodList: () => [samplePaymentMethod]
+  },
   Mutation: {
-    estimateShippingMethods: () => [sampleShippingMethod],
-    setShipping: () => ({
-      paymentMethods: [samplePaymentMethod]
-    }),
+    setShippingAddress: () => true,
+    setBillingAddress: () => true,
+    setPaymentMethod: () => true,
+    setShippingMethod: () => true,
     placeOrder: () => ({
       orderId: '10',
       orderRealId: '010'
@@ -78,12 +82,26 @@ const resolversWithoutErrors = {
 };
 
 const resolversWithErrors = {
-  Mutation: {
-    estimateShippingMethods: () => {
-      throw new Error('estimateShippingMethods error');
+  Query: {
+    shippingMethodList: () => {
+      throw new Error('shippingMethodList error');
     },
-    setShipping: () => {
+    paymentMethodList: () => {
+      throw new Error('paymentMethodList error');
+    }
+  },
+  Mutation: {
+    setPaymentMethod: () => {
+      throw new Error('setPaymentMethod error');
+    },
+    setShippingMethod: () => {
       throw new Error('setShipping error');
+    },
+    setShippingAddress: () => {
+      throw new Error('setShippingAddress error');
+    },
+    setBillingAddress: () => {
+      throw new Error('setBillingAddress error');
     },
     placeOrder: () => {
       throw new Error('placeOrder error');
@@ -117,20 +135,34 @@ const createApolloClient = (resolvers: any) => {
   });
 };
 
-describe('CheckoutLogic', () => {
+declare type RenderCheckoutLogicArgs = {
+  onStateUpdated?: (data: CheckoutProviderRenderProps) => void;
+};
+
+describe('<CheckoutContext/>', () => {
   let wrapper: ReactWrapper<any, any> | null;
   let client: ApolloClient<any>;
 
-  const renderCheckoutLogic = (): { getProps: () => CheckoutLogicRenderProps; wrapper: ReactWrapper<any, any> } => {
-    let renderedProps: CheckoutLogicRenderProps;
+  const renderCheckoutLogic = (
+    data?: RenderCheckoutLogicArgs
+  ): {
+    getProps: () => CheckoutProviderRenderProps;
+    wrapper: ReactWrapper<any, any>;
+  } => {
+    let renderedProps: CheckoutProviderRenderProps;
     wrapper = mount(
       <ApolloProvider client={client}>
-        <CheckoutLogic>
-          {logicData => {
-            renderedProps = logicData;
-            return <div />;
-          }}
-        </CheckoutLogic>
+        <CheckoutProvider>
+          <CheckoutConsumer>
+            {logicData => {
+              if (data && data.onStateUpdated) {
+                data.onStateUpdated(logicData);
+              }
+              renderedProps = logicData;
+              return <div />;
+            }}
+          </CheckoutConsumer>
+        </CheckoutProvider>
       </ApolloProvider>
     );
 
@@ -159,65 +191,91 @@ describe('CheckoutLogic', () => {
 
     it('should properly set email when setEmail() method is called', async () => {
       const { getProps } = renderCheckoutLogic();
-      await wait(0);
-      getProps().setEmail('foo@bar.com');
+      await act(async () => {
+        getProps().setEmail('foo@bar.com');
+      });
       expect(getProps().values.email).toBe('foo@bar.com');
     });
 
     it('should properly set shipping address data when address is passed to setShippingAddress()', async () => {
       const { getProps } = renderCheckoutLogic();
-      await wait(0);
-      getProps().setShippingAddress(sampleAddress);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingAddress(sampleAddress);
+      });
       expect(getProps().values.shippingAddress).toEqual(sampleAddress);
     });
 
     it('should properly set billing address data when address is passed to setBillingAddress()', async () => {
       const { getProps } = renderCheckoutLogic();
-      await wait(0);
-      getProps().setBillingAddress(sampleAddress);
-      await wait(0);
+      await act(async () => {
+        getProps().setBillingAddress(sampleAddress);
+      });
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
     });
 
     it('should properly set billing address data when setBillingSameAsShipping(true) is called', async () => {
       const { getProps } = renderCheckoutLogic();
-      await wait(0);
-      getProps().setShippingAddress(sampleAddress);
-      getProps().setBillingSameAsShipping(true);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingAddress(sampleAddress);
+      });
+      await act(async () => {
+        getProps().setBillingSameAsShipping(true);
+      });
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
     });
 
-    it('should properly return available shipping options when shipping address is set', async () => {
+    it('should properly return available shipping options when shipping and billing addresses are set', async () => {
       const { getProps } = renderCheckoutLogic();
-      await wait(0);
-      getProps().setShippingAddress(sampleAddress);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingAddress(sampleAddress);
+      });
+      await act(async () => {
+        getProps().setBillingSameAsShipping(true);
+      });
       expect(getProps().availableShippingMethods[0]).toEqual(sampleShippingMethod);
     });
 
     it('should properly return available payment options when shipping method is set', async () => {
       const { getProps } = renderCheckoutLogic();
-      await wait(0);
-      getProps().setShippingAddress(sampleAddress);
-      getProps().setBillingSameAsShipping(true);
-      await wait(0);
-      getProps().setShippingMethod(sampleShippingMethod);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingAddress(sampleAddress);
+        getProps().setBillingSameAsShipping(true);
+        getProps().setShippingMethod({
+          method: sampleShippingMethod.methodCode,
+          data: {
+            ...sampleShippingMethod
+          }
+        });
+      });
       expect(getProps().availablePaymentMethods[0]).toEqual(samplePaymentMethod);
     });
 
     it('should properly return orderId when order was placed', async () => {
       const { getProps } = renderCheckoutLogic();
-      await wait(0);
-      getProps().setEmail('foo@bar.com');
-      getProps().setShippingAddress(sampleAddress);
-      getProps().setBillingSameAsShipping(true);
-      getProps().setShippingMethod(sampleShippingMethod);
-      getProps().setPaymentMethod(samplePaymentMethod);
-      getProps().placeOrder();
-      await wait(0);
+      await act(async () => {
+        getProps().setEmail('foo@bar.com');
+        getProps().setShippingAddress(sampleAddress);
+      });
+      await act(async () => {
+        getProps().setBillingSameAsShipping(true);
+      });
+      await act(async () => {
+        getProps().setShippingMethod({
+          method: sampleShippingMethod.methodCode,
+          data: {
+            ...sampleShippingMethod
+          }
+        });
+      });
+      await act(async () => {
+        getProps().setPaymentMethod({
+          method: samplePaymentMethod.code,
+          data: {}
+        });
+      });
+      await act(async () => {
+        getProps().placeOrder();
+      });
       expect((getProps().result! as PlaceOrderSuccessfulResult).orderId).toBe('10');
     });
   });
@@ -236,31 +294,43 @@ describe('CheckoutLogic', () => {
 
     it('should pass errors passed from backend for setShippingAddress', async () => {
       const { getProps } = renderCheckoutLogic();
-      getProps().setShippingAddress(sampleAddress);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingAddress(sampleAddress);
+      });
       expect(getProps().errors.shippingAddress).toBeDefined();
     });
 
     it('should pass errors passed from backend for setShipping', async () => {
       const { getProps } = renderCheckoutLogic();
-      getProps().setShippingMethod(sampleShippingMethod);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingMethod({
+          method: sampleShippingMethod.methodCode,
+          data: {
+            ...sampleShippingMethod
+          }
+        });
+      });
       expect(getProps().errors.shippingMethod).toBeDefined();
     });
 
     it('should pass errors passed from backend for placeOrder', async () => {
       const { getProps } = renderCheckoutLogic();
-      getProps().setPaymentMethod(samplePaymentMethod);
-      getProps().placeOrder();
-      await wait(0);
+      await act(async () => {
+        getProps().setPaymentMethod({
+          method: samplePaymentMethod.code,
+          data: {}
+        });
+        getProps().placeOrder();
+      });
       expect(getProps().errors.order).toBeDefined();
     });
 
     it('should reset availableShippingMethods when setShippingAddress returns error', async () => {
       const { getProps } = renderCheckoutLogic();
-      getProps().setShippingAddress(sampleAddress);
-      await wait(0);
-      expect(getProps().availableShippingMethods).toBe(null);
+      await act(async () => {
+        getProps().setShippingAddress(sampleAddress);
+      });
+      expect(getProps().availableShippingMethods).toEqual([]);
     });
   });
 
@@ -277,31 +347,63 @@ describe('CheckoutLogic', () => {
     });
 
     it('should set loading flag to true when setShippingAddress mutation starts', async () => {
-      const { getProps } = renderCheckoutLogic();
+      let loadingChanged = false;
+      const { getProps } = renderCheckoutLogic({
+        onStateUpdated: data => {
+          if (data.loading) {
+            loadingChanged = true;
+          }
+        }
+      });
       expect(getProps().loading).toBe(false);
-      getProps().setShippingAddress(sampleAddress);
-      expect(getProps().loading).toBe(true);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingAddress(sampleAddress);
+      });
+      expect(getProps().values.shippingAddress).toBe(sampleAddress);
       expect(getProps().loading).toBe(false);
+      expect(loadingChanged).toBe(true);
     });
 
     it('should set loading flag to true when setShippingMethod mutation starts', async () => {
-      const { getProps } = renderCheckoutLogic();
+      let loadingChanged = false;
+      const { getProps } = renderCheckoutLogic({
+        onStateUpdated: data => {
+          if (data.loading) {
+            loadingChanged = true;
+          }
+        }
+      });
       expect(getProps().loading).toBe(false);
-      getProps().setShippingMethod(sampleShippingMethod);
-      expect(getProps().loading).toBe(true);
-      await wait(0);
+      await act(async () => {
+        getProps().setShippingMethod({
+          method: sampleShippingMethod.methodCode,
+          data: {
+            ...sampleShippingMethod
+          }
+        });
+      });
       expect(getProps().loading).toBe(false);
+      expect(loadingChanged).toBe(true);
     });
 
     it('should set loading flag to true when placeOrder mutation starts', async () => {
-      const { getProps } = renderCheckoutLogic();
+      let loadingChangedTimes = 0;
+      const { getProps } = renderCheckoutLogic({
+        onStateUpdated: data => {
+          if (data.loading) {
+            loadingChangedTimes++;
+          }
+        }
+      });
       expect(getProps().loading).toBe(false);
-      getProps().setPaymentMethod(samplePaymentMethod);
-      getProps().placeOrder();
-      expect(getProps().loading).toBe(true);
-      await wait(0);
+      await act(async () => {
+        getProps().setPaymentMethod({ method: samplePaymentMethod.code, data: {} });
+      });
+      await act(async () => {
+        getProps().placeOrder();
+      });
       expect(getProps().loading).toBe(false);
+      expect(loadingChangedTimes).toBe(2);
     });
   });
 });

@@ -1,9 +1,10 @@
 import gql from 'graphql-tag';
-import { Mutation, OperationInput } from '@deity/falcon-data';
+import { Mutation } from '@deity/falcon-data';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { PlaceOrderResult, PlaceOrderInput } from '@deity/falcon-shop-extension';
 
 export const PLACE_ORDER = gql`
-  mutation PlaceOrder($input: PlaceOrderInput!) {
+  mutation PlaceOrder($input: PlaceOrderInput) {
     placeOrder(input: $input) {
       __typename
       ... on PlaceOrderSuccessfulResult {
@@ -26,8 +27,15 @@ export type PlaceOrderResponse = {
   placeOrder: PlaceOrderResult;
 };
 
-export class PlaceOrderMutation extends Mutation<PlaceOrderResponse, OperationInput<PlaceOrderInput>> {
+export class PlaceOrderMutation extends Mutation<PlaceOrderResponse, PlaceOrderInput> {
   static defaultProps = {
-    mutation: PLACE_ORDER
+    mutation: PLACE_ORDER,
+    refetchQueries: ['Cart', 'OrderList']
   };
 }
+
+export const usePlaceOrderMutation = (options?: MutationHookOptions<PlaceOrderResponse, PlaceOrderInput>) =>
+  useMutation<PlaceOrderResponse, PlaceOrderInput>(PLACE_ORDER, {
+    refetchQueries: ['Cart', 'OrderList'],
+    ...(options || {})
+  });

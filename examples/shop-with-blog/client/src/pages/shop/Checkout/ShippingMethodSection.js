@@ -42,7 +42,8 @@ class ShippingSection extends React.Component {
   onShippingSelected = selectedShipping => this.setState({ selectedShipping });
 
   submitShipping = () => {
-    this.props.setShipping(this.state.selectedShipping);
+    const { methodCode: method, ...data } = this.state.selectedShipping;
+    this.props.setShipping({ method, data });
   };
 
   render() {

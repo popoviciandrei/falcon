@@ -1342,7 +1342,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {string} input.currentPassword current password
    * @returns {Promise<boolean>} true on success
    */
-  async changeCustomerPassword(obj, { input }) {
+  async changePassword(obj, { input }) {
     const { password: newPassword, currentPassword } = input;
 
     try {
@@ -1402,25 +1402,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     throw new Error('Trying to remove coupon without quoteId in session');
   }
 
-  async estimateShippingMethods(obj, { input }) {
-    input.address = this.prepareAddressForOrder(input.address);
-
-    const response = await this.performCartAction(
-      '/estimate-shipping-methods',
-      'post',
-      // todo: check why params cannot be passed here directly. In this case params.constructor === undefined
-      // and because of that RESTDataSource.fetch() cannot properly serialize to before sending
-      // Using Object.assign() fixes the problem with constructor property so fetch() works correctly then
-      Object.assign({}, input)
-    );
-
-    response.forEach(method => {
-      method.currency = this.session.currency;
-    });
-
-    return this.convertKeys(response);
-  }
-
   /**
    * Removes unnecessary fields from address entry and adds proper id so Magento doesn't crash
    * @param {AddressInput} address address to process
@@ -1471,23 +1452,81 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     };
   }
 
+  async setShippingAddress(root, { input: address }) {
+    this.session.cart.shippingAddress = address;
+    this.context.session.save();
+    return true;
+  }
+
+  async setBillingAddress(root, { input: address }) {
+    this.session.cart.billingAddress = address;
+    this.context.session.save();
+    return true;
+  }
+
+  async shippingMethodList() {
+    if (!this.session.cart.shippingAddress) {
+      return [];
+    }
+
+    const input = {
+      address: this.prepareAddressForOrder(this.session.cart.shippingAddress)
+    };
+
+    const response = await this.performCartAction('/estimate-shipping-methods', 'post', input);
+    response.forEach(method => {
+      method.currency = this.session.currency;
+    });
+
+    return this.convertKeys(response);
+  }
+
+  async paymentMethodList() {
+    const { billingAddress, shippingAddress, shippingCarrierCode, shippingMethodCode } = this.session.cart;
+    const magentoData = {
+      addressInformation: {
+        shippingCarrierCode,
+        shippingMethodCode,
+        billingAddress: this.prepareAddressForOrder(billingAddress),
+        shippingAddress: this.prepareAddressForOrder(shippingAddress)
+      }
+    };
+
+    const { paymentMethods } = await this.performCartAction('/shipping-information', 'post', magentoData);
+    return paymentMethods;
+  }
+
   /**
    * Sets shipping method for the order
    * @param {object} obj Parent object
    * @param {SetShippingInput} input shipping configuration
    * @returns {Promise<ShippingInformation>} shipping configuration info
    */
-  async setShipping(obj, { input }) {
+  async setShippingMethod(obj, { input }) {
+    const { billingAddress, shippingAddress } = this.session.cart;
+    const {
+      method: shippingMethodCode,
+      data: { carrierCode: shippingCarrierCode }
+    } = input;
+    this.session.cart.shippingCarrierCode = shippingCarrierCode;
+    this.session.cart.shippingMethodCode = shippingMethodCode;
+
     const magentoData = {
       addressInformation: {
-        ...input,
-        billingAddress: this.prepareAddressForOrder(input.billingAddress),
-        shippingAddress: this.prepareAddressForOrder(input.shippingAddress)
+        shippingCarrierCode,
+        shippingMethodCode,
+        billingAddress: this.prepareAddressForOrder(billingAddress),
+        shippingAddress: this.prepareAddressForOrder(shippingAddress)
       }
     };
 
-    const response = await this.performCartAction('/shipping-information', 'post', magentoData);
-    return this.convertKeys(response);
+    await this.performCartAction('/shipping-information', 'post', magentoData);
+    return true;
+  }
+
+  async setPaymentMethod() {
+    // Will be handled on "placeOrder" mutation
+    return true;
   }
 
   getPaymentMethodConfig(paymentMethod) {
@@ -1520,13 +1559,21 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   async placeOrder(obj, { input }) {
     let placeOrderResult;
+    const { paymentMethod: paymentData } = input;
+    const { method: paymentMethod, data: additionalData } = paymentData;
 
-    if (input.paymentMethod.method === 'paypal_express') {
+    if (paymentMethod === 'paypal_express') {
       return this.handlePayPalToken(input);
     }
 
     try {
-      placeOrderResult = await this.performCartAction('/place-order', 'put', input);
+      placeOrderResult = await this.performCartAction('/place-order', 'put', {
+        ...input,
+        paymentMethod: {
+          method: paymentMethod,
+          additionalData
+        }
+      });
     } catch (e) {
       // todo: use new version of error handler
       if (e.statusCode === 400) {
