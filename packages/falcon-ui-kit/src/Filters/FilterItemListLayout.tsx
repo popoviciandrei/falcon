@@ -1,6 +1,6 @@
-import React from 'react';
-import { List, themed } from '@deity/falcon-ui';
+import { List, ListProps, themed } from '@deity/falcon-ui';
 
+export type FilterItemListLayoutProps = ListProps;
 export const FilterItemListLayout = themed({
   tag: List,
   defaultTheme: {

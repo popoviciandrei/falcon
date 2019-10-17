@@ -15,7 +15,7 @@
     "size": "falcon-client size | logger-pretty -m",
     "test": "falcon-client test --env=jsdom",
     "test:coverage": "falcon-client test --env=jsdom --ci --coverage",
-    "lint": "eslint ./"
+    "lint": "eslint --ext js,jsx,ts,tsx ."
   },
   "engines": {
     "node": ">=8.10"

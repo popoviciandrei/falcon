@@ -19,7 +19,7 @@ export const PARENT_KEYWORD: string = '$parent';
  * Generates a path-like string for the provided request
  * for `query { foo { bar } }` - it will generate `foo.bar` string
  * @param node Operation path object
- * @returns Generated operation path string
+ * @returns {string} Generated operation path string
  */
 export const getOperationPath = (node: ResponsePath): string => {
   const { key, prev } = node;
@@ -33,7 +33,7 @@ export const getOperationPath = (node: ResponsePath): string => {
 /**
  * Extract "root" type from GQL field by getting "ofType" sub-type until it reaches the root field
  * @param type GQL Object type
- * @returns "root" object type
+ * @returns {GraphQLType} "root" object type
  */
 export const getRootType = (type: GraphQLOutputType): GraphQLType => {
   const realType: GraphQLType = isWrappingType(type) ? type.ofType : type;
@@ -49,7 +49,7 @@ declare interface GetFieldValueFn {
  * Extract a value by `fieldName` from the provided `sourceValue`
  * @param sourceValue Source object to get a field value from
  * @param fieldName Name of the field
- * @returns Value or list of values (in case of `sourceValue` is an array)
+ * @returns {string} Value or list of values (in case of `sourceValue` is an array)
  */
 export const getFieldValue: GetFieldValueFn = (sourceValue: object | Array<object>, fieldName: string) => {
   if (!sourceValue || !fieldName) {
@@ -65,7 +65,7 @@ export const getFieldValue: GetFieldValueFn = (sourceValue: object | Array<objec
 /**
  * Find a field name with `@cacheId` directive applied
  * @param gqlType GQL Object Type
- * @returns Name of the "ID" field or `undefined` if there is none
+ * @returns {string | undefined} Name of the "ID" field or `undefined` if there is none
  */
 export const findIdFieldName = (gqlType: GraphQLOutputType): string | undefined => {
   const rootType = getRootType(gqlType);
@@ -95,7 +95,7 @@ export const findIdFieldName = (gqlType: GraphQLOutputType): string | undefined 
  * Generate tag names using `entityName` and `entityId`
  * @param entityName Entity Type name (like "Product")
  * @param entityId Entity ID or list of IDs (like: "1" or ["1", "2"])
- * @returns List of tag names (example: ["Product:1", "Product:2"])
+ * @returns {string[]} List of tag names (example: ["Product:1", "Product:2"])
  */
 export const generateTagNames = (entityName: string, entityId: string | string[]): string[] => {
   if (!entityId) {
@@ -159,7 +159,7 @@ export const getTagsForField = (
  * @param info GraphQL info object
  * @param parent GraphQL parent object
  * @param forceTypeName type name to force as a tag name
- * @returns List of tags
+ * @returns {string[]} List of tags
  */
 export const extractTagsForIdPath = (
   idPath: string,

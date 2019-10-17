@@ -37,7 +37,7 @@ export abstract class EndpointManager {
   }
 
   /**
-   * @returns List of supported endpoints
+   * @returns {Array<EndpointEntry>} List of supported endpoints
    */
   getEntries(): Array<EndpointEntry> {
     return [];

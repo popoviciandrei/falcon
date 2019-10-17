@@ -1,6 +1,5 @@
 import React from 'react';
 import { ThemeProvider, Box, Divider, FlexLayout, Icon, Sidebar, Portal } from '@deity/falcon-ui';
-
 import { ComponentsEditor } from './ComponentsEditor';
 import { ComponentFinder } from './ComponentFinder';
 import { Tabs } from './Tabs';

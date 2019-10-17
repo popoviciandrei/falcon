@@ -39,6 +39,10 @@ export class DynamicRouteResolver {
 
   /**
    * Fetches url data from remote API. Signature of the method must match the signature of GraphQL resolvers
+   * @param obj
+   * @param args
+   * @param context
+   * @param info
    */
   fetchUrl: GraphQLResolver<FetchUrlResult | null, null, FetchUrlParams> = async (obj, args, context, info) => {
     const { path } = args;

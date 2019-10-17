@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ThemedComponentPropsWithVariants } from '@deity/falcon-ui';
+import { Text, TextProps } from '@deity/falcon-ui';
 
 const errorInsights = ({ message, ...rest }) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -9,12 +9,12 @@ const errorInsights = ({ message, ...rest }) => {
   return '';
 };
 
-export type ErrorProps = {
+export type ErrorProps = TextProps & {
   insights?: any;
 };
-export const Error: React.SFC<ErrorProps & ThemedComponentPropsWithVariants> = ({ children, insights, ...rest }) => {
+export const Error: React.SFC<ErrorProps> = ({ children, insights, ...rest }) => {
   return (
-    <Text defaultTheme={{ error: { color: 'error' } }} title={errorInsights(insights)} {...(rest as any)}>
+    <Text defaultTheme={{ error: { color: 'error' } }} title={errorInsights(insights)} {...rest}>
       {children}
     </Text>
   );

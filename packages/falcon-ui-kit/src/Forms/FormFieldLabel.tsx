@@ -1,4 +1,3 @@
-import React from 'react';
 import { Label, themed } from '@deity/falcon-ui';
 import { FormFieldArea } from './FormFieldLayout';
 

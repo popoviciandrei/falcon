@@ -1,4 +1,3 @@
-import React from 'react';
 import { themed } from '@deity/falcon-ui';
 import { OrderListItemLayout } from './OrderListItemLayout';
 
