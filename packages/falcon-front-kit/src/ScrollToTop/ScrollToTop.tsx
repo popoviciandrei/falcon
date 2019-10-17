@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-export class ScrollToTopImpl extends React.Component<RouteComponentProps> {
+class ScrollToTopInner extends React.Component<RouteComponentProps> {
   componentDidUpdate(prevProps: RouteComponentProps) {
     const { location } = this.props;
 
@@ -17,4 +17,4 @@ export class ScrollToTopImpl extends React.Component<RouteComponentProps> {
   }
 }
 
-export const ScrollToTop = withRouter(ScrollToTopImpl);
+export const ScrollToTop = withRouter(ScrollToTopInner);

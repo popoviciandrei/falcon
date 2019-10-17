@@ -12,7 +12,7 @@
     "coverage": "codecov -p packages",
     "watch": "lerna run watch --parallel",
     "start": "cross-env CI=true lerna run start:dbg --scope=@deity/example-shop-with-blog* --parallel",
-    "prepublish": "lerna run --scope=@deity/falcon-ui --stream prepare",
+    "prepublish": "rimraf node_modules/@emotion/core/types && lerna run --scope=@deity/falcon-ui --stream prepare",
     "prepare": "lerna run --stream prepare",
     "lint": "eslint ./"
   },
@@ -30,7 +30,7 @@
     "lerna": "3.16.2",
     "lint-staged": "9.2.0",
     "rimraf": "2.6.2",
-    "typescript": "3.5.3"
+    "typescript": "3.6.4"
   },
   "engines": {
     "node": ">=8.10",

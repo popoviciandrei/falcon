@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResetPasswordFormProvider } from '@deity/falcon-front-kit';
-import { FormField, Form, FormProps, FormSubmit, FormErrorSummary, PasswordRevealInput } from '../Forms';
+import { ErrorSummary } from '../Error';
+import { FormField, Form, FormProps, FormSubmit, PasswordRevealInput } from '../Forms';
 
 export type ResetPasswordFormProps = Partial<FormProps> & {
   onSuccess?: () => Promise<void>;
@@ -8,18 +9,14 @@ export type ResetPasswordFormProps = Partial<FormProps> & {
 };
 export const ResetPasswordForm: React.SFC<ResetPasswordFormProps> = ({ onSuccess, resetToken, ...formProps }) => (
   <ResetPasswordFormProvider initialValues={{ resetToken, password: '' }} onSuccess={onSuccess}>
-    {({ isSubmitting, status }) => {
-      const error = (status && status.error) || undefined;
-
-      return (
-        <Form id="reset-password" i18nId="resetPassword" {...formProps}>
-          <FormField name="password" required type="password" autoComplete="new-password">
-            {({ field }) => <PasswordRevealInput {...field} />}
-          </FormField>
-          <FormSubmit justifySelf="center" submitting={isSubmitting} value="Reset my password" />
-          <FormErrorSummary errors={error} />
-        </Form>
-      );
-    }}
+    {({ isSubmitting, status = {} }) => (
+      <Form id="reset-password" i18nId="resetPassword" {...formProps}>
+        <FormField name="password" required type="password" autoComplete="new-password">
+          {({ field }) => <PasswordRevealInput {...field} />}
+        </FormField>
+        <FormSubmit justifySelf="center" submitting={isSubmitting} value="Reset my password" />
+        {status.error && <ErrorSummary errors={status.error} />}
+      </Form>
+    )}
   </ResetPasswordFormProvider>
 );
