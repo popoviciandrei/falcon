@@ -291,7 +291,7 @@ export const CheckoutProvider = (props: CheckoutProviderProps) => {
       paymentMethodListProps.loading,
       setPaymentMethodLoading,
       placeOrderLoading
-    ].filter(v => v).length > 0;
+    ].filter(Boolean).length > 0;
 
   const context: CheckoutProviderRenderProps = {
     ...state,
