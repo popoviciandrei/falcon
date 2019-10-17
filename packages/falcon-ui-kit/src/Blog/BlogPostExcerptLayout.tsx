@@ -1,4 +1,3 @@
-import React from 'react';
 import { themed, Link } from '@deity/falcon-ui';
 import { toGridTemplate } from '../helpers';
 
@@ -10,6 +9,7 @@ export const BlogPostExcerptArea = {
   readMore: 'readMore'
 };
 
+export type BlogPostExcerptLayoutProps = Parameters<typeof BlogPostExcerptLayout>[0];
 export const BlogPostExcerptLayout = themed({
   tag: Link,
   defaultTheme: {

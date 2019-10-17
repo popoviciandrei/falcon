@@ -12,7 +12,7 @@ type ThemeMeta = {
       options?: any[];
     };
     previewCss?: (value: string) => CSSObject;
-  }
+  };
 };
 
 export const themeMeta: ThemeMeta = {

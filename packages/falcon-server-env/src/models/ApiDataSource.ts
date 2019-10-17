@@ -177,7 +177,7 @@ export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLCon
    * @param totalItems Total amount of entries
    * @param [currentPage=null] Current page index
    * @param [perPage=null] Limit entries per page
-   * @returns Calculated result
+   * @returns {PaginationData} Calculated result
    */
   protected processPagination(
     totalItems: PaginationValue,

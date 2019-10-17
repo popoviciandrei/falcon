@@ -22,10 +22,10 @@
     "watch": "falcon-scripts watch"
   },
   "dependencies": {
-    "@babel/runtime": "7.5.5",
+    "@babel/runtime": "7.6.3",
     "@deity/falcon-blog-extension": "^1.0.0",
     "@deity/falcon-data": "^1.0.0",
-    "core-js": "3.1.4"
+    "core-js": "3.2.1"
   },
   "devDependencies": {
     "@deity/falcon-scripts": "^1.0.0",

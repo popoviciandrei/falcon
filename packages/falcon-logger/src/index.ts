@@ -44,7 +44,7 @@ logger.setApp = (name: string): void => {
  * @example
  * logger.getFor("my-module").info("Calling my-module...");
  * @param moduleName Module name
- * @returns Module-specific Logger instance
+ * @returns {Logger} Module-specific Logger instance
  */
 logger.getFor = (moduleName: string): Logger => logger.child({ module: moduleName }) as Logger;
 
@@ -54,7 +54,7 @@ logger.getFor = (moduleName: string): Logger => logger.child({ module: moduleNam
  * "TRACE: My time (XX ms)"
  * @param label Log label
  * @param fn Function to trace the execution time of
- * @returns `fn` result
+ * @returns {Promise<T>} `fn` result
  */
 logger.traceTime = function traceTime<T = any>(label: string, fn: () => Promise<T>): Promise<T> {
   // using `function()` statement to preserve the context in case of "getFor" call

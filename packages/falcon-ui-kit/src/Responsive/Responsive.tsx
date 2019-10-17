@@ -7,7 +7,7 @@ export type ResponsiveProps = {
   height?: keyof ThemeBreakpoints | number;
   children: React.ReactNode;
 };
-const ResponsiveImpl: React.SFC<ResponsiveProps & PropsWithTheme> = props => {
+const ResponsiveInner: React.SFC<ResponsiveProps & PropsWithTheme> = props => {
   const { theme, width, height, ...rest } = props;
 
   let responsiveProps = {};
@@ -29,4 +29,4 @@ const ResponsiveImpl: React.SFC<ResponsiveProps & PropsWithTheme> = props => {
   return <MediaQuery {...responsiveProps} {...rest} />;
 };
 
-export const Responsive: React.SFC<ResponsiveProps> = withTheme(ResponsiveImpl) as React.SFC<ResponsiveProps>;
+export const Responsive: React.SFC<ResponsiveProps> = withTheme(ResponsiveInner) as React.SFC<ResponsiveProps>;

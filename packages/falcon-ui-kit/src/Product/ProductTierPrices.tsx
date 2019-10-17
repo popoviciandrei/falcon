@@ -1,26 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { T } from '@deity/falcon-i18n';
-import { Box, Text, ThemedComponentProps } from '@deity/falcon-ui';
+import { Box, BoxProps, Text } from '@deity/falcon-ui';
 import { Locale } from '@deity/falcon-front-kit';
 
-export type ProductTierPricesProps = {
+export type ProductTierPricesProps = BoxProps & {
   items: {
     qty: number;
     value: number;
     discount: number;
   }[];
 };
-export const ProductTierPrices: React.SFC<ProductTierPricesProps & ThemedComponentProps> = ({
-  items: tierPrices,
-  ...rest
-}) => {
+export const ProductTierPrices: React.SFC<ProductTierPricesProps> = ({ items: tierPrices, ...rest }) => {
   if (!Array.isArray(tierPrices) || !tierPrices.length) {
     return null;
   }
 
   return (
-    <Box {...(rest as any)}>
+    <Box {...rest}>
       <Locale>
         {({ priceFormat }) =>
           tierPrices.map(x => (

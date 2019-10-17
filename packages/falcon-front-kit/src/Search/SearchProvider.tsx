@@ -143,5 +143,5 @@ const SearchProviderWithSortOrders: React.SFC<SearchProviderProps & RouteCompone
   </BackendConfigQuery>
 );
 
-// wrap everything in router so SearchProviderImpl has access to history and location
+// wrap everything in router so SearchProviderWithSortOrders has access to history and location
 export const SearchProvider = withRouter(SearchProviderWithSortOrders);

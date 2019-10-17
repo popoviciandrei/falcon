@@ -22,7 +22,7 @@
     "@deity/falcon-wordpress-api": "^1.0.0",
     "apollo-env": "0.5.1",
     "config": "^2.0.1",
-    "core-js": "3.0.0-beta.3",
+    "core-js": "3.2.1",
     "cross-env": "5.2.0"
   },
   "devDependencies": {

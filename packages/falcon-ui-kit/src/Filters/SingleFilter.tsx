@@ -1,7 +1,6 @@
 import React from 'react';
-import { ThemedComponentProps } from '@deity/falcon-ui';
 import { FilterOption } from '@deity/falcon-front-kit';
-import { FilterItemListLayout } from './FilterItemListLayout';
+import { FilterItemListLayout, FilterItemListLayoutProps } from './FilterItemListLayout';
 import { FilterItemLayout } from './FilterItemLayout';
 import { SelectedFilterItemLayout } from './SelectedFilterItemLayout';
 
@@ -10,7 +9,7 @@ export type SingleFilterProps = {
   selected?: string;
   onChange: (value?: string) => void;
 };
-export const SingleFilter: React.SFC<SingleFilterProps & ThemedComponentProps> = ({
+export const SingleFilter: React.SFC<SingleFilterProps & FilterItemListLayoutProps> = ({
   options,
   selected,
   onChange,
@@ -19,7 +18,7 @@ export const SingleFilter: React.SFC<SingleFilterProps & ThemedComponentProps> =
   const selectedOption = selected !== undefined ? options.find(x => x.value === selected) : undefined;
 
   return (
-    <FilterItemListLayout {...(rest as any)}>
+    <FilterItemListLayout {...rest}>
       {selectedOption && (
         <SelectedFilterItemLayout onClick={() => onChange()}>{selectedOption!.title}</SelectedFilterItemLayout>
       )}

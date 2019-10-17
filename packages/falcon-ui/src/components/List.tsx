@@ -1,5 +1,6 @@
 import { themed } from '../theme';
 
+export type ListProps = Parameters<typeof List>[0];
 export const List = themed({
   tag: 'ul',
   defaultTheme: {
