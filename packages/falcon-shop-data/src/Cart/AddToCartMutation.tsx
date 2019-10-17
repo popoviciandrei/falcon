@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { AddToCartInput, CartItemPayload } from '@deity/falcon-shop-extension';
 
@@ -25,3 +26,11 @@ export class AddToCartMutation extends Mutation<AddToCartResponse, OperationInpu
     refetchQueries: ['MiniCart', 'Cart']
   };
 }
+
+export const useAddToCartMutation = (
+  options: MutationHookOptions<AddToCartResponse, OperationInput<AddToCartInput>> = {}
+) =>
+  useMutation(ADD_TO_CART, {
+    refetchQueries: ['MiniCart', 'Cart'],
+    ...options
+  });

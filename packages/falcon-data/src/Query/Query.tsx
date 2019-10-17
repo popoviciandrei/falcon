@@ -4,23 +4,19 @@ import { OperationVariables, QueryResult } from '@apollo/react-common';
 import { Query as ApolloQuery, QueryComponentOptions } from '@apollo/react-components';
 import { NetworkStatus } from 'apollo-client';
 import { Loader } from './Loader';
-import { Error } from './Error';
+import { OperationError } from './OperationError';
+import { FetchMore, ApolloFetchMore } from './fetchMore';
 
-export type ApolloFetchMore<TData, TVariables> = QueryResult<TData, TVariables>['fetchMore'];
-export type FetchMore<TData, TVariables> = (data: TData, fetchMore: ApolloFetchMore<TData, TVariables>) => any;
+export type QueryRenderProps<TData = any, TVariables = OperationVariables> = {
+  fetchMore: (() => any) | ApolloFetchMore<TData, TVariables>;
+} & Omit<QueryResult<TData, TVariables>, 'fetchMore'>;
 
-export type QueryRenderProps<TData = any, TVariables = OperationVariables> = Omit<
-  QueryResult<TData, TVariables>,
-  'fetchMore'
-> & {
-  fetchMore: (() => any) | undefined;
-};
-
-export type QueryProps<TData, TVariables> = QueryComponentOptions<TData, TVariables> & {
+export type QueryProps<TData, TVariables> = {
   fetchMore?: FetchMore<TData, TVariables>;
   passLoading?: boolean;
   passError?: boolean;
-};
+  children?: (renderProps: QueryRenderProps<TData, TVariables>) => any;
+} & Omit<QueryComponentOptions<TData, TVariables>, 'children'>;
 
 export class Query<TData = any, TVariables = OperationVariables> extends React.Component<
   QueryProps<TData, TVariables>
@@ -37,10 +33,10 @@ export class Query<TData = any, TVariables = OperationVariables> extends React.C
     return (
       <ApolloQuery {...restProps}>
         {(result: QueryResult<TData, TVariables>) => {
-          const { networkStatus, error, data } = result;
+          const { networkStatus, error, data, fetchMore: apolloFetchMore } = result;
 
           if (!passError && error) {
-            return <Error error={error} />;
+            return <OperationError {...error} />;
           }
 
           const loading =
@@ -51,8 +47,8 @@ export class Query<TData = any, TVariables = OperationVariables> extends React.C
 
           return children({
             ...result,
-            data: result.data || ({} as TData),
-            fetchMore: fetchMore ? () => fetchMore(data!, result.fetchMore) : undefined
+            data: data || ({} as TData),
+            fetchMore: fetchMore ? () => fetchMore(data!, result.fetchMore) : apolloFetchMore
           });
         }}
       </ApolloQuery>
