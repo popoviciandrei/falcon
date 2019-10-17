@@ -67,7 +67,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       },
       Address: {
         country: apiGetter((api, ...args) => api.country(...args)),
-        region: apiGetter((api, ...args) => api.region(...args))
+        region: apiGetter((api, ...args) => api.addressRegion(...args))
       }
     };
   }
