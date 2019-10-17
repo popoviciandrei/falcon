@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
 import { I18n, T } from '@deity/falcon-i18n';
-import { TwoStepWizard } from '@deity/falcon-ecommerce-uikit';
+import { TwoStepWizard } from '@deity/falcon-front-kit';
+import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
 import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';

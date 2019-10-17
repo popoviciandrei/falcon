@@ -23,7 +23,7 @@ export class Portal extends React.Component<{}, { wrapper: HTMLElement }> {
     }
   }
 
-  render() {
+  render(): React.ReactNode {
     const { wrapper } = this.state;
     if (wrapper) {
       return ReactDOM.createPortal(<Root {...this.props} />, wrapper);

@@ -30,7 +30,7 @@ export function renderAppShell({ config, webpackAssets }) {
 
 /**
  * @typedef {object} RenderApp
- * @property {function} App React Component
+ * @property {Function} App React Component
  * @property {object} config App configuration
  * @property {object} clientApolloSchema Apollo State object
  * @property {object} webpackAssets webpack assets

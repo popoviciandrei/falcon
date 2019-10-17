@@ -1,7 +1,7 @@
 import pino, { Logger as PinoLogger, Level } from 'pino';
 import { chindingsSym } from 'pino/lib/symbols';
 
-export type Logger = {
+type Logger = {
   setLogLevel: (level: Level) => void;
   setApp: (name: string) => void;
   getFor: (moduleName: string) => Logger;
@@ -56,7 +56,7 @@ logger.getFor = (moduleName: string): Logger => logger.child({ module: moduleNam
  * @param fn Function to trace the execution time of
  * @returns `fn` result
  */
-logger.traceTime = function<T = any>(label: string, fn: () => Promise<T>): Promise<T> {
+logger.traceTime = function traceTime<T = any>(label: string, fn: () => Promise<T>): Promise<T> {
   // using `function()` statement to preserve the context in case of "getFor" call
   if (!this.isLevelEnabled('trace')) {
     return fn();

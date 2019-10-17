@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled-base';
 import isPropValid from '@emotion/is-prop-valid';
-
+import { extractThemableProps } from './utils';
+import { defaultBaseTheme } from './theme';
+import { mappings, PropsMappings, ResponsivePropMapping } from './responsiveprops';
 import {
   Theme,
   CSSObject,
@@ -10,9 +12,6 @@ import {
   ThemedComponentPropsWithVariants,
   InlineCss
 } from './index';
-import { extractThemableProps } from './utils';
-import { defaultBaseTheme } from './theme';
-import { mappings, PropsMappings, ResponsivePropMapping } from './responsiveprops';
 
 const propsMappingKeys = Object.keys(mappings) as (keyof PropsMappings)[];
 
@@ -204,7 +203,7 @@ function getThemedCss(props: ThemedProps) {
 
   // if props are defined in theme object for themeKey merge them with default ones
   if (themeKey) {
-    const areComponentPropsDefinedInTheme = themeKey && theme.components[themeKey] !== undefined;
+    const areComponentPropsDefinedInTheme = theme.components[themeKey] !== undefined;
     if (areComponentPropsDefinedInTheme) {
       addPropsToMerge(theme.components[themeKey]);
     }
@@ -272,37 +271,41 @@ const filterPropsToForward = (baseComponent: any, props: any, ref: any) => {
   return filteredProps;
 };
 
-// this component handles dynamic html tag rendering via and 'as' prop as well as forwards ref to DOM element
-// and forwards only allowed html tags
-const Tag = React.forwardRef<{}, { tag: any; as: any }>((props, ref) => {
+type HtmlTag = string | {}; // TODO: I think type should be at least `JSX.IntrinsicElements | {}`
+type DynamicHtmlTagProps = {
+  tag: any;
+  as: any;
+};
+/**
+ * Handles dynamic html tag rendering via and `as` prop as well as forwards `ref`
+ *  and only allowed html props to DOM element
+ */
+const DynamicHtmlTag = React.forwardRef<{}, DynamicHtmlTagProps>((props, ref) => {
   const Base = props.as || props.tag || 'div';
   const nextProps = filterPropsToForward(Base, props as any, ref);
 
   return React.createElement(Base, nextProps);
 });
 
-export type BaseProps<TTag extends string | {}> = {
+export type BaseProps<TTag extends HtmlTag> = {
   as?: TTag;
-} & PropsWithVariant &
-  (TTag extends keyof JSX.IntrinsicElements ? JSX.IntrinsicElements[TTag] : {}) &
+} & (TTag extends keyof JSX.IntrinsicElements ? JSX.IntrinsicElements[TTag] : {}) &
   (TTag extends React.ComponentType<infer TExtendProps> ? Partial<TExtendProps> : {});
 
-type DefaultProps<TTag extends string | {}> = (TTag extends keyof JSX.IntrinsicElements
+type ThemedDefaultProps<TTag extends HtmlTag> = (TTag extends keyof JSX.IntrinsicElements
   ? JSX.IntrinsicElements[TTag]
   : {}) &
   (TTag extends React.ComponentType<infer TExtendProps> ? Partial<TExtendProps> : {});
 
-type ThemedOptions<TTag extends string | {}, TProps> = {
+type ThemedOptions<TTag extends HtmlTag, TProps> = {
   tag?: TTag;
-
   defaultTheme?: { [name: string]: ThemedComponentPropsWithVariants<TProps> };
-
-  defaultProps?: DefaultProps<TTag> & TProps;
+  defaultProps?: ThemedDefaultProps<TTag> & TProps;
 };
 
 export type DefaultThemeProps = { [name: string]: ThemedComponentPropsWithVariants };
 
-export function themed<TProps, TTag extends string | {}>(options: ThemedOptions<TTag, TProps>) {
+export function themed<TProps, TTag extends HtmlTag = HtmlTag>(options: ThemedOptions<TTag, TProps>) {
   let label = '';
 
   if (options.defaultTheme) {
@@ -312,7 +315,7 @@ export function themed<TProps, TTag extends string | {}>(options: ThemedOptions<
     }
   }
 
-  const styledComponentWithThemeProps = styled(Tag, {
+  const styledComponentWithThemeProps = styled(DynamicHtmlTag, {
     label, // label is transformed for displayName of styled component,
     // target inserted as css class in resulting element so this could potentially be used as a fallback
     // to style components via traditional css
@@ -333,7 +336,7 @@ export function themed<TProps, TTag extends string | {}>(options: ThemedOptions<
     tag: options.tag
   };
 
-  return styledComponentWithThemeProps as <TTagOverride extends string | {} = TTag>(
+  return styledComponentWithThemeProps as <TTagOverride extends HtmlTag = TTag>(
     props: BaseProps<TTagOverride> &
       Partial<typeof options['defaultProps']> &
       ThemedComponentProps &

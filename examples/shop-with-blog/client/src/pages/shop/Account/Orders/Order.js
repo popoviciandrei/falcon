@@ -1,118 +1,98 @@
 import React from 'react';
+import { T } from '@deity/falcon-i18n';
+import { OrderQuery } from '@deity/falcon-shop-data';
 import { H1, Text, Divider, Box, FlexLayout, GridLayout } from '@deity/falcon-ui';
-import { I18n, T } from '@deity/falcon-i18n';
 import {
-  GetOrderQuery,
-  toGridTemplate,
+  OrderLayout,
+  OrderLayoutArea,
+  OrderItemSummary,
+  FormattedDate,
   AddressDetails,
-  DateFormat,
-  TotalRow,
-  LocaleProvider,
-  OrderItemSummary
-} from '@deity/falcon-ecommerce-uikit';
-
-const orderLayoutArea = {
-  items: 'checkout',
-  summary: 'cart',
-  divider: 'divider'
-};
-
-const orderLayout = {
-  orderLayout: {
-    display: 'grid',
-    gridGap: 'lg',
-    // prettier-ignore
-    gridTemplate: {
-      xs: toGridTemplate([
-        ['1fr'],
-        [orderLayoutArea.items],
-        [orderLayoutArea.divider],
-        [orderLayoutArea.summary]
-      ]),
-      md: toGridTemplate([
-        ['2fr', '1px', '1fr'],
-        [orderLayoutArea.items, orderLayoutArea.divider, orderLayoutArea.summary]
-      ])
-    }
-  }
-};
+  PropertyRowLayout,
+  Price
+} from '@deity/falcon-ui-kit';
+import { LocaleProvider } from '@deity/falcon-front-kit';
 
 const Order = ({ match }) => {
   const id = parseInt(match.params.id, 10);
 
   return (
-    <GetOrderQuery variables={{ id }}>
-      {({ order }) => (
-        <GridLayout mb="md" gridGap="md">
-          <H1>
-            <T id="order.title" orderId={order.incrementId} />
-          </H1>
-          <FlexLayout>
-            <Text fontWeight="bold" mr="md">
-              <T id="order.statusLabel" />
-            </Text>
-            <T id="order.status" context={order.status || 'na'} />
-          </FlexLayout>
-          <Box defaultTheme={orderLayout}>
-            <GridLayout gridArea={orderLayoutArea.items} alignContent="flex-start">
-              <I18n>
-                {t => (
-                  <LocaleProvider currency={order.orderCurrencyCode}>
+    <GridLayout gridGap="md">
+      <OrderQuery variables={{ id }}>
+        {({ data: { order } }) => (
+          <LocaleProvider currency={order.orderCurrencyCode}>
+            <H1>
+              <T id="order.title" orderId={order.referenceNo} />
+            </H1>
+            <OrderLayout>
+              <FlexLayout gridArea={OrderLayoutArea.status}>
+                <Text fontWeight="bold" mr="md">
+                  <T id="order.statusLabel" />
+                </Text>
+                <T id="order.status" context={order.status || 'na'} />
+              </FlexLayout>
+              <GridLayout gridArea={OrderLayoutArea.items} alignContent="flex-start">
+                <Divider />
+                {order.items.map(x => (
+                  <React.Fragment key={x.sku}>
+                    <OrderItemSummary {...x} />
                     <Divider />
-                    {order.items.map(x => (
-                      <React.Fragment key={x.sku}>
-                        <OrderItemSummary {...x} />
-                        <Divider />
-                      </React.Fragment>
-                    ))}
-
-                    <Box>
-                      <TotalRow title={t('order.subtotalLabel')} value={order.subtotal} />
-                      <TotalRow title={t('order.shippingAmountLabel')} value={order.shippingAmount} />
-                    </Box>
-                    <Divider />
-                    <TotalRow title={t('order.grandTotalLabel')} value={order.grandTotal} fontWeight="bold" />
-                  </LocaleProvider>
-                )}
-              </I18n>
-            </GridLayout>
-            <Divider gridArea={orderLayoutArea.divider} />
-            <GridLayout gridArea={orderLayoutArea.summary} alignContent="flex-start">
-              <Box>
-                <Text fontWeight="bold">
-                  <T id="order.billingAddressLabel" />
-                </Text>
-                <AddressDetails {...order.billingAddress} />
-              </Box>
-              <Box>
-                <Text fontWeight="bold">
-                  <T id="order.shippingAddressLabel" />
-                </Text>
-                <AddressDetails {...order.shippingAddress} />
-              </Box>
-              <Box>
-                <Text fontWeight="bold">
-                  <T id="order.createdAtLabel" />
-                </Text>
-                <DateFormat value={order.createdAt} />
-              </Box>
-              <Box>
-                <Text fontWeight="bold">
-                  <T id="order.shippingMethodLabel" />
-                </Text>
-                {order.shippingDescription}
-              </Box>
-              <Box>
-                <Text fontWeight="bold">
-                  <T id="order.paymentMethodLabel" />
-                </Text>
-                {order.shippingDescription}
-              </Box>
-            </GridLayout>
-          </Box>
-        </GridLayout>
-      )}
-    </GetOrderQuery>
+                  </React.Fragment>
+                ))}
+                <Box>
+                  <PropertyRowLayout variant="spaceBetween">
+                    <T id="order.subtotalLabel" />
+                    <Price value={order.subtotal} />
+                  </PropertyRowLayout>
+                  <PropertyRowLayout variant="spaceBetween">
+                    <T id="order.shippingAmountLabel" />
+                    <Price value={order.shippingAmount} />
+                  </PropertyRowLayout>
+                </Box>
+                <Divider />
+                <PropertyRowLayout variant="spaceBetween" fontWeight="bold">
+                  <T id="order.grandTotalLabel" />
+                  <Price value={order.grandTotal} />
+                </PropertyRowLayout>
+              </GridLayout>
+              <Divider gridArea={OrderLayoutArea.divider} />
+              <GridLayout gridArea={OrderLayoutArea.summary} alignContent="flex-start">
+                <Box>
+                  <Text fontWeight="bold">
+                    <T id="order.billingAddressLabel" />
+                  </Text>
+                  <AddressDetails {...order.billingAddress} />
+                </Box>
+                <Box>
+                  <Text fontWeight="bold">
+                    <T id="order.shippingAddressLabel" />
+                  </Text>
+                  <AddressDetails {...order.shippingAddress} />
+                </Box>
+                <Box>
+                  <Text fontWeight="bold">
+                    <T id="order.createdAtLabel" />
+                  </Text>
+                  <FormattedDate value={order.createdAt} />
+                </Box>
+                <Box>
+                  <Text fontWeight="bold">
+                    <T id="order.shippingMethodLabel" />
+                  </Text>
+                  {order.shippingDescription}
+                </Box>
+                <Box>
+                  <Text fontWeight="bold">
+                    <T id="order.paymentMethodLabel" />
+                  </Text>
+                  {order.shippingDescription}
+                </Box>
+              </GridLayout>
+            </OrderLayout>
+          </LocaleProvider>
+        )}
+      </OrderQuery>
+    </GridLayout>
   );
 };
 

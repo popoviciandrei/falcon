@@ -10,10 +10,9 @@ import {
   FormErrorSummary,
   TwoColumnsLayout,
   TwoColumnsLayoutArea,
-  AddAddressMutation,
-  CountriesQuery,
-  CountrySelector
-} from '@deity/falcon-ecommerce-uikit';
+  CountryPicker
+} from '@deity/falcon-ui-kit';
+import { AddAddressMutation, CountryListQuery } from '@deity/falcon-shop-data';
 
 const AddAddress = ({ history }) => (
   <GridLayout mb="md" gridGap="md">
@@ -64,16 +63,12 @@ const AddAddress = ({ history }) => (
                   <FormField name="postcode" required />
                   <FormField name="city" required />
                   <FormField name="countryId" required>
-                    {({ form, field }) => (
-                      <CountriesQuery passLoading>
-                        {({ countries = { items: [] } }) => (
-                          <CountrySelector
-                            {...field}
-                            onChange={x => form.setFieldValue(field.name, x)}
-                            items={countries.items}
-                          />
+                    {({ field }) => (
+                      <CountryListQuery passLoading>
+                        {({ data: { countryList = { items: [] } } }) => (
+                          <CountryPicker {...field} options={countryList.items} />
                         )}
-                      </CountriesQuery>
+                      </CountryListQuery>
                     )}
                   </FormField>
                 </GridLayout>

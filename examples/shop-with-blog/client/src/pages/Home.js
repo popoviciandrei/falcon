@@ -1,38 +1,38 @@
 import React from 'react';
-import gql from 'graphql-tag';
-import { H1, GridLayout } from '@deity/falcon-ui';
+import { GET_CATEGORY_WITH_PRODUCT_LIST } from '@deity/falcon-shop-data';
+import { Loader } from '@deity/falcon-data';
+import { useQuery } from '@apollo/react-hooks';
 import { T } from '@deity/falcon-i18n';
-import { Query, ProductList } from '@deity/falcon-ecommerce-uikit';
+import { H1 } from '@deity/falcon-ui';
+import { PageLayout, ProductList } from '@deity/falcon-ui-kit';
 
-const HOMEPAGE_PRODUCTS_QUERY = gql`
-  query HomepageProducts($categoryId: String!, $amount: Int) {
-    category(id: $categoryId) {
-      products(pagination: { perPage: $amount, page: 1 }) {
-        items {
-          id
-          name
-          price {
-            regular
-            special
-            minTier
-          }
-          thumbnail
-          urlPath
-        }
+const Home = () => {
+  const { loading, data } = useQuery(GET_CATEGORY_WITH_PRODUCT_LIST, {
+    variables: {
+      categoryId: '25',
+      query: {
+        perPage: 1,
+        page: 20
       }
     }
-  }
-`;
+  });
 
-const Home = () => (
-  <GridLayout gridGap="md" py="ld">
-    <H1 css={{ textAlign: 'center' }}>
-      <T id="home.hotSellers" />
-    </H1>
-    <Query query={HOMEPAGE_PRODUCTS_QUERY} variables={{ categoryId: '25', amount: 20 }}>
-      {({ category }) => <ProductList products={category.products.items} />}
-    </Query>
-  </GridLayout>
-);
+  if (loading) {
+    return <Loader />;
+  }
+
+  const {
+    category: { productList }
+  } = data;
+
+  return (
+    <PageLayout>
+      <H1 css={{ textAlign: 'center' }}>
+        <T id="home.hotSellers" />
+      </H1>
+      <ProductList items={productList.items} />
+    </PageLayout>
+  );
+};
 
 export default Home;

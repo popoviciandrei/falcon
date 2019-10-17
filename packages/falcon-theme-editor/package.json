@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-theme-editor",
   "license": "OSL-3.0",
-  "version": "0.1.7",
+  "version": "1.0.0",
   "homepage": "https://falcon-ui.docs.deity.io/",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-theme-editor",
   "publishConfig": {
@@ -29,17 +29,17 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^0.0.3",
-    "@types/react": "16.7.20",
-    "@types/react-dom": "16.0.11",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "@deity/falcon-scripts": "^1.0.0",
+    "@types/react": "16.9.5",
+    "@types/react-dom": "16.9.1",
+    "react": "16.10.2",
+    "react-dom": "16.10.2",
     "regenerator-runtime": "0.13.3"
   },
   "peerDependencies": {
-    "@deity/falcon-ui": "^0.2.4",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "@deity/falcon-ui": "^1.0.0",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
   },
   "gitHead": "d8cd5eede81220aa29563275dcf35448611cc194"
 }

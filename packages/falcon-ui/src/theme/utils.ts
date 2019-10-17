@@ -44,7 +44,7 @@ export function mergeThemes(theme: Theme, themeOverride: RecursivePartial<Theme>
     for (let keyframeKey in newTheme.keyframes) {
       // only process keyframes not yet processed by emotion (anim property not et)
       if (!newTheme.keyframes[keyframeKey].anim) {
-        // TODO remove `any` when fixed: https://github.com/deity-io/falcon/issues/545
+        // TODO remove casting to `any` when https://github.com/deity-io/falcon/issues/545 fixed
         newTheme.keyframes[keyframeKey] = keyframes(newTheme.keyframes[keyframeKey] as any) as any;
       }
     }

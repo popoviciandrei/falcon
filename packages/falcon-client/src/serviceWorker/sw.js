@@ -5,7 +5,7 @@ import { Router, NavigationRoute } from 'workbox-routing';
 import { precacheAndRoute, getCacheKeyForURL } from 'workbox-precaching';
 
 /**
- * @typedef {Object} FalconSWBuildConfig
+ * @typedef {object} FalconSWBuildConfig
  * @property {boolean} precache if Workbox precache
  */
 /** @type {FalconSWBuildConfig} */
@@ -80,22 +80,27 @@ async function getFromCacheOrNetwork(request) {
 }
 
 router.registerRoute(
-  new NavigationRoute(async ({ url }) => {
-    if (await isWaitingWithOneClient()) {
-      self.registration.waiting.postMessage({ type: 'SKIP_WAITING', payload: undefined });
+  new NavigationRoute(
+    async ({ url }) => {
+      if (await isWaitingWithOneClient()) {
+        self.registration.waiting.postMessage({ type: 'SKIP_WAITING', payload: undefined });
 
-      return new Response('', { headers: { Refresh: '0' } }); // refresh the tab by returning a blank response
+        return new Response('', { headers: { Refresh: '0' } }); // refresh the tab by returning a blank response
+      }
+
+      if (!CONFIG.precache) {
+        return fetch(url.href);
+      }
+
+      const cachedUrlKey = getCacheKeyForURL('app-shell');
+      if (!cachedUrlKey) {
+        return fetch(url.href);
+      }
+
+      return getFromCacheOrNetwork(cachedUrlKey);
+    },
+    {
+      blacklist: CONFIG.blacklistRoutes.map(route => new RegExp(route))
     }
-
-    if (!CONFIG.precache) {
-      return fetch(url.href);
-    }
-
-    const cachedUrlKey = getCacheKeyForURL('app-shell');
-    if (!cachedUrlKey) {
-      return fetch(url.href);
-    }
-
-    return getFromCacheOrNetwork(cachedUrlKey);
-  })
+  )
 );

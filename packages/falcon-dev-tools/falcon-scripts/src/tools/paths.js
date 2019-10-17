@@ -26,6 +26,8 @@ module.exports = {
   resolvePackageDir,
   resolveOwn,
 
+  tsc: path.join(resolvePackageDir('typescript'), 'bin', 'tsc'),
+
   pkgPath: resolvePkg('.'),
   pkgSrc: resolvePkg('src'),
   pkgDist: resolvePkg('dist'),

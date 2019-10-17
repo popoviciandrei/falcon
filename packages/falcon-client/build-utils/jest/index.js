@@ -9,6 +9,7 @@ const mockEnvVariables = () => {
 };
 
 const run = () => {
+  process.env.FORCE_COLOR = 0;
   mockEnvVariables();
 
   const createConfig = require('./config/create');

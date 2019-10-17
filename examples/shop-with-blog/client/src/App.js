@@ -1,27 +1,24 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { ThemeProvider, Box, Button } from '@deity/falcon-ui';
-import ScrollToTop from '@deity/falcon-client/src/components/ScrollToTop';
+import { AppLayout, Sidebar } from '@deity/falcon-ui-kit';
 import { ServiceWorkerRegistrar, ServiceWorker } from '@deity/falcon-service-worker';
 import {
-  AppLayout,
-  Header,
-  ProtectedRoute,
+  NetworkStatus,
+  ScrollToTop,
   OnlyUnauthenticatedRoute,
-  OnlineStatus,
+  ProtectedRoute,
   LocaleProvider,
-  SearchProvider,
-  Sidebar
-} from '@deity/falcon-ecommerce-uikit';
+  SearchProvider
+} from '@deity/falcon-front-kit';
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
 import loadable from 'src/components/loadable';
 import { ErrorBoundary } from 'src/components/ErrorBoundary';
-import { Footer } from 'src/components/footer';
-import Home from 'src/pages/Home';
 import logo from 'src/assets/logo.png';
 import DynamicRoute from 'src/pages/DynamicRoute';
-import { SidebarContainer } from 'src/pages/shop/components/Sidebar';
+import { SidebarContainer } from 'src/components/Sidebar';
+import { Header, PageFooter } from './components';
 import { deityGreenTheme, globalCss } from './theme';
 
 const HeadMetaTags = () => (
@@ -40,7 +37,8 @@ const HeadMetaTags = () => (
   </Helmet>
 );
 
-const Account = loadable(() => import(/* webpackChunkName: "account" */ './pages/shop/Account/Account'));
+const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/Home'));
+const Account = loadable(() => import(/* webpackChunkName: "account/account" */ './pages/shop/Account/Account'));
 const SignIn = loadable(() => import(/* webpackChunkName: "account/sign-in" */ './pages/account/SignIn'));
 const ResetPassword = loadable(() => import(/* webpackChunkName: "shop/resetpassword" */ './pages/shop/ResetPassword'));
 const Blog = loadable(() => import(/* webpackChunkName: "blog/blog" */ './pages/blog/Blog'));
@@ -51,9 +49,7 @@ const CheckoutConfirmation = loadable(() =>
 );
 const CheckoutFailure = loadable(() => import(/* webpackChunkName: "shop/checkout" */ './pages/shop/CheckoutFailure'));
 const SidebarContents = loadable(() =>
-  import(
-    /* webpackPrefetch: true, webpackChunkName: "shop/SidebarContents" */ './pages/shop/components/Sidebar/SidebarContents'
-  )
+  import(/* webpackPrefetch: true, webpackChunkName: "shop/sidebar" */ './pages/shop/Sidebar/SidebarContents')
 );
 
 let ThemeEditorComponent;
@@ -86,8 +82,8 @@ const App = () => (
                     ) : null
                   }
                 </ServiceWorker>
+                <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
                 <Header />
-                <OnlineStatus>{({ isOnline }) => !isOnline && <p>you are offline.</p>}</OnlineStatus>
                 <ErrorBoundary>
                   <Switch>
                     <Route exact path="/" component={Home} />
@@ -101,11 +97,11 @@ const App = () => (
                     <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
                     <DynamicRoute />
                   </Switch>
-                  <Footer />
+                  <PageFooter />
                   <SidebarContainer>
                     {sidebarProps => (
                       <Sidebar {...sidebarProps}>
-                        <SidebarContents contentType={sidebarProps.contentType} />
+                        <SidebarContents {...sidebarProps} />
                       </Sidebar>
                     )}
                   </SidebarContainer>
