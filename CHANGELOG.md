@@ -27,9 +27,9 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 ### Falcon E-commerce UI Kit discontinued
 
-- Breaking change: Falcon E-commerce UI Kit is discontinued, instead we introduce [Falcon Front Kit](#falcon-front-kit-v0.0.1), [Falcon UI Kit](#falcon-ui-kit-v0.0.1), [Falcon Data](#falcon-data-v0.0.1), [Falcon Shop Data](#falcon-shop-data-v0.0.1) and [Falcon Blog Data](#falcon-blog-data-v0.0.1) ([#487](https://github.com/deity-io/falcon/pull/487))
+- Breaking change: Falcon E-commerce UI Kit is discontinued, instead we introduce [Falcon Front Kit](#falcon-front-kit-v1.0.0), [Falcon UI Kit](#falcon-ui-kit-v1.0.0), [Falcon Data](#falcon-data-v1.0.0), [Falcon Shop Data](#falcon-shop-data-v1.0.0) and [Falcon Blog Data](#falcon-blog-data-v1.0.0) ([#487](https://github.com/deity-io/falcon/pull/487))
 
-### Falcon Front Kit v0.0.1
+### Falcon Front Kit v1.0.0
 
 - initial release
 - added convention for validation error messages translation ([#585](https://github.com/deity-io/falcon/pull/585))
@@ -37,26 +37,26 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
 
-### Falcon UI Kit v0.0.1
+### Falcon UI Kit v1.0.0
 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - fixed displaying multiple street numbers in `AddressDetails` component ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
 
-### Falcon Data v0.0.1
+### Falcon Data v1.0.0
 
 - initial release
 - improved Falcon `Query` component to not hide Apollo `Query` component render props ([#580](https://github.com/deity-io/falcon/pull/580)), ([#613](https://github.com/deity-io/falcon/pull/613))
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved way of handling errors ([#627](https://github.com/deity-io/falcon/pull/627)), ([#632](https://github.com/deity-io/falcon/pull/632))
 
-### Falcon Shop Data v0.0.1
+### Falcon Shop Data v1.0.0
 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 
-### Falcon Blog Data v0.0.1
+### Falcon Blog Data v1.0.0
 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
