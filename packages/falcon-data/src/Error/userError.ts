@@ -30,7 +30,11 @@ export const isUserError = <TError extends Error>(error: TError): boolean => {
   return false;
 };
 
-export const userErrorToErrorModelList = <TError extends Error>(error: TError): ErrorModel[] => {
+/**
+ * Extract all user errors if any
+ * @param error
+ */
+export const tryGetUserError = <TError extends Error>(error: TError): ErrorModel[] => {
   if (isUserError(error)) {
     const { graphQLErrors } = (error as any) as ApolloError;
 
@@ -47,14 +51,6 @@ export const userErrorToErrorModelList = <TError extends Error>(error: TError): 
 
       return [...result, { message, code: extensions.code }];
     }, []);
-  }
-
-  return [];
-};
-
-export const tryGetUserError = <TError extends Error>(error: TError): ErrorModel[] => {
-  if (isUserError(error)) {
-    return userErrorToErrorModelList(error);
   }
 
   return [];
