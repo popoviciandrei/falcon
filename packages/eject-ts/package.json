@@ -1,6 +1,6 @@
 {
   "name": "eject-ts",
-  "version": "0.1.4",
+  "version": "0.1.4-beta.0",
   "license": "OSL-3.0",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/eject-ts",
   "publishConfig": {
