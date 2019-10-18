@@ -28,9 +28,9 @@ export default () => async (ctx, next) => {
       Logger.error(errorToLog);
     }
 
-    let viewsDir = resolvePath(__dirname, './../../', 'views');
+    let viewsDir = resolvePath(__dirname, '../', 'views');
     if (!existsSync(joinPath(viewsDir, '/errors/500.html'))) {
-      viewsDir = resolvePath(resolve.sync('@deity/falcon-client/views/errors/500.html'), './../..');
+      viewsDir = resolvePath(resolve.sync('@deity/falcon-client/views/errors/500.html'), '../../');
     }
     ctx.status = status;
 

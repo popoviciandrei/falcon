@@ -18,16 +18,19 @@ class PaymentSection extends React.Component {
     super(props);
     this.state = {
       selectedPayment: null,
-      additionalData: null
+      data: null
     };
   }
 
-  onPaymentSelected = (selectedPayment, additionalData) => this.setState({ selectedPayment, additionalData });
+  onPaymentSelected = (selectedPayment, data) => this.setState({ selectedPayment, data });
 
-  resetSelected = () => this.setState({ selectedPayment: null, additionalData: null });
+  resetSelected = () => this.setState({ selectedPayment: null, data: null });
 
   submitPayment = () => {
-    this.props.setPayment(this.state.selectedPayment, this.state.additionalData);
+    this.props.setPayment({
+      method: this.state.selectedPayment.code,
+      data: this.state.data
+    });
   };
 
   render() {
@@ -71,7 +74,7 @@ class PaymentSection extends React.Component {
                       selectOption(code);
                     }}
                     selectedOption={selectedOption}
-                    onPaymentDetailsReady={additionalData => this.onPaymentSelected(payment, additionalData)}
+                    onPaymentDetailsReady={data => this.onPaymentSelected(payment, data)}
                   />
                 ))
               }

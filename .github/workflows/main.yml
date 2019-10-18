@@ -24,6 +24,7 @@ jobs:
       - name: Install Falcon dependencies
         run: yarn --non-interactive --frozen-lockfile
       - name: Lint project files
+        if: matrix.node == '12'
         run: yarn lint
       - name: Run Falcon tests
         run: yarn test

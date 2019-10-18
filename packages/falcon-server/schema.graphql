@@ -30,7 +30,7 @@ type Query {
   """
   backendConfig: BackendConfig
   """
-  Resolves dynamic resource metada
+  Resolves dynamic resource metadata
   """
   url(path: String!): ResourceMeta @cache
 }
