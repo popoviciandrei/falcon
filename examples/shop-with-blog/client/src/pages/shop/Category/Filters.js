@@ -22,8 +22,8 @@ export const Filters = ({ data, ...rest }) => (
                   return (
                     <SingleFilter
                       options={options}
-                      selected={value.join('-')}
-                      onChange={x => setFilter(field, x ? x.split('-').slice(0, 2) : [], FilterOperator.equals)}
+                      selected={value[0]}
+                      onChange={x => setFilter(field, x ? [x] : [], FilterOperator.equals)}
                     />
                   );
                 case 'color': {

@@ -1,26 +1,49 @@
-# CheckoutLogic
+# CheckoutContext
 
-CheckoutLogic components realises business logic related to checkout flow.
+CheckoutContext component realizes business logic related to checkout flow.
 
 It provides current state of the checkout process and methods for manipulating with checkout.
 
 ## Usage
 
-`CheckoutLogic` provides all the data related to the checkout process via render props so it needs to be rendered as React component in the application:
+`CheckoutContext` provides all the data related to the checkout process via render props so it needs to be rendered as React component in the application:
 
 ```jsx
-<CheckoutLogic>
-  {checkoutLogicData => (
-    <div>
-      <Button onClick={checkoutLogicData.setEmail('foo@bar.com')}>Set email</Button>
-    </div>
-  )}
-</CheckoutLogic>
+  <CheckoutProvider>
+    <CheckoutContext.Consumer>
+      {checkoutLogicData => (
+        <div>
+          <Button onClick={() => checkoutLogicData.setEmail('foo@bar.com')}>Set email</Button>
+        </div>
+      )}
+    <CheckoutContext.Consumer>
+  </CheckoutProvider>
+```
+
+Or using hooks:
+
+```jsx
+import React, { useContext } from 'react';
+import { CheckoutContext, CheckoutProvider } from '@deity/falcon-front-kit';
+
+const MyCheckout = () => {
+  const { setEmail } = useContext(CheckoutContext);
+
+  return (
+    <Button onClick={() => setEmail('my@email.com')}></Button>
+  );
+};
+
+export default (
+  <CheckoutProvider>
+    <MyCheckout/>
+  </CheckoutProvider>
+);
 ```
 
 ## API
 
-The following props are provided by `CheckoutLogic`:
+The following props are provided by `CheckoutContext`:
 
 - `loading: bool` - flag that indicates that data loading/submitting is in progress
 - `orderId: string` - order id that is set when order has been placed correctly

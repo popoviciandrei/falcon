@@ -14,6 +14,24 @@ extend type Query {
   cmsPage(id: Int, identifier: String): CmsPage
   cmsBlock(identifier: String): CmsBlock
   validatePasswordToken(token: String!): Boolean
+  """
+  **Checkout Step 3/7**
+
+  Fetch a list of available shipping methods for the active cart.
+
+  Preceded by `Mutation.setBillingAddress`
+  Followed by `Mutation.setShippingMethod`
+  """
+  shippingMethodList: [ShippingMethod!]!
+  """
+  **Checkout Step 5/7**
+
+  Fetch a list of available payment methods for the active cart.
+
+  Preceded by `Mutation.setShippingMethod`
+  Followed by `Mutation.setPaymentMethod`
+  """
+  paymentMethodList: [PaymentMethod!]!
 }
 
 extend type Mutation {
@@ -34,10 +52,60 @@ extend type Mutation {
   editAddress(input: EditAddressInput!): Address
   addAddress(input: AddAddressInput!): Address
   removeAddress(id: Int!): Boolean
-  estimateShippingMethods(input: EstimateShippingMethodsInput!): [ShippingMethod!]!
-  # set current customer order shipping information
-  setShipping(input: SetShippingInput): SetShippingResult!
-  placeOrder(input: PlaceOrderInput!): PlaceOrderResult!
+  """
+  **Checkout Step 1/7 🛒 (start)**
+
+  Set Shipping Address for the active cart.
+
+  Followed by `Mutation.setBillingAddress`
+  """
+  setShippingAddress(input: CheckoutAddressInput!): Boolean!
+  """
+  **Checkout Step 2/7**
+
+  Set Billing Address for the active cart.
+
+  Preceded by `Mutation.setShippingAddress`
+  Followed by `Query.shippingMethodList`
+  """
+  setBillingAddress(input: CheckoutAddressInput!): Boolean!
+  """
+  **Checkout Step 4/7**
+
+  Set selected shipping method for the active cart.
+
+  Preceded by `Query.shippingMethodList`.
+  Followed by `Query.paymentMethodList`.
+  """
+  setShippingMethod(input: CheckoutDetailsInput!): Boolean!
+  """
+  **Checkout Step 6/7**
+
+  Set selected payment method for the active cart.
+
+  Preceded by `Query.paymentMethodList`.
+  Followed by `Mutation.placeOrder`.
+  """
+  setPaymentMethod(input: CheckoutDetailsInput!): Boolean!
+  """
+  **Checkout Step 7/7 🏁 (final)**
+
+  Place an order.
+
+  Preceded by `Mutation.setPaymentMethod`.
+
+  ---
+
+  Complete flow:
+  1. `Mutation.setShippingAddress`
+  2. `Mutation.setBillingAddress`
+  3. `Query.shippingMethodList`
+  4. `Mutation.setShippingMethod`
+  5. `Query.paymentMethodList`
+  6. `Mutation.setPaymentMethod`
+  7. `Mutation.placeOrder`
+  """
+  placeOrder(input: PlaceOrderInput): PlaceOrderResult!
 }
 
 extend type BackendConfig {
@@ -64,29 +132,26 @@ input RequestPasswordResetInput {
   email: String!
 }
 
+"""
+Optional input data that can be provided for a 1-step checkout (if supported by the backend).
+"""
 input PlaceOrderInput {
-  billingAddress: CheckoutAddressInput
   email: String
-  paymentMethod: PaymentMethodInput!
-}
-
-input PaymentMethodInput {
-  method: String
-  """
-  Selected payment-specific payload (like encrypted credit card info)
-  """
-  additionalData: JSON
-}
-
-input SetShippingInput {
   billingAddress: CheckoutAddressInput!
   shippingAddress: CheckoutAddressInput!
-  shippingCarrierCode: String!
-  shippingMethodCode: String!
+  paymentMethod: CheckoutDetailsInput!
+  shippingMethod: CheckoutDetailsInput!
 }
 
-input EstimateShippingMethodsInput {
-  address: CheckoutAddressInput!
+input CheckoutDetailsInput {
+  """
+  Payment or shipping method name, defined by the backend
+  """
+  method: String!
+  """
+  Extra payload data object required by the selected entity (like encrypted credit card info, shipping carrier code etc)
+  """
+  data: JSON
 }
 
 input FilterInput {
@@ -153,9 +218,6 @@ input EditCustomerInput {
 
 input CheckoutAddressInput {
   id: ID
-  # legacy from Magento 2 for placeOrder billingAddress input field
-  terms: Boolean
-
   firstname: String!
   lastname: String!
   city: String
@@ -279,7 +341,7 @@ type PlaceOrder3dSecureField {
 }
 
 """
-Mixed result for "Mutation.placeOrder" for
+Mixed result for "Mutation.placeOrder" mutation
 """
 union PlaceOrderResult = PlaceOrderSuccessfulResult | PlaceOrder3dSecureResult
 
@@ -325,11 +387,6 @@ type ShippingMethod {
   priceExclTax: Float!
   priceInclTax: Float!
   currency: String
-}
-
-type SetShippingResult {
-  paymentMethods: [PaymentMethod!]!
-  totals: [CartTotal!]!
 }
 
 type PaymentMethod {
