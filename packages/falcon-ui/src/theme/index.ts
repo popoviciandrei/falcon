@@ -35,7 +35,6 @@ export interface Theme {
   components: ThemedComponents;
   icons: ThemedIcons;
 }
-type s = keyof Theme;
 
 export type ThemedIcons = {
   [name: string]: {
