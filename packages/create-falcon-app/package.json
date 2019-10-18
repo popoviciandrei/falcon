@@ -1,6 +1,6 @@
 {
   "name": "create-falcon-app",
-  "version": "2.0.0",
+  "version": "2.0.0-beta.1",
   "description": "CLI tool to bootstrap Falcon applications",
   "homepage": "https://falcon.deity.io/",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/create-falcon-app",
