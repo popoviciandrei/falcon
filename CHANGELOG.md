@@ -27,7 +27,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 ### Falcon E-commerce UI Kit discontinued
 
-- Breaking change: Falcon E-commerce UI Kit is discontinued, instead we introduce [Falcon Front Kit](#falcon-front-kit-v1.0.0), [Falcon UI Kit](#falcon-ui-kit-v1.0.0), [Falcon Data](#falcon-data-v1.0.0), [Falcon Shop Data](#falcon-shop-data-v1.0.0) and [Falcon Blog Data](#falcon-blog-data-v1.0.0) ([#487](https://github.com/deity-io/falcon/pull/487))
+- Breaking change: Falcon E-commerce UI Kit is discontinued, instead we introduce [Falcon Front Kit](#falcon-front-kit-v1.0.0), [Falcon UI Kit](#falcon-ui-kit-v1.0.0), [Falcon Data](#falcon-data-v1.0.0), [Falcon Shop Data](#falcon-shop-data-v1.0.0) and [Falcon Blog Data](#falcon-blog-data-v1.0.0), (see rework [log](https://github.com/deity-io/falcon/blob/a5274623c148b9b0c8cc1d17254d7c89395955da/packages/falcon-ecommerce-uikit/uikit.md)) ([#487](https://github.com/deity-io/falcon/pull/487))
 
 ### Falcon Front Kit v1.0.0
 
