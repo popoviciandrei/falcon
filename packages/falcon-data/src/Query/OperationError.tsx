@@ -1,10 +1,10 @@
 import React from 'react';
 import { ApolloError } from 'apollo-client';
-import { ErrorModel, apolloErrorToErrorModelList } from './apolloErrorToErrorModelList';
+import { ErrorModel, useGetUserError } from '../Error';
 
 export type OperationErrorProps = ApolloError;
 export const OperationError: React.SFC<OperationErrorProps> = props => {
-  const errors = apolloErrorToErrorModelList(props);
+  const [, { error: errors }] = useGetUserError(props);
 
   const errorInsights = ({ message, ...rest }: ErrorModel) => {
     if (process.env.NODE_ENV !== 'production') {

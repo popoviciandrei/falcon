@@ -63,7 +63,11 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 ### Falcon Server vNext
 
-- FalconServer/Extensions rework ([#479](https://github.com/deity-io/falcon/pull/479))
+- Falcon-Server has been fully migrated to [TypeScript](https://github.com/microsoft/TypeScript/) 🎉 ([#479](https://github.com/deity-io/falcon/pull/479))
+  - Changed the flow of Extension Containers, whereby `Extension` base class has been removed in favor of a cleaner code ([read more](https://falcon.deity.io/docs/falcon-server/extensions))
+  - Now every `schema.graphql` file needs to be placed in the root of the package
+  - Custom `Extenstion` can deliver its own `schemaDirectives` now which will be properly merged into the main Schema
+  - Improved BackendConfig fetching technique (asynchronously in parallel)
 - improved Cache calls by tracking simultaneous requests with the same cache-key ([#557](https://github.com/deity-io/falcon/pull/557))
 - introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
 - falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
