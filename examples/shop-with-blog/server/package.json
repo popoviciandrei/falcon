@@ -1,7 +1,7 @@
 {
   "name": "@deity/example-shop-with-blog-server",
   "license": "OSL-3.0",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -14,12 +14,12 @@
     "node": ">=8.10"
   },
   "dependencies": {
-    "@deity/falcon-blog-extension": "^1.0.0-beta.0",
-    "@deity/falcon-logger": "^1.0.3-beta.0",
-    "@deity/falcon-magento2-api": "^1.0.0-beta.0",
-    "@deity/falcon-server": "^2.0.0-beta.0",
-    "@deity/falcon-shop-extension": "^1.0.0-beta.0",
-    "@deity/falcon-wordpress-api": "^1.0.0-beta.0",
+    "@deity/falcon-blog-extension": "^1.0.0-beta.1",
+    "@deity/falcon-logger": "^1.0.3-beta.1",
+    "@deity/falcon-magento2-api": "^1.0.0-beta.1",
+    "@deity/falcon-server": "^2.0.0-beta.1",
+    "@deity/falcon-shop-extension": "^1.0.0-beta.1",
+    "@deity/falcon-wordpress-api": "^1.0.0-beta.1",
     "apollo-env": "0.5.1",
     "config": "^2.0.1",
     "core-js": "3.2.1",

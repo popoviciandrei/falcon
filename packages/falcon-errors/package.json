@@ -3,7 +3,7 @@
   "description": "Meta-package for Falcon error codes",
   "license": "OSL-3.0",
   "main": "index.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-errors",
   "publishConfig": {
     "access": "public"

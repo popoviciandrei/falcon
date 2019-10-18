@@ -1,6 +1,6 @@
 {
   "name": "@deity/falcon-adyen-plugin",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "license": "OSL-3.0",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/payment/falcon-adyen-plugin",
   "publishConfig": {
@@ -27,8 +27,8 @@
     "core-js": "3.2.1"
   },
   "devDependencies": {
-    "@deity/falcon-payment-plugin": "^1.0.0-beta.0",
-    "@deity/falcon-scripts": "^1.0.0-beta.0",
+    "@deity/falcon-payment-plugin": "^1.0.0-beta.1",
+    "@deity/falcon-scripts": "^1.0.0-beta.1",
     "@types/react": "16.9.5",
     "react": "16.10.2",
     "regenerator-runtime": "0.13.3"
