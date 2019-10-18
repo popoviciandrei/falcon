@@ -32,7 +32,7 @@ export interface Theme {
   transitionDurations: ThemeTransitionDurations;
   keyframes: ThemeKeyframes;
   zIndex: ThemeZIndex;
-  components: ThemedComponents;
+  components: ThemeComponents;
   icons: ThemedIcons;
 }
 
@@ -94,7 +94,7 @@ export type ThemedComponentPropsWithVariants<TProps = {}> = ThemedComponentProps
   };
 };
 
-export interface ThemedComponents {
+export interface ThemeComponents {
   [key: string]: ThemedComponentPropsWithVariants;
 }
 type NumberOrStringValues<T> = { readonly [P in keyof T]: number | string };
