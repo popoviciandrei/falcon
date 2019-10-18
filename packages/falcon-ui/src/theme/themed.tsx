@@ -53,6 +53,7 @@ const convertThemedPropsToCss = (props: ThemedComponentProps, theme: Theme): CSS
   if (!theme) {
     return {};
   }
+
   // TODO: typescript: can typings be improved for that object?
   const targetCss = {} as any;
 

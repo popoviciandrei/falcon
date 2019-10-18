@@ -70,26 +70,22 @@ export interface CSSObject extends CssResponsiveProps, CSSPseudoObject, CSSOther
 
 export type PropsWithTheme<TProps> = TProps & { theme: Theme };
 
-export type BaseThemedComponentProps = {
-  [ComponentProp in keyof PropsMappings]?:
-    | (PropsMappings[ComponentProp] extends ThemedPropMapping
-        ? Extract<keyof Theme[PropsMappings[ComponentProp]['themeProp']], string>
-        : PropsMappings[ComponentProp] extends ResponsivePropMapping
-        ? CssProps[PropsMappings[ComponentProp]['cssProp']]
-        : (string | number))
-    | {
-        [Breakpoint in keyof Theme['breakpoints']]?: PropsMappings[ComponentProp] extends ThemedPropMapping
-          ? Extract<keyof Theme[PropsMappings[ComponentProp]['themeProp']], string>
-          : PropsMappings[ComponentProp] extends ResponsivePropMapping
-          ? CssProps[PropsMappings[ComponentProp]['cssProp']]
-          : (string | number);
-      };
+type ThemePropMap<TProp extends keyof PropsMappings> = PropsMappings[TProp] extends ThemedPropMapping
+  ? Extract<keyof Theme[PropsMappings[TProp]['themeProp']], string>
+  : PropsMappings[TProp] extends ResponsivePropMapping
+  ? CssProps[PropsMappings[TProp]['cssProp']]
+  : (string | number);
+
+export type BaseThemingProps = {
+  [TProp in keyof PropsMappings]?:
+    | ThemePropMap<TProp>
+    | { [TBreakpoint in keyof ThemeBreakpoints]?: ThemePropMap<TProp> };
 };
 export type InlineCss<TProps> = ((props: PropsWithTheme<TProps>) => CSSObject) | CSSObject;
 
 export type PropsWithInlineCss<TProps> = TProps & { css?: InlineCss<TProps> };
 
-export interface ThemedComponentProps<TProps = {}> extends BaseThemedComponentProps {
+export interface ThemedComponentProps<TProps = {}> extends BaseThemingProps {
   css?: InlineCss<TProps>;
 }
 
