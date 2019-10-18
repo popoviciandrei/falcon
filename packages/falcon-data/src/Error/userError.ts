@@ -8,9 +8,17 @@ export type ErrorModel = {
   path?: any;
 };
 
+/**
+ * Determines if `error` is Apollo network error
+ * @param error
+ */
 export const isNetworkError = <TError extends Error>(error: TError): boolean =>
   isApolloError(error) && !!error.networkError;
 
+/**
+ * Determines if `error` is Apollo graphQl error, which is considered as user error
+ * @param error
+ */
 export const isUserError = <TError extends Error>(error: TError): boolean => {
   if (isApolloError(error)) {
     const { graphQLErrors, networkError } = error;
