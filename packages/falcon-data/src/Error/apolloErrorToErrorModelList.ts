@@ -1,12 +1,6 @@
 import { ApolloError } from 'apollo-client';
 import { codes } from '@deity/falcon-errors';
-
-export type ErrorModel = {
-  message: string;
-  code: string;
-  /** path to property (on operation input or operation output) on which error occurs */
-  path?: any;
-};
+import { ErrorModel } from '../Error';
 
 export const apolloErrorToErrorModelList = (error: ApolloError): ErrorModel[] => {
   const { networkError, graphQLErrors } = error;
