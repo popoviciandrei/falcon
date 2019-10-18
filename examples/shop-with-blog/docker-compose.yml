@@ -1,0 +1,23 @@
+version: '3'
+services:
+  falcon-client-dev:
+    build:
+      context: ./client
+      dockerfile: dev.Dockerfile
+    ports:
+      - '3000:3000' # web server
+      - '3001:3001' # webpack dev server
+    volumes:
+      - /usr/src/app/client/node_modules
+      - ./client:/usr/src/app/client
+    environment:
+      - GRAPHQL_URL=http://falcon-server-dev:4000/graphql
+  falcon-server-dev:
+    build:
+      context: ./server
+      dockerfile: dev.Dockerfile
+    ports:
+      - '4000:4000'
+    volumes:
+      - /usr/src/app/server/node_modules
+      - ./server:/usr/src/app/server
