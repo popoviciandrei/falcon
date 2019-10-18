@@ -68,9 +68,7 @@ type CssResponsiveProps = {
 
 export interface CSSObject extends CssResponsiveProps, CSSPseudoObject, CSSOthersObject {}
 
-export interface PropsWithTheme {
-  theme: Theme;
-}
+export type PropsWithTheme<TProps> = TProps & { theme: Theme };
 
 export type BaseThemedComponentProps = {
   [ComponentProp in keyof PropsMappings]?:
@@ -87,8 +85,9 @@ export type BaseThemedComponentProps = {
           : (string | number);
       };
 };
+export type InlineCss<TProps> = ((props: PropsWithTheme<TProps>) => CSSObject) | CSSObject;
 
-export type InlineCss<TProps> = ((props: PropsWithTheme & TProps) => CSSObject) | CSSObject;
+export type PropsWithInlineCss<TProps> = TProps & { css?: InlineCss<TProps> };
 
 export interface ThemedComponentProps<TProps = {}> extends BaseThemedComponentProps {
   css?: InlineCss<TProps>;

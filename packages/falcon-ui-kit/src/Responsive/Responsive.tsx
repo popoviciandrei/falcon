@@ -7,7 +7,7 @@ export type ResponsiveProps = {
   height?: keyof ThemeBreakpoints | number;
   children: React.ReactNode;
 };
-const ResponsiveInner: React.SFC<ResponsiveProps & PropsWithTheme> = props => {
+const ResponsiveInner: React.SFC<PropsWithTheme<ResponsiveProps>> = props => {
   const { theme, width, height, ...rest } = props;
 
   let responsiveProps = {};

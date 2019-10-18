@@ -46,7 +46,7 @@ type PropsWithDefaultTheme = {
   defaultTheme?: ThemedComponentPropsWithVariants | { [name: string]: ThemedComponentPropsWithVariants };
 };
 
-type ThemedProps = ThemedComponentProps & PropsWithTheme & PropsWithVariant & PropsWithDefaultTheme;
+type ThemedProps = PropsWithTheme<ThemedComponentProps & PropsWithVariant & PropsWithDefaultTheme>;
 
 const convertThemedPropsToCss = (props: ThemedComponentProps, theme: Theme): CSSObject => {
   //  if theme is not provided via theme provider do not map anything
