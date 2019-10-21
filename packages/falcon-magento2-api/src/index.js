@@ -1266,7 +1266,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {object} obj.region region object
    * @returns {promise<Country>} requested region data
    */
-  async region({ region }) {
+  async addressRegion({ region }) {
     if (!region || !region.region) {
       return null;
     }
