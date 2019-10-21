@@ -24,7 +24,7 @@ const copyFolder = (source, dest) => {
 
 const getPackageManager = () => {
   try {
-    execa.sync('yarnpkg', '--version');
+    execa.sync('yarnpkg', ['--version']);
     return 'yarn';
   } catch (e) {
     return 'npm';
