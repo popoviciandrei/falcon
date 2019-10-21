@@ -19,7 +19,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed `/graphQL` proxy error handling ([#632](https://github.com/deity-io/falcon/pull/632))
 - fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
 
-### Falcon UI Next
+### Falcon UI vNext
 
 - fixed theme merging ([#551](https://github.com/deity-io/falcon/pull/551))
 - fixed duplicated conditions when extracting themed css ([#611](https://github.com/deity-io/falcon/pull/611))
@@ -27,7 +27,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 ### Falcon E-commerce UI Kit discontinued
 
-- Breaking change: Falcon E-commerce UI Kit is discontinued, instead we introduce [Falcon Front Kit](#falcon-front-kit-v1.0.0), [Falcon UI Kit](#falcon-ui-kit-v1.0.0), [Falcon Data](#falcon-data-v1.0.0), [Falcon Shop Data](#falcon-shop-data-v1.0.0) and [Falcon Blog Data](#falcon-blog-data-v1.0.0), (see rework [log](https://github.com/deity-io/falcon/blob/a5274623c148b9b0c8cc1d17254d7c89395955da/packages/falcon-ecommerce-uikit/uikit.md)) ([#487](https://github.com/deity-io/falcon/pull/487))
+- Breaking change: Falcon E-commerce UI Kit has been discontinued, instead we introduce [Falcon Front Kit](#falcon-front-kit-v1.0.0), [Falcon UI Kit](#falcon-ui-kit-v1.0.0), [Falcon Data](#falcon-data-v1.0.0), [Falcon Shop Data](#falcon-shop-data-v1.0.0) and [Falcon Blog Data](#falcon-blog-data-v1.0.0), (see rework [log](https://github.com/deity-io/falcon/blob/a5274623c148b9b0c8cc1d17254d7c89395955da/packages/falcon-ecommerce-uikit/uikit.md)) ([#487](https://github.com/deity-io/falcon/pull/487))
 
 ### Falcon Front Kit v1.0.0
 
@@ -41,7 +41,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
-- fixed displaying multiple street numbers in `AddressDetails` component ([#614](https://github.com/deity-io/falcon/pull/614))
+- fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
 
 ### Falcon Data v1.0.0
