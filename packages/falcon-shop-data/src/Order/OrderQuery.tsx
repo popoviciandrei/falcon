@@ -33,7 +33,9 @@ export const GET_ORDER = gql`
         street
         city
         postcode
-        countryId
+        country {
+          code
+        }
         telephone
       }
       shippingAddress {
@@ -43,7 +45,9 @@ export const GET_ORDER = gql`
         street
         city
         postcode
-        countryId
+        country {
+          code
+        }
         telephone
       }
     }
