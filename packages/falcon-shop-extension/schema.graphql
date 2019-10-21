@@ -656,9 +656,9 @@ type BundleProductOptionLink {
   canChangeQuantity: Int
   name: String
   catalogDisplayPrice: String
-  id: String
+  id: ID
   isDefault: Boolean
-  optionId: Int
+  optionId: ID
   position: Int
   price: String
   priceType: String
