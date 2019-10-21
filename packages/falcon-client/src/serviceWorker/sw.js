@@ -39,7 +39,13 @@ if (CONFIG.precache) {
   precacheAndRoute(ENTRIES, {});
 }
 
-async function cleanResponse(response) {
+/**
+ * Creates a new response with same parameters and body as the passed response.
+ * @param {Response} response
+ * @returns {Response} cloned response
+ * @see https://stackoverflow.com/a/45440505/412319
+ */
+async function cloneResponse(response) {
   const clonedResponse = response.clone();
 
   // Not all browsers support the Response.body stream, so fall back to reading
@@ -56,10 +62,10 @@ async function cleanResponse(response) {
 
 const router = new Router();
 self.addEventListener('fetch', event => {
-  let responsePromise = router.handleRequest(event);
+  const responsePromise = router.handleRequest(event);
   if (responsePromise) {
-    responsePromise = responsePromise.then(res => (res.redirected ? cleanResponse(res) : res));
-    event.respondWith(responsePromise);
+    // if response is redirected, we should clone the response before sending it
+    event.respondWith(responsePromise.then(res => (res.redirected ? cloneResponse(res) : res)));
   }
 });
 
