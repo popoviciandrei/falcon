@@ -88,6 +88,15 @@ export interface ThemedComponentProps<TProps = {}> extends BaseThemingProps {
   css?: InlineCss<TProps>;
 }
 
+// TODO: use below type instead of `ThemedComponentProps<TProps>`
+// export type WithThemedComponentProps<TProps> = PropsWithInlineCss<
+//   {
+//     variant?: string;
+//     defaultTheme?: ComponentTheme<TProps> | { [name: string]: ComponentTheme<TProps> };
+//   } & TProps &
+//     BaseThemingProps
+// >;
+
 export type ComponentTheme<TProps> = {
   variants?: {
     [variantKey: string]: ThemedComponentProps<TProps>;
