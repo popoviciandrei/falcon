@@ -4,14 +4,7 @@ import isPropValid from '@emotion/is-prop-valid';
 import { extractThemableProps } from './utils';
 import { defaultBaseTheme } from './theme';
 import { mappings, PropsMappings, ResponsivePropMapping } from './responsiveprops';
-import {
-  Theme,
-  CSSObject,
-  PropsWithTheme,
-  ThemedComponentProps,
-  ThemedComponentPropsWithVariants,
-  InlineCss
-} from './index';
+import { Theme, CSSObject, PropsWithTheme, ThemedComponentProps, ComponentTheme, InlineCss } from './index';
 
 const NESTED_CSS_OBJECT_SELECTORS = [':', '&', '*', '>', '@'];
 const propsMappingKeys = Object.keys(mappings) as (keyof PropsMappings)[];
@@ -42,11 +35,11 @@ type PropsWithVariant = {
   variant?: string;
 };
 
-type PropsWithDefaultTheme = {
-  defaultTheme?: ThemedComponentPropsWithVariants | { [name: string]: ThemedComponentPropsWithVariants };
+type PropsWithDefaultTheme<TProps> = {
+  defaultTheme?: ComponentTheme<TProps> | { [name: string]: ComponentTheme<TProps> };
 };
 
-type ThemedProps = PropsWithTheme<ThemedComponentProps & PropsWithVariant & PropsWithDefaultTheme>;
+type ThemedProps = PropsWithTheme<ThemedComponentProps & PropsWithVariant & PropsWithDefaultTheme<{}>>;
 
 const convertThemedPropsToCss = (props: ThemedComponentProps, theme: Theme): CSSObject => {
   //  if theme is not provided via theme provider do not map anything
@@ -292,11 +285,11 @@ type TagProps<TTag extends Tag> = (TTag extends keyof JSX.IntrinsicElements ? JS
 
 type ThemedOptions<TTag extends Tag, TProps> = {
   tag: TTag;
-  defaultTheme?: { [name: string]: ThemedComponentPropsWithVariants<TProps> };
+  defaultTheme?: { [name: string]: ComponentTheme<TProps> };
   defaultProps?: TagProps<TTag> & TProps;
 };
 
-export type DefaultThemeProps = { [name: string]: ThemedComponentPropsWithVariants };
+export type DefaultThemeProps = { [name: string]: ComponentTheme<{}> };
 
 export function themed<TProps, TTag extends Tag = Tag>(options: ThemedOptions<TTag, TProps>) {
   let label = '';

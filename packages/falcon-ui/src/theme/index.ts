@@ -88,14 +88,14 @@ export interface ThemedComponentProps<TProps = {}> extends BaseThemingProps {
   css?: InlineCss<TProps>;
 }
 
-export type ThemedComponentPropsWithVariants<TProps = {}> = ThemedComponentProps<TProps> & {
+export type ComponentTheme<TProps> = {
   variants?: {
     [variantKey: string]: ThemedComponentProps<TProps>;
   };
-};
+} & ThemedComponentProps<TProps>;
 
 export interface ThemeComponents {
-  [key: string]: ThemedComponentPropsWithVariants;
+  [key: string]: ComponentTheme<{}>;
 }
 type NumberOrStringValues<T> = { readonly [P in keyof T]: number | string };
 
