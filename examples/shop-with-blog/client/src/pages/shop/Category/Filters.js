@@ -18,14 +18,6 @@ export const Filters = ({ data, ...rest }) => (
           <FilterTile key={field} title={title} initiallyOpen={value.length > 0}>
             {(() => {
               switch (field) {
-                case 'price':
-                  return (
-                    <SingleFilter
-                      options={options}
-                      selected={value[0]}
-                      onChange={x => setFilter(field, x ? [x] : [], FilterOperator.equals)}
-                    />
-                  );
                 case 'color': {
                   const colorsMap = {
                     'Deity Green': '#a9cf38',
@@ -57,6 +49,7 @@ export const Filters = ({ data, ...rest }) => (
                     />
                   );
                 case 'cat':
+                case 'price':
                 default:
                   return (
                     <SingleFilter
