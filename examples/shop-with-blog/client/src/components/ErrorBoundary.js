@@ -1,33 +1,55 @@
 import React from 'react';
-import { H2, Box, Link } from '@deity/falcon-ui';
+import { isNetworkError } from '@deity/falcon-data';
+import { T } from '@deity/falcon-i18n';
+import { H2, Link } from '@deity/falcon-ui';
+import { PageLayout, FixCenteredLayout } from '@deity/falcon-ui-kit';
 
-// based on https://reactjs.org/docs/error-boundaries.html
 export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {};
   }
 
-  static getDerivedStateFromError() {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
+  /** @param {Error} error */
+  getMessageId(error) {
+    const { networkError } = error;
+    const code = (isNetworkError(error) && networkError.result && networkError.result.code) || 'UNKNOWN';
+
+    if (code === 'ECONNREFUSED' || networkError.message === 'Failed to fetch') {
+      return 'failedToFetch';
+    }
+
+    return 'unknown';
   }
 
-  componentDidCatch(error, info) {
-    // You can also log the error to an error reporting service
-    console.error(error, info);
+  /** @param {Error} error */
+  errorInsights(error) {
+    if (process.env.NODE_ENV !== 'production') {
+      return JSON.stringify(error, null, 2);
+    }
+
+    return '';
+  }
+
+  componentDidCatch(error) {
+    this.setState({ error });
   }
 
   render() {
-    if (this.state.hasError) {
-      return (
-        <Box m="md" css={{ textAlign: 'center' }}>
-          <H2 mb="md">Something went wrong....</H2>
-          <Link onClick={() => window.location.reload()}>Refresh</Link>
-        </Box>
-      );
+    const { error } = this.state;
+    if (!error) {
+      return this.props.children;
     }
 
-    return this.props.children;
+    return (
+      <PageLayout>
+        <FixCenteredLayout maxWidth={700} css={{ textAlign: 'center' }}>
+          <H2 mb="md" title={this.errorInsights(error)}>
+            <T id={`error.${this.getMessageId(error)}`} />
+          </H2>
+          <Link onClick={() => window.location.reload()}>Refresh</Link>
+        </FixCenteredLayout>
+      </PageLayout>
+    );
   }
 }

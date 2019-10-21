@@ -1,4 +1,11 @@
-import { Pagination, PaginationInput, Aggregation, SortOrderValue, SortOrder } from '@deity/falcon-data';
+import {
+  Pagination,
+  PaginationInput,
+  Aggregation,
+  SortOrderValue,
+  SortOrder,
+  OperationInput
+} from '@deity/falcon-data';
 
 export type GraphQLBase = {
   __typename?: string;
@@ -425,15 +432,21 @@ export type OrderItem = {
   parentItem?: OrderItem;
 };
 
-export type PlaceOrderInput = {
-  billingAddress?: CheckoutAddressInput;
-  email?: string;
-  paymentMethod: PaymentMethodInput;
-};
+export type PlaceOrderInput = Partial<
+  OperationInput<{
+    email?: String;
+    billingAddress: CheckoutAddressInput;
+    shippingAddress: CheckoutAddressInput;
+    paymentMethod: CheckoutDetailsInput;
+    shippingMethod: CheckoutDetailsInput;
+  }>
+>;
 
-export type PaymentMethodInput = {
+export type CheckoutDetailsInput = {
+  /** Payment or shipping method name, defined by the backend */
   method: string;
-  additionalData: object;
+  /** Extra payload data object required by the selected entity (like encrypted credit card info, shipping carrier code etc) */
+  data?: object;
 };
 
 export type PlaceOrderResult = PlaceOrderSuccessfulResult | PlaceOrder3dSecureResult;
@@ -454,9 +467,8 @@ export type PlaceOrder3dSecureField = {
   value?: string;
 };
 
-export type EstimateShippingMethodsInput = {
-  address: CheckoutAddressInput;
-};
+export type SetCheckoutAddressInput = OperationInput<CheckoutAddressInput>;
+export type SetCheckoutDetailsInput = OperationInput<CheckoutDetailsInput>;
 
 export type ShippingMethod = {
   carrierTitle: string;
@@ -467,18 +479,6 @@ export type ShippingMethod = {
   priceExclTax: number;
   priceInclTax: number;
   currency?: string;
-};
-
-export type SetShippingInput = {
-  billingAddress: CheckoutAddressInput;
-  shippingAddress: CheckoutAddressInput;
-  shippingCarrierCode: string;
-  shippingMethodCode: string;
-};
-
-export type SetShippingResult = {
-  paymentMethods: PaymentMethod[];
-  totals: CartTotal;
 };
 
 export type PaymentMethod = {
