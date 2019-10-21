@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import { Mutation } from '@deity/falcon-data';
 
 export const REMOVE_ADDRESS = gql`
-  mutation RemoveAddress($id: Int!) {
+  mutation RemoveAddress($id: ID!) {
     removeAddress(id: $id)
   }
 `;
