@@ -15,14 +15,14 @@ const ResponsiveInner: React.SFC<PropsWithTheme<ResponsiveProps>> = props => {
   if (width !== undefined) {
     responsiveProps = {
       ...responsiveProps,
-      minWidth: (theme.breakpoints as any)[width] || width
+      minWidth: theme.breakpoints[width] || width
     };
   }
 
   if (height !== undefined) {
     responsiveProps = {
       ...responsiveProps,
-      minHeight: (theme.breakpoints as any)[height] || height
+      minHeight: theme.breakpoints[height] || height
     };
   }
 
