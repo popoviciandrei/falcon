@@ -1,6 +1,5 @@
 import React from 'react';
 import { Value } from 'react-powerplug';
-
 import { themed } from '../theme';
 import { Box } from './Box';
 import { ListItem } from './List';

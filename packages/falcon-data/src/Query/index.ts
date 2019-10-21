@@ -1,4 +1,5 @@
 export * from './Query';
+export * from './useQuery';
+export * from './fetchMore';
 export * from './Loader';
-export * from './getErrorCode';
-export * from './Error';
+export * from './OperationError';

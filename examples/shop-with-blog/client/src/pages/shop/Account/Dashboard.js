@@ -7,7 +7,7 @@ import { EmptyOrderList, OrderListLayout, OrderListHeader } from '@deity/falcon-
 import { OrderList } from './Orders/OrderList';
 
 const Dashboard = () => (
-  <GridLayout gridGap="md">
+  <GridLayout>
     <H1>
       <T id="dashboard.title" />
     </H1>

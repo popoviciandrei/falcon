@@ -1,4 +1,5 @@
 import CSS from 'csstype';
+import { Keyframes } from '@emotion/serialize';
 import { defaultBaseTheme } from './theme';
 import { PropsMappings } from './responsiveprops';
 import { mergeThemes } from './utils';
@@ -34,6 +35,8 @@ export interface Theme {
   components: ThemedComponents;
   icons: ThemedIcons;
 }
+type s = keyof Theme;
+
 export type ThemedIcons = {
   [name: string]: {
     icon: React.ComponentType | ((props: any) => JSX.Element);
@@ -44,25 +47,23 @@ type ThemedPropMapping = {
   themeProp: keyof Theme;
 };
 
-type CssPropsKeys = keyof CSS.PropertiesFallback<number | string>;
 type CssProps = CSS.PropertiesFallback<number | string>;
 
 type ResponsivePropMapping = {
-  cssProp: CssPropsKeys;
+  cssProp: keyof CssProps;
 };
 
-export type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
+export type RecursivePartial<T> = { [key in keyof T]?: RecursivePartial<T[key]> };
 
-type CSSPseudoObject = { [K in CSS.SimplePseudos]?: CSSObject };
-
-type CssOtherProps = undefined | string | number | CSSObject;
-
+type CSSPseudoObject = {
+  [key in CSS.SimplePseudos]?: CSSObject;
+};
+type CssOtherProps = undefined | number | string | CSSObject;
 type CSSOthersObject = {
   [propertiesName: string]: CssOtherProps | CssOtherProps[];
 };
-
 type CssResponsiveProps = {
-  [key in CssPropsKeys]?: { [Breakpoint in keyof Theme['breakpoints']]?: CssProps[key] } | CssProps[key];
+  [key in keyof CssProps]?: { [Breakpoint in keyof Theme['breakpoints']]?: CssProps[key] } | CssProps[key];
 };
 
 export interface CSSObject extends CssResponsiveProps, CSSPseudoObject, CSSOthersObject {}
@@ -71,9 +72,7 @@ export interface PropsWithTheme {
   theme: Theme;
 }
 
-export type InlineCss<TProps = {}> = ((props: PropsWithTheme & TProps) => CSSObject) | CSSObject;
-
-export type ThemedComponentPropsWithCss<TProps = {}> = {
+export type BaseThemedComponentProps = {
   [ComponentProp in keyof PropsMappings]?:
     | (PropsMappings[ComponentProp] extends ThemedPropMapping
         ? Extract<keyof Theme[PropsMappings[ComponentProp]['themeProp']], string>
@@ -87,9 +86,13 @@ export type ThemedComponentPropsWithCss<TProps = {}> = {
           ? CssProps[PropsMappings[ComponentProp]['cssProp']]
           : (string | number);
       };
-} & { css?: InlineCss<TProps> };
+};
 
-export interface ThemedComponentProps<TProps = {}> extends ThemedComponentPropsWithCss<TProps> {}
+export type InlineCss<TProps> = ((props: PropsWithTheme & TProps) => CSSObject) | CSSObject;
+
+export interface ThemedComponentProps<TProps = {}> extends BaseThemedComponentProps {
+  css?: InlineCss<TProps>;
+}
 
 export type ThemedComponentPropsWithVariants<TProps = {}> = ThemedComponentProps<TProps> & {
   variants?: {
@@ -98,12 +101,11 @@ export type ThemedComponentPropsWithVariants<TProps = {}> = ThemedComponentProps
 };
 
 export interface ThemedComponents {
-  [themeKey: string]: ThemedComponentPropsWithVariants;
+  [key: string]: ThemedComponentPropsWithVariants;
 }
 type NumberOrStringValues<T> = { readonly [P in keyof T]: number | string };
 
 type Colors = typeof defaultBaseTheme.colors;
-
 export interface ThemeColors extends Colors {}
 
 type Breakpoints = NumberOrStringValues<typeof defaultBaseTheme.breakpoints>;
@@ -143,7 +145,7 @@ type TransitionDurations = typeof defaultBaseTheme.transitionDurations;
 export interface ThemeTransitionDurations extends TransitionDurations {}
 
 export interface ThemeKeyframes {
-  [key: string]: CSSObject;
+  [key: string]: CSSObject | Keyframes;
 }
 
 type ZIndex = typeof defaultBaseTheme.zIndex;

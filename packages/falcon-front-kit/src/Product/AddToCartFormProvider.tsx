@@ -1,7 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
+import { useGetUserError } from '@deity/falcon-data';
 import { Product, ProductOption } from '@deity/falcon-shop-extension';
-import { AddToCartMutation } from '@deity/falcon-shop-data';
+import { useAddToCartMutation } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 import { ProductOptionsMap, productOptionsToForm, formProductOptionsToInput } from './productOptionMappers';
 
@@ -25,34 +26,36 @@ export const AddToCartFormProvider: React.SFC<AddToCartFormProviderProps> = prop
     bundleOptions: product.bundleOptions || []
   };
 
+  const [addToCart] = useAddToCartMutation();
+  const [getUserError] = useGetUserError();
+
   return (
-    <AddToCartMutation>
-      {addToCart => (
-        <Formik
-          initialValues={initialValues || defaultInitialValues}
-          onSubmit={(values, formikActions) =>
-            addToCart({
-              variables: {
-                input: {
-                  sku: product.sku,
-                  qty: parseInt(values.qty.toString(), 10),
-                  options: formProductOptionsToInput(values.options),
-                  bundleOptions: undefined // values.bundleOptions as any - TODO add appropriate mapper
-                }
-              }
-            })
-              .then(() => {
-                formikActions.setSubmitting(false);
-                return onSuccess && onSuccess();
-              })
-              .catch(e => {
-                formikActions.setSubmitting(false);
-                formikActions.setStatus({ error: e.message });
-              })
+    <Formik
+      initialValues={initialValues || defaultInitialValues}
+      onSubmit={(values, { setSubmitting, setStatus }) =>
+        addToCart({
+          variables: {
+            input: {
+              sku: product.sku,
+              qty: parseInt(values.qty.toString(), 10),
+              options: formProductOptionsToInput(values.options),
+              bundleOptions: undefined // values.bundleOptions as any - TODO: add appropriate mapper
+            }
           }
-          {...formikProps}
-        />
-      )}
-    </AddToCartMutation>
+        })
+          .then(() => {
+            setSubmitting(false);
+            return onSuccess && onSuccess();
+          })
+          .catch(e => {
+            const error = getUserError(e);
+            if (error.length) {
+              setStatus({ error });
+              setSubmitting(false);
+            }
+          })
+      }
+      {...formikProps}
+    />
   );
 };

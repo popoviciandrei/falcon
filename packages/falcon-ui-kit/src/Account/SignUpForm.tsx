@@ -1,13 +1,14 @@
 import React from 'react';
 import { SignUpFormProvider } from '@deity/falcon-front-kit';
-import { FormField, Form, FormProps, FormSubmit, FormErrorSummary, PasswordRevealInput } from '../Forms';
+import { ErrorSummary } from '../Error';
+import { FormField, Form, FormProps, FormSubmit, PasswordRevealInput } from '../Forms';
 
 export type SignUpFormProps = Partial<FormProps> & {
   onSuccess?: Function;
 };
 export const SignUpForm: React.SFC<SignUpFormProps> = ({ onSuccess, ...formProps }) => (
   <SignUpFormProvider onSuccess={onSuccess}>
-    {({ isSubmitting, status }) => (
+    {({ isSubmitting, status = {} }) => (
       <Form id="sign-up" i18nId="signUp" {...formProps}>
         <FormField name="firstname" type="text" required autoComplete="given-name" />
         <FormField name="lastname" type="text" required autoComplete="family-name" />
@@ -18,7 +19,7 @@ export const SignUpForm: React.SFC<SignUpFormProps> = ({ onSuccess, ...formProps
         </FormField>
 
         <FormSubmit submitting={isSubmitting} value="Create an account" />
-        <FormErrorSummary errors={status && status.error} />
+        {status.error && <ErrorSummary errors={status.error} />}
       </Form>
     )}
   </SignUpFormProvider>

@@ -16,6 +16,9 @@ coverage:
       falcon-server-env:
         paths:
           - falcon-server-env/
+      falcon-front-kit:
+        paths:
+          - falcon-front-kit/
       falcon-magento2-api:
         paths:
           - falcon-magento2-api/

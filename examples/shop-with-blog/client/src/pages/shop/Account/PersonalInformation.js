@@ -7,7 +7,7 @@ import { FormField, Form, FormErrorSummary, TwoColumnsLayout, TwoColumnsLayoutAr
 import { CustomerQuery, EditCustomerMutation } from '@deity/falcon-shop-data';
 
 const PersonalInformation = () => (
-  <GridLayout mb="md" gridGap="md">
+  <GridLayout mb="md">
     <H1>
       <T id="editCustomer.title" />
     </H1>

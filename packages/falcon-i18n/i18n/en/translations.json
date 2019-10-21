@@ -302,5 +302,9 @@
     "toLong": "Please enter a {{label}} with maximum {{max}} characters.",
     "belowRange": "Please enter a {{label}} greater than {{min}}.",
     "aboveRange": "Please enter a {{label}} lower than {{min}}."
+  },
+  "error": {
+    "unknown": "Something went wrong...",
+    "failedToFetch": "We can not reach our services at this moment, please try again later."
   }
 }

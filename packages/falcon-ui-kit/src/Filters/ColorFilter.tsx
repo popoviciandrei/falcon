@@ -1,12 +1,11 @@
 import React from 'react';
-import { ThemedComponentProps } from '@deity/falcon-ui';
 import { ColorTile } from '../Color';
 import { FilterItemLayout } from './FilterItemLayout';
 import { SelectedFilterItemLayout } from './SelectedFilterItemLayout';
-import { FilterItemListLayout } from './FilterItemListLayout';
+import { FilterItemListLayout, FilterItemListLayoutProps } from './FilterItemListLayout';
 import { SingleFilterProps } from './SingleFilter';
 
-export const ColorFilter: React.SFC<SingleFilterProps & ThemedComponentProps> = ({
+export const ColorFilter: React.SFC<SingleFilterProps & FilterItemListLayoutProps> = ({
   options,
   selected,
   onChange,
@@ -15,7 +14,7 @@ export const ColorFilter: React.SFC<SingleFilterProps & ThemedComponentProps> = 
   const selectedOption = selected !== undefined ? options.find(x => x.value === selected) : undefined;
 
   return (
-    <FilterItemListLayout display="flex" flexWrap="wrap" {...(rest as any)}>
+    <FilterItemListLayout display="flex" flexWrap="wrap" {...rest}>
       {selectedOption && (
         <SelectedFilterItemLayout onClick={() => onChange()}>
           <ColorTile size="lg" color={selectedOption!.value} title={selectedOption!.title} />

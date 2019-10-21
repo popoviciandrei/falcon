@@ -2,7 +2,8 @@ import React from 'react';
 import { Button, FlexLayout, Link } from '@deity/falcon-ui';
 import { T } from '@deity/falcon-i18n';
 import { SignInFormProvider } from '@deity/falcon-front-kit';
-import { FormField, Form, FormProps, PasswordRevealInput, FormErrorSummary } from '../Forms';
+import { ErrorSummary } from '../Error';
+import { FormField, Form, FormProps, PasswordRevealInput } from '../Forms';
 
 export type SignInFormProps = Partial<FormProps> & {
   onSuccess?: () => Promise<void>;
@@ -11,7 +12,7 @@ export type SignInFormProps = Partial<FormProps> & {
 
 export const SignInForm: React.SFC<SignInFormProps> = ({ onSuccess, onForgotPassword, ...formProps }) => (
   <SignInFormProvider onSuccess={onSuccess}>
-    {({ isSubmitting, status }) => (
+    {({ isSubmitting, status = {} }) => (
       <Form i18nId="signIn" {...formProps}>
         <FormField name="email" type="email" required autoComplete="email" />
         <FormField
@@ -33,7 +34,7 @@ export const SignInForm: React.SFC<SignInFormProps> = ({ onSuccess, onForgotPass
           </Button>
         </FlexLayout>
 
-        <FormErrorSummary errors={status && status.error} />
+        {status.error && <ErrorSummary errors={status.error} />}
       </Form>
     )}
   </SignInFormProvider>

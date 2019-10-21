@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
-import { CheckoutLogic } from '@deity/falcon-front-kit';
+import { CheckoutConsumer, CheckoutProvider } from '@deity/falcon-front-kit';
 import { toGridTemplate, Loader } from '@deity/falcon-ui-kit';
 import { CartQuery, CustomerQuery, GET_CUSTOMER_WITH_ADDRESSES } from '@deity/falcon-shop-data';
 import { T, I18n } from '@deity/falcon-i18n';
@@ -285,13 +285,15 @@ class CheckoutWizard extends React.Component {
 }
 
 const CheckoutPage = () => (
-  <CheckoutLogic>
-    {checkoutData => (
-      <CustomerQuery query={GET_CUSTOMER_WITH_ADDRESSES}>
-        {({ data: { customer } }) => <CheckoutWizard checkoutData={checkoutData} customerData={customer} />}
-      </CustomerQuery>
-    )}
-  </CheckoutLogic>
+  <CheckoutProvider>
+    <CheckoutConsumer>
+      {checkoutData => (
+        <CustomerQuery query={GET_CUSTOMER_WITH_ADDRESSES}>
+          {({ data: { customer } }) => <CheckoutWizard checkoutData={checkoutData} customerData={customer} />}
+        </CustomerQuery>
+      )}
+    </CheckoutConsumer>
+  </CheckoutProvider>
 );
 
 export default CheckoutPage;

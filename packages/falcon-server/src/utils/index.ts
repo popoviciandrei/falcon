@@ -8,7 +8,7 @@ declare interface ICreateShortHash {
 /**
  * Creates short hash for the given data
  * @param data Data to create hash
- * @returns Hashed string
+ * @returns {ICreateShortHash} Hashed string
  */
 export const createShortHash: ICreateShortHash = (data: string | Array<string>) =>
   createHash('sha1')

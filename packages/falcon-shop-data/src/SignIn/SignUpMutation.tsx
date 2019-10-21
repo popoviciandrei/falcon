@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { SignUpInput } from '@deity/falcon-shop-extension';
 
@@ -16,3 +17,9 @@ export class SignUpMutation extends Mutation<SignUpResponse, OperationInput<Sign
     refetchQueries: ['Customer', 'Cart']
   };
 }
+
+export const useSignUpMutation = (options: MutationHookOptions<SignUpResponse, OperationInput<SignUpInput>> = {}) =>
+  useMutation(SIGN_UP_MUTATION, {
+    refetchQueries: ['Customer', 'Cart'],
+    ...options
+  });

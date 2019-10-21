@@ -1,7 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
+import { useGetUserError } from '@deity/falcon-data';
 import { RequestPasswordResetInput } from '@deity/falcon-shop-extension';
-import { RequestPasswordResetMutation } from '@deity/falcon-shop-data';
+import { useRequestPasswordResetMutation } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
 export type ForgotPasswordFormValues = RequestPasswordResetInput;
@@ -12,25 +13,27 @@ export const ForgotPasswordFormProvider: React.SFC<ForgotPasswordFormProviderPro
     email: ''
   };
 
+  const [requestPasswordReset] = useRequestPasswordResetMutation();
+  const [getUserError] = useGetUserError();
+
   return (
-    <RequestPasswordResetMutation>
-      {requestPasswordReset => (
-        <Formik
-          initialValues={initialValues || defaultInitialValues}
-          onSubmit={(values, formikActions) =>
-            requestPasswordReset({ variables: { input: values } })
-              .then(() => {
-                formikActions.setSubmitting(false);
-                return onSuccess && onSuccess();
-              })
-              .catch(e => {
-                formikActions.setSubmitting(false);
-                formikActions.setStatus({ error: e.message });
-              })
-          }
-          {...formikProps}
-        />
-      )}
-    </RequestPasswordResetMutation>
+    <Formik
+      initialValues={initialValues || defaultInitialValues}
+      onSubmit={(values, { setSubmitting, setStatus }) =>
+        requestPasswordReset({ variables: { input: values } })
+          .then(() => {
+            setSubmitting(false);
+            return onSuccess && onSuccess();
+          })
+          .catch(e => {
+            const error = getUserError(e);
+            if (error.length) {
+              setStatus({ error });
+              setSubmitting(false);
+            }
+          })
+      }
+      {...formikProps}
+    />
   );
 };
