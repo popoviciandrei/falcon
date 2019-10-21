@@ -9,13 +9,13 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Falcon Client vNext
 
 - changed the way of defining "proxyEndpoints" ([#571](https://github.com/deity-io/falcon/pull/571))
-- fixed typos in build log messages ([602](https://github.com/deity-io/falcon/pull/602))
+- fixed typos in build log messages ([#602](https://github.com/deity-io/falcon/pull/602))
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved code redistribution across chunks ([#619](https://github.com/deity-io/falcon/pull/619))
 - fixed self cached service worker (`/sw.js`) ([#626](https://github.com/deity-io/falcon/pull/626))
-- upgrade `react` to version `16.10.2` ([#640](https://github.com/deity-io/falcon/pull/640))
+- upgraded `react` to version `16.10.2` ([#640](https://github.com/deity-io/falcon/pull/640))
 - improved eslint configuration ([#642](https://github.com/deity-io/falcon/pull/642)), ([#639](https://github.com/deity-io/falcon/pull/639)), ([#633](https://github.com/deity-io/falcon/pull/633))
-- upgrade `css-loader` to version `3.2.0` ([#620](https://github.com/deity-io/falcon/pull/620))
+- upgraded `css-loader` to version `3.2.0` ([#620](https://github.com/deity-io/falcon/pull/620))
 - fixed `/graphQL` proxy error handling ([#632](https://github.com/deity-io/falcon/pull/632))
 - fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
 
@@ -70,7 +70,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
   - Improved BackendConfig fetching technique (asynchronously in parallel)
 - improved Cache calls by tracking simultaneous requests with the same cache-key ([#557](https://github.com/deity-io/falcon/pull/557))
 - introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
-- falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
+- fixed falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
 
 ### Falcon Server Env vNext
 
