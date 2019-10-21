@@ -39,13 +39,27 @@ if (CONFIG.precache) {
   precacheAndRoute(ENTRIES, {});
 }
 
+async function cleanResponse(response) {
+  const clonedResponse = response.clone();
+
+  // Not all browsers support the Response.body stream, so fall back to reading
+  // the entire body into memory as a blob.
+  const body = 'body' in clonedResponse ? clonedResponse.body : await clonedResponse.blob();
+
+  // new Response() is happy when passed either a stream or a Blob.
+  return new Response(body, {
+    headers: clonedResponse.headers,
+    status: clonedResponse.status,
+    statusText: clonedResponse.statusText
+  });
+}
+
 const router = new Router();
 self.addEventListener('fetch', event => {
-  const responsePromise = router.handleRequest(event);
+  let responsePromise = router.handleRequest(event);
   if (responsePromise) {
-    // if response is redirected, we should clone the response before sending it
-    // see https://stackoverflow.com/a/45440505/412319
-    event.respondWith(responsePromise.then(res => (res.redirected ? res.clone() : res)));
+    responsePromise = responsePromise.then(res => (res.redirected ? cleanResponse(res) : res));
+    event.respondWith(responsePromise);
   }
 });
 
