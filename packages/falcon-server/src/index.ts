@@ -113,7 +113,7 @@ export class FalconServer {
   }
 
   async getApolloServerConfig() {
-    this.apolloServerConfig = await this.extensionContainer.createGraphQLConfig(this.getInitialGraphQLConfig());
+    this.apolloServerConfig = this.extensionContainer.createGraphQLConfig(this.getInitialGraphQLConfig());
 
     // Removing "placeholder" (_) fields from the Type definitions
     delete this.apolloServerConfig.schema.getSubscriptionType().getFields()['_'];
