@@ -1,8 +1,9 @@
 export { InMemoryLRUCache } from 'apollo-server-caching';
 export * from './models/ApiDataSource';
+export * from './models/Extension';
 export * from './models/EndpointManager';
 export { default as ContextHTTPCache } from './cache/ContextHTTPCache';
-export * from './cache/Cache';
+export { default as Cache } from './cache/Cache';
 export * from './types';
 export { default as htmlHelpers } from './helpers/htmlHelpers';
 export { Events } from './events';

@@ -1,22 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from 'react-apollo/test-utils';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { MemoryRouter } from 'react-router-dom';
 import { I18nProvider } from '@deity/falcon-i18n';
 import i18nFactory from '../src/i18n/__fakes__/i18nFactory';
 
 /**
- * @typedef {object} FalconClientProps
- * @property {object} apollo react-apollo MockProvider props
- * @property {object} router react-router-dom MemoryRouter props
- * @property {object} i18next i18next options
+ * @typedef {Object} FalconClientProps
+ * @property {Object} apollo react-apollo MockProvider props
+ * @property {Object} router react-router-dom MemoryRouter props
+ * @property {Object} i18next i18next options
  */
 
 /**
  * FalconClientMock wrapper component
  * @param {FalconClientProps} props props
- * @returns {object} FalconClientMock component
+ * @returns {Object} FalconClientMock component
  */
 const FalconClient = ({ apollo, router, i18next, children }) => {
   const extractor = new ChunkExtractor({ stats: { namedChunkGroups: {} } });

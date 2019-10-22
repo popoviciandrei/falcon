@@ -1,60 +1,40 @@
 import React from 'react';
 import { T } from '@deity/falcon-i18n';
-import { BlogPostListQuery } from '@deity/falcon-blog-data';
-import { Breadcrumbs, ListItem, Icon } from '@deity/falcon-ui';
-import {
-  RouterLink,
-  PageLayout,
-  BlogPostListLayout,
-  BlogPostExcerpt,
-  BreadcrumbLink,
-  BlogPostListPaginationLayout
-} from '@deity/falcon-ui-kit';
+import { Box, Breadcrumbs, Breadcrumb, Link } from '@deity/falcon-ui';
+import { BlogPostsQuery, BlogPostsLayout, BlogPostExcerpt, BlogPostsPaginator } from '@deity/falcon-ecommerce-uikit';
 
-const Blog = ({ match }) => {
-  const { params } = match;
+const Blog = props => (
+  <Box as="section">
+    <Breadcrumbs my="md" alignSelf="flex-start">
+      <Breadcrumb key="index">
+        <Link to="/">
+          <T id="home.title" />
+        </Link>
+      </Breadcrumb>
+      <Breadcrumb key="post">
+        <T id="blog.title" />
+      </Breadcrumb>
+    </Breadcrumbs>
 
-  return (
-    <PageLayout as="section">
-      <Breadcrumbs alignSelf="flex-start">
-        <BreadcrumbLink to="/">
-          <T id="name" />
-        </BreadcrumbLink>
-        <BreadcrumbLink to="/blog">
-          <T id="blog.title" />
-        </BreadcrumbLink>
-      </Breadcrumbs>
-
-      <BlogPostListQuery variables={{ pagination: { perPage: 2, page: +params.page || 1 } }}>
-        {({ data: { blogPostList } }) => {
-          const { items, pagination } = blogPostList;
-          return (
-            <React.Fragment>
-              <BlogPostListLayout>
-                {items.map((x, index) => (
-                  <ListItem key={x.slug} gridColumn={index < 2 ? 'span 3' : 'span 2'}>
-                    <BlogPostExcerpt title={x.title} slug={x.slug} date={x.date} image={x.image} excerpt={x.excerpt} />
-                  </ListItem>
-                ))}
-              </BlogPostListLayout>
-              <BlogPostListPaginationLayout isPrevPage={pagination.prevPage}>
-                {pagination.prevPage && (
-                  <RouterLink display="flex" lineHeight="small" fontSize="md" to={`/blog/${pagination.prevPage}`}>
-                    <Icon size="md" mr="xs" src="prevPage" /> <T id="blog.newerEntries" />
-                  </RouterLink>
-                )}
-                {pagination.nextPage && (
-                  <RouterLink display="flex" lineHeight="small" fontSize="md" to={`/blog/${pagination.nextPage}`}>
-                    <T id="blog.olderEntries" /> <Icon ml="xs" size="md" src="nextPage" />
-                  </RouterLink>
-                )}
-              </BlogPostListPaginationLayout>
-            </React.Fragment>
-          );
-        }}
-      </BlogPostListQuery>
-    </PageLayout>
-  );
-};
+    <BlogPostsQuery
+      variables={{
+        pagination: {
+          page: +props.match.params.page || 1
+        }
+      }}
+    >
+      {({ blogPosts }) => (
+        <React.Fragment>
+          <BlogPostsLayout>
+            {blogPosts.items.map((item, index) => (
+              <BlogPostExcerpt key={item.slug} gridColumn={index < 2 ? 'span 3' : 'span 2'} excerpt={item} />
+            ))}
+          </BlogPostsLayout>
+          <BlogPostsPaginator pagination={blogPosts.pagination} />
+        </React.Fragment>
+      )}
+    </BlogPostsQuery>
+  </Box>
+);
 
 export default Blog;

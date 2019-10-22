@@ -66,7 +66,7 @@ export async function Server({ App, clientApolloSchema, bootstrap, webpackAssets
 
 /**
  * @typedef {object} ServerAppConfig
- * @property {Function} App Root application component
+ * @property {function} App Root application component
  * @property {{config, onServerCreated, onServerInitialized, onServerStarted }} bootstrap Initial configuration
  * @property {object} clientApolloSchema Apollo State object
  * @property {object} webpackAssets webpack assets
@@ -75,7 +75,7 @@ export async function Server({ App, clientApolloSchema, bootstrap, webpackAssets
 /**
  * @typedef {object} WebServer
  * @property {Koa} instance Server instance
- * @property {Function} callback Initial configuration
+ * @property {function} callback Initial configuration
  * @property {number} port Desired PORT to run at
  * @property {object} clientApolloSchema Apollo State object
  */

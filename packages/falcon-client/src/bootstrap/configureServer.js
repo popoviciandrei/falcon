@@ -14,11 +14,11 @@ import { ProxyRequest } from '../service/ProxyRequest';
  * @param {koa-router} router KoaRouter object
  * @param {string} serverUrl Falcon-Server URL
  * @param {string[]} endpoints list of endpoints to be proxied to {serverUrl}
- * @param {object} redirects Map of redirects
- * @param {PaymentRedirectMap} redirects.payment Payment redirects
+ * @param {Object} redirs Map of redirections
+ * @param {PaymentRedirectMap} redirs.payment Payment redirects
  * @returns {undefined}
  */
-export const configureProxy = async (router, serverUrl, endpoints, redirects) => {
+export const configureProxy = async (router, serverUrl, endpoints, redirs) => {
   if (!router) {
     Logger.error('"router" must be passed for "configureProxy" call in your "bootstrap.js" file');
     return;
@@ -47,15 +47,14 @@ export const configureProxy = async (router, serverUrl, endpoints, redirects) =>
         }
 
         const { type, result } = await proxyResult.json();
-        const { [type]: redirectMap = {} } = redirects;
+        const { [type]: redirectMap = {} } = redirs;
         const { [result]: redirectLocation = '/' } = redirectMap;
 
         // Result redirection
         ctx.status = 302;
-        ctx.redirect(redirectLocation);
+        ctx.set('location', redirectLocation);
       });
     });
-    Logger.info('Endpoints configured');
   } catch (error) {
     Logger.error(`Failed to handle remote endpoints: ${error.message}`);
   }
@@ -64,7 +63,7 @@ export const configureProxy = async (router, serverUrl, endpoints, redirects) =>
 /**
  * Fetches a config from Falcon-Server
  * @param {string} serverUrl Falcon-Server URL
- * @returns {object} Remote server config
+ * @returns {Object} Remote server config
  */
 export const fetchRemoteConfig = async serverUrl => {
   if (!serverUrl) {

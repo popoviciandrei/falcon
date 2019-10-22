@@ -1,8 +1,0 @@
-type Review {
-  id: Int!
-  content: String!
-}
-
-extend type Product {
-  reviews: [Review]
-}

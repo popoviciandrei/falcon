@@ -1,6 +1,6 @@
 {
   "name": "@deity/babel-preset-falcon-client",
-  "version": "1.0.0",
+  "version": "0.1.4",
   "license": "OSL-3.0",
   "main": "index.js",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-dev-tools/babel-preset-falcon-client",

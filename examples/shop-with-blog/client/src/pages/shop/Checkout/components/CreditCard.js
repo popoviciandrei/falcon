@@ -1,1 +1,1 @@
-export { CreditCardInput as default } from '@deity/falcon-ui-kit';
+export { CreditCard as default } from '@deity/falcon-ecommerce-uikit';

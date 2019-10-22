@@ -1,14 +1,10 @@
-import { Response, Request, RequestInit } from 'apollo-server-env';
+import { Response, Request } from 'apollo-server-env';
 import { CacheOptions, RequestOptions } from 'apollo-datasource-rest/dist/RESTDataSource';
-import { Middleware } from 'koa';
-import { Config as ApolloServerConfig } from 'apollo-server-koa';
-import { GraphQLResolveInfo } from 'graphql';
-import { IResolvers } from 'graphql-tools';
+import { IMiddleware } from 'koa-router';
+import { RequestInit } from 'apollo-server-env';
 import { EventEmitter2 } from 'eventemitter2';
 import { ApiDataSource } from './models/ApiDataSource';
-import { Cache } from './cache/Cache';
-
-export { ApolloServerConfig };
+import Cache from './cache/Cache';
 
 export interface DataSourceConfig<TContext> {
   context: TContext;
@@ -19,7 +15,6 @@ export interface FetchUrlResult {
   id: string | number;
   type: string;
   path: string;
-  redirect: boolean;
 }
 
 export enum ApiUrlPriority {
@@ -31,7 +26,9 @@ export enum ApiUrlPriority {
   OFF = 0
 }
 
-export type DataSources = Record<string, ApiDataSource<GraphQLContext>>;
+export type DataSources = {
+  [name: string]: ApiDataSource<GraphQLContext>;
+};
 
 export interface IConfigurableConstructorParams<T = object> {
   /** short-name */
@@ -69,11 +66,8 @@ export interface ApiDataSourceConfig extends UrlConfig {
   [propName: string]: any;
 }
 
-export type RemoteBackendConfig = {
-  locales?: string[];
-};
-
 // todo: this is a temporary type just to have proper type checking in the Extension class. It needs to be improved.
+export type ExtensionContainer = object;
 export type ApiContainer = object;
 
 export interface ContextData {
@@ -81,8 +75,12 @@ export interface ContextData {
 }
 
 export interface GraphQLContext {
-  session?: Record<string, any>;
-  headers?: Record<string, string>;
+  session?: {
+    [propName: string]: any;
+  };
+  headers?: {
+    [propName: string]: string;
+  };
   cache: Cache;
   dataSources: DataSources;
   [propName: string]: any;
@@ -105,44 +103,21 @@ export type ContextFetchRequest = Request & ContextData;
 
 export type ContextFetchResponse = Response & ContextData;
 
-export interface ExtensionConfig {
-  api?: string;
-}
-
-export interface ExtensionInitializer {
-  (): ExtensionInstance;
-  (config: ExtensionConfig): ExtensionInstance;
-}
-
-export interface ExtensionInstance {
-  resolvers?: GraphQLResolverMap;
-}
-
 export type FetchUrlParams = {
   path: string;
 };
 
 export interface EndpointEntry {
-  methods: Array<RequestMethod | keyof typeof RequestMethod> | RequestMethod | keyof typeof RequestMethod;
-  handler: Middleware;
+  methods: Array<RequestMethod> | RequestMethod;
+  handler: IMiddleware;
   path: string;
 }
 
 export enum RequestMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-  PATCH = 'PATCH',
-  HEAD = 'HEAD',
-  LINK = 'LINK',
-  UNLINK = 'UNLINK',
-  OPTIONS = 'OPTIONS',
-  ALL = 'ALL'
+  GET = 'get',
+  POST = 'post',
+  PUT = 'put',
+  DELETE = 'delete',
+  PATCH = 'patch',
+  ALL = 'all'
 }
-
-export interface GraphQLResolver<T, O = any, P = any, C extends GraphQLContext = GraphQLContext> {
-  (obj: O, params: P, context: C, info: GraphQLResolveInfo): Promise<T>;
-}
-
-export type GraphQLResolverMap = IResolvers<any, GraphQLContext>;

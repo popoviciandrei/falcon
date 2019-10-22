@@ -1,23 +1,20 @@
 import React from 'react';
 import { NetworkStatus } from 'apollo-client';
+import { H1, GridLayout, Button, FlexLayout } from '@deity/falcon-ui';
 import { T } from '@deity/falcon-i18n';
-import { OrderListQuery } from '@deity/falcon-shop-data';
-import { H1, Button, GridLayout, FlexLayout } from '@deity/falcon-ui';
-import { OrderListLayout, OrderListHeader, EmptyOrderList } from '@deity/falcon-ui-kit';
-import { OrderList } from './OrderList';
+import { OrderListQuery, OrderList, NoOrders } from '@deity/falcon-ecommerce-uikit';
 
 const Orders = () => (
-  <GridLayout gridGap="md">
+  <GridLayout mb="md" gridGap="md">
     <H1>
       <T id="orderList.title" />
     </H1>
     <OrderListQuery>
-      {({ data: { orderList }, fetchMore, networkStatus }) =>
-        orderList.items.length ? (
-          <OrderListLayout>
-            <OrderListHeader />
-            <OrderList items={orderList.items} />
-            {orderList.pagination.nextPage && (
+      {({ orders: { items, pagination }, fetchMore, networkStatus }) =>
+        items.length ? (
+          <React.Fragment>
+            <OrderList items={items} />
+            {pagination.nextPage && (
               <FlexLayout justifyContent="center">
                 <Button
                   onClick={fetchMore}
@@ -28,9 +25,9 @@ const Orders = () => (
                 </Button>
               </FlexLayout>
             )}
-          </OrderListLayout>
+          </React.Fragment>
         ) : (
-          <EmptyOrderList />
+          <NoOrders />
         )
       }
     </OrderListQuery>

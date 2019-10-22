@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Image, Text, Divider } from '@deity/falcon-ui';
-import { Price, toGridTemplate, PropertyRowLayout } from '@deity/falcon-ui-kit';
+import { Price, toGridTemplate } from '@deity/falcon-ecommerce-uikit';
 import CartTotals from '../components/CartTotals';
 
 const MAX_THUMB_SIZE = '80px';
@@ -20,10 +20,10 @@ export const checkoutCartSummaryItemLayout = {
     my: 'xs',
     fontSize: 'xs',
     // prettier-ignore
-    gridTemplate: toGridTemplate([
-      [MAX_THUMB_SIZE, '1fr',            'auto'],
-      [ItemArea.thumb, ItemArea.name,    ItemArea.price],
-      [ItemArea.thumb, ItemArea.details, ItemArea.details]
+    gridTemplate:  toGridTemplate([
+      [MAX_THUMB_SIZE,  '1fr',            '60px',           '60px'            ],
+      [ItemArea.thumb,  ItemArea.name,    ItemArea.name,    ItemArea.price    ],
+      [ItemArea.thumb,  ItemArea.details, ItemArea.details, ItemArea.details  ]
     ])
   }
 };
@@ -42,20 +42,20 @@ const CartItem = ({ item }) => (
     <Box gridArea={ItemArea.details}>
       {item.itemOptions &&
         item.itemOptions.length > 0 &&
-        item.itemOptions.map(option => <PropertyRow option={option} key={option.label} />)}
-      <PropertyRow option={{ label: 'Quantity', value: item.qty }} />
+        item.itemOptions.map(option => <OptionRow option={option} key={option.label} />)}
+      <OptionRow option={{ label: 'Quantity', value: item.qty }} />
     </Box>
     <Price gridArea={ItemArea.price} value={item.rowTotalInclTax} fontWeight="bold" css={{ textAlign: 'right' }} />
   </Box>
 );
 
-const PropertyRow = ({ option }) => (
-  <PropertyRowLayout>
-    <Text>{option.label}:</Text>
-    <Text>{option.value}</Text>
-  </PropertyRowLayout>
+const OptionRow = ({ option }) => (
+  <Box display="flex" fontSize="xs">
+    <Text flex="1">{option.label}:</Text>
+    <Text flex="2">{option.value}</Text>
+  </Box>
 );
-PropertyRow.propTypes = {
+OptionRow.propTypes = {
   option: PropTypes.shape({
     label: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])

@@ -4,21 +4,6 @@
 
 Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) are already released and available via npm. Versions without a date are not released yet.
 
-## Falcon vNext
-
-### Falcon Client vNext
-
-- changed the way of defining "proxyEndpoints" ([#571](https://github.com/deity-io/falcon/pull/571))
-
-### Falcon Server vNext
-
-- improved Cache calls by tracking simultaneous requests with the same cache-key ([#557](https://github.com/deity-io/falcon/pull/557))
-- introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
-
-### Falcon Server Env vNext
-
-- added optional `ApiDataSource.getExtraResolvers` static method to define extra resolvers ([#557](https://github.com/deity-io/falcon/pull/557))
-
 ## Falcon v1.3 (2019-08-01)
 
 - required changes were made to make Falcon compatible with Node v12 ([#537](https://github.com/deity-io/falcon/pull/537))

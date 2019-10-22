@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form, ErrorMessage } from 'formik';
-import { graphql } from '@apollo/react-hoc';
+import { graphql } from 'react-apollo';
 import { Box, Text, Link, Input, Button, Details, DetailsContent } from '@deity/falcon-ui';
-import { SignOutMutation, GET_CUSTOMER } from '@deity/falcon-shop-data';
-import { toGridTemplate } from '@deity/falcon-ui-kit';
 import { I18n, T } from '@deity/falcon-i18n';
-import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components/Sidebar';
+import { SignOutMutation, GET_CUSTOMER, toGridTemplate, OpenSidebarMutation } from '@deity/falcon-ecommerce-uikit';
 import SectionHeader from './CheckoutSectionHeader';
 
 const customerEmailFormLayout = {
@@ -158,7 +156,13 @@ class EmailSection extends React.Component {
               <Link
                 mx="xs"
                 color="primary"
-                onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
+                onClick={() =>
+                  openSidebar({
+                    variables: {
+                      contentType: 'account'
+                    }
+                  })
+                }
               >
                 <T id="customerSelector.signInLink" />
               </Link>

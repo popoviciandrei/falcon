@@ -1,5 +1,5 @@
 import React from 'react';
-import { withApollo } from '@apollo/react-hoc';
+import { withApollo } from 'react-apollo';
 import GAnalytics from 'ganalytics';
 import { ANALYTICS } from '../graphql/analytics.gql';
 

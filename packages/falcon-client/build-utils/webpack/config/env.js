@@ -58,8 +58,8 @@ function buildClientEnv(
 }
 
 /**
- * @param {object} data env variables name/value map
- * @returns {object}
+ * @param {Object} data env variables name/value map
+ * @returns {Object}
  */
 function serializeEnvVariables(data) {
   return Object.keys(data).reduce((result, x) => {

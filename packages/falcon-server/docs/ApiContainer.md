@@ -9,7 +9,7 @@ processing payment callbacks).
 
 The constructor expects to receive an instance of EventEmitter.
 
-## `apiContainer.registerApis(apis: object<string, ApiInstanceConfig>)`
+## `apiContainer.registerApis(apis: Object<string, ApiInstanceConfig>)`
 
 This method registers the provided APIs
 ([`ApiInstanceConfig`](#ApiInstanceConfig-type)) into `apiContainer.dataSources` Map.

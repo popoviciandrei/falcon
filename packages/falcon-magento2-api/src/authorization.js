@@ -42,14 +42,14 @@ function setAuthScope(requestOptions, param) {
  */
 class OAuth1Auth {
   /**
-   * @param {object} config configuration
+   * @param {Object} config configuration
    * @param {string} config.consumerKey consumer key
    * @param {string} config.consumerSecret consumer secret
    * @param {string} config.accessToken access token
    * @param {string} config.accessTokenSecret access token secret
    * @param {string} config.requestTokenUrl request token URL
    * @param {string} config.accessTokenUrl access token URL
-   * @param {object} options options
+   * @param {Object} options options
    * @param {Function} options.resolveURL Apollo `RESTDataSource.resolverURL`
    */
   constructor(config, options) {

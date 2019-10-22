@@ -1,9 +1,10 @@
 global.__SERVER__ = true; // eslint-disable-line no-underscore-dangle
 
-const fs = require('fs');
 const nock = require('nock');
 const { Cache, InMemoryLRUCache, BearerAuth } = require('@deity/falcon-server-env');
 const { codes } = require('@deity/falcon-errors');
+const { BaseSchema } = require('@deity/falcon-server');
+const { Schema } = require('@deity/falcon-shop-extension');
 const { makeExecutableSchema } = require('graphql-tools');
 const { EventEmitter2 } = require('eventemitter2');
 const addSeconds = require('date-fns/add_seconds');
@@ -11,9 +12,6 @@ const { Headers } = require('apollo-server-env');
 const { Magento2ApiBase } = require('./Magento2ApiBase');
 const magentoResponses = require('./__mocks__/apiResponses');
 const { AuthScope, IntegrationAuthType } = require('./authorization');
-
-const BaseSchema = fs.readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
-const Schema = fs.readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');
 
 const URL = 'http://example.com';
 const ee = new EventEmitter2();

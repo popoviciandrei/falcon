@@ -4,23 +4,26 @@ import { Formik } from 'formik';
 import { T } from '@deity/falcon-i18n';
 import { H1, Text, Button, FlexLayout, GridLayout } from '@deity/falcon-ui';
 import {
-  getAddressType,
   Form,
   FormField,
   CheckboxFormField,
   FormErrorSummary,
+  AddressQuery,
+  getAddressType,
+  GET_ADDRESS,
+  EditAddressMutation,
   TwoColumnsLayout,
   TwoColumnsLayoutArea,
-  CountryPicker
-} from '@deity/falcon-ui-kit';
-import { GET_ADDRESS, AddressQuery, EditAddressMutation, CountryListQuery } from '@deity/falcon-shop-data';
+  CountriesQuery,
+  CountrySelector
+} from '@deity/falcon-ecommerce-uikit';
 
 const EditAddress = ({ match, history }) => {
   const id = parseInt(match.params.id, 10);
 
   return (
     <AddressQuery variables={{ id }}>
-      {({ data: { address } }) => (
+      {({ address }) => (
         <GridLayout mb="md" gridGap="md">
           <H1>
             <T id="editAddress.title" />
@@ -31,7 +34,7 @@ const EditAddress = ({ match, history }) => {
               <T id="editAddress.defaultAddressLabel" context={getAddressType(address)} />
             </Text>
           )}
-          <EditAddressMutation refetchQueries={['AddressList', { query: GET_ADDRESS, variables: { id } }]}>
+          <EditAddressMutation refetchQueries={['Addresses', { query: GET_ADDRESS, variables: { id } }]}>
             {(editAddress, { loading, error }) => (
               <Formik
                 initialValues={{
@@ -76,12 +79,16 @@ const EditAddress = ({ match, history }) => {
                         <FormField name="postcode" required />
                         <FormField name="city" required />
                         <FormField name="countryId" required>
-                          {({ field }) => (
-                            <CountryListQuery passLoading>
-                              {({ data: { countryList = { items: [] } } }) => (
-                                <CountryPicker {...field} options={countryList.items} />
+                          {({ form, field }) => (
+                            <CountriesQuery passLoading>
+                              {({ countries = { items: [] } }) => (
+                                <CountrySelector
+                                  {...field}
+                                  onChange={x => form.setFieldValue(field.name, x)}
+                                  items={countries.items}
+                                />
                               )}
-                            </CountryListQuery>
+                            </CountriesQuery>
                           )}
                         </FormField>
                       </GridLayout>

@@ -1,32 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NetworkStatus } from 'apollo-client';
-import { Helmet } from 'react-helmet-async';
 import { Toggle } from 'react-powerplug';
-import { CategoryWithProductListQuery } from '@deity/falcon-shop-data';
-import { H1, Box, FlexLayout, Divider, Button } from '@deity/falcon-ui';
-import { SearchConsumer, SortOrderPickerProvider, getFiltersData } from '@deity/falcon-front-kit';
+import { H1, H3, GridLayout, Box, FlexLayout, Divider, Button } from '@deity/falcon-ui';
 import {
-  Loader,
+  SearchConsumer,
+  CategoryProductsQuery,
   CategoryLayout,
   CategoryArea,
-  Sidebar,
-  SidebarLayout,
-  Responsive,
-  SortOrderPicker,
+  ShowingOutOf,
+  SortOrdersProvider,
+  SortOrderDropdown,
+  getFiltersData,
   FiltersSummary,
-  ProductList
-} from '@deity/falcon-ui-kit';
+  ProductList,
+  ShowMore,
+  Responsive,
+  Sidebar,
+  Loader
+} from '@deity/falcon-ecommerce-uikit';
 import { Filters } from './Filters';
-import { ShowingOutOf } from './ShowingOutOf';
-import { ShowMore } from './ShowMore';
 
 const copy = item => item && JSON.parse(JSON.stringify(item));
 
 const CategoryPage = ({ id }) => (
   <SearchConsumer>
     {({ state }) => (
-      <CategoryWithProductListQuery
+      <CategoryProductsQuery
         variables={{
           categoryId: id,
           sort: state.sort,
@@ -34,28 +34,25 @@ const CategoryPage = ({ id }) => (
         }}
         passLoading
       >
-        {({ data: { category }, fetchMore, networkStatus, loading }) => {
+        {({ category, fetchMore, networkStatus, loading }) => {
           if (!category && loading) {
             return <Loader />;
           }
 
-          const { name, productList } = category;
-          const { pagination, items, aggregations } = productList;
+          const { name, products } = category;
+          const { pagination, items, aggregations } = products;
           const filtersData = getFiltersData(state.filters, aggregations);
 
           return (
             <CategoryLayout variant={!filtersData.length && 'noFilters'}>
               {loading && <Loader variant="overlay" />}
-              <Helmet>
-                <title>{name}</title>
-              </Helmet>
               <Box gridArea={CategoryArea.heading}>
                 <H1>{name}</H1>
                 <FlexLayout justifyContent="space-between" alignItems="center">
                   <ShowingOutOf itemsCount={items.length} totalItems={pagination.totalItems} />
-                  <SortOrderPickerProvider>
-                    {sortOrderPickerProps => <SortOrderPicker {...sortOrderPickerProps} />}
-                  </SortOrderPickerProvider>
+                  <SortOrdersProvider>
+                    {sortOrdersProps => <SortOrderDropdown {...sortOrdersProps} />}
+                  </SortOrdersProvider>
                 </FlexLayout>
                 <Divider mt="xs" />
               </Box>
@@ -71,9 +68,10 @@ const CategoryPage = ({ id }) => (
                             <React.Fragment>
                               <Button onClick={toggle}>Filters</Button>
                               <Sidebar isOpen={on} side="left" close={toggle}>
-                                <SidebarLayout title="Filters">
+                                <GridLayout gridRowGap="md">
+                                  <H3 ml="xl">Filters</H3>
                                   <Filters data={filtersData} px="md" />
-                                </SidebarLayout>
+                                </GridLayout>
                               </Sidebar>
                             </React.Fragment>
                           )}
@@ -85,7 +83,7 @@ const CategoryPage = ({ id }) => (
               )}
               <Box gridArea={CategoryArea.content}>
                 <FiltersSummary data={filtersData} />
-                <ProductList items={items} />
+                <ProductList products={items} />
               </Box>
               <FlexLayout gridArea={CategoryArea.footer} flexDirection="column" alignItems="center">
                 {pagination.nextPage && <Divider />}
@@ -96,7 +94,7 @@ const CategoryPage = ({ id }) => (
             </CategoryLayout>
           );
         }}
-      </CategoryWithProductListQuery>
+      </CategoryProductsQuery>
     )}
   </SearchConsumer>
 );

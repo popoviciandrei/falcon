@@ -72,7 +72,7 @@ export const availablePresets: Preset[] = [
       },
 
       components: {
-        headerBarLayout: {
+        searchbarLayout: {
           gridTemplate: '"logo cart signIn login" / 1fr auto auto auto',
           alignItems: 'center',
           css: {
@@ -128,7 +128,7 @@ export const availablePresets: Preset[] = [
       },
 
       components: {
-        headerBarLayout: {
+        searchbarLayout: {
           gridTemplate: '"cart logo signIn login" / auto 1fr auto auto',
           alignItems: 'center',
           my: 'sm',

@@ -26,7 +26,7 @@ async function falconWebServer() {
   /**
    * Creates an instance of Falcon web server
    * @param {ServerAppConfig} props Application parameters
-   * @returns {WebServer} Falcon web server
+   * @return {WebServer} Falcon web server
    */
   return Server({
     App: app.default,

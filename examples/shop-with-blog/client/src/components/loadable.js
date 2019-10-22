@@ -1,6 +1,6 @@
 import React from 'react';
 import loadable from '@loadable/component';
-import { Loader } from '@deity/falcon-ui-kit';
+import { Loader } from '@deity/falcon-ecommerce-uikit';
 
 /**
  * loadable define code splitting point with lazy `import`, it needs to be exported as `default` and imported via `loadable` name to be compatible with SSR

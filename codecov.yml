@@ -1,6 +1,3 @@
-codecov:
-  require_ci_to_pass: yes
-
 coverage:
   status:
     project:
@@ -16,11 +13,20 @@ coverage:
       falcon-server-env:
         paths:
           - falcon-server-env/
+      falcon-shop-extension:
+        paths:
+          - falcon-shop-extension/
+      falcon-blog-extension:
+        paths:
+          - falcon-blog-extension/
       falcon-magento2-api:
         paths:
           - falcon-magento2-api/
       falcon-wordpress-api:
         paths:
           - falcon-wordpress-api/
+      falcon-ecommerce-uikit:
+        paths:
+          - falcon-ecommerce-uikit/
 
 comment: off

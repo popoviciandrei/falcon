@@ -2,7 +2,7 @@ import { ChunkExtractor } from '@loadable/server';
 
 /**
  * Assets middleware
- * @param {{webpackAssets: object}} params webpack assets
+ * @param {{webpackAssets: Object}} params webpack assets
  * @returns {import('koa').Middleware} Koa middleware
  */
 export default ({ webpackAssets }) => {

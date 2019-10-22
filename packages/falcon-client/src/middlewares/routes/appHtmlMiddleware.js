@@ -5,8 +5,8 @@ import Html from '../../components/Html';
 
 /**
  * Application html renderer middleware.
- * @param {object} params params
- * @param {object} params.config configuration
+ * @param {Object} params params
+ * @param {Object} params.config configuration
  * @returns {import('koa').Middleware} Koa middleware
  */
 export default ({ config }) => async ctx => {

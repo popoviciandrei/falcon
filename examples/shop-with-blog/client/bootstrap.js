@@ -1,5 +1,5 @@
 const config = require('config');
-const { configureProxy } = require('@deity/falcon-client/src/bootstrap/configureServer');
+const { fetchRemoteConfig, configureProxy } = require('@deity/falcon-client/src/bootstrap/configureServer');
 
 export default async () => {
   const redirects = {
@@ -10,12 +10,13 @@ export default async () => {
     }
   };
   const serverUrl = config.graphqlUrl || config.apolloClient.httpLink.uri;
+  const serverConfig = await fetchRemoteConfig(serverUrl);
 
   return {
     config: { ...config },
     // onServerCreated: server => { console.log('created'); },
     // onServerInitialized: server => { console.log('initialized'); },
     // onServerStarted: server => { console.log('started'); }
-    onRouterCreated: async router => configureProxy(router, serverUrl, config.proxyEndpoints, redirects)
+    onRouterCreated: async router => configureProxy(router, serverUrl, serverConfig.endpoints, redirects)
   };
 };

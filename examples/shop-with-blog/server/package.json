@@ -1,9 +1,9 @@
 {
   "name": "@deity/example-shop-with-blog-server",
-  "license": "OSL-3.0",
-  "version": "2.0.0",
   "private": true,
+  "license": "OSL-3.0",
   "main": "index.js",
+  "version": "0.6.3",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon index.js | logger-pretty",
     "start:dbg": "cross-env NODE_ENV=development nodemon --inspect index.js | logger-pretty",
@@ -14,13 +14,13 @@
     "node": ">=8.10"
   },
   "dependencies": {
-    "@deity/falcon-blog-extension": "^1.0.0",
-    "@deity/falcon-logger": "^1.0.3",
-    "@deity/falcon-magento2-api": "^1.0.0",
-    "@deity/falcon-server": "^2.0.0",
-    "@deity/falcon-shop-extension": "^1.0.0",
-    "@deity/falcon-wordpress-api": "^1.0.0",
-    "apollo-env": "0.5.1",
+    "@deity/falcon-blog-extension": "^0.1.9",
+    "@deity/falcon-logger": "^1.0.2",
+    "@deity/falcon-magento2-api": "^0.6.3",
+    "@deity/falcon-server": "^0.4.0",
+    "@deity/falcon-shop-extension": "^0.4.5",
+    "@deity/falcon-wordpress-api": "^0.1.9",
+    "apollo-env": "0.4.0",
     "config": "^2.0.1",
     "core-js": "3.0.0-beta.3",
     "cross-env": "5.2.0"
@@ -29,6 +29,6 @@
     "nodemon": "^1.19.1"
   },
   "resolutions": {
-    "apollo-env": "0.5.1"
+    "apollo-env": "0.3.1"
   }
 }

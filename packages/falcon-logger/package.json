@@ -1,14 +1,14 @@
 {
   "name": "@deity/falcon-logger",
   "license": "OSL-3.0",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "homepage": "https://falcon.deity.io/docs/miscellaneous/falcon-logger",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-logger",
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/falcon-logger.cjs.js",
   "module": "dist/index.js",
+  "main": "dist/falcon-logger.cjs.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
   "files": [
@@ -39,7 +39,7 @@
     "split2": "^3.1.1"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^1.0.0",
+    "@deity/falcon-scripts": "^0.0.3",
     "@types/args": "3.0.0",
     "@types/jmespath": "0.15.0",
     "@types/pino": "5.8.8",

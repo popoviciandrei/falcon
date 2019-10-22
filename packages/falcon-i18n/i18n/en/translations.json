@@ -1,5 +1,5 @@
 {
-  "name": "Deity",
+  "welcome": "Welcome to @deity",
   "copyright": "© Copyright {{year}}",
   "continue": "Continue",
   "edit": "Edit",
@@ -49,15 +49,11 @@
     "reviews": "{{count}} review",
     "reviews_plural": "{{count}} reviews",
     "addToCart": "Add to cart",
-    "qtyFieldLabel": "Quantity",
-    "options": {
-      "93FieldRequired": "Please select a {{label}}.",
-      "145FieldRequired": "Please select a {{label}}."
-    },
+    "quantity": "Quantity",
     "tierPriceDescription": "Buy {{qty}} for {{price}} and safe {{discount}}%",
     "error": {
       "quantity": "Quantity must be greater than 0",
-      "options": "Please select all required options"
+      "configurableOptions": "Please select all required options"
     },
     "tabs": {
       "description": "Description",
@@ -116,12 +112,6 @@
     "billingAddress": "Billing address",
     "useTheSameAddress": "My billing address is the same as shipping"
   },
-  "checkoutConfirmation": {
-    "title": "THANK YOU FOR SHOPPING!",
-    "orderReceived": "We have received your order (No.: {{referenceNo}}) with the following items:",
-    "realizationNotice": "We are working hard on getting your items to you as soon as possible.",
-    "shippingNotice": "We will send you a shipping confirmation email once your order is on the way."
-  },
   "creditCard": {
     "namePlaceholder": "Name on card",
     "numberPlaceholder": "Card number",
@@ -147,13 +137,12 @@
     "emailFieldPlaceholder": "Email",
     "passwordFieldLabel": "Password",
     "passwordFieldPlaceholder": "Password",
-    "submitButton": "Sign in",
-    "forgotPasswordLink": "Forgot password?"
+    "button": "Sign in",
+    "forgotPasswordQuestion": "Forgot password?"
   },
   "forgotPassword": {
     "title": "Forgot Password",
-    "emailFieldLabel": "Email",
-    "successMessage": "If there is an account associated with {{values.email}} you will receive an email with a link to reset your password."
+    "emailFieldLabel": "Email"
   },
   "resetPassword": {
     "title": "Reset Password",
@@ -174,7 +163,7 @@
     "passwordFieldLabel": "Password",
     "passwordFieldPlaceholder": "At least 8 characters"
   },
-  "newAccount": {
+  "newCustomer": {
     "title": "New Customers",
     "benefitsHeader": "Creating an account has many benefits:",
     "benefitList": ["check out faster", "keep more than one address", "track orders and more"],
@@ -316,14 +305,5 @@
     "title": "Not found",
     "text": "The content you were trying to reach couldn't be found.",
     "goHomeButton": "Go back to Home page"
-  },
-  "formError": {
-    "required": "Please enter a {{label}}.",
-    "invalid": "Please enter a valid {{label}}.",
-    "uncomplexPassword": "Please enter a {{label}} with at least one lower, upper case char and digit",
-    "toShort": "Please enter a {{label}} with at least {{min}} characters.",
-    "toLong": "Please enter a {{label}} with maximum {{max}} characters.",
-    "belowRange": "Please enter a {{label}} greater than {{min}}.",
-    "aboveRange": "Please enter a {{label}} lower than {{min}}."
   }
 }

@@ -1,5 +1,6 @@
 import CSS from 'csstype';
 import { defaultBaseTheme } from './theme';
+
 import { PropsMappings } from './responsiveprops';
 import { mergeThemes } from './utils';
 
@@ -62,7 +63,7 @@ type CSSOthersObject = {
 };
 
 type CssResponsiveProps = {
-  [key in CssPropsKeys]?: { [Breakpoint in keyof Theme['breakpoints']]?: CssProps[key] } | CssProps[key];
+  [key in CssPropsKeys]?: { [Breakpoint in keyof Theme['breakpoints']]?: CssProps[key] } | CssProps[key]
 };
 
 export interface CSSObject extends CssResponsiveProps, CSSPseudoObject, CSSOthersObject {}
@@ -71,9 +72,9 @@ export interface PropsWithTheme {
   theme: Theme;
 }
 
-export type InlineCss<TProps = {}> = ((props: PropsWithTheme & TProps) => CSSObject) | CSSObject;
+export type InlineCss<T = {}> = ((props: PropsWithTheme & T) => CSSObject) | CSSObject;
 
-export type ThemedComponentPropsWithCss<TProps = {}> = {
+export type ThemedComponentPropsWithCss<T = {}> = {
   [ComponentProp in keyof PropsMappings]?:
     | (PropsMappings[ComponentProp] extends ThemedPropMapping
         ? Extract<keyof Theme[PropsMappings[ComponentProp]['themeProp']], string>
@@ -85,15 +86,15 @@ export type ThemedComponentPropsWithCss<TProps = {}> = {
           ? Extract<keyof Theme[PropsMappings[ComponentProp]['themeProp']], string>
           : PropsMappings[ComponentProp] extends ResponsivePropMapping
           ? CssProps[PropsMappings[ComponentProp]['cssProp']]
-          : (string | number);
-      };
-} & { css?: InlineCss<TProps> };
+          : (string | number)
+      }
+} & { css?: InlineCss<T> };
 
-export interface ThemedComponentProps<TProps = {}> extends ThemedComponentPropsWithCss<TProps> {}
+export interface ThemedComponentProps<T = {}> extends ThemedComponentPropsWithCss<T> {}
 
-export type ThemedComponentPropsWithVariants<TProps = {}> = ThemedComponentProps<TProps> & {
+export type ThemedComponentPropsWithVariants<T = {}> = ThemedComponentProps<T> & {
   variants?: {
-    [variantKey: string]: ThemedComponentProps<TProps>;
+    [variantKey: string]: ThemedComponentProps<T>;
   };
 };
 

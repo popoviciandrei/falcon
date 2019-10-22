@@ -1,67 +1,61 @@
 const path = require('path');
-const spawn = require('cross-spawn-promise');
-const { getEntryPointFile } = require('./tools');
-const { paths } = require('./tools');
+const glob = require('glob');
+const ts = require('typescript');
 
-function tsCompilerOptionsToCliParams(compilerOptions) {
-  return Object.entries(compilerOptions).reduce(
-    (result, option) => [...result, `--${option[0]}`, option[1].toString()],
-    []
-  );
+class FormatHost {
+  getCurrentDirectory() {
+    return ts.sys.getCurrentDirectory();
+  }
+
+  getCanonicalFileName(fileName) {
+    return path.normalize(fileName);
+  }
+
+  getNewLine() {
+    return ts.sys.newLine;
+  }
 }
 
-const compilerOptions = {
-  outDir: 'dist',
-  declarationDir: 'dist',
-  target: 'ESNEXT',
-  module: 'ESNext',
-  moduleResolution: 'Node',
-  allowSyntheticDefaultImports: true,
-  esModuleInterop: true,
-  jsx: 'react',
-  alwaysStrict: true,
-  noFallthroughCasesInSwitch: true,
-  noImplicitReturns: true,
-  noUnusedParameters: true,
-  sourceMap: true,
-  skipLibCheck: true,
-  declaration: true,
-  emitDeclarationOnly: true,
-  declarationMap: true,
-  forceConsistentCasingInFileNames: true,
-  pretty: true
-};
+function tsc(fileNames, options) {
+  const program = ts.createProgram(fileNames, options);
+  const emitResult = program.emit();
+  let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
-module.exports.build = ({ packagePath }) => {
-  console.log('building dts...');
+  allDiagnostics = ts.sortAndDeduplicateDiagnostics(allDiagnostics);
 
-  return spawn(
-    'node',
-    [
-      paths.tsc,
-      ...tsCompilerOptionsToCliParams(compilerOptions),
-      getEntryPointFile(path.join(packagePath, 'src'), 'index', ['.ts', '.tsx'])
-    ],
-    {
-      stdio: 'inherit'
-    }
-  );
-};
+  if (allDiagnostics.some(x => x.category === 1)) {
+    console.error(ts.formatDiagnosticsWithColorAndContext(allDiagnostics, new FormatHost()));
 
-module.exports.watch = ({ packagePath }) => {
-  console.log('building dts...');
+    throw new Error();
+  }
 
-  return spawn(
-    'node',
-    [
-      paths.tsc,
-      ...tsCompilerOptionsToCliParams(compilerOptions),
-      '--watch',
-      '--preserveWatchOutput',
-      getEntryPointFile(path.join(packagePath, 'src'), 'index', ['.ts', '.tsx'])
-    ],
-    {
-      stdio: 'inherit'
-    }
-  );
+  console.log(ts.formatDiagnosticsWithColorAndContext(allDiagnostics, new FormatHost()));
+}
+
+module.exports = ({ packagePath }) => {
+  console.log('building d.ts...');
+
+  const files = glob.sync(`${path.join(packagePath, 'src')}/*(*.ts|*.tsx)`);
+
+  tsc(files, {
+    outDir: 'dist',
+    declarationDir: 'dist',
+    target: ts.ScriptTarget.ESNext,
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    allowSyntheticDefaultImports: true,
+    esModuleInterop: true,
+    jsx: ts.JsxEmit.React,
+    alwaysStrict: true,
+    noFallthroughCasesInSwitch: true,
+    noImplicitReturns: true,
+    noUnusedParameters: true,
+    sourceMap: true,
+    skipLibCheck: true,
+    declaration: true,
+    emitDeclarationOnly: true,
+    declarationMap: true,
+    forceConsistentCasingInFileNames: true,
+    pretty: true
+  });
 };

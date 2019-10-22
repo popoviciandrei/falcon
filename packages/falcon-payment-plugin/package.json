@@ -1,6 +1,6 @@
 {
   "name": "@deity/falcon-payment-plugin",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "license": "OSL-3.0",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-payment-plugin",
   "main": "dist/falcon-payment-plugin.cjs.js",
@@ -26,17 +26,19 @@
     "core-js": "3.1.4"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^1.0.0",
+    "@deity/falcon-scripts": "^0.0.3",
     "@types/enzyme": "3.10.3",
     "@types/enzyme-adapter-react-16": "1.0.5",
-    "@types/react": "16.9.5",
-    "@types/react-dom": "16.9.1",
-    "react": "16.10.2",
-    "react-dom": "16.10.2",
+    "@types/react": "16.7.20",
+    "@types/react-dom": "16.0.11",
+    "@types/react-test-renderer": "^16.0.3",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-test-renderer": "^16.6.3",
     "regenerator-runtime": "0.13.3"
   },
   "peerDependencies": {
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
   }
 }

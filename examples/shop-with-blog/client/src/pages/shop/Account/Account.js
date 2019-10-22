@@ -2,9 +2,8 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Link as RouterLink, Switch, Route } from 'react-router-dom';
 import { T } from '@deity/falcon-i18n';
-import { SignOutMutation } from '@deity/falcon-shop-data';
 import { Box, Link, Menu, MenuItem } from '@deity/falcon-ui';
-import { PageLayout, NotFound, toGridTemplate } from '@deity/falcon-ui-kit';
+import { toGridTemplate, SignOutLogic, NotFound } from '@deity/falcon-ecommerce-uikit';
 import AccountDashboard from './Dashboard';
 import PersonalInformation from './PersonalInformation';
 import ChangePassword from './ChangePassword';
@@ -22,6 +21,11 @@ const AccountArea = {
 const accountLayout = {
   accountLayout: {
     display: 'grid',
+    gridGap: {
+      xs: 'sm',
+      md: 'md'
+    },
+    my: 'lg',
     // prettier-ignore
     gridTemplate: {
       xs: toGridTemplate([
@@ -48,9 +52,9 @@ MenuLink.propTypes = {
   to: PropTypes.string.isRequired
 };
 
-const Account = ({ history }) => (
-  <Box as={PageLayout} defaultTheme={accountLayout}>
-    <Box gridArea={AccountArea.menu} display="flex" flexDirection="column" alignItems="stretch" mt="md">
+const Account = () => (
+  <Box defaultTheme={accountLayout}>
+    <Box gridArea={AccountArea.menu} display="flex" flexDirection="column" alignItems="stretch" my="md">
       <Menu>
         <MenuLink to="/account">
           <T id="account.dashboardLink" />
@@ -65,13 +69,13 @@ const Account = ({ history }) => (
           <T id="account.personalInformationLink" />
         </MenuLink>
         <MenuItem>
-          <SignOutMutation>
-            {signOut => (
-              <Link p="xs" flex={1} onClick={() => signOut().then(() => history.push('/'))}>
+          <SignOutLogic>
+            {({ signOut }) => (
+              <Link p="xs" flex={1} onClick={() => signOut()}>
                 <T id="signOut.link" />
               </Link>
             )}
-          </SignOutMutation>
+          </SignOutLogic>
         </MenuItem>
       </Menu>
     </Box>

@@ -3,8 +3,15 @@ import { Formik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
 import { T } from '@deity/falcon-i18n';
 import { H1, FlexLayout, GridLayout, Button, Link } from '@deity/falcon-ui';
-import { FormField, Form, FormErrorSummary, TwoColumnsLayout, TwoColumnsLayoutArea } from '@deity/falcon-ui-kit';
-import { CustomerQuery, EditCustomerMutation } from '@deity/falcon-shop-data';
+import {
+  FormField,
+  Form,
+  FormErrorSummary,
+  CustomerQuery,
+  EditCustomerMutation,
+  TwoColumnsLayout,
+  TwoColumnsLayoutArea
+} from '@deity/falcon-ecommerce-uikit';
 
 const PersonalInformation = () => (
   <GridLayout mb="md" gridGap="md">
@@ -13,7 +20,7 @@ const PersonalInformation = () => (
     </H1>
     <TwoColumnsLayout my="md">
       <CustomerQuery>
-        {({ data: { customer } }) => (
+        {({ customer }) => (
           <EditCustomerMutation>
             {(editCustomer, { loading, error }) => (
               <Formik

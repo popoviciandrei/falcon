@@ -1,14 +1,20 @@
 import React from 'react';
 import { T } from '@deity/falcon-i18n';
-import { FilterOperator } from '@deity/falcon-shop-data';
 import { Button } from '@deity/falcon-ui';
-import { SearchConsumer } from '@deity/falcon-front-kit';
-import { FiltersPanelLayout, FilterTile, SingleFilter, MultipleFilter, ColorFilter } from '@deity/falcon-ui-kit';
+import {
+  FiltersLayout,
+  FilterTile,
+  SingleFilter,
+  ColorFilter,
+  MultipleFilter,
+  SearchConsumer,
+  FilterOperator
+} from '@deity/falcon-ecommerce-uikit';
 
 export const Filters = ({ data, ...rest }) => (
   <SearchConsumer>
     {({ state: { filters }, setFilter, removeFilters }) => (
-      <FiltersPanelLayout {...rest}>
+      <FiltersLayout {...rest}>
         {filters.length > 0 && (
           <Button onClick={removeFilters}>
             <T id="filters.clearAll" />
@@ -69,7 +75,7 @@ export const Filters = ({ data, ...rest }) => (
             })()}
           </FilterTile>
         ))}
-      </FiltersPanelLayout>
+      </FiltersLayout>
     )}
   </SearchConsumer>
 );

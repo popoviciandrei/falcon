@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const glob = require('glob');
 const rollup = require('rollup');
 const babel = require('rollup-plugin-babel');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const replace = require('rollup-plugin-replace');
-const { paths, getEntryPointFile } = require('./tools');
+const { paths } = require('./tools');
 
 const makeExternalPredicate = externalsArr => {
   if (externalsArr.length === 0) {
@@ -15,13 +16,34 @@ const makeExternalPredicate = externalsArr => {
   return id => externalPattern.test(id);
 };
 
+/**
+ * Returns  `index.[supportedExtensions]` files
+ * @param {string} directory directory to search in
+ * @param {string[]} supportedExtensions extensions
+ * @returns {string}
+ */
+function getEntryPointFile(directory, supportedExtensions) {
+  const files = glob.sync(`${path.join(directory, 'index')}@(${supportedExtensions.join('|')})`);
+  if (files.length > 1) {
+    throw new Error(`Directory "${directory}" should contain single entry point 'index.*' file!`);
+  }
+
+  if (files.length === 0) {
+    console.warn(`No entry point 'index.*' file found in directory '${directory}'. Nothing to compile.`);
+
+    return undefined;
+  }
+
+  return files[0];
+}
+
 module.exports.main = async () => {
   console.log('building cjs...');
 
   process.env.ROLLUP = true;
 
   const extensions = ['.tsx', '.ts', '.jsx', '.js'];
-  const inputFile = getEntryPointFile(paths.pkgSrc, 'index', extensions);
+  const inputFile = getEntryPointFile(paths.pkgSrc, extensions);
   if (!inputFile) {
     return;
   }
@@ -37,8 +59,7 @@ module.exports.main = async () => {
       ...Object.keys(packageJson.peerDependencies || {})
     ]),
     plugins: [
-      // TODO: remove `preferBuiltins: true` - this is because our extensions uses `fs` which is not available on window object!
-      nodeResolve({ extensions, preferBuiltins: true }),
+      nodeResolve({ extensions }),
       commonjs(),
       babel({
         extensions,
@@ -59,7 +80,7 @@ module.exports.bin = async () => {
   process.env.ROLLUP = true;
 
   const extensions = ['.tsx', '.ts', '.jsx', '.js'];
-  const inputFile = getEntryPointFile(paths.pkgBinSrc, 'index', extensions);
+  const inputFile = getEntryPointFile(paths.pkgBinSrc, extensions);
   if (!inputFile) {
     return;
   }

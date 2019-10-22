@@ -1,11 +1,8 @@
 const { NODE_ENV, ROLLUP } = process.env;
 
-const targetTest = NODE_ENV === 'test';
+const targetNode = NODE_ENV === 'test';
 const rollupCjsBuild = ROLLUP !== undefined;
-const targetNode = rollupCjsBuild || targetTest;
-const useESModules = !(rollupCjsBuild || targetTest);
-
-// TODO: think one more time on this configuration! which is: if rollup build (cjs) then compile for node
+const useESModules = !(rollupCjsBuild || targetNode);
 
 module.exports = {
   presets: [
@@ -20,20 +17,19 @@ module.exports = {
     require.resolve('@babel/preset-typescript'),
     require.resolve('@babel/preset-react')
   ],
-
   plugins: [
     require.resolve('babel-plugin-graphql-tag'),
     require.resolve('@babel/plugin-proposal-class-properties'),
-    [require.resolve('@babel/plugin-proposal-object-rest-spread'), { loose: true, useBuiltIns: true }],
-    targetTest && [require.resolve('@babel/plugin-transform-modules-commonjs'), { loose: true }],
+    [require.resolve('@babel/plugin-transform-runtime'), { useESModules }],
+    [require.resolve('@babel/plugin-proposal-object-rest-spread'), { loose: true }],
+    require.resolve('@babel/plugin-syntax-dynamic-import'),
+    require.resolve('@loadable/babel-plugin'),
     ...(targetNode
       ? [
           require.resolve('babel-plugin-dynamic-import-node'),
+          [require.resolve('@babel/plugin-transform-modules-commonjs'), { loose: true }],
           require.resolve('@babel/plugin-transform-react-jsx-source')
         ]
-      : [
-          require.resolve('babel-plugin-annotate-pure-calls'),
-          [require.resolve('@babel/plugin-transform-runtime'), { useESModules }]
-        ])
+      : [require.resolve('babel-plugin-annotate-pure-calls')])
   ].filter(Boolean)
 };

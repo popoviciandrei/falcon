@@ -1,11 +1,9 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { HelmetProvider } from 'react-helmet-async';
+import Helmet from 'react-helmet';
 import { ChunkExtractorManager } from '@loadable/server';
 import { APP_INIT } from '../../graphql/config.gql';
 import HtmlHead from '../../components/HtmlHead';
-
-const helmetContext = {};
 
 /**
  * App shell rendering middleware.
@@ -17,15 +15,13 @@ export default () => async (ctx, next) => {
 
   const markup = (
     <ChunkExtractorManager extractor={chunkExtractor}>
-      <HelmetProvider context={helmetContext}>
-        <HtmlHead htmlLang={config.i18n.lng} />
-      </HelmetProvider>
+      <HtmlHead htmlLang={config.i18n.lng} />
     </ChunkExtractorManager>
   );
 
   renderToString(markup);
 
-  ctx.state.helmetContext = helmetContext.helmet;
+  ctx.state.helmetContext = Helmet.renderStatic();
 
   return next();
 };

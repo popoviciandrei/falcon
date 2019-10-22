@@ -49,7 +49,7 @@ const build = async () => {
     // default! - needs to be `development`
     process.env.NODE_ENV = 'production';
   }
-  logDeityGreenInfo(`Creating a ${process.env.NODE_ENV.toUpperCase()} build...`);
+  logDeityGreenInfo(`Creating an ${process.env.NODE_ENV.toUpperCase()} build...`);
 
   await application.build(buildConfig);
   await serviceWorker.build(buildConfig.serviceWorker);
@@ -67,7 +67,7 @@ const size = async () => {
   if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'production';
   }
-  logDeityGreenInfo(`Creating a ${process.env.NODE_ENV.toUpperCase()} build...`);
+  logDeityGreenInfo(`Creating an ${process.env.NODE_ENV.toUpperCase()} build...`);
 
   await application.size(buildConfig);
 };

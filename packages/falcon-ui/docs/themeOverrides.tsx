@@ -101,7 +101,7 @@ export const customizedButtonTheme = (theme: Theme) => ({
 export const Card = themed({
   tag: 'div',
   defaultTheme: {
-    productCardLayout: {
+    card: {
       p: 'md',
       boxShadow: 'subtle',
       borderRadius: 'medium',

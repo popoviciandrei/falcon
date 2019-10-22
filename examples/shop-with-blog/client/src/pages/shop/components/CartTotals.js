@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Text } from '@deity/falcon-ui';
-import { PropertyRowLayout, Price } from '@deity/falcon-ui-kit';
+import { TotalRow } from '@deity/falcon-ecommerce-uikit';
+import { Box, Divider } from '@deity/falcon-ui';
 
 const TOTALS = {
   SHIPPING: 'shipping',
@@ -15,23 +15,14 @@ const getTotalByCode = (totals, code) => totals.find(total => total.code === cod
 
 const CartTotals = ({ totalsData, totalsToDisplay = [], bold = [], ...props }) => (
   <Box {...props}>
-    {totalsToDisplay.map((code, index) => {
-      if (code === 'divider') {
+    {totalsToDisplay.map((totalCode, index) => {
+      if (totalCode === 'divider') {
         return <Divider key={`divider-${index}`} />; // eslint-disable-line react/no-array-index-key
       }
 
-      const total = getTotalByCode(totalsData, code);
+      const total = getTotalByCode(totalsData, totalCode);
       if (total) {
-        return (
-          <PropertyRowLayout
-            key={code}
-            variant="spaceBetween"
-            fontWeight={bold.indexOf(code) !== -1 ? 'bold' : 'normal'}
-          >
-            <Text>{total.title}</Text>
-            <Price value={total.value} />
-          </PropertyRowLayout>
-        );
+        return <TotalRow key={totalCode} {...total} fontWeight={bold.indexOf(totalCode) !== -1 ? 'bold' : 'normal'} />;
       }
 
       return null;

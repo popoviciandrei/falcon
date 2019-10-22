@@ -2,6 +2,7 @@ import React from 'react';
 import { ThemeProvider as Provider } from 'emotion-theming';
 import { Global, CacheProvider } from '@emotion/core';
 import createCache from '@emotion/cache';
+
 import { createTheme, PropsWithTheme, CSSObject } from '../theme';
 import { Root } from './Root';
 
@@ -36,11 +37,7 @@ export const ThemeProvider: React.SFC<ThemeProviderProps> = ({
 }) => (
   <CacheProvider value={isServer ? createCache() : cache}>
     <Provider theme={theme}>
-      <Global
-        styles={
-          globalCss as any /* TODO remove casting to `any` when https://github.com/deity-io/falcon/issues/545 fixed */
-        }
-      />
+      <Global styles={globalCss} />
       {withoutRoot ? rest.children : <Root {...rest} />}
     </Provider>
   </CacheProvider>

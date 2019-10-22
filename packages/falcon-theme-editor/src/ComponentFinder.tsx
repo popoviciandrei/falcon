@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Portal } from '@deity/falcon-ui';
 import { ComponentWithDefaultTheme } from './ThemeEditorState';
 
-function throttle(callback: Function, wait: number, context: object) {
+function throttle(callback: Function, wait: number, context: Object) {
   let timeout: number | undefined;
   let callbackArgs: any[];
 

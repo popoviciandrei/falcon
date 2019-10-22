@@ -1,31 +1,8 @@
 import React from 'react';
-import { T } from '@deity/falcon-i18n';
-import { BlogPostQuery } from '@deity/falcon-blog-data';
-import { H1, Breadcrumbs, Breadcrumb } from '@deity/falcon-ui';
-import { BlogPostLayout, FormattedDate, CMSContent, PageLayout, BreadcrumbLink } from '@deity/falcon-ui-kit';
+import { BlogPostQuery, BlogPost } from '@deity/falcon-ecommerce-uikit';
 
 const Post = ({ path }) => (
-  <BlogPostQuery variables={{ path }}>
-    {({ data: { blogPost } }) => (
-      <PageLayout>
-        <Breadcrumbs alignSelf="flex-start">
-          <BreadcrumbLink to="/">
-            <T id="name" />
-          </BreadcrumbLink>
-          <BreadcrumbLink to="/blog">
-            <T id="blog.title" />
-          </BreadcrumbLink>
-          <Breadcrumb>{blogPost.title}</Breadcrumb>
-        </Breadcrumbs>
-
-        <BlogPostLayout>
-          <H1>{blogPost.title}</H1>
-          <FormattedDate mb="xl" value={blogPost.date} />
-          <CMSContent html={blogPost.content} />
-        </BlogPostLayout>
-      </PageLayout>
-    )}
-  </BlogPostQuery>
+  <BlogPostQuery variables={{ path }}>{postProps => <BlogPost {...postProps} />}</BlogPostQuery>
 );
 
 export default Post;

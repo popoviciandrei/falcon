@@ -1,8 +1,0 @@
-type Product {
-  id: Int!
-  name: String!
-}
-
-extend type Query {
-  productList: [Product]
-}
