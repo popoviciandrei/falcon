@@ -19,7 +19,7 @@ import {
   PageLayout,
   Breadcrumbs
 } from '@deity/falcon-ui-kit';
-import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components/Sidebar';
+import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 
 const ProductPage = ({ id, path }) => (
   <PageLayout>

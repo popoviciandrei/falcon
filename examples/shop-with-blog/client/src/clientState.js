@@ -1,5 +1,5 @@
 import { getClientConfigResolver } from '@deity/falcon-front-kit';
-import { openSidebarResolver, closeSidebarResolver } from 'src/components/Sidebar';
+import { openSidebarResolver, closeSidebarResolver } from 'src/components';
 
 /**
  * Defines client-side state resolvers
