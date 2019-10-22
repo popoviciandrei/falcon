@@ -1,9 +1,11 @@
 const { dirname, resolve } = require('path');
 const http = require('http');
+const util = require('util');
+const { execFile, execFileSync } = require('child_process');
 const fs = require('fs-extra');
-const execa = require('execa');
 const Listr = require('listr');
 
+const execFilePromise = util.promisify(execFile);
 const examplesPath = resolve(__dirname, './../examples');
 const rootDir = resolve(__dirname, './../../..');
 const rootPackage = resolve(rootDir, 'package.json');
@@ -24,7 +26,7 @@ const copyFolder = (source, dest) => {
 
 const getPackageManager = () => {
   try {
-    execa.sync('yarnpkg', ['--version']);
+    execFileSync('yarnpkg', ['--version']);
     return 'yarn';
   } catch (e) {
     return 'npm';
@@ -112,7 +114,7 @@ const createFalconApp = ({ name, example }) => {
         ctx.activeProjects.forEach(folder => {
           subTasks.push({
             title: `for ${folder.replace(baseProjectPath, '')}`,
-            task: () => execa(ctx.packageManager, ['install'], { cwd: folder })
+            task: () => execFilePromise(ctx.packageManager, ['install'], { cwd: folder })
           });
         });
 
