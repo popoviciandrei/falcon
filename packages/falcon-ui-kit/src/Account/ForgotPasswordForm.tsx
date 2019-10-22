@@ -3,7 +3,7 @@ import { T } from '@deity/falcon-i18n';
 import { Text } from '@deity/falcon-ui';
 import { ForgotPasswordFormProvider } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '../Error';
-import { FormField, Form, FormSubmit, FormProps, FormErrorSummary } from '../Forms';
+import { FormField, Form, FormSubmit, FormProps } from '../Forms';
 
 export type ForgetPasswordFormProps = Partial<FormProps> & {
   onSuccess?: () => void;
