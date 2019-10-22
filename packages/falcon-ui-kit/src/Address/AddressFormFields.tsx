@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { CountryListQuery } from '@deity/falcon-shop-data';
 import { Box, GridLayout } from '@deity/falcon-ui';
@@ -46,11 +45,7 @@ export const AddressFormFields: React.SFC<AddressFormFieldsProps> = props => {
         <FormField name="countryId" required autoComplete={getAutoComplete('country')}>
           {({ field }) => (
             <CountryListQuery passLoading>
-              {({ data: { countryList = {} } }) => (
-                // @ts-ignore
-                // FIXME: resolve this type error
-                <CountryPicker {...field} options={countryList.items || []} />
-              )}
+              {({ data: { countryList = {} } }) => <CountryPicker {...field} options={countryList.items || []} />}
             </CountryListQuery>
           )}
         </FormField>

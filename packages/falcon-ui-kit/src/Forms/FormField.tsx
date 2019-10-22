@@ -12,6 +12,7 @@ export type FormFieldRenderProps<TValue = any> = {
   };
   field: FormikFieldProps<TValue>['field'] &
     React.InputHTMLAttributes<HTMLInputElement> &
+    React.SelectHTMLAttributes<HTMLSelectElement> &
     ThemedComponentProps & {
       id?: string;
       placeholder?: string;
