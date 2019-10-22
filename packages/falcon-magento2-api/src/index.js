@@ -904,6 +904,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       '/directory/countries',
       {},
       {
+        cacheOptions: { ttl: 86400 }, // 24 hours cache
         context: {
           isAuthRequired: false,
           didReceiveResult: result =>
