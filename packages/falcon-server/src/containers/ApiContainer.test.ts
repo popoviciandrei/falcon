@@ -14,6 +14,16 @@ const apis = {
   }
 };
 
+const apisWithExtraResolvers = {
+  'fake-api': {
+    package: 'fake-backend-api-with-extra-resolvers',
+    config: {
+      host: 'fake.host.com',
+      protocol: 'http'
+    }
+  }
+};
+
 describe('ApiContainer', () => {
   let ee;
 
@@ -43,5 +53,12 @@ describe('ApiContainer', () => {
     await container.registerApis([{ package: 'foo-bar' }]);
 
     expect(container.dataSources.size).toBe(0);
+  });
+
+  it('Should collect extraResolvers (if available)', async () => {
+    const container = new ApiContainer(ee);
+    expect(container.resolvers).toHaveLength(0);
+    await container.registerApis(apisWithExtraResolvers);
+    expect(container.resolvers).toHaveLength(1);
   });
 });
