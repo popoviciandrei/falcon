@@ -5,3 +5,4 @@ export * from './AddressDetailsLayout';
 export * from './AddressFormFields';
 export * from './AddressListLayout';
 export * from './AddressType';
+export * from './EditAddressForm';
