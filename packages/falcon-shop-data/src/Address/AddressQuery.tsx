@@ -38,7 +38,7 @@ export type AddressResponse = {
     | 'company'
     | 'defaultBilling'
     | 'defaultShipping'
-  >[];
+  >;
 };
 export class AddressQuery extends Query<AddressResponse> {
   static defaultProps = {
