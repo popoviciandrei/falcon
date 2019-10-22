@@ -6,7 +6,7 @@ import { Box, Text, Link, Input, Button, Details, DetailsContent } from '@deity/
 import { SignOutMutation, GET_CUSTOMER } from '@deity/falcon-shop-data';
 import { toGridTemplate } from '@deity/falcon-ui-kit';
 import { I18n, T } from '@deity/falcon-i18n';
-import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components/Sidebar';
+import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 import SectionHeader from './CheckoutSectionHeader';
 
 const customerEmailFormLayout = {
