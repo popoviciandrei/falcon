@@ -183,9 +183,9 @@ export class FalconServer {
             activeLocale: this.activeLocaleResolver()
           },
           JSON: GraphQLJSON
-        },
-        ...this.apiContainer.resolvers
+        }
       ],
+      extraResolvers: [...this.apiContainer.resolvers],
       subscriptions: this.getSubscriptionsOptions(),
       tracing: this.config.debug,
       playground: this.config.debug && {
