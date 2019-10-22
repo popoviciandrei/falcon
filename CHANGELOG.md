@@ -37,6 +37,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed synchronisation of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+- added `Add`/`EditAddressFormProvider` components to handle relevant form data ([#624](https://github.com/deity-io/falcon/pull/624))
 
 ### Falcon UI Kit v1.0.0
 
@@ -44,6 +45,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
+- added `AddressFormFields` and `Add`/`EditAddressForm` components to make address forms more reusable ([#624](https://github.com/deity-io/falcon/pull/624))
 
 ### Falcon Data v1.0.0
 
@@ -56,6 +58,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+- fixed response types of `AddressQuery` and `CounryListQuery` ([#624](https://github.com/deity-io/falcon/pull/624))
 
 ### Falcon Blog Data v1.0.0
 
@@ -88,6 +91,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Falcon Scripts vNext
 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
+
+### Example Shop with Blog vNext
+
+- replace mentions of "invoice/delivery address" with "shipping/billing address" for consistency ([#624](https://github.com/deity-io/falcon/pull/624))
 
 ## Falcon v1.3 (2019-08-01)
 
