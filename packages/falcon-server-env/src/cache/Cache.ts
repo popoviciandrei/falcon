@@ -31,8 +31,10 @@ const DEFAULT_TAG_TTL: number = 60 * 60; // 1 hour
 /**
  * Cache-wrapper with extended methods
  */
-export default class Cache<V = any> implements KeyValueCache<V> {
-  constructor(protected cacheProvider: KeyValueCache<string>, protected tagTtl: number = DEFAULT_TAG_TTL) {}
+export class Cache<V = any> implements KeyValueCache<V> {
+  protected activeGetRequests: Map<string, Promise<V>> = new Map();
+
+  constructor(public provider: KeyValueCache<string>, protected tagTtl: number = DEFAULT_TAG_TTL) {}
 
   async get(key: string): Promise<V>;
 
@@ -42,49 +44,18 @@ export default class Cache<V = any> implements KeyValueCache<V> {
    * Returns cached value for the provided key and setOptions object
    * @param {string} key Cache key
    * @param {GetCacheOptions} setOptions Object with params to fetch the data to be cached
-   * @returns {Promise<string|undefined>} Cached value
+   * @returns {Promise<V>} Cached value
    */
   async get(key: string, setOptions?: GetCacheOptions): Promise<V> {
-    let value: GetCacheFetchResult = await this.cacheProvider.get(key);
-    try {
-      value = JSON.parse(value);
-    } catch {
-      // Keep `value` with the original value
+    if (this.activeGetRequests.has(key)) {
+      return this.activeGetRequests.get(key) as Promise<V>;
     }
 
-    // Validating by cache tags
-    if (this.isValueWithOptions(value)) {
-      const { tags: tagMap = {} } = value.options as ValueOptions;
-      if (await this.isTagMapValid(tagMap as TagMap)) {
-        ({ value } = value);
-      } else {
-        // If tags are invalid - set value as "not found"
-        value = undefined;
-        await this.delete(key);
-      }
-    }
+    this.activeGetRequests.set(key, this.createGetRequest(key, setOptions));
+    const result = await this.activeGetRequests.get(key);
+    this.activeGetRequests.delete(key);
 
-    if (typeof value === 'undefined' && typeof setOptions === 'object') {
-      const { fetchData } = setOptions;
-      let { options } = setOptions;
-      const cacheResult: GetCacheFetchResult = await fetchData();
-      if (typeof cacheResult !== 'undefined') {
-        if (this.isValueWithOptions(cacheResult)) {
-          ({ value } = cacheResult);
-          const { options: cacheResultOptions = {} } = cacheResult;
-          // Merging cache options from the "fetchData" result and passed method argument
-          options = Object.assign({}, options, cacheResultOptions);
-        } else {
-          value = cacheResult;
-        }
-
-        if (typeof value !== 'undefined') {
-          await this.set(key, value, options as SetCacheOptions);
-        }
-      }
-    }
-
-    return value;
+    return result as V;
   }
 
   async set(key: string, value: V): Promise<void>;
@@ -109,7 +80,7 @@ export default class Cache<V = any> implements KeyValueCache<V> {
       cachedValue = JSON.stringify(cachedValue);
     }
 
-    return this.cacheProvider.set(key, cachedValue, options);
+    return this.provider.set(key, cachedValue, options);
   }
 
   async delete(key: string): Promise<boolean>;
@@ -127,7 +98,7 @@ export default class Cache<V = any> implements KeyValueCache<V> {
       await Promise.all(key.map(kKey => this.delete(kKey)));
       return;
     }
-    return this.cacheProvider.delete(key);
+    return this.provider.delete(key);
   }
 
   /**
@@ -185,6 +156,49 @@ export default class Cache<V = any> implements KeyValueCache<V> {
    */
   private isValueWithOptions(data: any): boolean {
     return typeof data === 'object' && 'value' in data && 'options' in data;
+  }
+
+  private async createGetRequest(key: string, setOptions?: GetCacheOptions): Promise<V> {
+    let value: GetCacheFetchResult = await this.provider.get(key);
+    try {
+      value = JSON.parse(value);
+    } catch {
+      // Keep `value` with the original value
+    }
+
+    // Validating by cache tags
+    if (this.isValueWithOptions(value)) {
+      const { tags: tagMap = {} } = value.options as ValueOptions;
+      if (await this.isTagMapValid(tagMap as TagMap)) {
+        ({ value } = value);
+      } else {
+        // If tags are invalid - set value as "not found"
+        value = undefined;
+        await this.delete(key);
+      }
+    }
+
+    if (typeof value === 'undefined' && typeof setOptions === 'object') {
+      const { fetchData } = setOptions;
+      let { options } = setOptions;
+      const cacheResult: GetCacheFetchResult = await fetchData();
+      if (typeof cacheResult !== 'undefined') {
+        if (this.isValueWithOptions(cacheResult)) {
+          ({ value } = cacheResult);
+          const { options: cacheResultOptions = {} } = cacheResult;
+          // Merging cache options from the "fetchData" result and passed method argument
+          options = Object.assign({}, options, cacheResultOptions);
+        } else {
+          value = cacheResult;
+        }
+
+        if (typeof value !== 'undefined') {
+          await this.set(key, value, options as SetCacheOptions);
+        }
+      }
+    }
+
+    return value;
   }
 
   /**

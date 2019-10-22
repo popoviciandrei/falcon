@@ -6,7 +6,7 @@ import AdyenCCPlugin from '@deity/falcon-adyen-plugin';
 import PayPalExpressPlugin from '@deity/falcon-paypal-plugin';
 import loadable from 'src/components/loadable';
 
-const CreditCard = loadable(() => import(/* webpackChunkName: "checkout/payment/credit-card" */ './CreditCard'));
+const CreditCardInput = loadable(() => import(/* webpackChunkName: "checkout/payment/credit-card" */ './CreditCard'));
 
 const paymentPlugins = {
   adyen_cc: AdyenCCPlugin,
@@ -37,7 +37,7 @@ class PaymentMethodItem extends React.Component {
           <AdyenCCPlugin config={config} onPaymentDetailsReady={onPaymentDetailsReady}>
             {({ setCreditCardData }) => (
               <FlexLayout my="md" css={{ width: '100%' }}>
-                <CreditCard onCompletion={setCreditCardData} />
+                <CreditCardInput onCompletion={setCreditCardData} />
               </FlexLayout>
             )}
           </AdyenCCPlugin>

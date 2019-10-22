@@ -1,6 +1,5 @@
 import React from 'react';
 import { Toggle } from 'react-powerplug';
-
 import { themed } from '../theme';
 import { Box } from './Box';
 import { Icon } from './Icon';

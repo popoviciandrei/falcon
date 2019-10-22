@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line import/order
 import { PaymentPluginModel, PaymentPluginComponentProps } from '@deity/falcon-payment-plugin';
 
 const adyen = require('adyen-cse-web');
@@ -20,6 +21,7 @@ export interface CreditCardData {
 export class AdyenCCPlugin extends PaymentPluginModel<AdyenProps> {
   static icon: string =
     'https://raw.githubusercontent.com/Adyen/adyen-magento2/develop/view/base/web/images/logos/creditcard.png';
+
   private cseInstance: any;
 
   constructor(props: AdyenProps) {

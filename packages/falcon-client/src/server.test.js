@@ -1,16 +1,18 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'jest-extended';
+import { readFileSync } from 'fs';
 import React from 'react';
-import Helmet from 'react-helmet';
+import { HelmetProvider } from 'react-helmet-async';
 import loadable from '@loadable/component';
 import { Route, Switch } from 'react-router-dom';
 import Koa from 'koa';
 import supertest from 'supertest';
-import { BaseSchema } from '@deity/falcon-server';
 import { T } from '@deity/falcon-i18n';
+import { DynamicRoute } from '@deity/falcon-front-kit';
 import { Server } from './server';
-import DynamicRoute from './components/DynamicRoute';
 import defaultConfiguration from './clientApp/defaultConfiguration';
+
+const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
 
 describe('Server', () => {
   const fakeI18nConfig = {
@@ -90,7 +92,7 @@ describe('Server', () => {
   });
 
   it('Should render Home page (SSR)', async () => {
-    Helmet.canUseDOM = false;
+    HelmetProvider.canUseDOM = false;
     const Home = () => (
       <div>
         <h2>Foo</h2>
@@ -108,6 +110,7 @@ describe('Server', () => {
             shop: loadable(() => import('./__mocks__/pages/Shop')),
             post: loadable(() => import('./__mocks__/pages/Post'))
           }}
+          notFound={() => <span>Not found</span>}
         />
       </Switch>
     );

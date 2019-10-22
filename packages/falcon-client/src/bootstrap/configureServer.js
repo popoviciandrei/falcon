@@ -1,7 +1,7 @@
 import url from 'url';
 import Logger from '@deity/falcon-logger';
 import fetch from 'node-fetch';
-import { ProxyRequest } from '../service/ProxyRequest';
+import { proxyRequest } from '../service/proxyRequest';
 
 /**
  * @typedef {object} PaymentRedirectMap
@@ -11,14 +11,14 @@ import { ProxyRequest } from '../service/ProxyRequest';
  */
 
 /**
- * @param {koa-router} router KoaRouter object
+ * @param {import('koa-router')} router KoaRouter object
  * @param {string} serverUrl Falcon-Server URL
  * @param {string[]} endpoints list of endpoints to be proxied to {serverUrl}
- * @param {Object} redirs Map of redirections
- * @param {PaymentRedirectMap} redirs.payment Payment redirects
+ * @param {object} redirects Map of redirects
+ * @param {PaymentRedirectMap} redirects.payment Payment redirects
  * @returns {undefined}
  */
-export const configureProxy = async (router, serverUrl, endpoints, redirs) => {
+export const configureProxy = async (router, serverUrl, endpoints, redirects) => {
   if (!router) {
     Logger.error('"router" must be passed for "configureProxy" call in your "bootstrap.js" file');
     return;
@@ -36,25 +36,33 @@ export const configureProxy = async (router, serverUrl, endpoints, redirs) => {
     endpoints.forEach(endpoint => {
       // using "endpoint" value as a proxied route name
       router.all(endpoint, async ctx => {
-        const proxyResult = await ProxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
-        const { status } = proxyResult;
+        const response = await proxyRequest(url.resolve(serverUrl, ctx.originalUrl), ctx);
 
-        if (status === 404) {
+        response.headers.forEach((value, name) => ctx.set(name, value));
+        /**
+         * node-fetch returns `set-cookie` headers concatenated with `, ` (which is invalid)
+         * for this reason we manually fill `set-cookie` with `raw` headers
+         * @see https://github.com/bitinn/node-fetch/blob/master/src/headers.js#L120
+         */
+        ctx.set('set-cookie', response.headers.raw()['set-cookie'] || []);
+
+        if (response.status === 404) {
           // Hiding "not found" page output from the backend
-          ctx.message = proxyResult.statusText;
-          ctx.status = status;
+          ctx.message = response.statusText;
+          ctx.status = response.status;
           return;
         }
 
-        const { type, result } = await proxyResult.json();
-        const { [type]: redirectMap = {} } = redirs;
+        const { type, result } = await response.json();
+        const { [type]: redirectMap = {} } = redirects;
         const { [result]: redirectLocation = '/' } = redirectMap;
 
         // Result redirection
         ctx.status = 302;
-        ctx.set('location', redirectLocation);
+        ctx.redirect(redirectLocation);
       });
     });
+    Logger.info('Endpoints configured');
   } catch (error) {
     Logger.error(`Failed to handle remote endpoints: ${error.message}`);
   }
@@ -63,7 +71,7 @@ export const configureProxy = async (router, serverUrl, endpoints, redirs) => {
 /**
  * Fetches a config from Falcon-Server
  * @param {string} serverUrl Falcon-Server URL
- * @returns {Object} Remote server config
+ * @returns {object} Remote server config
  */
 export const fetchRemoteConfig = async serverUrl => {
   if (!serverUrl) {

@@ -1,16 +1,10 @@
 import React from 'react';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
+import { CheckoutConsumer, CheckoutProvider } from '@deity/falcon-front-kit';
+import { toGridTemplate, Loader } from '@deity/falcon-ui-kit';
+import { CustomerQuery, GET_CUSTOMER_WITH_ADDRESSES, CartQuery, CountryListQuery } from '@deity/falcon-shop-data';
 import { T, I18n } from '@deity/falcon-i18n';
-import {
-  CheckoutLogic,
-  CartQuery,
-  CountriesQuery,
-  CustomerQuery,
-  GET_CUSTOMER_WITH_ADDRESSES,
-  toGridTemplate,
-  Loader
-} from '@deity/falcon-ecommerce-uikit';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import ErrorList from '../components/ErrorList';
 import CheckoutCartSummary from './CheckoutCartSummary';
@@ -46,13 +40,13 @@ const checkoutLayout = {
     // prettier-ignore
     gridTemplate: {
       xs: toGridTemplate([
-        ['1fr'                ],
+        ['1fr'],
         [CheckoutArea.checkout],
-        [CheckoutArea.divider ],
-        [CheckoutArea.cart    ]
+        [CheckoutArea.divider],
+        [CheckoutArea.cart]
       ]),
       md: toGridTemplate([
-        ['2fr',                 '1px',               '1fr'             ],
+        ['2fr', '1px', '1fr'],
         [CheckoutArea.checkout, CheckoutArea.divider, CheckoutArea.cart]
       ])
     },
@@ -162,11 +156,11 @@ class CheckoutWizard extends React.Component {
 
     const { customerData } = this.props;
 
-    let addresses;
-    let defaultShippingAddress;
-    let defaultBillingAddress;
-    let orderResult = null;
+    const addresses = customerData && customerData.addresses ? customerData.addresses : [];
+    const defaultShippingAddress = addresses.find(item => item.defaultShipping);
+    const defaultBillingAddress = addresses.find(item => item.defaultBilling);
 
+    let orderResult = null;
     if (!loading && result) {
       if (result.url) {
         orderResult = (
@@ -183,18 +177,11 @@ class CheckoutWizard extends React.Component {
       }
     }
 
-    // detect if user is logged in - if so and he has address list then use it for address sections
-    if (customerData && customerData.addresses && customerData.addresses.length) {
-      ({ addresses } = customerData);
-      defaultShippingAddress = addresses.find(item => item.defaultShipping);
-      defaultBillingAddress = addresses.find(item => item.defaultBilling);
-    }
-
     return (
-      <CountriesQuery>
-        {({ countries }) => (
+      <CountryListQuery>
+        {({ data: { countryList } }) => (
           <CartQuery>
-            {({ cart }) => {
+            {({ data: { cart } }) => {
               // cart is empty and it's not a "placeOrder" result so redirect user to the homepage
               if (!loading && !orderResult && cart.itemsQty === 0) {
                 return <Redirect to="/" />;
@@ -228,7 +215,7 @@ class CheckoutWizard extends React.Component {
                         <AddressSection
                           id="shipping-address"
                           open={currentStep === CHECKOUT_STEPS.SHIPPING_ADDRESS}
-                          countries={countries.items}
+                          countries={countryList.items}
                           onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING_ADDRESS)}
                           title={t('checkout.shippingAddress')}
                           submitLabel={t('checkout.nextStep')}
@@ -247,12 +234,13 @@ class CheckoutWizard extends React.Component {
                           onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.BILLING_ADDRESS)}
                           title={t('checkout.billingAddress')}
                           submitLabel={t('checkout.nextStep')}
-                          countries={countries.items}
+                          countries={countryList.items}
                           selectedAddress={values.billingAddress}
                           setAddress={setBillingAddress}
                           setUseTheSame={setBillingSameAsShipping}
                           useTheSame={values.billingSameAsShipping}
                           labelUseTheSame={t('checkout.useTheSameAddress')}
+                          errors={errors.billingAddress}
                           availableAddresses={addresses}
                           defaultSelected={defaultBillingAddress}
                         />
@@ -298,19 +286,21 @@ class CheckoutWizard extends React.Component {
             }}
           </CartQuery>
         )}
-      </CountriesQuery>
+      </CountryListQuery>
     );
   }
 }
 
 const CheckoutPage = () => (
-  <CheckoutLogic>
-    {checkoutData => (
-      <CustomerQuery query={GET_CUSTOMER_WITH_ADDRESSES}>
-        {({ customer }) => <CheckoutWizard checkoutData={checkoutData} customerData={customer} />}
-      </CustomerQuery>
-    )}
-  </CheckoutLogic>
+  <CheckoutProvider>
+    <CheckoutConsumer>
+      {checkoutData => (
+        <CustomerQuery query={GET_CUSTOMER_WITH_ADDRESSES}>
+          {({ data: { customer } }) => <CheckoutWizard checkoutData={checkoutData} customerData={customer} />}
+        </CustomerQuery>
+      )}
+    </CheckoutConsumer>
+  </CheckoutProvider>
 );
 
 export default CheckoutPage;

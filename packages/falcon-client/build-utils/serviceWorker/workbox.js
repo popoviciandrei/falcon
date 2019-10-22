@@ -7,7 +7,7 @@ const paths = require('../paths');
 
 /**
  * Generates Workbox precache manifest
- * @returns {Object[]} entries
+ * @returns {object[]} entries
  */
 async function getManifestEntries() {
   try {

@@ -1,5 +1,10 @@
 const nock = require('nock');
+const { InMemoryLRUCache } = require('@deity/falcon-server-env');
 const WordpressApi = require('./');
+
+const cache = {
+  provider: new InMemoryLRUCache()
+};
 
 describe('WordPress API', () => {
   let wpApi;
@@ -32,7 +37,7 @@ describe('WordPress API', () => {
         }
       });
 
-    await wpApi.initialize({ context: { session: {} } });
+    await wpApi.initialize({ context: { session: {} }, cache });
 
     const result = await wpApi.fetchUrl({}, { path: '/foo/' }, { session: {} });
     expect(result).toEqual({
@@ -43,7 +48,7 @@ describe('WordPress API', () => {
     });
   });
 
-  it('Should pass pagination data correctly in "blogPosts" method', async () => {
+  it('Should pass pagination data correctly in "blogPostList" method', async () => {
     const correctResponse = {
       success: true
     };
@@ -52,9 +57,9 @@ describe('WordPress API', () => {
       .get(uri => uri.indexOf('posts?per_page=3') >= 0)
       .reply(200, correctResponse);
 
-    await wpApi.initialize({ context: {} });
+    await wpApi.initialize({ context: {}, cache });
 
-    const result = await wpApi.blogPosts({}, { query: {}, pagination: { perPage: 3 } }, { session: {} });
+    const result = await wpApi.blogPostList({}, { query: {}, pagination: { perPage: 3 } }, { session: {} });
 
     expect(result).toEqual(correctResponse);
   });

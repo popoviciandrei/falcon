@@ -12,10 +12,10 @@ export const Details = themed({
       display: 'flex',
       flexDirection: 'column',
 
-      css: props => ({
+      css: ({ theme, open }) => ({
         '> :not(summary, style)': {
-          display: props.open ? 'block' : 'none',
-          flex: props.open ? '1' : 0
+          display: open ? 'block' : 'none',
+          flex: open ? '1' : 0
         },
 
         '> summary::-webkit-details-marker': {
@@ -24,12 +24,12 @@ export const Details = themed({
 
         '> summary:after': {
           display: 'block',
-          content: props.open ? '"-"' : '"+"',
-          marginLeft: props.theme.spacing.sm,
-          fontSize: props.theme.fontSizes.md,
+          content: open ? '"-"' : '"+"',
+          marginLeft: theme.spacing.sm,
+          fontSize: theme.fontSizes.md,
           lineHeight: 0.6,
-          fontWeight: props.theme.fontWeights.bold,
-          color: props.theme.colors.secondaryText
+          fontWeight: theme.fontWeights.bold,
+          color: theme.colors.secondaryText
         }
       })
     }

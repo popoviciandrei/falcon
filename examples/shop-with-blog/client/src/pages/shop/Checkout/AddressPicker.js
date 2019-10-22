@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownLabel, DropdownMenu, DropdownMenuItem } from '@deity/falcon-ui';
-import { addressToString } from '@deity/falcon-ecommerce-uikit';
+import { addressToString } from '@deity/falcon-front-kit';
 
 const AddressPicker = ({ addresses, selectedAddressId, onChange }) => {
   const selected = addresses.find(item => item.id === selectedAddressId);
@@ -23,7 +23,7 @@ const AddressPicker = ({ addresses, selectedAddressId, onChange }) => {
 
 AddressPicker.propTypes = {
   addresses: PropTypes.arrayOf(PropTypes.shape({})),
-  selectedAddressId: PropTypes.number,
+  selectedAddressId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   onChange: PropTypes.func
 };
 

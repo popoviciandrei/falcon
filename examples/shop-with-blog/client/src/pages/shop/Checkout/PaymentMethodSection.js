@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
 import { I18n, T } from '@deity/falcon-i18n';
-import { TwoStepWizard } from '@deity/falcon-ecommerce-uikit';
+import { TwoStepWizard } from '@deity/falcon-front-kit';
+import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
 import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';
@@ -18,16 +18,19 @@ class PaymentSection extends React.Component {
     super(props);
     this.state = {
       selectedPayment: null,
-      additionalData: null
+      data: null
     };
   }
 
-  onPaymentSelected = (selectedPayment, additionalData) => this.setState({ selectedPayment, additionalData });
+  onPaymentSelected = (selectedPayment, data) => this.setState({ selectedPayment, data });
 
-  resetSelected = () => this.setState({ selectedPayment: null, additionalData: null });
+  resetSelected = () => this.setState({ selectedPayment: null, data: null });
 
   submitPayment = () => {
-    this.props.setPayment(this.state.selectedPayment, this.state.additionalData);
+    this.props.setPayment({
+      method: this.state.selectedPayment.code,
+      data: this.state.data
+    });
   };
 
   render() {
@@ -71,7 +74,7 @@ class PaymentSection extends React.Component {
                       selectOption(code);
                     }}
                     selectedOption={selectedOption}
-                    onPaymentDetailsReady={additionalData => this.onPaymentSelected(payment, additionalData)}
+                    onPaymentDetailsReady={data => this.onPaymentSelected(payment, data)}
                   />
                 ))
               }

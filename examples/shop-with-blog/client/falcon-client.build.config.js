@@ -6,10 +6,14 @@ module.exports = {
   clearConsole: false,
   useWebmanifest: true,
   serviceWorker: {
-    precache: process.env.NODE_ENV === 'production'
+    precache: process.env.NODE_ENV === 'production',
+    blacklistRoutes: config.proxyEndpoints || []
   },
   i18n: {
     resourcePackages: ['@deity/falcon-i18n']
   },
-  moduleOverride: {}
+  moduleOverride: {
+    '@deity/falcon-data/dist/Query/Loader': '@deity/falcon-ui-kit/dist/Loader/Loader',
+    '@deity/falcon-data/dist/Query/OperationError': '@deity/falcon-ui-kit/dist/Error/OperationError'
+  }
 };

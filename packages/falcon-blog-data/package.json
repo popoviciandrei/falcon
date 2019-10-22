@@ -1,0 +1,44 @@
+{
+  "name": "@deity/falcon-blog-data",
+  "license": "OSL-3.0",
+  "version": "1.0.0",
+  "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-blog-data",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/falcon-blog-data.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "source": "src/index.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "prepare": "npm run clean && npm run build",
+    "clean": "falcon-scripts clean",
+    "build": "falcon-scripts build",
+    "watch": "falcon-scripts watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.3",
+    "@deity/falcon-blog-extension": "^1.0.0",
+    "@deity/falcon-data": "^1.0.0",
+    "core-js": "3.2.1"
+  },
+  "devDependencies": {
+    "@deity/falcon-scripts": "^1.0.0",
+    "@types/prop-types": "15.7.3",
+    "@types/react": "16.9.5",
+    "apollo-client": "2.6.4",
+    "graphql-tag": "2.10.1",
+    "prop-types": "15.7.2",
+    "react": "16.10.2"
+  },
+  "peerDependencies": {
+    "apollo-client": "^2.6.4",
+    "graphql-tag": "^2.10.1",
+    "react": "^16.10.2"
+  }
+}

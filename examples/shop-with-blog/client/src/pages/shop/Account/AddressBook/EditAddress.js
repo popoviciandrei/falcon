@@ -4,27 +4,24 @@ import { Formik } from 'formik';
 import { T } from '@deity/falcon-i18n';
 import { H1, Text, Button, FlexLayout, GridLayout } from '@deity/falcon-ui';
 import {
+  getAddressType,
   Form,
   FormField,
   CheckboxFormField,
   FormErrorSummary,
-  AddressQuery,
-  getAddressType,
-  GET_ADDRESS,
-  EditAddressMutation,
   TwoColumnsLayout,
   TwoColumnsLayoutArea,
-  CountriesQuery,
-  CountrySelector
-} from '@deity/falcon-ecommerce-uikit';
+  CountryPicker
+} from '@deity/falcon-ui-kit';
+import { GET_ADDRESS, AddressQuery, EditAddressMutation, CountryListQuery } from '@deity/falcon-shop-data';
 
 const EditAddress = ({ match, history }) => {
   const id = parseInt(match.params.id, 10);
 
   return (
     <AddressQuery variables={{ id }}>
-      {({ address }) => (
-        <GridLayout mb="md" gridGap="md">
+      {({ data: { address } }) => (
+        <GridLayout>
           <H1>
             <T id="editAddress.title" />
           </H1>
@@ -34,7 +31,7 @@ const EditAddress = ({ match, history }) => {
               <T id="editAddress.defaultAddressLabel" context={getAddressType(address)} />
             </Text>
           )}
-          <EditAddressMutation refetchQueries={['Addresses', { query: GET_ADDRESS, variables: { id } }]}>
+          <EditAddressMutation refetchQueries={['AddressList', { query: GET_ADDRESS, variables: { id } }]}>
             {(editAddress, { loading, error }) => (
               <Formik
                 initialValues={{
@@ -67,28 +64,24 @@ const EditAddress = ({ match, history }) => {
                     {!address.defaultBilling && <CheckboxFormField name="defaultBilling" />}
                     {!address.defaultShipping && <CheckboxFormField name="defaultShipping" />}
                     <TwoColumnsLayout>
-                      <GridLayout gridArea={TwoColumnsLayoutArea.left}>
+                      <GridLayout gridArea={TwoColumnsLayoutArea.left} gridGap="sm">
                         <FormField name="company" />
                         <FormField name="firstname" required />
                         <FormField name="lastname" required />
                         <FormField name="telephone" />
                       </GridLayout>
-                      <GridLayout gridArea={TwoColumnsLayoutArea.right}>
+                      <GridLayout gridArea={TwoColumnsLayoutArea.right} gridGap="sm">
                         <FormField name="street1" required />
                         <FormField name="street2" />
                         <FormField name="postcode" required />
                         <FormField name="city" required />
                         <FormField name="countryId" required>
-                          {({ form, field }) => (
-                            <CountriesQuery passLoading>
-                              {({ countries = { items: [] } }) => (
-                                <CountrySelector
-                                  {...field}
-                                  onChange={x => form.setFieldValue(field.name, x)}
-                                  items={countries.items}
-                                />
+                          {({ field }) => (
+                            <CountryListQuery passLoading>
+                              {({ data: { countryList = { items: [] } } }) => (
+                                <CountryPicker {...field} options={countryList.items} />
                               )}
-                            </CountriesQuery>
+                            </CountryListQuery>
                           )}
                         </FormField>
                       </GridLayout>

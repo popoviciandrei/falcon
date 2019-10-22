@@ -6,7 +6,8 @@ const errorCodes = {
   NOT_FOUND: null,
   CUSTOMER_TOKEN_NOT_FOUND: null,
   CUSTOMER_TOKEN_EXPIRED: null,
-  SESSION_NOT_FOUND: null
+  SESSION_NOT_FOUND: null,
+  BAD_USER_INPUT: null
 };
 
 Object.keys(errorCodes).forEach(key => {
