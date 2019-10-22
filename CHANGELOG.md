@@ -64,7 +64,6 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 ### Falcon Shop Extension v1.0.0
 
-- initial release
 - introduced Country and Region types to allow fetching more details with address queries ([#609](https://github.com/deity-io/falcon/pull/609))
 
 ### Falcon Server vNext
