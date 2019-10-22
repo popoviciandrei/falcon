@@ -18,8 +18,7 @@ import {
   ProductList
 } from '@deity/falcon-ui-kit';
 import { Filters } from './Filters';
-import { ShowingOutOf } from './ShowingOutOf';
-import { ShowMore } from './ShowMore';
+import { ShowMore, ShowingOutOf } from './components';
 
 const copy = item => item && JSON.parse(JSON.stringify(item));
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { T } from '@deity/falcon-i18n';
 import { H1, Divider } from '@deity/falcon-ui';
 import { PageLayout, FixCenteredLayout, SignInForm, NewAccount } from '@deity/falcon-ui-kit';
-import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components/Sidebar';
+import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 
 const SignIn = ({ history, location }) => {
   const { search } = location;

@@ -14,11 +14,9 @@ import {
 } from '@deity/falcon-front-kit';
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
 import loadable from 'src/components/loadable';
-import { ErrorBoundary } from 'src/components/ErrorBoundary';
 import logo from 'src/assets/logo.png';
 import DynamicRoute from 'src/pages/DynamicRoute';
-import { SidebarContainer } from 'src/components/Sidebar';
-import { Header, PageFooter } from './components';
+import { Header, PageFooter, SidebarContainer, ErrorBoundary } from './components';
 import { deityGreenTheme, globalCss } from './theme';
 
 const HeadMetaTags = () => (
