@@ -13,7 +13,7 @@ type InjectedProps = {
 const FormSubmitWithFormik: React.SFC<FormSubmitProps & BoxProps> = ({ value, formik, children, ...rest }) => (
   <Box justifySelf="end" mt="md" {...rest}>
     {children || (
-      <Button type="submit" variant={formik.isSubmitting ? 'loader' : undefined}>
+      <Button type="submit" disabled={formik.isSubmitting} variant={formik.isSubmitting ? 'loader' : undefined}>
         {value}
       </Button>
     )}
