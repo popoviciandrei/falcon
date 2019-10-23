@@ -8,7 +8,7 @@ process.on('uncaughtException', ex => {
 });
 
 const config = require('config');
-const FalconServer = require('@deity/falcon-server');
+const { FalconServer } = require('@deity/falcon-server');
 
 const server = new FalconServer(config);
 server.start();

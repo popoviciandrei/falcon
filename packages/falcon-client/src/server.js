@@ -3,7 +3,6 @@ import serve from 'koa-static';
 import helmet from 'koa-helmet';
 import Router from 'koa-router';
 import compress from 'koa-compress';
-import Logger from '@deity/falcon-logger';
 import error500 from './middlewares/error500Middleware';
 import serverTiming from './middlewares/serverTimingMiddleware';
 import graphqlProxy from './middlewares/graphqlProxyMiddleware';
@@ -16,8 +15,6 @@ import { renderAppShell, renderApp } from './middlewares/routes';
  */
 export async function Server({ App, clientApolloSchema, bootstrap, webpackAssets }) {
   const { config } = bootstrap;
-  Logger.setLogLevel(config.logLevel);
-
   const instance = new Koa();
   if (bootstrap.onServerCreated) {
     await bootstrap.onServerCreated(instance);
@@ -34,12 +31,15 @@ export async function Server({ App, clientApolloSchema, bootstrap, webpackAssets
     router.all(graphqlUri, graphqlProxy(config.graphqlUrl));
   }
 
+  const nodeEnv = process.env.NODE_ENV;
   const publicDir = process.env.PUBLIC_DIR;
-  router.get('/sw.js', serve(publicDir, { maxage: 0 }));
-  router.get('/static/*', serve(publicDir, { maxage: process.env.NODE_ENV === 'production' ? 31536000000 : 0 }));
+  const swDir = process.env.SW_DIR;
+
+  router.get('/sw.js', serve(swDir, { maxage: 0 }));
+  router.get('/static/*', serve(publicDir, { maxage: nodeEnv === 'production' ? 31536000000 : 0 }));
   router.get('/*', serve(publicDir));
   router.get('/app-shell', ...renderAppShell({ config, webpackAssets }));
-  router.get('/*', ...renderApp({ App, clientApolloSchema, config, webpackAssets }));
+  router.get('/*', ...(await renderApp({ App, clientApolloSchema, config, webpackAssets })));
   if (bootstrap.onRouterInitialized) {
     await bootstrap.onRouterInitialized(router);
   }
@@ -66,7 +66,7 @@ export async function Server({ App, clientApolloSchema, bootstrap, webpackAssets
 
 /**
  * @typedef {object} ServerAppConfig
- * @property {function} App Root application component
+ * @property {Function} App Root application component
  * @property {{config, onServerCreated, onServerInitialized, onServerStarted }} bootstrap Initial configuration
  * @property {object} clientApolloSchema Apollo State object
  * @property {object} webpackAssets webpack assets
@@ -75,7 +75,7 @@ export async function Server({ App, clientApolloSchema, bootstrap, webpackAssets
 /**
  * @typedef {object} WebServer
  * @property {Koa} instance Server instance
- * @property {function} callback Initial configuration
+ * @property {Function} callback Initial configuration
  * @property {number} port Desired PORT to run at
  * @property {object} clientApolloSchema Apollo State object
  */

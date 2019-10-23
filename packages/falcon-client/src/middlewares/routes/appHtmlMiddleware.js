@@ -5,25 +5,23 @@ import Html from '../../components/Html';
 
 /**
  * Application html renderer middleware.
- * @param {Object} params params
- * @param {Object} params.config configuration
- * @returns {function(ctx: object, next: function): Promise<void>} Koa middleware
+ * @param {object} params params
+ * @param {object} params.config configuration
+ * @returns {import('koa').Middleware} Koa middleware
  */
 export default ({ config }) => async ctx => {
-  const { AppMarkup, client, assets, chunkExtractor, helmetContext, serverTiming } = ctx.state;
+  const { AppMarkup, client, i18next, assets, chunkExtractor, helmetContext, serverTiming } = ctx.state;
   const { webmanifest } = assets;
 
   const renderTimer = serverTiming.start('HTML renderToString()');
 
   const htmlDocument = renderToString(
     <Html
-      assets={{
-        webmanifest
-      }}
+      assets={{ webmanifest }}
       chunkExtractor={chunkExtractor}
       helmetContext={helmetContext}
       state={client.extract()}
-      i18nextState={extractI18nextState(ctx)}
+      i18nextState={extractI18nextState(i18next)}
       googleTagManager={config.googleTagManager}
     >
       {AppMarkup}

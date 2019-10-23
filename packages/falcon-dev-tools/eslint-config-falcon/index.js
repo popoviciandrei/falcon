@@ -1,7 +1,7 @@
 module.exports = {
   parser: 'babel-eslint',
-  extends: ['eslint-config-airbnb', 'plugin:prettier/recommended'],
-  plugins: ['react', 'import', 'prettier', 'jsdoc'],
+  extends: ['eslint-config-airbnb', 'eslint-config-prettier'],
+  plugins: ['react', 'import', 'eslint-plugin-prettier', 'jsdoc', 'jsx-a11y'],
   settings: {
     'import/parser': 'babel-eslint',
     'import/resolver': { node: true },
@@ -22,13 +22,14 @@ module.exports = {
     'global-require': 'off',
     'id-length': [1, { exceptions: ['_', 'e', 't', 'x', 'p', 'm', 'i', 'j'] }],
     'import/default': 'off',
-    'import/no-duplicates': 'off',
+    'import/extensions': ['off', 'never'],
+    'import/no-duplicates': ['error', { includeExports: true }],
     'import/named': 'off',
     'import/namespace': 'off',
     'import/no-unresolved': 'off',
     'import/no-named-as-default': 'error',
-    'import/extensions': ['off', 'never'],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/order': ['error', { 'newlines-between': 'never' }],
     'import/prefer-default-export': 'off',
     'jsx-a11y/anchor-is-valid': ['off', { components: ['Link'] }],
     'jsx-a11y/click-events-have-key-events': 'off',
@@ -70,9 +71,10 @@ module.exports = {
     'react/require-default-props': ['off'],
     'react/no-access-state-in-setstate': 'error',
     'react/prop-types': 'off',
+    'react/forbid-prop-types': 'off',
     'react/destructuring-assignment': 'off',
     'jsdoc/check-alignment': 1,
-    'jsdoc/check-indentation': 1,
+    'jsdoc/check-indentation': 'off',
     'jsdoc/check-param-names': 1,
     'jsdoc/check-syntax': 1,
     'jsdoc/check-tag-names': 1,
@@ -80,11 +82,9 @@ module.exports = {
     'jsdoc/require-hyphen-before-param-description': [1, 'never'],
     'jsdoc/newline-after-description': [1, 'never'],
     'jsdoc/require-param': 1,
-    'jsdoc/require-param-description': 1,
     'jsdoc/require-param-name': 1,
-    'jsdoc/require-param-type': 1,
+    'jsdoc/require-param-type': 'off',
     'jsdoc/require-returns-check': 1,
-    'jsdoc/require-returns-description': 1,
     'jsdoc/require-returns-type': 1
   },
   globals: {
@@ -110,8 +110,8 @@ module.exports = {
         'no-continue': 'off',
         'dot-notation': 'off',
         'react/prop-types': 'off',
-        'import/prefer-default-export': 'off',
-        'import-name': [true, { react: 'React' }]
+        'import/order': 1,
+        'import/prefer-default-export': 'off'
       }
     }
   ]

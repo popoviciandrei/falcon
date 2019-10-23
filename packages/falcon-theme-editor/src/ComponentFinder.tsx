@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Portal } from '@deity/falcon-ui';
 import { ComponentWithDefaultTheme } from './ThemeEditorState';
 
-function throttle(callback: Function, wait: number, context: Object) {
+function throttle(callback: Function, wait: number, context: object) {
   let timeout: number | undefined;
   let callbackArgs: any[];
 
@@ -30,13 +30,16 @@ type ComponentFinderProps = {
   onChange: (components: ComponentWithDefaultTheme[]) => void;
 };
 
-function getNearestThemableComponentForElement(el: Element) {
+function getNearestThemableComponentForElement(element: Element) {
   const maxElementHierarchyTraversal = 3;
   let currentTraversal = 0;
-  let elementToCheck: Element | null = el;
 
+  let elementToCheck: Element | null = element;
   while (currentTraversal < maxElementHierarchyTraversal) {
-    if (!elementToCheck) return;
+    if (!elementToCheck) {
+      return undefined;
+    }
+
     // __reactInternalInstance trick based on https://stackoverflow.com/a/50204915/105206
     // eslint-disable-next-line
     for (const key in elementToCheck) {
@@ -96,6 +99,10 @@ function getHSLA(hash: number) {
 export class ComponentFinder extends React.Component<ComponentFinderProps, ComponentFinderState> {
   readonly state: ComponentFinderState = {};
 
+  currentElementFromPoint?: Element = undefined;
+
+  throttledOnChange?: Function = undefined;
+
   componentDidMount() {
     this.throttledOnChange = throttle(this.onChange, 50, this);
     window.addEventListener('mousemove', this.throttledOnChange as any);
@@ -147,9 +154,6 @@ export class ComponentFinder extends React.Component<ComponentFinderProps, Compo
       locatedComponent: undefined
     });
   };
-
-  currentElementFromPoint?: Element = undefined;
-  throttledOnChange?: Function = undefined;
 
   renderOverlay() {
     const { locatedComponent } = this.state;

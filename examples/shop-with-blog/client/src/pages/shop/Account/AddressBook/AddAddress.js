@@ -10,13 +10,12 @@ import {
   FormErrorSummary,
   TwoColumnsLayout,
   TwoColumnsLayoutArea,
-  AddAddressMutation,
-  CountriesQuery,
-  CountrySelector
-} from '@deity/falcon-ecommerce-uikit';
+  CountryPicker
+} from '@deity/falcon-ui-kit';
+import { AddAddressMutation, CountryListQuery } from '@deity/falcon-shop-data';
 
 const AddAddress = ({ history }) => (
-  <GridLayout mb="md" gridGap="md">
+  <GridLayout mb="md">
     <H1>
       <T id="addAddress.title" />
     </H1>
@@ -52,28 +51,24 @@ const AddAddress = ({ history }) => (
               <CheckboxFormField name="defaultBilling" />
               <CheckboxFormField name="defaultShipping" />
               <TwoColumnsLayout>
-                <GridLayout gridArea={TwoColumnsLayoutArea.left}>
+                <GridLayout gridArea={TwoColumnsLayoutArea.left} gridGap="sm">
                   <FormField name="company" />
                   <FormField name="firstname" required />
                   <FormField name="lastname" required />
                   <FormField name="telephone" />
                 </GridLayout>
-                <GridLayout gridArea={TwoColumnsLayoutArea.right}>
+                <GridLayout gridArea={TwoColumnsLayoutArea.right} gridGap="sm">
                   <FormField name="street1" required />
                   <FormField name="street2" />
                   <FormField name="postcode" required />
                   <FormField name="city" required />
                   <FormField name="countryId" required>
-                    {({ form, field }) => (
-                      <CountriesQuery passLoading>
-                        {({ countries = { items: [] } }) => (
-                          <CountrySelector
-                            {...field}
-                            onChange={x => form.setFieldValue(field.name, x)}
-                            items={countries.items}
-                          />
+                    {({ field }) => (
+                      <CountryListQuery passLoading>
+                        {({ data: { countryList = { items: [] } } }) => (
+                          <CountryPicker {...field} options={countryList.items} />
                         )}
-                      </CountriesQuery>
+                      </CountryListQuery>
                     )}
                   </FormField>
                 </GridLayout>

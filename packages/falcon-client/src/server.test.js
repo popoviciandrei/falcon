@@ -1,18 +1,35 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'jest-extended';
+import { readFileSync } from 'fs';
 import React from 'react';
-import Helmet from 'react-helmet';
+import { HelmetProvider } from 'react-helmet-async';
 import loadable from '@loadable/component';
 import { Route, Switch } from 'react-router-dom';
 import Koa from 'koa';
 import supertest from 'supertest';
-import { BaseSchema } from '@deity/falcon-server';
 import { T } from '@deity/falcon-i18n';
+import { DynamicRoute } from '@deity/falcon-front-kit';
 import { Server } from './server';
-import DynamicRoute from './components/DynamicRoute';
 import defaultConfiguration from './clientApp/defaultConfiguration';
 
+const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
+
 describe('Server', () => {
+  const fakeI18nConfig = {
+    __typename: 'I18nConfig',
+    lng: 'en',
+    resources: {
+      __typename: 'I18nResources',
+      en: {
+        __typename: 'I18nResourcesData',
+        translations: {
+          __typename: 'I18nTranslations',
+          key: 'foo bar baz'
+        }
+      }
+    }
+  };
+
   it('Should properly call eventHandlers', async () => {
     const onServerCreatedMock = jest.fn();
     const onServerInitializedMock = jest.fn();
@@ -20,9 +37,12 @@ describe('Server', () => {
     const onRouterCreatedMock = jest.fn();
     const onRouterInitializedMock = jest.fn();
 
+    jest.mock('./middlewares/routes/i18nextMiddleware', () => {});
+
     const config = defaultConfiguration({
       serverSideRendering: true,
-      logLevel: 'error'
+      logLevel: 'error',
+      i18n: { ...fakeI18nConfig }
     });
     const bootstrap = {
       config,
@@ -72,7 +92,7 @@ describe('Server', () => {
   });
 
   it('Should render Home page (SSR)', async () => {
-    Helmet.canUseDOM = false;
+    HelmetProvider.canUseDOM = false;
     const Home = () => (
       <div>
         <h2>Foo</h2>
@@ -90,6 +110,7 @@ describe('Server', () => {
             shop: loadable(() => import('./__mocks__/pages/Shop')),
             post: loadable(() => import('./__mocks__/pages/Post'))
           }}
+          notFound={() => <span>Not found</span>}
         />
       </Switch>
     );
@@ -98,20 +119,7 @@ describe('Server', () => {
       logLevel: 'error',
       serverSideRendering: true,
       googleTagManager: { __typename: 'GTMConfig', id: null },
-      i18n: {
-        __typename: 'I18nConfig',
-        lng: 'en',
-        resources: {
-          __typename: 'I18nResources',
-          en: {
-            __typename: 'I18nResourcesData',
-            translations: {
-              __typename: 'I18nTranslations',
-              key: 'foo bar baz'
-            }
-          }
-        }
-      },
+      i18n: { ...fakeI18nConfig },
       apolloClient: {
         httpLink: {
           typeDefs: [BaseSchema]

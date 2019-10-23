@@ -1,6 +1,6 @@
 {
   "name": "@deity/falcon-i18n",
-  "version": "0.2.5",
+  "version": "1.0.0",
   "license": "OSL-3.0",
   "homepage": "https://falcon.deity.io/docs/falcon-client/internationalization",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-i18n",
@@ -23,21 +23,24 @@
     "watch": "falcon-scripts watch"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.1"
+    "@babel/runtime": "7.6.3",
+    "core-js": "3.2.1"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^0.0.1",
+    "@deity/falcon-scripts": "^1.0.0",
     "@types/i18next": "12.1.0",
+    "@types/react": "16.9.5",
     "i18next": "^12.1.0",
-    "prop-types": "^15.6.2",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "prop-types": "15.7.2",
+    "react": "16.10.2",
+    "react-dom": "16.10.2",
+    "regenerator-runtime": "0.13.3"
   },
   "peerDependencies": {
     "i18next": "^12.1.0",
-    "prop-types": "^15.6.2",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "prop-types": "^15.7.2",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
   },
   "gitHead": "d8cd5eede81220aa29563275dcf35448611cc194"
 }

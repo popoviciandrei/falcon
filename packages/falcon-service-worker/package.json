@@ -1,0 +1,42 @@
+{
+  "name": "@deity/falcon-service-worker",
+  "version": "1.0.0",
+  "license": "OSL-3.0",
+  "homepage": "https://falcon.deity.io/docs/falcon-client/basics",
+  "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-service-worker",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/falcon-service-worker.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "prepare": "npm run clean && npm run build",
+    "clean": "falcon-scripts clean",
+    "build": "falcon-scripts build",
+    "watch": "falcon-scripts watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.3",
+    "core-js": "3.2.1"
+  },
+  "devDependencies": {
+    "@deity/falcon-scripts": "^1.0.0",
+    "@types/prop-types": "15.7.3",
+    "@types/react": "16.9.5",
+    "@types/react-dom": "16.9.1",
+    "prop-types": "15.7.2",
+    "react": "16.10.2",
+    "react-dom": "16.10.2",
+    "regenerator-runtime": "0.13.3"
+  },
+  "peerDependencies": {
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
+  }
+}

@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
+const { EOL } = require('os');
 const chalk = require('chalk');
 const program = require('commander');
-const { EOL } = require('os');
 const createFalconApp = require('../src');
 const pkg = require('../package.json');
 

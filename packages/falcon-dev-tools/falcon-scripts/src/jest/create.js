@@ -16,16 +16,7 @@ module.exports = ({ packagePath }) => ({
     '^src(.*)$': '<rootDir>/src$1',
     '^react-native$': 'react-native-web'
   },
-  collectCoverageFrom: [
-    'src/**/*.js',
-    'src/**/*.jsx',
-    'src/**/*.ts',
-    'src/**/*.tsx',
-    '!src/index.js',
-    '!src/index.jsx',
-    '!src/index.ts',
-    '!src/index.tsx'
-  ],
+  collectCoverageFrom: ['src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx', '!src/**/*.d.ts'],
   coverageReporters: ['html', 'text', 'text-summary', 'lcov'],
   globals: {
     'ts-jest': { diagnostics: false }

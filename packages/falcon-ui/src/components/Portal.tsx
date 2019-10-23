@@ -2,8 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Root } from './Root';
 
-export class Portal extends React.Component {
-  state = { wrapper: null };
+export class Portal extends React.Component<{}, { wrapper: HTMLElement }> {
+  constructor(props) {
+    super(props);
+
+    this.state = { wrapper: null };
+  }
 
   componentDidMount() {
     const wrapper = document.createElement('div');
@@ -19,7 +23,7 @@ export class Portal extends React.Component {
     }
   }
 
-  render() {
+  render(): React.ReactNode {
     const { wrapper } = this.state;
     if (wrapper) {
       return ReactDOM.createPortal(<Root {...this.props} />, wrapper);

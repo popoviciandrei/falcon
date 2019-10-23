@@ -14,7 +14,7 @@ module.exports = paths => {
       '^.+\\.css$': path.resolve(__dirname, 'cssTransform.js'),
       '^(?!.*\\.(js|jsx|mjs|css|json)$)': path.resolve(__dirname, 'fileTransform.js')
     },
-    transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$'],
+    transformIgnorePatterns: ['/[sS]+/'],
     moduleFileExtensions: ['js', 'jsx', 'json'],
     moduleNameMapper: {
       '^src(.*)$': '<rootDir>/src$1',

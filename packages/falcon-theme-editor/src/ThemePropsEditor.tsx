@@ -14,7 +14,6 @@ import {
   DropdownMenuItem,
   Input
 } from '@deity/falcon-ui';
-
 import { themeCategories, themeMeta } from './thememeta';
 import { fonts } from './fonts';
 

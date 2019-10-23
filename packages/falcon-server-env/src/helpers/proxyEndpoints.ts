@@ -1,6 +1,5 @@
-import Logger from '@deity/falcon-logger';
-import { IRouterContext } from 'koa-router';
 import { parse } from 'url';
+import { IRouterContext } from 'koa-router';
 import { EndpointManager } from '../models/EndpointManager';
 import { RequestMethod } from '../types';
 
@@ -28,7 +27,7 @@ export default class ProxyEndpoints extends EndpointManager {
     header.host = parse(this.baseUrl).host;
 
     try {
-      Logger.debug(`ProxyEndpoints: processing ${method} ${url} => ${this.baseUrl + url}`);
+      this.logger.debug(`Processing ${method} ${url} => ${this.baseUrl + url}`);
       ctx.body = this.fetch(`${this.baseUrl}${url}`, {
         method,
         headers: header,

@@ -2,14 +2,13 @@ import util from 'util';
 import _ from 'lodash';
 import addSeconds from 'date-fns/add_seconds';
 import { URLSearchParamsInit } from 'apollo-server-env';
-import Logger from '@deity/falcon-logger';
 import { ApiDataSource, BearerAuth, ContextRequestInit } from '@deity/falcon-server-env';
 import { FalconError, AuthenticationError, codes } from '@deity/falcon-errors';
 import { AuthScope, IntegrationAuthType, setAuthScope, OAuth1Auth } from './authorization';
 
 export type CustomerToken = {
   /** authorization bearer */
-  TokenKind: string;
+  token: string;
   /** expiration date */
   expirationTime: Date;
 };
@@ -43,7 +42,7 @@ export class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Create Magento api wrapper instance
-   * @param {Object} params configuration params
+   * @param {object} params configuration params
    */
   constructor(params) {
     super(params);
@@ -69,7 +68,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized POST request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} body body
+   * @param {object} body body
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -80,7 +79,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PATCH request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} body body
+   * @param {object} body body
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -91,7 +90,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PUT request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {Object} body body
+   * @param {object} body body
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -124,7 +123,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized POST request, for `integration` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -135,7 +134,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PATCH request, for `integration` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -146,7 +145,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PUT request, for `integration` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -179,7 +178,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized POST request, for `customer` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -190,7 +189,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PATCH request, for `customer` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -201,7 +200,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized PUT request, for `customer` scope
    * @param {string} path path
-   * @param {Object} body object representation of query string
+   * @param {object} body object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
@@ -227,22 +226,16 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Makes sure that context required for http calls exists
    * Gets basic store configuration from Magento
-   * @returns {Object} Magento config
+   * @returns {object} Magento config
    */
   async fetchBackendConfig() {
-    const getCachedValue = async url => {
-      const value = await this.cache.get([this.name, this.getStoreCode(), url].join(':'), {
-        fetchData: async () => {
-          const rawValue = await this.getForIntegration(url);
-
-          return JSON.stringify(rawValue);
-        },
+    const getCachedValue = async url =>
+      this.cache.get([this.name, this.getStoreCode(), url].join(':'), {
+        fetchData: async () => this.getForIntegration(url),
         options: {
           ttl: 10 * 60 // 10 min
         }
       });
-      return JSON.parse(value);
-    };
 
     const [storeConfigs, storeViews, storeGroups, storeWebsites] = await Promise.all([
       getCachedValue('/store/storeConfigs'),
@@ -358,7 +351,7 @@ export class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Setting up authorization handler for Integration requests
-   * @param {Object} authConfig configuration
+   * @param {object} authConfig configuration
    * @returns {IAuthorizeRequest} authorization handler
    */
   setupIntegrationScopeAuth(authConfig) {
@@ -387,7 +380,7 @@ export class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Setting up authorization handler for Customer requests
-   * @param {Object} session session
+   * @param {object} session session
    * @param {CustomerToken} session.customerToken customer token
    * @returns {IAuthorizeRequest} authorization handler
    */
@@ -415,7 +408,7 @@ export class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Determines if Customer's session is expired (Customer needs to be signed out)
-   * @param {Object} session the session
+   * @param {object} session the session
    * @param {CustomerToken} session.customerToken the Customer token
    * @returns {boolean} `true` if the session is expired, `false` otherwise
    */
@@ -426,8 +419,8 @@ export class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Helper method to recursively change key naming from underscore (snake case) to camelCase
-   * @param {Object} data argument to process
-   * @returns {Object} converted object
+   * @param {object} data argument to process
+   * @returns {object} converted object
    */
   convertKeys(data) {
     // handle simple types
@@ -513,7 +506,7 @@ export class Magento2ApiBase extends ApiDataSource {
 
   /**
    * Check if Customer authentication token is valid
-   * @param {Object} authToken authentication token
+   * @param {object} authToken authentication token
    * @param {string} authToken.token value
    * @param {Date} authToken.expirationTime expiration time
    * @returns {boolean} true if token is valid
@@ -534,7 +527,7 @@ export class Magento2ApiBase extends ApiDataSource {
    * @returns {{ value: string, options: { ttl: number } }} Result
    */
   async fetchAdminToken({ username, password }) {
-    Logger.info(`${this.name}: Retrieving admin token.`);
+    this.logger.info(`Retrieving admin token.`);
 
     const dataNow = Date.now();
     const token = await this.post('/integration/admin/token', { username, password });
@@ -547,7 +540,7 @@ export class Magento2ApiBase extends ApiDataSource {
       throw noTokenError;
     }
 
-    Logger.info(`${this.name}: Admin token found.`);
+    this.logger.info(`Admin token found.`);
 
     // FIXME: bellow code does not make sense anymore !!!
     // according to https://github.com/deity-io/falcon-magento2-development/issues/32
@@ -555,7 +548,7 @@ export class Magento2ApiBase extends ApiDataSource {
     // we need to do it right after fetching `storeConfig`. Be aware that adminToken is required to fetch storeConfig :)
     const validTime = 1;
     const ttl = (validTime * 60 - 5) * 60;
-    Logger.debug(`${this.name}: Admin token valid for ${validTime} hours, till ${addSeconds(dataNow, ttl)}`);
+    this.logger.debug(`Admin token valid for ${validTime} hours, till ${addSeconds(dataNow, ttl)}`);
 
     return {
       value: token,
@@ -583,7 +576,7 @@ export class Magento2ApiBase extends ApiDataSource {
    * Process received response data
    * @param {Response} response received response from the api
    * @param {Request} request request
-   * @returns {Object} processed response data
+   * @returns {object} processed response data
    */
   async didReceiveResponse(response, request) {
     const cookies = (response.headers.get('set-cookie') || '').split('; ');
@@ -615,7 +608,7 @@ export class Magento2ApiBase extends ApiDataSource {
   /**
    * Handle error occurred during http response
    * @param {Error} error Error to process
-   * @param {Object} req Request object
+   * @param {object} req Request object
    */
   didEncounterError(error, req) {
     const { extensions = {} } = error;
@@ -650,7 +643,7 @@ export class Magento2ApiBase extends ApiDataSource {
     }
 
     // Fixing invalid storeCode
-    Logger.debug(`${this.name}: ${storeCode ? 'is invalid' : 'store code is missing'}, removing cart data`);
+    this.logger.debug(`${storeCode ? 'is invalid' : 'store code is missing'}, removing cart data`);
     delete this.session.storeCode;
     delete this.session.cart;
     await this.setShopStore({}, { storeCode: this.storeCode });

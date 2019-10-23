@@ -30,7 +30,7 @@ export function renderAppShell({ config, webpackAssets }) {
 
 /**
  * @typedef {object} RenderApp
- * @property {function} App React Component
+ * @property {Function} App React Component
  * @property {object} config App configuration
  * @property {object} clientApolloSchema Apollo State object
  * @property {object} webpackAssets webpack assets
@@ -41,7 +41,7 @@ export function renderAppShell({ config, webpackAssets }) {
  * @param {RenderApp} params params
  * @returns {function(ctx: object, next: function)[]} Koa middlewares
  */
-export function renderApp({ config, clientApolloSchema, App, webpackAssets }) {
+export async function renderApp({ config, clientApolloSchema, App, webpackAssets }) {
   const { i18n, serverSideRendering, apolloClient } = config;
   const configSchema = { data: { config } };
 
@@ -54,7 +54,7 @@ export function renderApp({ config, clientApolloSchema, App, webpackAssets }) {
         clientApolloSchema
       }
     }),
-    i18next({ ...i18n }),
+    await i18next({ ...i18n }),
     serverSideRendering ? ssr({ App }) : appShell(),
     appHtml({ config })
   ].filter(x => x);

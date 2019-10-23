@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import Backend from 'i18next-sync-fs-backend';
+import Backend from 'i18next-node-fs-backend';
 
 /**
  * @typedef {object} Options
@@ -47,10 +47,10 @@ export default ({ lng = 'en', fallbackLng = 'en', whitelist = ['en'], debug = fa
     );
   });
 
-export function extractI18nextState(ctx) {
-  if (ctx.i18next) {
+export function extractI18nextState(i18nextInstance) {
+  if (i18nextInstance) {
     return {
-      language: ctx.i18next.language
+      language: i18nextInstance.language
     };
   }
 

@@ -1,5 +1,5 @@
 {
-  "welcome": "Welcome to @deity",
+  "name": "Deity",
   "copyright": "© Copyright {{year}}",
   "continue": "Continue",
   "edit": "Edit",
@@ -49,11 +49,15 @@
     "reviews": "{{count}} review",
     "reviews_plural": "{{count}} reviews",
     "addToCart": "Add to cart",
-    "quantity": "Quantity",
+    "qtyFieldLabel": "Quantity",
+    "options": {
+      "93FieldRequired": "Please select a {{label}}.",
+      "145FieldRequired": "Please select a {{label}}."
+    },
     "tierPriceDescription": "Buy {{qty}} for {{price}} and safe {{discount}}%",
     "error": {
       "quantity": "Quantity must be greater than 0",
-      "configurableOptions": "Please select all required options"
+      "options": "Please select all required options"
     },
     "tabs": {
       "description": "Description",
@@ -102,7 +106,21 @@
     "payment": "Payment",
     "shipping": "Shipping",
     "noShippingMethodsAvailable": "There are no available shipping methods for your shipping address. Please contact shop administrator.",
-    "noPaymentMethodsAvailable": "There are no available payment methods for this order. Please contact shop administrator."
+    "noPaymentMethodsAvailable": "There are no available payment methods for this order. Please contact shop administrator.",
+    "externalPaymentRedirect": "Redirecting to the external Payment Gateway URL...",
+    "summary": "Summary",
+    "editCart": "Edit cart items",
+    "placeOrder": "Place order",
+    "nextStep": "Continue",
+    "shippingAddress": "Shipping address",
+    "billingAddress": "Billing address",
+    "useTheSameAddress": "My billing address is the same as shipping"
+  },
+  "checkoutConfirmation": {
+    "title": "THANK YOU FOR SHOPPING!",
+    "orderReceived": "We have received your order (No.: {{referenceNo}}) with the following items:",
+    "realizationNotice": "We are working hard on getting your items to you as soon as possible.",
+    "shippingNotice": "We will send you a shipping confirmation email once your order is on the way."
   },
   "creditCard": {
     "namePlaceholder": "Name on card",
@@ -129,12 +147,13 @@
     "emailFieldPlaceholder": "Email",
     "passwordFieldLabel": "Password",
     "passwordFieldPlaceholder": "Password",
-    "button": "Sign in",
-    "forgotPasswordQuestion": "Forgot password?"
+    "submitButton": "Sign in",
+    "forgotPasswordLink": "Forgot password?"
   },
   "forgotPassword": {
     "title": "Forgot Password",
-    "emailFieldLabel": "Email"
+    "emailFieldLabel": "Email",
+    "successMessage": "If there is an account associated with {{values.email}} you will receive an email with a link to reset your password."
   },
   "resetPassword": {
     "title": "Reset Password",
@@ -155,7 +174,7 @@
     "passwordFieldLabel": "Password",
     "passwordFieldPlaceholder": "At least 8 characters"
   },
-  "newCustomer": {
+  "newAccount": {
     "title": "New Customers",
     "benefitsHeader": "Creating an account has many benefits:",
     "benefitList": ["check out faster", "keep more than one address", "track orders and more"],
@@ -208,6 +227,29 @@
     "shippingAmountLabel": "Shipping & Handling",
     "grandTotalLabel": "Total"
   },
+  "customerSelector": {
+    "title": "Customer",
+    "signOut": "$t(signOut.link)",
+    "edit": "$t(edit)",
+    "or": "or",
+    "signInLink": "sign in with your account",
+    "ifAlreadyRegistered": "if you are already registered",
+    "invalidEmail": "Invalid email address",
+    "guestPrompt": "Type your email and continue as guest:",
+    "guestContinue": "Continue as guest"
+  },
+  "addressForm": {
+    "emailFieldLabel": "Email",
+    "companyFieldLabel": "Company",
+    "firstnameFieldLabel": "First name",
+    "lastnameFieldLabel": "Last name",
+    "telephoneFieldLabel": "Phone number",
+    "street1FieldLabel": "Street line 1",
+    "street2FieldLabel": "Street line 2",
+    "postcodeFieldLabel": "ZIP code",
+    "cityFieldLabel": "City",
+    "countryFieldLabel": "Country"
+  },
   "addressBook": {
     "title": "Address Book",
     "sectionTitle_billing": "Default Invoice Address",
@@ -220,21 +262,21 @@
     "removeConfirmationMessage": "Are you sure?"
   },
   "editAddress": {
-    "title": "Address Edit",
+    "title": "Edit Address",
     "defaultAddressLabel_billing": "It's a default Invoice address.",
     "defaultAddressLabel_shipping": "It's a default Delivery Address.",
     "defaultAddressLabel_billing&shipping": "It's a default Invoice and Delivery Address.",
     "defaultShippingFieldLabel": "Use as my default Delivery Address",
     "defaultBillingFieldLabel": "Use as my default Invoice Address",
-    "companyFieldLabel": "Company",
-    "firstnameFieldLabel": "First Name",
-    "lastnameFieldLabel": "Last Name",
-    "telephoneFieldLabel": "Phone Number",
-    "street1FieldLabel": "Street Line 1",
-    "street2FieldLabel": "Street Line 2",
-    "postcodeFieldLabel": "ZIP Code",
-    "cityFieldLabel": "City",
-    "countryIdFieldLabel": "Country",
+    "companyFieldLabel": "$t(addressForm.companyFieldLabel)",
+    "firstnameFieldLabel": "$t(addressForm.firstnameFieldLabel)",
+    "lastnameFieldLabel": "$t(addressForm.lastnameFieldLabel)",
+    "telephoneFieldLabel": "$t(addressForm.telephoneFieldLabel)",
+    "street1FieldLabel": "$t(addressForm.street1FieldLabel)",
+    "street2FieldLabel": "$t(addressForm.street2FieldLabel)",
+    "postcodeFieldLabel": "$t(addressForm.postcodeFieldLabel)",
+    "cityFieldLabel": "$t(addressForm.cityFieldLabel)",
+    "countryIdFieldLabel": "$t(addressForm.countryFieldLabel)",
     "submitButton": "Update Address",
     "cancelButton": "Cancel"
   },
@@ -242,15 +284,15 @@
     "title": "Add Address",
     "defaultShippingFieldLabel": "$t(editAddress.defaultShippingFieldLabel)",
     "defaultBillingFieldLabel": "$t(editAddress.defaultBillingFieldLabel)",
-    "companyFieldLabel": "$t(editAddress.companyFieldLabel)",
-    "firstnameFieldLabel": "$t(editAddress.firstnameFieldLabel)",
-    "lastnameFieldLabel": "$t(editAddress.lastnameFieldLabel)",
-    "telephoneFieldLabel": "$t(editAddress.telephoneFieldLabel)",
-    "street1FieldLabel": "$t(editAddress.street1FieldLabel)",
-    "street2FieldLabel": "$t(editAddress.street2FieldLabel)",
-    "postcodeFieldLabel": "$t(editAddress.postcodeFieldLabel)",
-    "cityFieldLabel": "$t(editAddress.cityFieldLabel)",
-    "countryIdFieldLabel": "$t(editAddress.countryIdFieldLabel)",
+    "companyFieldLabel": "$t(addressForm.companyFieldLabel)",
+    "firstnameFieldLabel": "$t(addressForm.firstnameFieldLabel)",
+    "lastnameFieldLabel": "$t(addressForm.lastnameFieldLabel)",
+    "telephoneFieldLabel": "$t(addressForm.telephoneFieldLabel)",
+    "street1FieldLabel": "$t(addressForm.street1FieldLabel)",
+    "street2FieldLabel": "$t(addressForm.street2FieldLabel)",
+    "postcodeFieldLabel": "$t(addressForm.postcodeFieldLabel)",
+    "cityFieldLabel": "$t(addressForm.cityFieldLabel)",
+    "countryIdFieldLabel": "$t(addressForm.countryFieldLabel)",
     "submitButton": "Save Address",
     "cancelButton": "$t(editAddress.cancelButton)"
   },
@@ -274,5 +316,18 @@
     "title": "Not found",
     "text": "The content you were trying to reach couldn't be found.",
     "goHomeButton": "Go back to Home page"
+  },
+  "formError": {
+    "required": "Please enter a {{label}}.",
+    "invalid": "Please enter a valid {{label}}.",
+    "uncomplexPassword": "Please enter a {{label}} with at least one lower, upper case char and digit",
+    "toShort": "Please enter a {{label}} with at least {{min}} characters.",
+    "toLong": "Please enter a {{label}} with maximum {{max}} characters.",
+    "belowRange": "Please enter a {{label}} greater than {{min}}.",
+    "aboveRange": "Please enter a {{label}} lower than {{min}}."
+  },
+  "error": {
+    "unknown": "Something went wrong...",
+    "failedToFetch": "We can not reach our services at this moment, please try again later."
   }
 }

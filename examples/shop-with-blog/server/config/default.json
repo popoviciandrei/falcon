@@ -1,4 +1,5 @@
 {
+  "appName": "falcon-server-demo",
   "debug": false,
   "port": 4000,
   "logLevel": "info",

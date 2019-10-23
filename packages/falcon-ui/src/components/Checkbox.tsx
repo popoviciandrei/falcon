@@ -28,7 +28,9 @@ export const Checkbox = themed({
       <Icon
         src="checkboxCheckmarkIcon"
         className="-inner-checkbox-icon"
-        fallback={
+        /* eslint-disable prettier/prettier */
+        // disable prettier because it conflicts with jsx-wrap-multilines
+        fallback={(
           <svg
             viewBox="0 0 24 24"
             strokeWidth="2"
@@ -40,7 +42,8 @@ export const Checkbox = themed({
           >
             <polyline points="20 6 9 17 4 12" />
           </svg>
-        }
+        )}
+        /* eslint-enable prettier/prettier */
       />
     )
   },

@@ -1,10 +1,15 @@
 import { EventEmitter2 } from 'eventemitter2';
 import fetch from 'node-fetch';
+import Logger from '@deity/falcon-logger';
 import { IConfigurableConstructorParams, EndpointEntry, UrlConfig } from '../types';
 import { formatUrl } from '../helpers/url';
 
 export interface EndpointConstructorParams extends IConfigurableConstructorParams<UrlConfig> {
   entries?: string[];
+}
+
+export interface EndpointConstructor<T extends EndpointManager = EndpointManager> {
+  new (params: EndpointConstructorParams): T;
 }
 
 export abstract class EndpointManager {
@@ -20,12 +25,15 @@ export abstract class EndpointManager {
 
   protected eventEmitter: EventEmitter2;
 
+  protected logger: typeof Logger;
+
   constructor(params: EndpointConstructorParams) {
     this.config = params.config || {};
     this.name = params.name || this.constructor.name;
     this.eventEmitter = params.eventEmitter;
     this.entries = params.entries || [];
     this.baseUrl = formatUrl(this.config);
+    this.logger = Logger.getFor(`${this.name}-endpointManager`);
   }
 
   /**

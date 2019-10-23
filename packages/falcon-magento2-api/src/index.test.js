@@ -1,13 +1,15 @@
 global.__SERVER__ = true; // eslint-disable-line no-underscore-dangle
 
+const fs = require('fs');
 const { Cache, InMemoryLRUCache } = require('@deity/falcon-server-env');
-const { BaseSchema } = require('@deity/falcon-server');
-const { Schema } = require('@deity/falcon-shop-extension');
 const { makeExecutableSchema } = require('graphql-tools');
 const { EventEmitter2 } = require('eventemitter2');
 const nock = require('nock');
-const Magento2Api = require('./index');
 const magentoResponses = require('./__mocks__/apiResponses');
+const Magento2Api = require('./index');
+
+const BaseSchema = fs.readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
+const Schema = fs.readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');
 
 const URL = 'http://example.com';
 const ee = new EventEmitter2();
@@ -160,7 +162,7 @@ describe('Magento2Api', () => {
     expect(resp).toBe(true);
   });
 
-  describe('createSearchParams()', () => {
+  describe('createSearchCriteria()', () => {
     it('Should properly create payload for magento', () => {
       const input = {
         filters: [
@@ -180,24 +182,22 @@ describe('Magento2Api', () => {
         }
       };
       const expectedOutput = {
-        searchCriteria: {
-          pageSize: 10,
-          currentPage: 2,
-          sortOrders: [{ field: 'price', direction: 'asc' }],
-          filterGroups: [
-            {
-              filters: [
-                {
-                  condition_type: 'eq',
-                  field: 'price',
-                  value: '10'
-                }
-              ]
-            }
-          ]
-        }
+        pageSize: 10,
+        currentPage: 2,
+        sortOrders: [{ field: 'price', direction: 'asc' }],
+        filterGroups: [
+          {
+            filters: [
+              {
+                condition_type: 'eq',
+                field: 'price',
+                value: '10'
+              }
+            ]
+          }
+        ]
       };
-      expect(api.createSearchParams(input)).toEqual(expectedOutput);
+      expect(api.createSearchCriteria(input)).toEqual(expectedOutput);
     });
 
     it('Should properly handle case when there is no pagination parameter passed', () => {
@@ -208,13 +208,11 @@ describe('Magento2Api', () => {
         }
       };
       const expectedOutput = {
-        searchCriteria: {
-          pageSize: api.perPage,
-          currentPage: 0,
-          sortOrders: [{ field: 'price', direction: 'asc' }]
-        }
+        pageSize: api.perPage,
+        currentPage: 1,
+        sortOrders: [{ field: 'price', direction: 'asc' }]
       };
-      expect(api.createSearchParams(input)).toEqual(expectedOutput);
+      expect(api.createSearchCriteria(input)).toEqual(expectedOutput);
     });
   });
 
@@ -247,20 +245,20 @@ describe('Magento2Api', () => {
     expect(resp).toEqual([]);
   });
 
-  it('categoryProducts() should correctly fetch category products', async () => {
+  it('categoryProductList() should correctly fetch category products', async () => {
     nock(URL)
       .get(createMagentoUrl('/falcon/categories/1/products'))
       .query(() => true)
       .reply(200, magentoResponses.categoryProducts);
 
-    const response = await api.categoryProducts({ id: 1 }, {});
+    const response = await api.categoryProductList({ id: 1 }, {});
 
     expect(response.items).toHaveLength(5);
     expect(response.aggregations).toHaveLength(3);
     expect(response.pagination).toBeObject; // eslint-disable-line
   });
 
-  it('categoryProducts() should always return pagination data', async () => {
+  it('categoryProductList() should always return pagination data', async () => {
     nock(URL)
       .persist(true)
       .get(createMagentoUrl('/falcon/categories/1/products'))
@@ -270,12 +268,12 @@ describe('Magento2Api', () => {
     // this is usually passed via config but api instance is already created
     // and we just want it to use a different value
     api.perPage = 3;
-    let response = await api.categoryProducts({ id: 1 }, {});
+    let response = await api.categoryProductList({ id: 1 }, {});
     expect(response.pagination.totalPages).toEqual(4);
 
     // check if pagination will be computed correctly when perPage in config changes
     api.perPage = 5;
-    response = await api.categoryProducts({ id: 1 }, {});
+    response = await api.categoryProductList({ id: 1 }, {});
     expect(response.pagination.totalPages).toEqual(3);
   });
 

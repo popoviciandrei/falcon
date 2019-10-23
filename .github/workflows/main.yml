@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: # Run tests when PR is merged to one of the following branches
+      - master
+      - dev
+  pull_request:
+    branches: # Run for every pull-request
+      - '**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node: ['12', '10', '8']
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install Falcon dependencies
+        run: yarn --non-interactive --frozen-lockfile
+      - name: Lint project files
+        if: matrix.node == '12'
+        run: yarn lint
+      - name: Run Falcon tests
+        run: yarn test
+      - name: Collect Code Coverage
+        run: yarn coverage -t ${{ secrets.CODECOV_TOKEN }}

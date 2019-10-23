@@ -1,12 +1,9 @@
-const fs = require('fs-extra');
 const path = require('path');
+const fs = require('fs-extra');
 const chalk = require('chalk');
-const deepMerge = require('deepmerge');
 const webpack = require('webpack');
 const Logger = require('@deity/falcon-logger');
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
-const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
-const clearConsole = require('react-dev-utils/clearConsole');
 const paths = require('./../paths');
 
 const colors = {
@@ -15,36 +12,6 @@ const colors = {
 
 function logDeityGreenInfo(x) {
   Logger.info(chalk.hex(colors.deityGreen)(x));
-}
-
-function exitIfBuildingItself() {
-  if (paths.ownPath === paths.appPath) {
-    Logger.error(
-      chalk.red(
-        'Error: falcon-client is not intended to starting or building itself. It hosts your application instead!\n'
-      )
-    );
-    Logger.info(
-      "If you don't known how to start see this: https://github.com/deity-io/falcon/tree/master/packages/create-falcon-app"
-    );
-    Logger.info(
-      'If you want more information about falcon-client see this: https://github.com/deity-io/falcon/tree/master/packages/falcon-client'
-    );
-
-    process.exit(1);
-  }
-}
-
-/**
- * Exit if required files does no exist
- * @param {FalconClientBuildConfig} config falcon-client build config
- * @returns {void}
- */
-function exitIfNoRequiredFiles(config) {
-  const filesToCheck = [paths.appIndexJs, config.useWebmanifest && paths.appWebmanifest].filter(x => x);
-  if (!checkRequiredFiles(filesToCheck)) {
-    process.exit(1);
-  }
 }
 
 function webpackCompiler(config) {
@@ -99,54 +66,6 @@ function removePreviousBuildAssets(appBuild, appBuildPublic) {
   }
 }
 
-function requireOrExit(id) {
-  try {
-    // eslint-disable-next-line
-    return require(id);
-  } catch (e) {
-    clearConsole();
-    Logger.error(`File ${path.basename(id)} is invalid (${id}).`, e);
-    process.exit(1);
-  }
-}
-
-/**
- * @typedef {object} FalconClientBuildConfig
- * @property {number} devServerPort webpack dev server port
- * @property {boolean} CI if Continuos Integration env
- * @property {boolean} clearConsole if clear console
- * @property {boolean} useWebmanifest is process Web App Manifest
- * @property {object} i18n i18n falcon client webpack plugin configuration
- * @property {string[]} envToBuildIn env vars to build in bundle
- * @property {(function|string)[]} plugins razzle compatible plugins
- * @property {object} moduleOverride dictionary of module names to override
- */
-
-/**
- * Get falcon-client build config
- * @param {string} buildConfigFileName `falcon-client.build.config.js` falcon-client build time config relative path
- * @returns {FalconClientBuildConfig} falcon-client build time config
- */
-function getBuildConfig(buildConfigFileName = 'falcon-client.build.config.js') {
-  const buildConfigFilePath = paths.resolveApp(buildConfigFileName);
-  const buildConfig = fs.existsSync(buildConfigFilePath) ? requireOrExit(buildConfigFilePath) : {};
-
-  const buildConfigDefaults = {
-    clearConsole: true,
-    CI: false,
-    devServerPort: 3001,
-    useWebmanifest: false,
-    i18n: {},
-    envToBuildIn: [],
-    plugins: [],
-    moduleOverride: {}
-  };
-
-  const config = deepMerge(buildConfigDefaults, buildConfig, { arrayMerge: (destination, source) => source });
-
-  return config;
-}
-
 function getFullIcuPath() {
   if (process.env.NODE_ICU_DATA !== undefined) {
     return process.env.NODE_ICU_DATA;
@@ -166,9 +85,6 @@ function formatBytes(bytes) {
 module.exports = {
   colors,
   logDeityGreenInfo,
-  exitIfBuildingItself,
-  exitIfNoRequiredFiles,
-  getBuildConfig,
   getFullIcuPath,
   removePreviousBuildAssets,
   webpackCompiler,

@@ -1,8 +1,7 @@
-const { EndpointManager } = require('@deity/falcon-server-env');
 const url = require('url');
+const { EndpointManager } = require('@deity/falcon-server-env');
 const get = require('lodash/get');
 const set = require('lodash/set');
-const Logger = require('@deity/falcon-logger');
 
 module.exports = class MagentoEndpoints extends EndpointManager {
   constructor(params) {
@@ -21,12 +20,12 @@ module.exports = class MagentoEndpoints extends EndpointManager {
     return [
       {
         methods: 'POST',
-        path: '/rest/*/V1/falcon/guest-orders/*/adyen-process-validate3d',
+        path: '/rest/(.*)/V1/falcon/guest-orders/(.*)/adyen-process-validate3d',
         handler: this.handleReturn()
       },
       {
         methods: 'POST',
-        path: '/rest/*/V1/falcon/orders/*/adyen-process-validate3d',
+        path: '/rest/(.*)/V1/falcon/orders/(.*)/adyen-process-validate3d',
         handler: this.handleReturn(false)
       }
     ];
@@ -36,22 +35,22 @@ module.exports = class MagentoEndpoints extends EndpointManager {
     return [
       {
         methods: 'GET',
-        path: '/rest/*/V1/falcon/guest-carts/*/paypal-express-return',
+        path: '/rest/(.*)/V1/falcon/guest-carts/(.*)/paypal-express-return',
         handler: this.handleReturn()
       },
       {
         methods: 'GET',
-        path: '/rest/*/V1/falcon/guest-carts/*/paypal-express-cancel',
+        path: '/rest/(.*)/V1/falcon/guest-carts/(.*)/paypal-express-cancel',
         handler: this.handlePayPalCancel()
       },
       {
         methods: 'GET',
-        path: '/rest/*/V1/falcon/carts/mine/paypal-express-return',
+        path: '/rest/(.*)/V1/falcon/carts/mine/paypal-express-return',
         handler: this.handleReturn(false)
       },
       {
         methods: 'GET',
-        path: '/rest/*/V1/falcon/carts/mine/paypal-express-cancel',
+        path: '/rest/(.*)/V1/falcon/carts/mine/paypal-express-cancel',
         handler: this.handlePayPalCancel(false)
       }
     ];
@@ -90,7 +89,7 @@ module.exports = class MagentoEndpoints extends EndpointManager {
       search: parsedUrl.search
     });
 
-    Logger.debug(`Proxying ${ctx.request.url} to ${targetUrl}`);
+    this.logger.debug(`Proxying ${ctx.request.url} to ${targetUrl}`);
 
     return this.fetch(targetUrl, {
       method: ctx.request.method,
@@ -111,9 +110,9 @@ module.exports = class MagentoEndpoints extends EndpointManager {
 
   /**
    * Generates Auth header (if required)
-   * @param {Object} ctx Koa context object
+   * @param {object} ctx Koa context object
    * @param {boolean} isGuest Anonymous flag
-   * @returns {Object} Headers object
+   * @returns {object} Headers object
    */
   getAuthHeaders(ctx, isGuest = true) {
     if (isGuest) {

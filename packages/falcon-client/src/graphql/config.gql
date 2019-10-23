@@ -8,10 +8,3 @@ query APP_INIT {
     }
   }
 }
-
-query GET_BACKEND_CONFIG {
-  backendConfig {
-    locales
-    activeLocale
-  }
-}

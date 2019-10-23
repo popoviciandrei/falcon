@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { CartQuery } from '@deity/falcon-ecommerce-uikit';
+import { CartQuery } from '@deity/falcon-shop-data';
 import { Box, H1, Text, Divider, Button } from '@deity/falcon-ui';
 import { T } from '@deity/falcon-i18n';
 import CartItem from './components/CartItem';
@@ -31,7 +31,7 @@ CartItemList.propTypes = {
 
 const CartPage = () => (
   <CartQuery>
-    {({ cart }) => (
+    {({ data: { cart } }) => (
       <Box mt="xxl" defaultTheme={cartLayout}>
         <H1 fontSize="xl">
           <T id="cart.title" />

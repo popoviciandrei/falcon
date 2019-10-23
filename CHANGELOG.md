@@ -4,6 +4,141 @@
 
 Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) are already released and available via npm. Versions without a date are not released yet.
 
+## Falcon vNext
+
+### Falcon Client vNext
+
+- changed the way of defining "proxyEndpoints" ([#571](https://github.com/deity-io/falcon/pull/571))
+- fixed typos in build log messages ([#602](https://github.com/deity-io/falcon/pull/602))
+- added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+- improved code redistribution across chunks ([#619](https://github.com/deity-io/falcon/pull/619))
+- fixed self cached service worker (`/sw.js`) ([#626](https://github.com/deity-io/falcon/pull/626))
+- upgraded `react` to version `16.10.2` ([#640](https://github.com/deity-io/falcon/pull/640))
+- improved eslint configuration ([#642](https://github.com/deity-io/falcon/pull/642)), ([#639](https://github.com/deity-io/falcon/pull/639)), ([#633](https://github.com/deity-io/falcon/pull/633))
+- upgraded `css-loader` to version `3.2.0` ([#620](https://github.com/deity-io/falcon/pull/620))
+- fixed `/graphQL` proxy error handling ([#632](https://github.com/deity-io/falcon/pull/632))
+- fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
+- fixed handling of redirects by serviceworker ([#594](https://github.com/deity-io/falcon/pull/594))
+
+### Falcon UI vNext
+
+- fixed theme merging ([#551](https://github.com/deity-io/falcon/pull/551))
+- fixed duplicated conditions when extracting themed css ([#611](https://github.com/deity-io/falcon/pull/611))
+- fixed incompatible `css` prop typings ([#645](https://github.com/deity-io/falcon/pull/645))
+
+### Falcon E-commerce UI Kit discontinued
+
+- Breaking change: Falcon E-commerce UI Kit has been discontinued, instead we introduce [Falcon Front Kit](#falcon-front-kit-v1.0.0), [Falcon UI Kit](#falcon-ui-kit-v1.0.0), [Falcon Data](#falcon-data-v1.0.0), [Falcon Shop Data](#falcon-shop-data-v1.0.0) and [Falcon Blog Data](#falcon-blog-data-v1.0.0), (see rework [log](https://github.com/deity-io/falcon/blob/a5274623c148b9b0c8cc1d17254d7c89395955da/packages/falcon-ecommerce-uikit/uikit.md)) ([#487](https://github.com/deity-io/falcon/pull/487))
+
+### Falcon Front Kit v1.0.0
+
+- initial release
+- added convention for validation error messages translation ([#585](https://github.com/deity-io/falcon/pull/585))
+- fixed synchronisation of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
+- added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+- improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+
+### Falcon UI Kit v1.0.0
+
+- initial release
+- added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+- fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
+- changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
+
+### Falcon Data v1.0.0
+
+- initial release
+- improved Falcon `Query` component to not hide Apollo `Query` component render props ([#580](https://github.com/deity-io/falcon/pull/580)), ([#613](https://github.com/deity-io/falcon/pull/613))
+- added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+- improved way of handling errors ([#627](https://github.com/deity-io/falcon/pull/627)), ([#632](https://github.com/deity-io/falcon/pull/632))
+
+### Falcon Shop Data v1.0.0
+
+- initial release
+- added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+
+### Falcon Blog Data v1.0.0
+
+- initial release
+- added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+
+### Falcon Server vNext
+
+- Falcon-Server has been fully migrated to [TypeScript](https://github.com/microsoft/TypeScript/) 🎉 ([#479](https://github.com/deity-io/falcon/pull/479))
+  - Changed the flow of Extension Containers, whereby `Extension` base class has been removed in favor of a cleaner code ([read more](https://falcon.deity.io/docs/falcon-server/extensions))
+  - Now every `schema.graphql` file needs to be placed in the root of the package
+  - Custom `Extenstion` can deliver its own `schemaDirectives` now which will be properly merged into the main Schema
+  - Improved BackendConfig fetching technique (asynchronously in parallel)
+- improved Cache calls by tracking simultaneous requests with the same cache-key ([#557](https://github.com/deity-io/falcon/pull/557))
+- introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
+- fixed falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
+
+### Falcon Server Env vNext
+
+- fixed HttpCache deserialization ([#584](https://github.com/deity-io/falcon/pull/584))
+- added TTL option for cache tags ([#549](https://github.com/deity-io/falcon/pull/549))
+- added optional `ApiDataSource.getExtraResolvers` static method to define extra resolvers ([#557](https://github.com/deity-io/falcon/pull/557))
+
+### Falcon Magento2 API vNext
+
+- added basic filtration into `productList` query resolver ([#575](https://github.com/deity-io/falcon/pull/575))
+- fixed `lastOrder` resolver ([#616](https://github.com/deity-io/falcon/pull/616))
+- improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+
+### Falcon Scripts vNext
+
+- added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
+
+### Create Falcon App vNext
+
+- fixed yarn check which was creating an empty "yarn.lock" file ([#675](https://github.com/deity-io/falcon/pull/675))
+
+## Falcon v1.3 (2019-08-01)
+
+- required changes were made to make Falcon compatible with Node v12 ([#537](https://github.com/deity-io/falcon/pull/537))
+- updated all dependencies to fix lodash security issues ([#528](https://github.com/deity-io/falcon/pull/528))
+- added translations to checkout process ([#535](https://github.com/deity-io/falcon/pull/535))
+
+### Falcon Server v0.4.0 (2019-08-01)
+
+- added support of ComponentContainer ([#515](https://github.com/deity-io/falcon/pull/515))
+- added auto-installing of Subscription handlers ([#520](https://github.com/deity-io/falcon/pull/520))
+- improved the way of extracting root fields for partial extension schemas ([#541](https://github.com/deity-io/falcon/pull/541))
+- fixed the usage of CacheProvider when working with non-scalar values ([#543](https://github.com/deity-io/falcon/pull/543))
+
+### Falcon Client v0.5.3 (2019-08-01)
+
+- fixed issues with tests setup ([#534](https://github.com/deity-io/falcon/pull/534))
+
+### Falcon E-commerce UI Kit v0.5.3 (2019-08-01)
+
+- fixed issues with product count in MiniCart ([#518](https://github.com/deity-io/falcon/pull/518))
+
+## Falcon v1.2 (2019-06-26)
+
+### Falcon Client v0.5.0 (2019-06-26)
+
+- changed Service Worker pre-cache strategy to cache all static content and skip requesting Falcon Client `SSR` until the next Service Worker release ([#470](https://github.com/deity-io/falcon/pull/470)), also:
+  - upgraded Workbox to the latest 4.3.1 version
+  - add build for Service Worker `sw.js` file
+- added source-map support for all modes ([#491](https://github.com/deity-io/falcon/pull/491))
+- improvement: made eslint optional ([#506](https://github.com/deity-io/falcon/pull/506))
+
+### Falcon Service Worker v0.0.1 (2019-06-26)
+
+- initial release
+
+### Falcon Logger v1.0 (2019-06-26)
+
+- changed Logger provider to [Pino](http://getpino.io/) ([#471](https://github.com/deity-io/falcon/pull/471))
+- added `setApp`, `getFor` and `traceTime` API methods ([#471](https://github.com/deity-io/falcon/pull/471))
+
+### Falcon Server v0.3.0 (2019-06-26)
+
+- added source-map support for all modes ([#491](https://github.com/deity-io/falcon/pull/491))
+
+---
+
 ## Falcon v1.1 (2019-05-29)
 
 ### Falcon Client v0.4.2 (2019-05-29)

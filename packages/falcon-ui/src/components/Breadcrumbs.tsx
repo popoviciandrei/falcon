@@ -1,5 +1,6 @@
 import { themed } from '../theme';
 
+export type BreadcrumbsProps = Parameters<typeof Breadcrumbs>[0];
 export const Breadcrumbs = themed({
   tag: 'ul',
 
@@ -17,6 +18,7 @@ export const Breadcrumbs = themed({
   }
 });
 
+export type BreadcrumbProps = Parameters<typeof Breadcrumb>[0];
 export const Breadcrumb = themed({
   tag: 'li',
 

@@ -3,12 +3,12 @@ import { themed, extractThemableProps } from '../theme';
 import { Box } from './Box';
 import { Icon } from './Icon';
 
-const RadioInnerDOM = (
-  props: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
-    icon: JSX.Element;
-    invalid: boolean;
-  }
-) => {
+export type RadioProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
+  icon: JSX.Element;
+  invalid: boolean;
+};
+
+const RadioInnerDOM = (props: RadioProps) => {
   const { className, icon, invalid, ...remaining } = props;
   const { themableProps, rest } = extractThemableProps(remaining);
 
@@ -22,22 +22,18 @@ const RadioInnerDOM = (
   );
 };
 
+const iconFallback = (
+  <svg viewBox="0 0 24 24" className="-inner-radio-icon" focusable="false">
+    <circle cx="12" cy="12" r="10" />
+  </svg>
+);
+
 export const Radio = themed({
   tag: RadioInnerDOM,
 
   defaultProps: {
     invalid: false,
-    icon: (
-      <Icon
-        className="-inner-radio-icon"
-        src="radioCheckedIcon"
-        fallback={
-          <svg viewBox="0 0 24 24" className="-inner-radio-icon" focusable="false">
-            <circle cx="12" cy="12" r="10" />
-          </svg>
-        }
-      />
-    )
+    icon: <Icon className="-inner-radio-icon" src="radioCheckedIcon" fallback={iconFallback} />
   },
 
   defaultTheme: {

@@ -1,7 +1,7 @@
-const chalk = require('chalk');
-const program = require('commander');
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
+const program = require('commander');
 const pkg = require('../package.json');
 const { saveJson, savePackageJson } = require('./helpers');
 

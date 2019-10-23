@@ -7,43 +7,32 @@ process.on('uncaughtException', ex => {
   console.log('Uncaught Exception: ', ex);
 });
 
-const Logger = require('@deity/falcon-logger');
+const fs = require('fs-extra');
+const { paths } = require('../src/tools');
+const test = require('../src/test');
 
 (async () => {
   const script = process.argv[2];
-  const args = process.argv.slice(3) || [];
-
-  const target =
-    (args.find(x => x.startsWith('--target=')) || '')
-      .split('=')
-      .pop()
-      .toUpperCase() || undefined;
-  if (target) {
-    process.env.TARGET = target;
-  }
-
   const packagePath = process.cwd();
 
   try {
     switch (script) {
       case 'build': {
-        const buildEsm = require('../src/build-esm');
-        const buildTsDeclarations = require('../src/build-tsDeclarations');
-        const buildCjs = require('../src/build-cjs');
-
-        buildEsm();
-        buildTsDeclarations({ packagePath });
-        if (target !== 'NODE') {
-          await buildCjs({ packagePath, target });
-        }
+        await Promise.all(
+          [
+            require('../src/build-dts').build({ packagePath }),
+            require('../src/build-esm').build({ packagePath }),
+            require('../src/build-cjs').main({ packagePath }),
+            fs.existsSync(paths.pkgBinSrc) && require('../src/build-cjs').bin({ packagePath })
+          ].filter(x => x)
+        );
 
         break;
       }
 
       case 'watch': {
-        const watchBuild = require('../src/watch-build');
+        await Promise.all([require('../src/build-dts').watch({ packagePath }), require('../src/build-esm').watch()]);
 
-        watchBuild();
         break;
       }
 
@@ -55,22 +44,18 @@ const Logger = require('@deity/falcon-logger');
       }
 
       case 'test': {
-        const watchTest = require('../src/watch-test');
-
-        await watchTest({ packagePath });
+        await test.watch({ packagePath });
         break;
       }
 
       case 'test:coverage': {
-        const testCoverage = require('../src/test-coverage');
-
-        await testCoverage({ packagePath });
+        await test.coverage({ packagePath });
         break;
       }
 
       default:
-        Logger.log(`Unknown script "${script}".`);
-        Logger.log('Perhaps you need to update @deity/falcon-scripts?');
+        console.log(`Unknown script "${script}".`);
+        console.log('Perhaps you need to update @deity/falcon-scripts?');
         process.exit();
 
         break;
@@ -78,7 +63,7 @@ const Logger = require('@deity/falcon-logger');
 
     process.exit(0);
   } catch (error) {
-    Logger.error(error);
+    console.error(error);
     process.exit(1);
   }
 })();

@@ -5,30 +5,26 @@ module.exports = (/* api */) => {
         require.resolve('@babel/preset-env'),
         {
           modules: false,
-          useBuiltIns: 'entry'
+          useBuiltIns: 'entry',
+          corejs: '3'
         }
       ],
-      require.resolve('@babel/preset-react')
-    ],
-    plugins: [
-      // class { handleThing = () => { } }
-      require.resolve('@babel/plugin-proposal-class-properties'),
-
-      // The following two plugins use Object.assign directly, instead of Babel's
-      // extends helper. Note that this assumes `Object.assign` is available.
-      // { ...todo, completed: true }
       [
-        require.resolve('@babel/plugin-proposal-object-rest-spread'),
+        require.resolve('@babel/preset-react'),
         {
           useBuiltIns: true
         }
-      ],
+      ]
+    ],
+    plugins: [
+      require.resolve('babel-plugin-graphql-tag'),
+      require.resolve('@babel/plugin-proposal-class-properties'),
+      require.resolve('@babel/plugin-transform-runtime'),
+      [require.resolve('@babel/plugin-proposal-object-rest-spread'), { useBuiltIns: true }],
       require.resolve('@babel/plugin-syntax-dynamic-import'), // Adds syntax support for import()
-      require.resolve('@babel/plugin-transform-runtime'), // Add support for async/await
       // Add support for loadable components SSR
       // https://www.smooth-code.com/open-source/loadable-components/docs/server-side-rendering/
-      require.resolve('@loadable/babel-plugin'),
-      require.resolve('babel-plugin-graphql-tag')
+      require.resolve('@loadable/babel-plugin')
     ]
   };
 

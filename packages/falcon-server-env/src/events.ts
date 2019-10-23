@@ -19,6 +19,9 @@ export enum Events {
   BEFORE_EXTENSION_CONTAINER_CREATED = 'falcon-server.before-extension-container-created',
   AFTER_EXTENSION_CONTAINER_CREATED = 'falcon-server.after-extension-container-created',
 
+  BEFORE_COMPONENT_CONTAINER_CREATED = 'falcon-server.before-component-container-created',
+  AFTER_COMPONENT_CONTAINER_CREATED = 'falcon-server.after-component-container-created',
+
   BEFORE_APOLLO_SERVER_CREATED = 'falcon-server.before-apollo-server-created',
   AFTER_APOLLO_SERVER_CREATED = 'falcon-server.after-apollo-server-created',
 

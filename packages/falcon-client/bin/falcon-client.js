@@ -9,25 +9,25 @@ process.on('uncaughtException', ex => {
 process.noDeprecation = true; // turns off that loadQuery clutter.
 
 const Logger = require('@deity/falcon-logger');
-const { app, serviceWorker, test } = require('../build-utils');
+const { build, size, startDevServer, test } = require('../build-utils');
 
 (async () => {
   const script = process.argv[2];
+  const args = process.argv.slice(3) || [];
 
   try {
     switch (script) {
       case 'start': {
-        await app.startDevServer();
+        await startDevServer(args);
         break;
       }
 
       case 'build': {
-        await app.build();
-        await serviceWorker.build();
+        await build(args);
         break;
       }
       case 'size': {
-        await app.size();
+        await size(args);
         break;
       }
 
@@ -37,8 +37,8 @@ const { app, serviceWorker, test } = require('../build-utils');
       }
 
       default:
-        Logger.log(`Unknown script "${script}".`);
-        Logger.log('Perhaps you need to update @deity/falcon-client?');
+        Logger.warn(`Unknown script "${script}".`);
+        Logger.warn('Perhaps you need to update @deity/falcon-client?');
         process.exit();
 
         break;

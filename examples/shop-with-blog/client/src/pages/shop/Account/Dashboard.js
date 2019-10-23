@@ -1,29 +1,38 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { T } from '@deity/falcon-i18n';
-import { Box, H1, H2, Text, Link, Divider, FlexLayout, GridLayout } from '@deity/falcon-ui';
-import { CustomerQuery, OrderListQuery, NoOrders, OrderList } from '@deity/falcon-ecommerce-uikit';
+import { CustomerQuery, OrderListQuery } from '@deity/falcon-shop-data';
+import { Box, H1, H2, Text, Link, Divider, GridLayout, FlexLayout } from '@deity/falcon-ui';
+import { EmptyOrderList, OrderListLayout, OrderListHeader } from '@deity/falcon-ui-kit';
+import { OrderList } from './Orders/OrderList';
 
 const Dashboard = () => (
-  <GridLayout mb="md" gridGap="md">
+  <GridLayout>
     <H1>
       <T id="dashboard.title" />
     </H1>
     <Box>
       <OrderListQuery variables={{ pagination: { perPage: 1, page: 1 } }}>
-        {({ orders: { items } }) => (
+        {({ data: { orderList } }) => (
           <React.Fragment>
             <FlexLayout justifyContent="flex-start" alignItems="baseline">
               <H2>
                 <T id="dashboard.recentOrder" />
               </H2>
-              {!!items.length && (
+              {!!orderList.items.length && (
                 <Link as={RouterLink} to="/account/orders" ml="md">
                   <T id="dashboard.viewAllOrders" />
                 </Link>
               )}
             </FlexLayout>
-            <Box>{items.length ? <OrderList items={items} /> : <NoOrders />}</Box>
+            {orderList.items.length ? (
+              <OrderListLayout>
+                <OrderListHeader />
+                <OrderList items={orderList.items} />
+              </OrderListLayout>
+            ) : (
+              <EmptyOrderList />
+            )}
           </React.Fragment>
         )}
       </OrderListQuery>
@@ -43,7 +52,7 @@ const Dashboard = () => (
         <T id="dashboard.personalInformation" />
       </H2>
       <CustomerQuery>
-        {({ customer }) => (
+        {({ data: { customer } }) => (
           <React.Fragment>
             <Text>{`${customer.firstname} ${customer.lastname}`}</Text>
             <Text>{customer.email}</Text>

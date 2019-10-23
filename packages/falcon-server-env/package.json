@@ -1,12 +1,9 @@
 {
   "name": "@deity/falcon-server-env",
   "license": "OSL-3.0",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "homepage": "https://falcon.deity.io/docs/falcon-server/falcon-server-env",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-server-env",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "source": "src/index.ts",
   "files": [
     "dist",
     "src"
@@ -14,70 +11,44 @@
   "publishConfig": {
     "access": "public"
   },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "diagnostics": false
-      }
-    },
-    "collectCoverageFrom": [
-      "src/**/*.ts",
-      "!src/events.ts",
-      "!src/index.ts"
-    ],
-    "coverageReporters": [
-      "html",
-      "text",
-      "text-summary",
-      "lcov"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json",
-      "node"
-    ]
-  },
+  "main": "dist/falcon-server-env.cjs.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
   "scripts": {
-    "prepare": "npm run build",
-    "clean": "rimraf dist",
-    "build": "tsc",
-    "test": "jest --watch",
-    "test:coverage": "jest --ci --coverage"
+    "prepare": "npm run clean && npm run build",
+    "clean": "falcon-scripts clean",
+    "build": "falcon-scripts build",
+    "test": "falcon-scripts test",
+    "test:coverage": "falcon-scripts test:coverage"
   },
   "dependencies": {
-    "@deity/falcon-logger": "^0.1.2",
+    "@deity/falcon-logger": "^1.0.3",
     "apollo-datasource": "0.3.1",
     "apollo-datasource-rest": "0.3.2",
     "apollo-server-caching": "0.3.1",
     "apollo-server-env": "2.2.0",
-    "graphql": "^14.1.1",
-    "graphql-tools": "4.0.4",
+    "apollo-server-koa": "2.9.3",
+    "graphql": "^14.5.8",
+    "graphql-tools": "^4.0.0",
     "html-entities": "1.2.1",
-    "node-fetch": "2.3.0",
+    "node-fetch": "2.6.0",
     "qs": "6.6.0",
     "striptags": "3.1.1"
   },
   "devDependencies": {
-    "@types/graphql": "14.0.5",
+    "@deity/falcon-scripts": "^1.0.0",
+    "@types/graphql": "^14.0.0",
     "@types/html-entities": "1.2.16",
-    "@types/jest": "23.3.10",
     "@types/koa": "2.0.47",
     "@types/koa-router": "7.0.35",
     "@types/nock": "9.3.0",
-    "@types/node": "11.9.5",
-    "@types/node-fetch": "2.1.6",
+    "@types/node": "^12.7.1",
+    "@types/node-fetch": "2.5.0",
     "@types/qs": "6.5.1",
     "eventemitter2": "5.0.1",
-    "koa": "2.7.0",
+    "koa": "2.8.1",
     "koa-router": "7.4.0",
-    "nock": "10.0.4",
-    "rimraf": "2.6.3",
-    "ts-jest": "24.0.2"
+    "nock": "10.0.6"
   },
   "gitHead": "d8cd5eede81220aa29563275dcf35448611cc194"
 }

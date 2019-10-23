@@ -1,29 +1,29 @@
 {
   "name": "@deity/eslint-config-falcon",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "license": "OSL-3.0",
-  "main": "index.js",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-dev-tools/eslint-config-falcon",
   "publishConfig": {
     "access": "public"
   },
+  "main": "index.js",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "1.9.0",
-    "@typescript-eslint/parser": "1.9.0",
-    "babel-eslint": "10.0.1",
-    "eslint-config-airbnb": "17.1.0",
-    "eslint-config-prettier": "4.2.0",
-    "eslint-plugin-import": "2.17.2",
-    "eslint-plugin-jsdoc": "5.0.2",
-    "eslint-plugin-jsx-a11y": "6.2.1",
+    "@typescript-eslint/eslint-plugin": "1.13.0",
+    "@typescript-eslint/parser": "1.13.0",
+    "babel-eslint": "10.0.2",
+    "eslint-config-airbnb": "17.1.1",
+    "eslint-config-prettier": "6.0.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-jsdoc": "15.6.2",
+    "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-prettier": "3.1.0",
-    "eslint-plugin-react": "7.13.0",
-    "eslint-plugin-typescript": "^0.14.0",
-    "prettier": "1.17.1",
-    "typescript": "3.4.5"
+    "eslint-plugin-react": "7.14.3",
+    "eslint-plugin-typescript": "0.14.0",
+    "prettier": "1.18.2",
+    "typescript": "3.6.4"
   },
   "peerDependencies": {
-    "eslint": ">=5.16.0"
+    "eslint": ">=6.1.0"
   },
   "gitHead": "d8cd5eede81220aa29563275dcf35448611cc194"
 }

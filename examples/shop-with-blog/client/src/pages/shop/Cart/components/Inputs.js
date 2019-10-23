@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { Box, NumberInput, Button, Icon } from '@deity/falcon-ui';
 
 export const RemoveItemButton = ({ onClick, loading }) => (

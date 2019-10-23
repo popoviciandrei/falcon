@@ -32,6 +32,7 @@ You configuration source must provide the following data:
 ```json
 {
   "googleAnalytics": {
+    "__typename": "ConfigGoogleAnalytics",
     "trackerID": "UA-xxxxx"
   }
 }

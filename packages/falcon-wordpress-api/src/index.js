@@ -1,9 +1,9 @@
-const { ApiDataSource, htmlHelpers } = require('@deity/falcon-server-env');
+const url = require('url');
 const qs = require('qs');
 const pick = require('lodash/pick');
 const isEmpty = require('lodash/isEmpty');
 const isObject = require('lodash/isObject');
-const url = require('url');
+const { ApiDataSource, htmlHelpers } = require('@deity/falcon-server-env');
 
 module.exports = class WordpressApi extends ApiDataSource {
   constructor(params) {
@@ -22,7 +22,7 @@ module.exports = class WordpressApi extends ApiDataSource {
 
   /**
    * Resolves url based on passed parameters
-   * @param {Object} req request params
+   * @param {object} req request params
    * @returns {string} resolved url object
    */
   async resolveURL(req) {
@@ -40,9 +40,9 @@ module.exports = class WordpressApi extends ApiDataSource {
 
   /**
    * Parses response and returns data in format accepted by falcon-blog-extension
-   * @param {Object} res object
-   * @param {Object} req native request object
-   * @returns {Object} parsed response
+   * @param {object} res object
+   * @param {object} req native request object
+   * @returns {object} parsed response
    */
   async didReceiveResponse(res, req) {
     const data = await super.didReceiveResponse(res, req);
@@ -97,9 +97,9 @@ module.exports = class WordpressApi extends ApiDataSource {
 
   /**
    * Fetch single published post by slug
-   * @param {Object} _ GraphQL root object
+   * @param {object} _ GraphQL root object
    * @param {string} path WP "slug" value
-   * @returns {Object} Post data
+   * @returns {object} Post data
    */
   async blogPost(_, { path }) {
     const slug = path.replace('/', '');
@@ -127,13 +127,13 @@ module.exports = class WordpressApi extends ApiDataSource {
 
   /**
    * Fetch published posts.
-   * @param {Object} _ GraphQL root object
-   * @param {Object} args arguments
-   * @param {Object} args.query Query object
-   * @param {Object} args.pagination Pagination
-   * @returns {Object[]} posts data
+   * @param {object} _ GraphQL root object
+   * @param {object} args arguments
+   * @param {object} args.query Query object
+   * @param {object} args.pagination Pagination
+   * @returns {object[]} blog post list
    */
-  async blogPosts(_, { query, pagination }) {
+  async blogPostList(_, { query, pagination }) {
     const payload = {
       ...query
     };
@@ -153,17 +153,16 @@ module.exports = class WordpressApi extends ApiDataSource {
 
   /**
    * @private
-   * @param {Object} post Post object
-   * @returns {Object} Processed Post object
+   * @param {object} post Post object
+   * @returns {object} Processed Post object
    */
   processPost(post) {
     if (!post) {
       return post;
     }
-    const image = post && post.featured_image;
 
-    if (image) {
-      post.image = this.reduceFeaturedImage(image);
+    if (post.featured_image) {
+      post.image = this.reduceFeaturedImage(post.featured_image);
     }
 
     if (post.related_posts) {
@@ -311,7 +310,7 @@ module.exports = class WordpressApi extends ApiDataSource {
   /* eslint-disable no-unused-vars */
   /**
    * Project can define it's own custom field processing logic for example to reduce size of acf related payload
-   * @param {Object} content custom fields values
+   * @param {object} content custom fields values
    */
   reduceAcf(content) {}
   /* eslint-enable no-unused-vars */
@@ -360,10 +359,10 @@ module.exports = class WordpressApi extends ApiDataSource {
   /**
    * Fetch wordpress url based on pathname and check if it contains any redirect.
    * Convert response based on data type (page | post | category )
-   * @param {Object} _ GQL root object
-   * @param {Object} params GQL params object
+   * @param {object} _ GQL root object
+   * @param {object} params GQL params object
    * @param {string} params.path URL path param
-   * @returns {Object} response - with reduced and converted data
+   * @returns {object} response - with reduced and converted data
    */
   async fetchUrl(_, { path }) {
     const { locale } = this.context.session;

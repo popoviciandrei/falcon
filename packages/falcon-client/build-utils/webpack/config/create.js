@@ -1,5 +1,5 @@
-const fs = require('fs-extra');
 const path = require('path');
+const fs = require('fs-extra');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const StartServerPlugin = require('start-server-webpack-plugin');
@@ -13,14 +13,10 @@ const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const { colors } = require('./../tools');
-const { getClientEnv } = require('./env');
+const { buildClientEnv, serializeEnvVariables } = require('./env');
 const runPlugin = require('./runPlugin');
 
 const falconClientPolyfills = require.resolve('./../../polyfills');
-
-/**
- *  @typedef {import('../tools').FalconClientBuildConfig} FalconClientBuildConfig
- */
 
 /**
  * Create RegExp filter based on provided modules names
@@ -31,22 +27,30 @@ function moduleFilter(modules) {
   return new RegExp(`[\\\\/]node_modules[\\\\/](${modules.map(x => x.replace('/', '[\\\\/]')).join('|')})[\\\\/]`);
 }
 
-function getEsLintLoaderOptions(eslintRcPath, isDev) {
-  const options = {
-    eslintPath: require.resolve('eslint'),
-    formatter: require('react-dev-utils/eslintFormatter'),
-    ignore: false,
-    useEslintrc: fs.existsSync(eslintRcPath),
-    emitWarning: isDev
-  };
-
-  if (!options.useEslintrc) {
-    options.baseConfig = {
-      extends: [require.resolve('@deity/eslint-config-falcon')]
-    };
-  }
-
-  return options;
+/**
+ * @param {import('../../paths')} paths
+ * @param {boolean} isDev
+ */
+function getESLintLoader(paths, isDev) {
+  return fs.existsSync(paths.appEslintRc)
+    ? {
+        test: /\.(js|jsx|mjs)$/,
+        include: paths.appSrc,
+        use: [
+          {
+            loader: require.resolve('eslint-loader'),
+            options: {
+              eslintPath: require.resolve('eslint'),
+              formatter: require('react-dev-utils/eslintFormatter'),
+              ignore: false,
+              useEslintrc: true,
+              emitWarning: isDev
+            }
+          }
+        ],
+        enforce: 'pre'
+      }
+    : undefined;
 }
 
 function getBabelLoaderOptions(babelRcPath) {
@@ -64,25 +68,29 @@ function getBabelLoaderOptions(babelRcPath) {
   return options;
 }
 
+/**
+ * @param {'web' | 'node' } target
+ * @param {'development' | 'production'} env
+ * @param {object} cssLoaderOptions
+ */
 function getStyleLoaders(target, env, cssLoaderOptions) {
-  const { sourceMap = false } = cssLoaderOptions;
+  const { minimize, ...restOptions } = cssLoaderOptions;
+  const sourceMap = cssLoaderOptions.sourceMap || false;
 
   // "postcss" loader applies autoprefixer to our CSS.
   // "css" loader resolves paths in CSS and adds assets as dependencies.
   // "style" loader turns CSS into JS modules that inject <style> tags.
   // In production, we use a plugin to extract that CSS to a file, but
   // in development "style" loader enables hot editing of CSS.
-  //
-  // Note: this yields the exact same CSS config as create-react-app.
 
   if (target === 'node') {
     // Style-loader does not work in Node.js without some crazy magic. Luckily we just need css-loader.
     return [
       {
-        loader: require.resolve('css-loader/locals'),
+        loader: require.resolve('css-loader'),
         options: {
-          ...cssLoaderOptions,
-          minimize: false
+          ...restOptions,
+          onlyLocals: true
         }
       }
     ];
@@ -92,7 +100,7 @@ function getStyleLoaders(target, env, cssLoaderOptions) {
     env === 'production' ? MiniCssExtractPlugin.loader : require.resolve('style-loader'),
     {
       loader: require.resolve('css-loader'),
-      options: { ...cssLoaderOptions }
+      options: { ...restOptions }
     },
     {
       loader: require.resolve('postcss-loader'),
@@ -103,7 +111,8 @@ function getStyleLoaders(target, env, cssLoaderOptions) {
           require('postcss-preset-env')({
             autoprefixer: { flexbox: 'no-2009' },
             stage: 3
-          })
+          }),
+          require('cssnano')({ preset: 'default' })
         ],
         sourceMap
       }
@@ -112,27 +121,39 @@ function getStyleLoaders(target, env, cssLoaderOptions) {
 }
 
 /**
- * Webpack configuration factory. It's the juice!
- * @param {'web' | 'node' } target target
- * @param {{ env: ('development' | 'production'), inspect: string, publicPath: string }} options environment
- * @param {FalconClientBuildConfig} buildConfig config
- * @returns {Object} webpack config
+ * @typedef {object} CreateWebpackOptions
+ * @property {string} inspect
+ * @property {boolean} analyze
+ * @property {import('../../paths')} paths
+ * @property {string} publicPath default is `/`
+ * @property {boolean} startDevServer has effect only when `process.env.NODE_ENV === 'development'`
+ * @property {import('../tools').FalconClientBuildConfig} buildConfig
  */
-module.exports = (target = 'web', options, buildConfig) => {
-  const { env, paths } = options;
-  const { devServerPort, useWebmanifest, plugins, modify, i18n, moduleOverride } = buildConfig;
 
-  // Define some useful shorthands.
+/**
+ * Webpack configuration factory. It's the juice!
+ * @param {'web' | 'node' } target
+ * @param {CreateWebpackOptions} options
+ * @returns {object} webpack configuration
+ */
+module.exports = (target = 'web', options) => {
+  options = { ...options, publicPath: options.publicPath || '/' };
+
+  const { NODE_ENV } = process.env;
   const IS_NODE = target === 'node';
   const IS_WEB = target === 'web';
-  const IS_PROD = env === 'production';
-  const IS_DEV = env === 'development';
+  const IS_PROD = NODE_ENV === 'production';
+  const IS_DEV = NODE_ENV === 'development';
 
-  process.env.NODE_ENV = IS_PROD ? 'production' : 'development';
+  const { paths, publicPath, startDevServer, buildConfig } = options;
+  const START_DEV_SERVER = IS_DEV ? startDevServer : false;
+  const { devServerPort, useWebmanifest, plugins, modify, i18n, moduleOverride } = buildConfig;
 
-  const devtool = 'cheap-module-source-map';
+  const devtool = 'source-map';
   const devServerUrl = `http://localhost:${devServerPort}/`;
-  const clientEnv = getClientEnv(target, { ...options, devServerPort }, buildConfig.envToBuildIn);
+  const serializedClientEnv = serializeEnvVariables(
+    buildClientEnv(target, NODE_ENV, publicPath, paths, START_DEV_SERVER, devServerPort, buildConfig.envToBuildIn)
+  );
 
   let config = {
     mode: IS_DEV ? 'development' : 'production',
@@ -163,17 +184,7 @@ module.exports = (target = 'web', options, buildConfig) => {
           use: { loader: require.resolve('source-map-loader') },
           enforce: 'pre'
         },
-        {
-          test: /\.(js|jsx|mjs)$/,
-          include: paths.appSrc,
-          use: [
-            {
-              loader: require.resolve('eslint-loader'),
-              options: getEsLintLoaderOptions(paths.appEslintRc, IS_DEV)
-            }
-          ],
-          enforce: 'pre'
-        },
+        getESLintLoader(paths, IS_DEV),
         // Avoid "require is not defined" errors
         {
           test: /\.mjs$/,
@@ -231,9 +242,8 @@ module.exports = (target = 'web', options, buildConfig) => {
         {
           test: /\.css$/,
           exclude: [paths.appBuild, /\.module\.css$/],
-          use: getStyleLoaders(target, env, {
+          use: getStyleLoaders(target, NODE_ENV, {
             importLoaders: 1,
-            modules: false,
             minimize: IS_PROD,
             sourceMap: !!devtool
           }),
@@ -242,11 +252,13 @@ module.exports = (target = 'web', options, buildConfig) => {
         {
           test: /\.module\.css$/,
           exclude: [paths.appBuild],
-          use: getStyleLoaders(target, env, {
+          use: getStyleLoaders(target, NODE_ENV, {
             importLoaders: 1,
-            modules: true,
+            modules: {
+              mode: 'global',
+              getLocalIdent: getCSSModuleLocalIdent
+            },
             minimize: IS_PROD,
-            getLocalIdent: getCSSModuleLocalIdent,
             sourceMap: !!devtool
           }),
           sideEffects: true // remove this when webpack adds a warning / error for this. See https://github.com/webpack/webpack/issues/6571
@@ -255,9 +267,8 @@ module.exports = (target = 'web', options, buildConfig) => {
           test: /\.(scss|sass)$/,
           exclude: /\.module\.(scss|sass)$/,
           use: [
-            ...getStyleLoaders(target, env, {
+            ...getStyleLoaders(target, NODE_ENV, {
               importLoaders: 2,
-              modules: false,
               minimize: IS_PROD,
               sourceMap: !!devtool
             }),
@@ -268,11 +279,13 @@ module.exports = (target = 'web', options, buildConfig) => {
         {
           test: /\.module\.(scss|sass)$/,
           use: [
-            ...getStyleLoaders(target, env, {
+            ...getStyleLoaders(target, NODE_ENV, {
               importLoaders: 2,
-              modules: true,
+              modules: {
+                mode: 'global',
+                getLocalIdent: getCSSModuleLocalIdent
+              },
               minimize: IS_PROD,
-              getLocalIdent: getCSSModuleLocalIdent,
               sourceMap: !!devtool
             }),
             IS_WEB && require.resolve('sass-loader')
@@ -293,47 +306,103 @@ module.exports = (target = 'web', options, buildConfig) => {
 
     config.output = {
       path: paths.appBuild,
-      publicPath: IS_DEV ? devServerUrl : '/',
+      publicPath: START_DEV_SERVER ? devServerUrl : '/',
       filename: 'server.js',
       libraryTarget: 'commonjs2'
     };
 
     config.plugins = [
-      new webpack.DefinePlugin(clientEnv.stringified),
+      new webpack.DefinePlugin(serializedClientEnv),
       new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
     ];
 
     config.entry = [paths.ownServerIndexJs];
 
     if (IS_DEV) {
-      config.watch = true;
+      config.entry = [
+        require.resolve('../prettyNodeErrors'),
+        START_DEV_SERVER && 'webpack/hot/poll?300',
+        ...config.entry
+      ].filter(x => x);
 
-      config.entry.unshift('webpack/hot/poll?300');
-      config.entry.unshift(require.resolve('./../prettyNodeErrors')); // Pretty format server errors
+      if (START_DEV_SERVER) {
+        config.watch = true;
 
-      config.plugins = [
-        ...config.plugins,
-        new webpack.HotModuleReplacementPlugin(),
-        new StartServerPlugin({
-          name: 'server.js',
-          nodeArgs: ['-r', 'source-map-support/register', options.inspect].filter(x => x)
-        }),
-        new webpack.WatchIgnorePlugin([paths.appWebpackAssets])
-      ];
+        config.plugins = [
+          ...config.plugins,
+          new webpack.HotModuleReplacementPlugin(),
+          new StartServerPlugin({
+            name: 'server.js',
+            nodeArgs: [options.inspect].filter(x => x)
+          }),
+          new webpack.WatchIgnorePlugin([paths.appWebpackAssets])
+        ];
+      }
     }
   }
 
   if (IS_WEB) {
     config.entry = {
-      client: [falconClientPolyfills, require.resolve('pwacompat'), paths.ownClientIndexJs]
+      client: [
+        falconClientPolyfills,
+        require.resolve('pwacompat'),
+        paths.ownClientIndexJs,
+        START_DEV_SERVER && require.resolve('./../webpackHotDevClient')
+      ].filter(x => x)
     };
 
     config.output = {
       path: paths.appBuildPublic,
+      publicPath: START_DEV_SERVER ? devServerUrl : options.publicPath,
       libraryTarget: 'var'
     };
 
-    config.optimization = {};
+    config.optimization = {
+      splitChunks: {
+        chunks: 'all',
+        automaticNameDelimiter: '-',
+        maxInitialRequests: 4,
+        cacheGroups: {
+          polyfills: {
+            name: 'polyfills',
+            enforce: true,
+            priority: 100,
+            test: moduleFilter(['core-js', 'whatwg-fetch', 'pwacompat'])
+          },
+          vendor: {
+            name: 'vendors',
+            enforce: true,
+            test: moduleFilter([
+              '@apollo/react-common',
+              '@apollo/react-components',
+              '@apollo/react-hoc',
+              '@apollo/react-hooks',
+              '@loadable/component',
+              'apollo-cache-inmemory',
+              'apollo-cache-persist',
+              'apollo-client',
+              'apollo-link',
+              'apollo-link-http',
+              'apollo-link-http-common',
+              'apollo-utilities',
+              'graphql',
+              'graphql-tag',
+              'graphql-tools',
+              'i18next',
+              'i18next-xhr-backend',
+              'react',
+              'react-apollo',
+              'react-dom',
+              'react-router',
+              'react-router-dom',
+              'tslib',
+              'history'
+            ])
+          }
+        }
+      }
+    };
+
     config.plugins = [
       new VirtualModulesPlugin({ [paths.ownWebmanifest]: '{}' }),
       new FalconI18nLocalesPlugin({
@@ -348,62 +417,63 @@ module.exports = (target = 'web', options, buildConfig) => {
         writeToDisk: { filename: path.dirname(paths.appWebpackAssets) }
       })
     ];
+    if (options.analyze) {
+      config.plugins.push(new BundleAnalyzerPlugin());
+    }
 
     if (IS_DEV) {
-      config.entry.client.push(require.resolve('./../webpackHotDevClient'));
-
       config.output = {
         ...config.output,
-        publicPath: devServerUrl, // should point to webpack-dev-server
         filename: 'static/js/[name].js',
         chunkFilename: 'static/js/[name].chunk.js',
         pathinfo: true,
         devtoolModuleFilenameTemplate: info => path.resolve(info.resourcePath).replace(/\\/g, '/')
       };
 
-      // configure webpack-dev-server to serve client-side bundle from http://localhost:${devServerPort}
-      config.devServer = {
-        disableHostCheck: true,
-        clientLogLevel: 'none',
-        compress: true, // enable gzip compression of generated files
-        // watchContentBase: true,
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        historyApiFallback: {
-          // Paths with dots should still use the history fallback. See https://github.com/facebookincubator/create-react-app/issues/387.
-          disableDotRule: true
-        },
-        host: 'localhost',
-        port: devServerPort,
-        hot: true,
-        noInfo: true,
-        overlay: false,
-        quiet: true,
-        // By default files from `contentBase` will not trigger a page reload.
-        // Reportedly, this avoids CPU overload on some systems. https://github.com/facebookincubator/create-react-app/issues/293
-        watchOptions: {
-          ignored: /node_modules/
-        },
-        before(app) {
-          app.use(errorOverlayMiddleware()); // this lets us open files from the runtime error overlay.
-        }
-      };
-      // Add client-only development plugins
+      if (START_DEV_SERVER) {
+        // configure webpack-dev-server to serve client-side bundle from http://localhost:${devServerPort}
+        config.devServer = {
+          disableHostCheck: true,
+          clientLogLevel: 'none',
+          compress: true, // enable gzip compression of generated files
+          // watchContentBase: true,
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          historyApiFallback: {
+            // Paths with dots should still use the history fallback. See https://github.com/facebookincubator/create-react-app/issues/387.
+            disableDotRule: true
+          },
+          host: 'localhost',
+          port: devServerPort,
+          hot: true,
+          noInfo: true,
+          overlay: false,
+          quiet: true,
+          // By default files from `contentBase` will not trigger a page reload.
+          // Reportedly, this avoids CPU overload on some systems. https://github.com/facebookincubator/create-react-app/issues/293
+          watchOptions: {
+            ignored: /node_modules/
+          },
+          before(app) {
+            app.use(errorOverlayMiddleware()); // this lets us open files from the runtime error overlay.
+          }
+        };
+      }
+
       config.plugins = [
         ...config.plugins,
-        new webpack.HotModuleReplacementPlugin({ multiStep: true }),
-        new webpack.DefinePlugin(clientEnv.stringified)
-      ];
+        START_DEV_SERVER && new webpack.HotModuleReplacementPlugin({ multiStep: true }),
+        new webpack.DefinePlugin(serializedClientEnv)
+      ].filter(x => x);
     } else {
       config.output = {
         ...config.output,
-        publicPath: options.publicPath,
         filename: 'static/js/[name].[hash:8].js',
         chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js'
       };
 
       config.plugins = [
         ...config.plugins,
-        new webpack.DefinePlugin(clientEnv.stringified),
+        new webpack.DefinePlugin(serializedClientEnv),
         // Extract our CSS into a files.
         new MiniCssExtractPlugin({
           filename: 'static/css/[name].[contenthash:8].css',
@@ -413,11 +483,8 @@ module.exports = (target = 'web', options, buildConfig) => {
         new webpack.optimize.AggressiveMergingPlugin()
       ];
 
-      if (options.analyze) {
-        config.plugins.push(new BundleAnalyzerPlugin());
-      }
-
       config.optimization = {
+        ...config.optimization,
         minimize: true,
         minimizer: [
           new UglifyJsPlugin({
@@ -455,40 +522,7 @@ module.exports = (target = 'web', options, buildConfig) => {
             parallel: true,
             sourceMap: !!devtool
           })
-        ],
-        splitChunks: {
-          cacheGroups: {
-            polyfills: {
-              name: 'polyfills',
-              enforce: true,
-              priority: 100,
-              chunks: 'initial',
-              test: moduleFilter(['core-js', 'object-assign', 'whatwg-fetch', 'pwacompat'])
-            },
-            vendor: {
-              name: 'vendors',
-              enforce: true,
-              chunks: 'initial',
-              test: moduleFilter([
-                'apollo-cache-inmemory',
-                'apollo-client',
-                'apollo-link',
-                'apollo-link-http',
-                'apollo-utilities',
-                'i18next',
-                'i18next-xhr-backend',
-                'react',
-                'react-apollo',
-                'react-dom',
-                'react-google-tag-manager',
-                `react-helmet`,
-                'react-router',
-                'react-router-dom',
-                'history'
-              ])
-            }
-          }
-        }
+        ]
       };
     }
   }
@@ -497,10 +531,9 @@ module.exports = (target = 'web', options, buildConfig) => {
     ...config.plugins,
     new NormalModuleOverridePlugin(moduleOverride),
     new WebpackBar({
-      minimal: buildConfig.CI,
+      fancy: !buildConfig.CI,
       color: colors.deityGreen,
-      name: IS_WEB ? 'client' : 'server',
-      compiledIn: true
+      name: IS_WEB ? 'client' : 'server'
     })
   ];
 
