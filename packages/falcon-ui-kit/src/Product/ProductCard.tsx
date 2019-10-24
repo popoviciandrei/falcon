@@ -9,14 +9,16 @@ export type ProductCardProps = {
   name: string;
   urlPath: string;
   price: ProductPriceProps;
-  thumbnail: string;
+  thumbnail?: string;
 };
 export const ProductCard: React.SFC<ProductCardProps> = ({ name, thumbnail, urlPath, price }) => {
   return (
     <ProductCardLayout to={urlPath}>
-      <LazyLoad height="100%" offset={150}>
-        <Image css={{ flex: '1 1 100%', minHeight: '0%' }} src={thumbnail} alt={name} />
-      </LazyLoad>
+      {thumbnail && (
+        <LazyLoad height="100%" offset={150}>
+          <Image css={{ flex: '1 1 100%', minHeight: '0%' }} src={thumbnail} alt={name} />
+        </LazyLoad>
+      )}
       <Text py="xs" ellipsis>
         {name}
       </Text>
@@ -33,5 +35,5 @@ ProductCard.propTypes = {
     regular: PropTypes.number.isRequired,
     special: PropTypes.number
   }).isRequired,
-  thumbnail: PropTypes.string.isRequired
+  thumbnail: PropTypes.string
 };
