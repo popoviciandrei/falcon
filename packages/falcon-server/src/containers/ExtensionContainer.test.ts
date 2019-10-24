@@ -4,12 +4,12 @@ import { RemoteBackendConfig } from '@deity/falcon-server-env';
 import { ExtensionContainer } from './ExtensionContainer';
 import { BaseSchema, ExtensionEntryMap } from '..';
 
-const extensions = {
+const extensions: ExtensionEntryMap = {
   shop: {
     package: '../__mocks__/fake-shop-extension',
     config: {
       apiUrl: 'https://example.com'
-    }
+    } as any
   },
   reviews: {
     package: '../__mocks__/fake-product-reviews-extension'
@@ -35,7 +35,7 @@ describe('ExtensionContainer', () => {
   beforeEach(async () => {
     ee = new EventEmitter2();
     container = new ExtensionContainer(ee);
-    await container.registerExtensions(extensions as ExtensionEntryMap);
+    await container.registerExtensions(extensions);
   });
 
   it('Should merge objects', () => {
