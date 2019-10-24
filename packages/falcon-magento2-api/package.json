@@ -41,6 +41,7 @@
     "qs": "6.6.0"
   },
   "devDependencies": {
+    "@deity/falcon-data": "^1.0.0",
     "@deity/falcon-scripts": "^1.0.0",
     "@deity/falcon-server": "^2.0.0",
     "@deity/falcon-shop-extension": "^1.0.0",
