@@ -41,7 +41,7 @@ export const generateExcerpt = (text: string, length: number = 140): string => {
     return '';
   }
 
-  const content = this.stripHtml(text);
+  const content = stripHtml(text);
 
   if (content && content.length > length) {
     return `${content.slice(0, length)}...`;
