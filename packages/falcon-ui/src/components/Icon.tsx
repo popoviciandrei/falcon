@@ -24,14 +24,6 @@ export type IconProps = IconRendererProps & {
   fallback?: any;
 };
 const IconInner: React.SFC<IconProps & PropsWithTheme> = props => {
-  if (!props.theme || !props.theme.icons) {
-    if (process.env.NODE_ENV !== 'production') {
-      const errorMessage = 'There were no icons provided in your theme, or you did not provide a theme.';
-      console.error(errorMessage);
-    }
-    return null;
-  }
-
   const { icons } = props.theme;
   const { src, fallback, ...rest } = props;
 
