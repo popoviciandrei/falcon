@@ -18,7 +18,7 @@ export type AddressFormFieldsProps = {
 export const AddressFormFields: React.SFC<AddressFormFieldsProps> = props => {
   const { twoColumns, askDefault, askEmail, autoCompleteSection } = props;
 
-  const getAutoComplete = attribute => [autoCompleteSection, attribute].filter(x => x).join(' ');
+  const getAutoComplete = attribute => [autoCompleteSection, attribute].filter(Boolean).join(' ');
 
   const askDefaultFields = (
     <Box mb="sm">
