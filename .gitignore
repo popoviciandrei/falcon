@@ -14,10 +14,14 @@ package-lock.json
 *.swp
 *.swo
 
-
 packages/**/dist/
+
 examples/**/build/
-examples/**/public/i18n/
+examples/**/config/*
+!examples/**/config/custom-environment-variables.*
+!examples/**/config/default.*
+!examples/**/config/development.*
+!examples/**/config/test.*
 
 #sandbox:
 examples/**/static/dist/
@@ -25,6 +29,4 @@ examples/**/static/manifest.json
 examples/**/webpack-assets.json
 examples/**/webpack-stats.json
 
-examples/**/config/*
-!examples/**/config/custom-environment-variables.*
-!examples/**/config/default.*
+
