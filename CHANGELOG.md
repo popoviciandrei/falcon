@@ -18,6 +18,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - upgraded `css-loader` to version `3.2.0` ([#620](https://github.com/deity-io/falcon/pull/620))
 - fixed `/graphQL` proxy error handling ([#632](https://github.com/deity-io/falcon/pull/632))
 - fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
+- fixed handling of redirects by serviceworker ([#594](https://github.com/deity-io/falcon/pull/594))
 
 ### Falcon UI vNext
 
@@ -88,6 +89,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Falcon Scripts vNext
 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
+
+### Create Falcon App vNext
+
+- fixed yarn check which was creating an empty "yarn.lock" file ([#675](https://github.com/deity-io/falcon/pull/675))
 
 ## Falcon v1.3 (2019-08-01)
 

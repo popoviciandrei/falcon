@@ -5,27 +5,29 @@ import { H1, Breadcrumbs, Breadcrumb } from '@deity/falcon-ui';
 import { BlogPostLayout, FormattedDate, CMSContent, PageLayout, BreadcrumbLink } from '@deity/falcon-ui-kit';
 
 const Post = ({ path }) => (
-  <BlogPostQuery variables={{ path }}>
-    {({ data: { blogPost } }) => (
-      <PageLayout>
-        <Breadcrumbs alignSelf="flex-start">
-          <BreadcrumbLink to="/">
-            <T id="name" />
-          </BreadcrumbLink>
-          <BreadcrumbLink to="/blog">
-            <T id="blog.title" />
-          </BreadcrumbLink>
-          <Breadcrumb>{blogPost.title}</Breadcrumb>
-        </Breadcrumbs>
+  <PageLayout>
+    <BlogPostQuery variables={{ path }}>
+      {({ data: { blogPost } }) => (
+        <React.Fragment>
+          <Breadcrumbs alignSelf="flex-start">
+            <BreadcrumbLink to="/">
+              <T id="name" />
+            </BreadcrumbLink>
+            <BreadcrumbLink to="/blog">
+              <T id="blog.title" />
+            </BreadcrumbLink>
+            <Breadcrumb>{blogPost.title}</Breadcrumb>
+          </Breadcrumbs>
 
-        <BlogPostLayout>
-          <H1>{blogPost.title}</H1>
-          <FormattedDate mb="xl" value={blogPost.date} />
-          <CMSContent html={blogPost.content} />
-        </BlogPostLayout>
-      </PageLayout>
-    )}
-  </BlogPostQuery>
+          <BlogPostLayout>
+            <H1>{blogPost.title}</H1>
+            <FormattedDate mb="xl" value={blogPost.date} />
+            <CMSContent html={blogPost.content} />
+          </BlogPostLayout>
+        </React.Fragment>
+      )}
+    </BlogPostQuery>
+  </PageLayout>
 );
 
 export default Post;
