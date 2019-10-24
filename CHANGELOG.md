@@ -73,6 +73,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - improved Cache calls by tracking simultaneous requests with the same cache-key ([#557](https://github.com/deity-io/falcon/pull/557))
 - introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
 - fixed falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
+- fixed priority for `ApiDataSource.getExtraResolvers` values ([#678](https://github.com/deity-io/falcon/pull/678))
 
 ### Falcon Server Env vNext
 
