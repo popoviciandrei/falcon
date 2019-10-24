@@ -23,10 +23,3 @@ examples/**/config/*
 !examples/**/config/development.*
 !examples/**/config/test.*
 
-#sandbox:
-examples/**/static/dist/
-examples/**/static/manifest.json
-examples/**/webpack-assets.json
-examples/**/webpack-stats.json
-
-
