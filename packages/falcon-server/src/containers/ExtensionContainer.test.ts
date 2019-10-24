@@ -9,7 +9,7 @@ const extensions: ExtensionEntryMap = {
     package: '../__mocks__/fake-shop-extension',
     config: {
       apiUrl: 'https://example.com'
-    } as any
+    }
   },
   reviews: {
     package: '../__mocks__/fake-product-reviews-extension'
@@ -70,7 +70,7 @@ describe('ExtensionContainer', () => {
         [
           {
             foo: 'bar'
-          } as any,
+          },
           {
             locales: ['pl-PL', 'en-US']
           },
