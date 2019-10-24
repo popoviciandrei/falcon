@@ -42,11 +42,6 @@ import { cacheInvalidatorMiddleware } from './middlewares';
 import { GraphQLCacheDirective, GraphQLCacheInvalidatorDirective } from './schemaDirectives';
 import { Config, BackendConfig } from './types';
 
-export * from './containers';
-export * from './graphqlUtils';
-export * from './middlewares';
-export * from './resolvers';
-export * from './schemaDirectives';
 export * from './utils';
 export * from './types';
 

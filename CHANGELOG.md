@@ -74,13 +74,14 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
 - fixed falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
 - fixed priority for `ApiDataSource.getExtraResolvers` values ([#678](https://github.com/deity-io/falcon/pull/678))
-- added re-export of all internally used components and helper utils ([#686](https://github.com/deity-io/falcon/pull/686))
+- `graphqlUtils` methods moved to `falcon-server-env` package ([#686](https://github.com/deity-io/falcon/pull/686))
 
 ### Falcon Server Env vNext
 
 - fixed HttpCache deserialization ([#584](https://github.com/deity-io/falcon/pull/584))
 - added TTL option for cache tags ([#549](https://github.com/deity-io/falcon/pull/549))
 - added optional `ApiDataSource.getExtraResolvers` static method to define extra resolvers ([#557](https://github.com/deity-io/falcon/pull/557))
+- added re-export of all internally used components and helper utils ([#686](https://github.com/deity-io/falcon/pull/686))
 
 ### Falcon Magento2 API vNext
 
