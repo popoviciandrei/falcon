@@ -70,6 +70,7 @@ export interface ApiDataSourceConfig extends UrlConfig {
 }
 
 export type RemoteBackendConfig = {
+  [key: string]: any;
   locales?: string[];
 };
 
