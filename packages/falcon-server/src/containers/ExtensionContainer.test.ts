@@ -39,7 +39,7 @@ describe('ExtensionContainer', () => {
   });
 
   it('Should merge objects', () => {
-    const testCases = [
+    const testCases: [RemoteBackendConfig[], RemoteBackendConfig][] = [
       [
         [
           {
@@ -70,7 +70,7 @@ describe('ExtensionContainer', () => {
         [
           {
             foo: 'bar'
-          },
+          } as any,
           {
             locales: ['pl-PL', 'en-US']
           },
@@ -83,7 +83,7 @@ describe('ExtensionContainer', () => {
     ];
 
     testCases.forEach(([incoming, expected]) => {
-      expect(container.mergeBackendConfigs(incoming as Array<RemoteBackendConfig>)).toEqual(expected);
+      expect(container.mergeBackendConfigs(incoming)).toEqual(expected);
     });
   });
 
