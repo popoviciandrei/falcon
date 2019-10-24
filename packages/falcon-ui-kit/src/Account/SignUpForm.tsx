@@ -18,7 +18,7 @@ export const SignUpForm: React.SFC<SignUpFormProps> = ({ onSuccess, ...formProps
           {({ field }) => <PasswordRevealInput {...field} />}
         </FormField>
 
-        <FormSubmit value="Create an account" />
+        <FormSubmit />
         {status.error && <ErrorSummary errors={status.error} />}
       </Form>
     )}

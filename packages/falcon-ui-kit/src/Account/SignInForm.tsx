@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlexLayout, Link } from '@deity/falcon-ui';
-import { T, I18n } from '@deity/falcon-i18n';
+import { T } from '@deity/falcon-i18n';
 import { SignInFormProvider } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '../Error';
 import { FormField, Form, FormProps, PasswordRevealInput, FormSubmit } from '../Forms';
@@ -29,7 +29,7 @@ export const SignInForm: React.SFC<SignInFormProps> = ({ onSuccess, onForgotPass
           <Link fontSize="xs" onClick={() => onForgotPassword()}>
             <T id="signIn.forgotPasswordLink" />
           </Link>
-          <I18n>{t => <FormSubmit value={t('signIn.submitButton')} />}</I18n>
+          <FormSubmit />
         </FlexLayout>
 
         {status.error && <ErrorSummary errors={status.error} />}

@@ -161,7 +161,8 @@
     "passwordFieldPlaceholder": "At least 8 characters",
     "failureMessage": "The reset password token you provided is invalid or has expired.",
     "requestAnotherToken": "Request another one",
-    "successMessage": "Your password has been reset successfully!"
+    "successMessage": "Your password has been reset successfully!",
+    "submitButton": "Reset my password"
   },
   "signOut": {
     "link": "Logout"
@@ -172,7 +173,8 @@
     "lastnameFieldLabel": "Last Name",
     "emailFieldLabel": "Email",
     "passwordFieldLabel": "Password",
-    "passwordFieldPlaceholder": "At least 8 characters"
+    "passwordFieldPlaceholder": "At least 8 characters",
+    "submitButton": "Create an account"
   },
   "newAccount": {
     "title": "New Customers",

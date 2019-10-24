@@ -14,7 +14,7 @@ export const ResetPasswordForm: React.SFC<ResetPasswordFormProps> = ({ onSuccess
         <FormField name="password" required type="password" autoComplete="new-password">
           {({ field }) => <PasswordRevealInput {...field} />}
         </FormField>
-        <FormSubmit justifySelf="center" value="Reset my password" />
+        <FormSubmit justifySelf="center" />
         {status.error && <ErrorSummary errors={status.error} />}
       </Form>
     )}
