@@ -1,9 +1,10 @@
 import { mockServer } from 'graphql-tools';
 import { EventEmitter2 } from 'eventemitter2';
+import { RemoteBackendConfig } from '@deity/falcon-server-env';
 import { ExtensionContainer } from './ExtensionContainer';
-import { BaseSchema } from '..';
+import { BaseSchema, ExtensionEntryMap } from '..';
 
-const extensions = {
+const extensions: ExtensionEntryMap = {
   shop: {
     package: '../__mocks__/fake-shop-extension',
     config: {
@@ -28,7 +29,7 @@ const mocks = {
 };
 
 describe('ExtensionContainer', () => {
-  let container;
+  let container: ExtensionContainer;
   let ee;
 
   beforeEach(async () => {
@@ -38,7 +39,7 @@ describe('ExtensionContainer', () => {
   });
 
   it('Should merge objects', () => {
-    const testCases = [
+    const testCases: [RemoteBackendConfig[], RemoteBackendConfig][] = [
       [
         [
           {
@@ -88,8 +89,8 @@ describe('ExtensionContainer', () => {
 
   describe('Schema stitching', () => {
     it('Should not throw errors during GraphQL config computing', () => {
-      expect(async () => {
-        await container.createGraphQLConfig({
+      expect(() => {
+        container.createGraphQLConfig({
           schemas: [BaseSchema]
         });
       }).not.toThrow();
@@ -106,12 +107,36 @@ describe('ExtensionContainer', () => {
           }
         }
       `;
-      const { schema } = await container.createGraphQLConfig({
+      const { schema } = container.createGraphQLConfig({
         schemas: [BaseSchema]
       });
       const server = mockServer(schema, mocks);
       const result = await server.query(query);
       expect(result.data.__type.fields.length).toEqual(3); // eslint-disable-line no-underscore-dangle
+    });
+
+    it('Should correctly merge resolver functions and let extraResolvers to have a higher priority', async () => {
+      const query = `query { foo { name } }`;
+      const { schema } = container.createGraphQLConfig({
+        schemas: [`type Query { foo: Foo } type Foo { name: String }`],
+        rootResolvers: [
+          {
+            Query: {
+              foo: () => ({ name: 'root' })
+            }
+          }
+        ],
+        extraResolvers: [
+          {
+            Query: {
+              foo: () => ({ name: 'extra' })
+            }
+          }
+        ]
+      });
+      const server = mockServer(schema, {}, true);
+      const { data } = await server.query(query);
+      expect(data.foo.name).toBe('extra');
     });
   });
 });
