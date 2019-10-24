@@ -43,6 +43,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
+- fixed `ProductCard` component which should not require `thumbnail` ([#685](https://github.com/deity-io/falcon/pull/685))
 
 ### Falcon Data v1.0.0
 
