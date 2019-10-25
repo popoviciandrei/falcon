@@ -3427,10 +3427,10 @@
     "@types/koa" "*"
     "@types/node" "*"
 
-"@types/koa-router@7.0.35":
-  version "7.0.35"
-  resolved "https://registry.npmjs.org/@types/koa-router/-/koa-router-7.0.35.tgz#07442ac95e65ec1b042af4f72abea44dc96b909f"
-  integrity sha512-WSdZ0FkUSCDiGQBtsEAmTjsM3l5o4eq2WDSCR9UXm/buLY73b5MSkfSt4f8+LAhoZYa9uNNcEyiE43J0xISF5A==
+"@types/koa-router@^7.0.42":
+  version "7.0.42"
+  resolved "https://registry.npmjs.org/@types/koa-router/-/koa-router-7.0.42.tgz#0e5c01d4d0a2873d402d432114f08372d7c50eb1"
+  integrity sha512-mggrNY7Ywwjt7QjaMAlbb1ixE+v7AFskOeyKdmZT/NvPVEAo48gYUxIcF8ILlMc3eg1bo6SxNoUcbxhTv7edrA==
   dependencies:
     "@types/koa" "*"
 
@@ -3446,10 +3446,10 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
-"@types/koa@2.0.47":
-  version "2.0.47"
-  resolved "https://registry.npmjs.org/@types/koa/-/koa-2.0.47.tgz#ac7854384a4cc49c16593c86acd99e636a48142a"
-  integrity sha512-llhCaHNWKFDMx1GCrqwgsWgUO+C4Da0SccbgevHIYOKVxwegEjFzl0WaMWHk3wWx0P0AdqHR+gQYZ2ZAb0ez0Q==
+"@types/koa@^2.0.51":
+  version "2.0.51"
+  resolved "https://registry.npmjs.org/@types/koa/-/koa-2.0.51.tgz#b08a57dc49e34aaf6b5cc004b5fef4b16ebe32e1"
+  integrity sha512-L5e/l6Z+SR9Jk6HM0wNYdkvWhSUBOvi+7Q5Uwn7kE/VmBXX7NIxARMigARWAyXAtXiv5Ry1P2HmebolFdvuIVg==
   dependencies:
     "@types/accepts" "*"
     "@types/cookies" "*"
@@ -3492,12 +3492,12 @@
   resolved "https://registry.npmjs.org/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/nock@9.3.0":
-  version "9.3.0"
-  resolved "https://registry.npmjs.org/@types/nock/-/nock-9.3.0.tgz#9d34358fdcc08afd07144e0784ac9e951d412dd4"
-  integrity sha512-ZHf/X8rTQ5Tb1rHjxIJYqm55uO265agE3G7NoSXVa2ep+EcJXgB2fsme+zBvK7MhrxTwkC/xkB6THyv50u0MGw==
+"@types/nock@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.npmjs.org/@types/nock/-/nock-11.1.0.tgz#0a8c1056a31ba32a959843abccf99626dd90a538"
+  integrity sha512-jI/ewavBQ7X5178262JQR0ewicPAcJhXS/iFaNJl0VHLfyosZ/kwSrsa6VNQNSO8i9d8SqdRgOtZSOKJ/+iNMw==
   dependencies:
-    "@types/node" "*"
+    nock "*"
 
 "@types/node-fetch@2.5.0":
   version "2.5.0"
@@ -4251,24 +4251,16 @@ apollo-client@2.6.4:
     tslib "^1.9.3"
     zen-observable "^0.8.0"
 
-apollo-datasource-rest@0.3.2:
-  version "0.3.2"
-  resolved "https://registry.npmjs.org/apollo-datasource-rest/-/apollo-datasource-rest-0.3.2.tgz#2f9dcc6531a7258535007894717d3806ecc32c7f"
-  integrity sha512-56Mt4VTlzeqHr+NPAkIi9KQYBhuOnn1PGrIg9X/nQ2gjY/sujiXiS1EmFo7vLbdO5NBNhfqvPXffgWWzZI1asQ==
+apollo-datasource-rest@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.npmjs.org/apollo-datasource-rest/-/apollo-datasource-rest-0.6.6.tgz#f3dbec7b24df77b24dd54e5a1256feb024b962e0"
+  integrity sha512-ZSB4d4KyTgONV7faS5SaSb6IGbCvPCcKnIHXnf02FuAg8iKfVi5iZdE1JkcsEggekZqEt3qIQk/f/VmTGfciVg==
   dependencies:
-    apollo-datasource "0.3.1"
-    apollo-server-caching "0.3.1"
-    apollo-server-env "2.2.0"
-    apollo-server-errors "2.2.1"
+    apollo-datasource "^0.6.3"
+    apollo-server-caching "^0.5.0"
+    apollo-server-env "^2.4.3"
+    apollo-server-errors "^2.3.4"
     http-cache-semantics "^4.0.0"
-
-apollo-datasource@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/apollo-datasource/-/apollo-datasource-0.3.1.tgz#4b7ec4c2dd7d08eb7edc865b95fd46b83a4679fd"
-  integrity sha512-qdEUeonc9pPZvYwXK36h2NZoT7Pddmy0HYOzdV0ON5pcG1YtNmUyyYi83Q60V5wTWjuaCjyJ9hOY6wr0BMvQuA==
-  dependencies:
-    apollo-server-caching "0.3.1"
-    apollo-server-env "2.2.0"
 
 apollo-datasource@^0.6.3:
   version "0.6.3"
@@ -4378,7 +4370,7 @@ apollo-link@^1.2.3:
     tslib "^1.9.3"
     zen-observable-ts "^0.8.20"
 
-apollo-server-cache-memcached@0.6.3:
+apollo-server-cache-memcached@^0.6.3:
   version "0.6.3"
   resolved "https://registry.npmjs.org/apollo-server-cache-memcached/-/apollo-server-cache-memcached-0.6.3.tgz#e5ba8faddd44e3851d1c8f34cb787cd7694afef3"
   integrity sha512-SYYNYcyvvIhjbu3tG5s+ICdcUZj9AD3kGa4a5jKstPr9SeXJRrSdYjN/cou+mi6yXi+4GdcD8K2IgTK75Vp1zw==
@@ -4387,7 +4379,7 @@ apollo-server-cache-memcached@0.6.3:
     apollo-server-env "^2.4.3"
     memcached "^2.2.2"
 
-apollo-server-cache-redis@1.1.4:
+apollo-server-cache-redis@^1.1.4:
   version "1.1.4"
   resolved "https://registry.npmjs.org/apollo-server-cache-redis/-/apollo-server-cache-redis-1.1.4.tgz#f0a712fbc65edeba7221bbac34f9458c8ee00218"
   integrity sha512-bWZbUTKf2NlLhTnOezLWcdP/h1te5UtEZ+LuMcrtpHidVFeKKImnHo1f9Qlc8eFrumstgBDQTMLfeG9lwWS66A==
@@ -4397,14 +4389,7 @@ apollo-server-cache-redis@1.1.4:
     dataloader "^1.4.0"
     ioredis "^4.0.0"
 
-apollo-server-caching@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/apollo-server-caching/-/apollo-server-caching-0.3.1.tgz#63fcb2aaa176e1e101b36a8450e6b4c593d2767a"
-  integrity sha512-mfxzikYXbB/OoEms77AGYwRh7FF3Oim5v5XWAL+VL49FrkbZt5lopVa4bABi7Mz8Nt3Htl9EBJN8765s/yh8IA==
-  dependencies:
-    lru-cache "^5.0.0"
-
-apollo-server-caching@0.5.0, apollo-server-caching@^0.5.0:
+apollo-server-caching@^0.5.0:
   version "0.5.0"
   resolved "https://registry.npmjs.org/apollo-server-caching/-/apollo-server-caching-0.5.0.tgz#446a37ce2d4e24c81833e276638330a634f7bd46"
   integrity sha512-l7ieNCGxUaUAVAAp600HjbUJxVaxjJygtPV0tPTe1Q3HkPy6LEWoY6mNHV7T268g1hxtPTxcdRu7WLsJrg7ufw==
@@ -4438,15 +4423,7 @@ apollo-server-core@^2.9.7:
     subscriptions-transport-ws "^0.9.11"
     ws "^6.0.0"
 
-apollo-server-env@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.npmjs.org/apollo-server-env/-/apollo-server-env-2.2.0.tgz#5eec5dbf46581f663fd6692b2e05c7e8ae6d6034"
-  integrity sha512-wjJiI5nQWPBpNmpiLP389Ezpstp71szS6DHAeTgYLb/ulCw3CTuuA+0/E1bsThVWiQaDeHZE0sE3yI8q2zrYiA==
-  dependencies:
-    node-fetch "^2.1.2"
-    util.promisify "^1.0.0"
-
-apollo-server-env@2.4.3, apollo-server-env@^2.4.3:
+apollo-server-env@^2.4.3:
   version "2.4.3"
   resolved "https://registry.npmjs.org/apollo-server-env/-/apollo-server-env-2.4.3.tgz#9bceedaae07eafb96becdfd478f8d92617d825d2"
   integrity sha512-23R5Xo9OMYX0iyTu2/qT0EUb+AULCBriA9w8HDfMoChB8M+lFClqUkYtaTTHDfp6eoARLW8kDBhPOBavsvKAjA==
@@ -7334,7 +7311,7 @@ deep-eql@^3.0.1:
   dependencies:
     type-detect "^4.0.0"
 
-deep-equal@^1.0.0, deep-equal@^1.0.1, deep-equal@~1.0.1:
+deep-equal@^1.0.1, deep-equal@~1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
   integrity sha1-9dJgKStmDghO/0zbyfCK0yR0SLU=
@@ -13588,20 +13565,17 @@ nocache@2.0.0:
   resolved "https://registry.npmjs.org/nocache/-/nocache-2.0.0.tgz#202b48021a0c4cbde2df80de15a17443c8b43980"
   integrity sha1-ICtIAhoMTL3i34DeFaF0Q8i0OYA=
 
-nock@10.0.6:
-  version "10.0.6"
-  resolved "https://registry.npmjs.org/nock/-/nock-10.0.6.tgz#e6d90ee7a68b8cfc2ab7f6127e7d99aa7d13d111"
-  integrity sha512-b47OWj1qf/LqSQYnmokNWM8D88KvUl2y7jT0567NB3ZBAZFz2bWp2PC81Xn7u8F2/vJxzkzNZybnemeFa7AZ2w==
+nock@*, nock@^11.6.0:
+  version "11.6.0"
+  resolved "https://registry.npmjs.org/nock/-/nock-11.6.0.tgz#481961e0cf78794f200ea71e25d948d668446717"
+  integrity sha512-9ocFR68CxS6nf2XtQNpdSh5n4QQSKl87DhXgLnHO/RD4CsGThFtu8/QG6myHTnrUHRE6JSKpiGjLJdRe2ZSlIA==
   dependencies:
     chai "^4.1.2"
     debug "^4.1.0"
-    deep-equal "^1.0.0"
     json-stringify-safe "^5.0.1"
-    lodash "^4.17.5"
+    lodash "^4.17.13"
     mkdirp "^0.5.0"
-    propagate "^1.0.0"
-    qs "^6.5.1"
-    semver "^5.5.0"
+    propagate "^2.0.0"
 
 node-dir@^0.1.10:
   version "0.1.17"
@@ -15701,10 +15675,10 @@ prop-types@15.6.2, prop-types@15.7.2, prop-types@15.x, prop-types@^15.5.10, prop
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
-propagate@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/propagate/-/propagate-1.0.0.tgz#00c2daeedda20e87e3782b344adba1cddd6ad709"
-  integrity sha1-AMLa7t2iDofjeCs0Stuhzd1q1wk=
+propagate@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/propagate/-/propagate-2.0.1.tgz#40cdedab18085c792334e64f0ac17256d38f9a45"
+  integrity sha512-vGrhOavPSTz4QVNuBNdcNXePNdNMaO1xj9yBeH1ScQPjk/rhg9sSlCXPhMkFuaNNW/syTvYqsnbIJxMBfRbbag==
 
 proper-url-join@^1.2.0:
   version "1.2.0"
@@ -15875,12 +15849,7 @@ qs@6.5.2, qs@~6.5.2:
   resolved "https://registry.npmjs.org/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-qs@6.6.0, qs@^6.4.0, qs@^6.5.1:
-  version "6.6.0"
-  resolved "https://registry.npmjs.org/qs/-/qs-6.6.0.tgz#a99c0f69a8d26bf7ef012f871cdabb0aee4424c2"
-  integrity sha512-KIJqT9jQJDQx5h5uAVPimw6yVg2SekOKu959OCtktD3FjzbpvaPr8i4zzg07DOMz+igA4W/aNM7OV8H37pFYfA==
-
-qs@^6.5.2:
+qs@^6.4.0, qs@^6.5.1, qs@^6.5.2, qs@^6.9.0:
   version "6.9.0"
   resolved "https://registry.npmjs.org/qs/-/qs-6.9.0.tgz#d1297e2a049c53119cb49cca366adbbacc80b409"
   integrity sha512-27RP4UotQORTpmNQDX8BHPukOnBP3p1uUJY5UnDhaJB+rMt9iMsok724XL+UHU23bEFOHRMQ2ZhI99qOWUMGFA==
