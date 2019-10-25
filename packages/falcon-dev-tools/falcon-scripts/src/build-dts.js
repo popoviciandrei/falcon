@@ -35,31 +35,27 @@ const compilerOptions = {
 module.exports.build = ({ packagePath }) => {
   console.log('building dts...');
 
-  return spawn(
-    'node',
-    [
-      paths.tsc,
-      ...tsCompilerOptionsToCliParams(compilerOptions),
-      getEntryPointFile(path.join(packagePath, 'src'), 'index', ['.ts', '.tsx'])
-    ],
-    {
-      stdio: 'inherit'
-    }
-  );
+  const entryPoint = getEntryPointFile(path.join(packagePath, 'src'), 'index', ['.ts', '.tsx', '.d.ts']);
+  if (!entryPoint) {
+    return;
+  }
+
+  return spawn('node', [paths.tsc, ...tsCompilerOptionsToCliParams(compilerOptions), entryPoint], {
+    stdio: 'inherit'
+  });
 };
 
 module.exports.watch = ({ packagePath }) => {
   console.log('building dts...');
 
+  const entryPoint = getEntryPointFile(path.join(packagePath, 'src'), 'index', ['.ts', '.tsx', '.d.ts']);
+  if (!entryPoint) {
+    return;
+  }
+
   return spawn(
     'node',
-    [
-      paths.tsc,
-      ...tsCompilerOptionsToCliParams(compilerOptions),
-      '--watch',
-      '--preserveWatchOutput',
-      getEntryPointFile(path.join(packagePath, 'src'), 'index', ['.ts', '.tsx'])
-    ],
+    [paths.tsc, ...tsCompilerOptionsToCliParams(compilerOptions), '--watch', '--preserveWatchOutput', entryPoint],
     {
       stdio: 'inherit'
     }
