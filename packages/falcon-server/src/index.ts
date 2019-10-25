@@ -42,7 +42,6 @@ import { cacheInvalidatorMiddleware } from './middlewares';
 import { GraphQLCacheDirective, GraphQLCacheInvalidatorDirective } from './schemaDirectives';
 import { Config, BackendConfig } from './types';
 
-export * from './utils';
 export * from './types';
 
 const BaseSchema: string = readFileSync(resolvePath(__dirname, './../schema.graphql'), 'utf8');
