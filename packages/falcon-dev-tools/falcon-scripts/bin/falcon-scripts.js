@@ -8,7 +8,7 @@ process.on('uncaughtException', ex => {
 });
 
 const fs = require('fs-extra');
-const { paths } = require('../src/tools');
+const { paths, promise } = require('../src/tools');
 const test = require('../src/test');
 
 (async () => {
@@ -18,7 +18,7 @@ const test = require('../src/test');
   try {
     switch (script) {
       case 'build': {
-        await Promise.all(
+        const results = await promise.reflectAll(
           [
             require('../src/build-dts').build({ packagePath }),
             require('../src/build-esm').build({ packagePath }),
@@ -27,11 +27,22 @@ const test = require('../src/test');
           ].filter(x => x)
         );
 
+        if (results.some(x => !x.isSuccess)) {
+          throw new Error('Build failed.');
+        }
+
         break;
       }
 
       case 'watch': {
-        await Promise.all([require('../src/build-dts').watch({ packagePath }), require('../src/build-esm').watch()]);
+        const results = await promise.reflectAll([
+          require('../src/build-dts').watch({ packagePath }),
+          require('../src/build-esm').watch()
+        ]);
+
+        if (results.some(x => !x.isSuccess)) {
+          throw new Error('Watch failed.');
+        }
 
         break;
       }
