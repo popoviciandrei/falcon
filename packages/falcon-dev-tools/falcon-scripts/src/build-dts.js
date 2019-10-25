@@ -22,7 +22,7 @@ const compilerOptions = {
   alwaysStrict: true,
   noFallthroughCasesInSwitch: true,
   noImplicitReturns: true,
-  noUnusedParameters: true,
+  noUnusedParameters: false,
   sourceMap: true,
   skipLibCheck: true,
   declaration: true,
