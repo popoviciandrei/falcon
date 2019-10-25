@@ -3,3 +3,4 @@ export * from './SignOutProvider';
 export * from './SignUpFormProvider';
 export * from './ForgotPasswordFormProvider';
 export * from './ResetPasswordFormProvider';
+export * from './ChangePasswordFormProvider';
