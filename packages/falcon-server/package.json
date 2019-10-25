@@ -38,7 +38,7 @@
     "@deity/falcon-errors": "^0.1.2",
     "@deity/falcon-logger": "^1.0.3",
     "@deity/falcon-server-env": "^1.0.0",
-    "@koa/cors": "^3.0.0",
+    "@koa/cors": "^2.2.3",
     "apollo-server-cache-memcached": "^0.6.3",
     "apollo-server-cache-redis": "^1.1.4",
     "apollo-server-caching": "^0.5.0",
