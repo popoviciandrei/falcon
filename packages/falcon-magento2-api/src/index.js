@@ -39,9 +39,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   static getExtraResolvers(apiGetter) {
     return {
-      BackendConfig: {
-        shop: apiGetter(api => api.fetchBackendConfig())
-      },
       ShopConfig: {
         stores: apiGetter(api => api.getActiveStores()),
         currencies: apiGetter(api => api.getActiveCurrencies()),
