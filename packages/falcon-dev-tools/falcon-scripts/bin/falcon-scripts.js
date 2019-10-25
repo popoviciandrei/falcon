@@ -31,7 +31,7 @@ const test = require('../src/test');
         );
 
         if (results.some(x => !x.isSuccess)) {
-          throw new Error('Build failed.');
+          throw results.find(x => !x.isSuccess).error;
         }
 
         break;
@@ -41,7 +41,7 @@ const test = require('../src/test');
         const results = await promise.reflectAll([dts.watch({ packagePath }), esm.watch()]);
 
         if (results.some(x => !x.isSuccess)) {
-          throw new Error('Watch failed.');
+          throw results.find(x => !x.isSuccess).error;
         }
 
         break;
