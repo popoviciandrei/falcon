@@ -2,6 +2,8 @@ import React from 'react';
 import { withTheme } from 'emotion-theming';
 import { themed, PropsWithTheme } from '../theme';
 
+const ENV = process.env.NODE_ENV;
+
 export type IconRendererProps = Parameters<typeof IconRenderer>[0];
 export const IconRenderer = themed({
   tag: 'svg',
@@ -23,12 +25,13 @@ export type IconProps = IconRendererProps & {
   src: string;
   fallback?: any;
 };
+
 const IconInner: React.SFC<IconProps & PropsWithTheme> = props => {
   const { src, fallback, theme, ...rest } = props;
   const { icons } = theme;
 
   if (!src || !icons || !icons[src]) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (ENV !== 'production') {
       const errorMessage = `No icon with the name "${src}" was found in your theme.`;
       console.error(errorMessage);
     }
