@@ -46,6 +46,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
 - added `AddressFormFields` and `Add`/`EditAddressForm` components to make address forms more reusable ([#624](https://github.com/deity-io/falcon/pull/624))
+- fixed `ProductCard` component which should not require `thumbnail` ([#685](https://github.com/deity-io/falcon/pull/685))
 
 ### Falcon Data v1.0.0
 
@@ -75,6 +76,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - improved Cache calls by tracking simultaneous requests with the same cache-key ([#557](https://github.com/deity-io/falcon/pull/557))
 - introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
 - fixed falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
+- fixed priority for `ApiDataSource.getExtraResolvers` values ([#678](https://github.com/deity-io/falcon/pull/678))
 
 ### Falcon Server Env vNext
 
@@ -95,6 +97,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Example Shop with Blog vNext
 
 - replace mentions of "invoice/delivery address" with "shipping/billing address" for consistency ([#624](https://github.com/deity-io/falcon/pull/624))
+
+### Create Falcon App vNext
+
+- fixed yarn check which was creating an empty "yarn.lock" file ([#675](https://github.com/deity-io/falcon/pull/675))
 
 ## Falcon v1.3 (2019-08-01)
 

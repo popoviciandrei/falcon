@@ -37,8 +37,10 @@ export class ApiContainer extends BaseContainer {
           return;
         }
 
-        // If imported ApiClass has a defined "getExtraResolvers" static method
-        if (ApiClass.getExtraResolvers) {
+        // If imported ApiClass has a defined "getExtraResolvers" static method:
+        // - pass `apiGetter` to this method
+        // - get the result and push to `this.resolvers` list which will be passed to `extraResolvers` later
+        if (ApiClass.getExtraResolvers && typeof ApiClass.getExtraResolvers === 'function') {
           const apiGetter = (resolve): ApiGetter => async (root, params, context, info) => {
             if (!(apiKey in context.dataSources)) {
               throw new Error(`"${apiKey}" API not found `);
