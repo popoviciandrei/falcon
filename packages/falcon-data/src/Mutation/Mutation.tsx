@@ -12,8 +12,13 @@ export class Mutation<TData = any, TVariables = OperationVariables> extends Reac
   };
 
   render() {
-    // seems like `optimisticResponse` keeps using its prop-types from the following file:
+    // seems like `optimisticResponse` keeps using its prop-types defined in the following file:
     // node_modules/@apollo/react-components/lib/Mutation.d.ts:9
+    // Compiler throws an error with the following message:
+    // --------------------------------------------------------------------------------
+    // Type 'TData | ((vars: TVariables) => TData)' is not assignable to type 'object'.
+    // Type 'TData' is not assignable to type 'object'
+    // --------------------------------------------------------------------------------
     const { children, optimisticResponse, ...restProps } = this.props;
     return (
       <ApolloMutation optimisticResponse={optimisticResponse as any} {...restProps}>
