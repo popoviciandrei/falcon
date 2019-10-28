@@ -20,5 +20,5 @@ export class ChangePasswordMutation extends Mutation<ChangePasswordResponse, Ope
 }
 
 export const useChangePasswordMutation = (
-  options: MutationHookOptions<ChangePasswordMutation, OperationInput<ChangePasswordInput>> = {}
+  options: MutationHookOptions<ChangePasswordResponse, OperationInput<ChangePasswordInput>> = {}
 ) => useMutation(CHANGE_PASSWORD_MUTATION, options);
