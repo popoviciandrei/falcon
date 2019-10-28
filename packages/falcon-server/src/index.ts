@@ -17,7 +17,7 @@ import { ApolloServer } from 'apollo-server-koa';
 import { KeyValueCache } from 'apollo-server-caching';
 import { ApolloError } from 'apollo-server-errors';
 import { EventEmitter2 } from 'eventemitter2';
-import GraphQLJSON from 'graphql-type-json';
+import { JSONResolver } from 'graphql-scalars';
 import Cookies from 'cookies';
 import cors from '@koa/cors';
 import Koa from 'koa';
@@ -30,13 +30,16 @@ import get from 'lodash/get';
 import capitalize from 'lodash/capitalize';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import * as WebSocket from 'ws';
-import { ApiContainer } from './containers/ApiContainer';
-import { ComponentContainer } from './containers/ComponentContainer';
-import { ExtensionContainer, GraphQLConfigDefaults } from './containers/ExtensionContainer';
-import { EndpointContainer } from './containers/EndpointContainer';
-import { DynamicRouteResolver } from './resolvers/DynamicRouteResolver';
-import { cacheInvalidatorMiddleware } from './middlewares/cacheInvalidatorMiddleware';
-import schemaDirectives from './schemaDirectives';
+import {
+  ApiContainer,
+  ComponentContainer,
+  ExtensionContainer,
+  GraphQLConfigDefaults,
+  EndpointContainer
+} from './containers';
+import { DynamicRouteResolver } from './resolvers';
+import { cacheInvalidatorMiddleware } from './middlewares';
+import { GraphQLCacheDirective, GraphQLCacheInvalidatorDirective } from './schemaDirectives';
 import { Config, BackendConfig } from './types';
 
 export * from './types';
@@ -113,7 +116,7 @@ export class FalconServer {
   }
 
   async getApolloServerConfig() {
-    this.apolloServerConfig = await this.extensionContainer.createGraphQLConfig(this.getInitialGraphQLConfig());
+    this.apolloServerConfig = this.extensionContainer.createGraphQLConfig(this.getInitialGraphQLConfig());
 
     // Removing "placeholder" (_) fields from the Type definitions
     delete this.apolloServerConfig.schema.getSubscriptionType().getFields()['_'];
@@ -182,10 +185,10 @@ export class FalconServer {
           BackendConfig: {
             activeLocale: this.activeLocaleResolver()
           },
-          JSON: GraphQLJSON
-        },
-        ...this.apiContainer.resolvers
+          JSON: JSONResolver
+        }
       ],
+      extraResolvers: [...this.apiContainer.resolvers],
       subscriptions: this.getSubscriptionsOptions(),
       tracing: this.config.debug,
       playground: this.config.debug && {
@@ -197,7 +200,10 @@ export class FalconServer {
   }
 
   getDefaultSchemaDirectives() {
-    return schemaDirectives;
+    return {
+      cache: GraphQLCacheDirective,
+      cacheInvalidator: GraphQLCacheInvalidatorDirective
+    };
   }
 
   protected urlResolver(

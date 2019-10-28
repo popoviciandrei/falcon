@@ -13,7 +13,7 @@ import {
   ForgotPasswordForm,
   Deferred
 } from '@deity/falcon-ui-kit';
-import { SIDEBAR_TYPE } from 'src/components/Sidebar';
+import { SIDEBAR_TYPE } from 'src/components';
 
 export default ({ contentType, open, close }) => {
   // if there is no content type provided it means that sidebar contents should be rendered as hidden

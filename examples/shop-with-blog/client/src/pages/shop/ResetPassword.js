@@ -10,7 +10,7 @@ import {
   InvalidResetPasswordToken,
   ResetPasswordSuccess
 } from '@deity/falcon-ui-kit';
-import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components/Sidebar';
+import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 
 export default ({ location }) => {
   const queryParams = new URLSearchParams(location.search);

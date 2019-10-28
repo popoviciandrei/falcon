@@ -10,20 +10,24 @@ import {
   GraphQLContext,
   GraphQLResolver,
   GraphQLResolverMap,
-  RemoteBackendConfig
+  RemoteBackendConfig,
+  getRootTypeFields,
+  RootFieldTypes
 } from '@deity/falcon-server-env';
 import { IResolvers } from 'apollo-server-koa';
 import { GraphQLResolveInfo } from 'graphql';
 import { mergeSchemas, makeExecutableSchema } from 'graphql-tools';
 import deepMerge from 'deepmerge';
-import { getRootTypeFields, RootFieldTypes } from '../graphqlUtils/schema';
 import { BackendConfig, ExtensionGraphQLConfig, ExtensionEntryMap } from '../types';
 import { BaseContainer } from './BaseContainer';
 
 export type GraphQLConfigDefaults = Partial<ApolloServerConfig> & {
   schemas?: Array<string>;
   contextModifiers?: ApolloServerConfig['context'][];
+  /** @type {IResolvers<any, any>[]} Base/default Falcon-Server resolvers */
   rootResolvers?: IResolvers<any, any>[];
+  /** @type {IResolvers<any, any>[]} List of extra resolvers which needs to be merged last for possible overwrites */
+  extraResolvers?: IResolvers<any, any>[];
 };
 
 /**
@@ -155,6 +159,11 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
       this.mergeGraphQLConfig(config, extConfig, extName);
     }
 
+    // If `config.extraResolvers` array is available - it needs to be merged last
+    if (config.extraResolvers) {
+      config.resolvers.push(...config.extraResolvers);
+    }
+
     // define context handler that invokes all context handlers delivered by extensions
     const { contextModifiers } = config;
     config.context = (arg: any) => {
@@ -179,6 +188,7 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
     // remove processed fields
     delete config.contextModifiers;
     delete config.resolvers;
+    delete config.extraResolvers;
     delete config.schemas;
 
     return config;
