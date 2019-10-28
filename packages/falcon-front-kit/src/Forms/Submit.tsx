@@ -38,7 +38,7 @@ export const Submit: React.SFC<SubmitProps> = ({ form: formikForm, value, childr
                 id: formId
               },
               submit: {
-                value: value || t(valueId), // TODO: test if value override works
+                value: value || t(valueId),
                 ...restProps
               },
               i18nIds: {
