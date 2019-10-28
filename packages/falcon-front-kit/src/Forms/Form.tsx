@@ -15,5 +15,5 @@ export const Form: React.SFC<FormProps> = ({ i18nId, ...restProps }) => (
   </FormContext.Provider>
 );
 Form.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired
+  id: PropTypes.string.isRequired
 };
