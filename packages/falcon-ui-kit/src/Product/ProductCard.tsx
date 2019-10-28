@@ -31,7 +31,7 @@ export const ProductCard: React.SFC<ProductCardProps> = ({ name, thumbnail, urlP
 ProductCard.propTypes = {
   name: PropTypes.string.isRequired,
   urlPath: PropTypes.string.isRequired,
-  price: PropTypes.shape({
+  price: PropTypes.exact({
     regular: PropTypes.number.isRequired,
     special: PropTypes.number
   }).isRequired,

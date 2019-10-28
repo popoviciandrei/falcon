@@ -12,9 +12,11 @@ export class Mutation<TData = any, TVariables = OperationVariables> extends Reac
   };
 
   render() {
-    const { children, ...restProps } = this.props;
+    // seems like `optimisticResponse` keeps using its prop-types from the following file:
+    // node_modules/@apollo/react-components/lib/Mutation.d.ts:9
+    const { children, optimisticResponse, ...restProps } = this.props;
     return (
-      <ApolloMutation {...restProps}>
+      <ApolloMutation optimisticResponse={optimisticResponse as any} {...restProps}>
         {(mutation: MutationFunction<TData, TVariables>, result: MutationResult<TData>) => children(mutation, result)}
       </ApolloMutation>
     );

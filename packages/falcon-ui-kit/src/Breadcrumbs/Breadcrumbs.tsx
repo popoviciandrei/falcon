@@ -29,7 +29,12 @@ export const Breadcrumbs: React.SFC<BreadcrumbsProps> = ({ items, ...rest }) => 
   </FalconUiBreadcrumbs>
 );
 Breadcrumbs.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object.isRequired)
+  items: PropTypes.arrayOf(
+    PropTypes.exact({
+      name: PropTypes.string.isRequired,
+      urlPath: PropTypes.string
+    }).isRequired
+  )
 };
 Breadcrumbs.defaultProps = {
   items: []

@@ -21,17 +21,10 @@ export const ErrorSummary: React.SFC<ErrorSummaryProps> = ({ errors, ...rest }) 
     </ErrorListLayout>
   );
 };
+const errorType = PropTypes.exact({
+  message: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired
+});
 ErrorSummary.propTypes = {
-  errors: PropTypes.oneOfType([
-    PropTypes.shape({
-      message: PropTypes.string.isRequired,
-      code: PropTypes.string.isRequired
-    }),
-    PropTypes.arrayOf(
-      PropTypes.shape({
-        message: PropTypes.string.isRequired,
-        code: PropTypes.string.isRequired
-      })
-    )
-  ])
+  errors: PropTypes.oneOfType([errorType, PropTypes.arrayOf(errorType)])
 };
