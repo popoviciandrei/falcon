@@ -4,3 +4,4 @@ export * from './SignUpFormProvider';
 export * from './ForgotPasswordFormProvider';
 export * from './ResetPasswordFormProvider';
 export * from './ChangePasswordFormProvider';
+export * from './EditCustomerFormProvider';
