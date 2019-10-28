@@ -67,14 +67,14 @@ export type EditAddressInput = AddressBase & {
 };
 
 export type Customer = {
-  id?: number;
-  websiteId?: number;
+  id: number;
+  websiteId: number;
   addresses?: Address[];
   defaultBilling?: string;
   defaultShipping?: string;
-  email?: string;
-  firstname?: string;
-  lastname?: string;
+  email: string;
+  firstname: string;
+  lastname: string;
   newsletterSubscriber?: boolean;
 } & GraphQLBase;
 
