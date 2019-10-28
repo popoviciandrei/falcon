@@ -7,7 +7,7 @@ declare type ResponseStatus = {
   [key: string]: number;
 };
 
-export default class ProxyEndpoints extends EndpointManager {
+export class ProxyEndpoints extends EndpointManager {
   getEntries() {
     return this.entries.map(route => ({
       methods: RequestMethod.ALL,

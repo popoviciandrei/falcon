@@ -21,6 +21,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
+      #      - name: Check duplicates in yarn.lock
+      #        if: matrix.node == '12'
+      #        run: npx yarn-deduplicate --list --fail yarn.lock
       - name: Install Falcon dependencies
         run: yarn --non-interactive --frozen-lockfile
       - name: Lint project files
