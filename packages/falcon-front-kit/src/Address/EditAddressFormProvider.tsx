@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import { useGetUserError } from '@deity/falcon-data';
 import { useEditAddressMutation, GET_ADDRESS } from '@deity/falcon-shop-data';
+import { Address } from '@deity/falcon-shop-extension';
 import { FormProviderProps } from '../Forms';
 
 export type EditAddressFormValues = {
@@ -17,23 +18,26 @@ export type EditAddressFormValues = {
   defaultBilling: boolean;
   defaultShipping: boolean;
 };
-export type EditAddressFormProvider = FormProviderProps<EditAddressFormValues> & {
+
+export type EditAddressFormProviderProps = FormProviderProps<EditAddressFormValues> & {
   id: number;
+  address?: Address;
 };
-export const EditAddressFormProvider: React.SFC<EditAddressFormProvider> = props => {
-  const { id, onSuccess, initialValues, ...formikProps } = props;
+
+export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = props => {
+  const { id, address, onSuccess, initialValues, ...formikProps } = props;
   const defaultInitialValues = {
-    firstname: '',
-    lastname: '',
-    street1: '',
-    street2: '',
-    postcode: '',
-    city: '',
-    countryId: '',
-    company: '',
-    telephone: '',
-    defaultBilling: false,
-    defaultShipping: false
+    firstname: address.firstname,
+    lastname: address.lastname,
+    street1: address.street.length > 0 ? address.street[0] : undefined,
+    street2: address.street.length > 1 ? address.street[1] : undefined,
+    postcode: address.postcode,
+    city: address.city,
+    countryId: address.countryId,
+    company: address.company || undefined,
+    telephone: address.telephone,
+    defaultBilling: address.defaultBilling,
+    defaultShipping: address.defaultShipping
   };
 
   const [editAddress] = useEditAddressMutation({

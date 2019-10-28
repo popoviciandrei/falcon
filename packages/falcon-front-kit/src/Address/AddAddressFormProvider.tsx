@@ -17,8 +17,10 @@ export type AddAddressFormValues = {
   defaultBilling: boolean;
   defaultShipping: boolean;
 };
-export type AddAddressFormProvider = FormProviderProps<AddAddressFormValues>;
-export const AddAddressFormProvider: React.SFC<AddAddressFormProvider> = props => {
+
+export type AddAddressFormProviderProps = FormProviderProps<AddAddressFormValues>;
+
+export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = props => {
   const { onSuccess, initialValues, ...formikProps } = props;
   const defaultInitialValues = {
     firstname: '',
