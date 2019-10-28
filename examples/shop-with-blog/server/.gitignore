@@ -1,0 +1,12 @@
+node_modules/
+config/*
+!config/custom-environment-variables.*
+!config/default.*
+!config/development.*
+!config/test.*
+
+.DS_Store
+npm-debug.log
+yarn-error.log
+.idea/
+.vscode/
