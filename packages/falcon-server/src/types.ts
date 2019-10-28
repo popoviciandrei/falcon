@@ -47,6 +47,7 @@ export type ModuleDefinition<T> = Record<
 >;
 
 export type ExtensionConfig = {
+  [key: string]: any;
   api?: string;
 };
 
@@ -55,6 +56,7 @@ export type ExtensionGraphQLConfig = {
 } & ExtensionInstance;
 
 export type ExternalResourceLikeConfig = {
+  [key: string]: any;
   protocol?: string;
   host?: string;
   port?: number;
