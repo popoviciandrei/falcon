@@ -8,7 +8,7 @@ const has = require('lodash/has');
 const forEach = require('lodash/forEach');
 const isPlainObject = require('lodash/isPlainObject');
 const addMinutes = require('date-fns/add_minutes');
-const { ApiUrlPriority, htmlHelpers } = require('@deity/falcon-server-env');
+const { ApiUrlPriority, stripHtml } = require('@deity/falcon-server-env');
 const { Magento2ApiBase } = require('./Magento2ApiBase');
 const { tryParseNumber } = require('./utils/number');
 const { typeResolverPathToString } = require('./utils/apollo');
@@ -284,7 +284,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   convertBreadcrumbs(breadcrumbs = []) {
     return breadcrumbs.map(item => {
-      item.name = htmlHelpers.stripHtml(item.name);
+      item.name = stripHtml(item.name);
       item.urlPath = this.convertPathToUrl(item.urlPath);
       item.urlQuery = null;
       if (item.urlQuery && Array.isArray(item.urlQuery)) {
@@ -507,7 +507,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       sku: data.sku,
       urlPath: this.convertPathToUrl(data.urlPath || customAttributes.urlKey),
       currency,
-      name: htmlHelpers.stripHtml(data.name),
+      name: stripHtml(data.name),
       description: customAttributes.description,
       thumbnail: data.image || customAttributes.image,
       gallery: resolveGallery(data),
@@ -1733,7 +1733,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       buckets: item.options.map(option => ({
         count: option.count,
         value: option.value,
-        title: htmlHelpers.stripHtml(option.label)
+        title: stripHtml(option.label)
       })),
       title: item.label
     }));

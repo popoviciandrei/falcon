@@ -1,7 +1,6 @@
 import Logger from '@deity/falcon-logger';
-import { Cache } from '@deity/falcon-server-env';
+import { Cache, generateTagNames } from '@deity/falcon-server-env';
 import { Middleware } from 'koa';
-import { generateTagNames } from '../graphqlUtils';
 
 export type CacheTagEntry = {
   type: string;
