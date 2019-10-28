@@ -15,11 +15,3 @@ package-lock.json
 *.swo
 
 packages/**/dist/
-
-examples/**/build/
-examples/**/config/*
-!examples/**/config/custom-environment-variables.*
-!examples/**/config/default.*
-!examples/**/config/development.*
-!examples/**/config/test.*
-
