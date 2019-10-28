@@ -4,7 +4,7 @@ import { Mutation, OperationInput } from '@deity/falcon-data';
 import { Customer, EditCustomerInput } from '@deity/falcon-shop-extension';
 
 export const EDIT_CUSTOMER_MUTATION = gql`
-  mutation EditCustomer($input: CustomerInput!) {
+  mutation EditCustomer($input: EditCustomerInput!) {
     editCustomer(input: $input) {
       id
     }
@@ -24,4 +24,8 @@ export class EditCustomerMutation extends Mutation<EditCustomerResponse, Operati
 
 export const useEditCustomerMutation = (
   options: MutationHookOptions<EditCustomerResponse, OperationInput<EditCustomerInput>> = {}
-) => useMutation(EDIT_CUSTOMER_MUTATION, options);
+) =>
+  useMutation(EDIT_CUSTOMER_MUTATION, {
+    refetchQueries: ['Customer', 'CustomerWithAddresses'],
+    ...options
+  });
