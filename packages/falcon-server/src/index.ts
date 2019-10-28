@@ -30,13 +30,16 @@ import get from 'lodash/get';
 import capitalize from 'lodash/capitalize';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import * as WebSocket from 'ws';
-import { ApiContainer } from './containers/ApiContainer';
-import { ComponentContainer } from './containers/ComponentContainer';
-import { ExtensionContainer, GraphQLConfigDefaults } from './containers/ExtensionContainer';
-import { EndpointContainer } from './containers/EndpointContainer';
-import { DynamicRouteResolver } from './resolvers/DynamicRouteResolver';
-import { cacheInvalidatorMiddleware } from './middlewares/cacheInvalidatorMiddleware';
-import schemaDirectives from './schemaDirectives';
+import {
+  ApiContainer,
+  ComponentContainer,
+  ExtensionContainer,
+  GraphQLConfigDefaults,
+  EndpointContainer
+} from './containers';
+import { DynamicRouteResolver } from './resolvers';
+import { cacheInvalidatorMiddleware } from './middlewares';
+import { GraphQLCacheDirective, GraphQLCacheInvalidatorDirective } from './schemaDirectives';
 import { Config, BackendConfig } from './types';
 
 export * from './types';
@@ -197,7 +200,10 @@ export class FalconServer {
   }
 
   getDefaultSchemaDirectives() {
-    return schemaDirectives;
+    return {
+      cache: GraphQLCacheDirective,
+      cacheInvalidator: GraphQLCacheInvalidatorDirective
+    };
   }
 
   protected urlResolver(
