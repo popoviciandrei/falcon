@@ -17,7 +17,7 @@ export const ForgotPasswordForm: React.SFC<ForgetPasswordFormProps> = ({ onSucce
       return (
         <Form id="forgot-password" i18nId="forgotPassword" {...formProps}>
           <FormField name="email" required type="email" autoComplete="email" />
-          <FormSubmit value="Reset my password" />
+          <FormSubmit />
           {status.error && <ErrorSummary errors={error} />}
 
           {submitSucceed && (

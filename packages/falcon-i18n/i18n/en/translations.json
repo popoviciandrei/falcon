@@ -153,7 +153,8 @@
   "forgotPassword": {
     "title": "Forgot Password",
     "emailFieldLabel": "Email",
-    "successMessage": "If there is an account associated with {{values.email}} you will receive an email with a link to reset your password."
+    "successMessage": "If there is an account associated with {{values.email}} you will receive an email with a link to reset your password.",
+    "submitButton": "Reset my password"
   },
   "resetPassword": {
     "title": "Reset Password",
