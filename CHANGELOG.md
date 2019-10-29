@@ -74,12 +74,14 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - introduced `@cacheId` directive to assist to `@cache` for generating cache tags ([#608](https://github.com/deity-io/falcon/pull/608))
 - fixed falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
 - fixed priority for `ApiDataSource.getExtraResolvers` values ([#678](https://github.com/deity-io/falcon/pull/678))
+- `graphqlUtils` methods moved to `falcon-server-env` package ([#686](https://github.com/deity-io/falcon/pull/686))
 
 ### Falcon Server Env vNext
 
 - fixed HttpCache deserialization ([#584](https://github.com/deity-io/falcon/pull/584))
 - added TTL option for cache tags ([#549](https://github.com/deity-io/falcon/pull/549))
 - added optional `ApiDataSource.getExtraResolvers` static method to define extra resolvers ([#557](https://github.com/deity-io/falcon/pull/557))
+- added re-export of all internally used components and helper utils ([#686](https://github.com/deity-io/falcon/pull/686))
 
 ### Falcon Magento2 API vNext
 
@@ -90,10 +92,13 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Falcon Scripts vNext
 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
+- fixed command error messages printing after its done ([#691](https://github.com/deity-io/falcon/pull/691))
 
 ### Create Falcon App vNext
 
 - fixed yarn check which was creating an empty "yarn.lock" file ([#675](https://github.com/deity-io/falcon/pull/675))
+- fixed dependencies in generated client ([#696](https://github.com/deity-io/falcon/pull/696))
+- added placeholder for `build:prod` step in generated server code ([#696](https://github.com/deity-io/falcon/pull/696))
 
 ## Falcon v1.3 (2019-08-01)
 

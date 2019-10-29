@@ -1,7 +1,12 @@
 import { SchemaDirectiveVisitor } from 'graphql-tools';
-import { GetCacheFetchResult } from '@deity/falcon-server-env';
+import {
+  GetCacheFetchResult,
+  getRootType,
+  getOperationPath,
+  extractTagsForIdPath,
+  getTagsForField
+} from '@deity/falcon-server-env';
 import { defaultFieldResolver, GraphQLNamedType, GraphQLField, GraphQLResolveInfo } from 'graphql';
-import { getRootType, getOperationPath, extractTagsForIdPath, getTagsForField } from '../graphqlUtils';
 import { createShortHash } from '../utils';
 import { CacheResolversConfig } from '../types';
 
