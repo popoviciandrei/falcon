@@ -69,7 +69,7 @@ export type EditAddressInput = AddressBase & {
 export type Customer = {
   id: number;
   websiteId: number;
-  addresses?: Address[];
+  addresses: Address[];
   defaultBilling?: string;
   defaultShipping?: string;
   email: string;
