@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const StartServerPlugin = require('start-server-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBar = require('webpackbar');
@@ -488,8 +488,8 @@ module.exports = (target = 'web', options) => {
         ...config.optimization,
         minimize: true,
         minimizer: [
-          new UglifyJsPlugin({
-            uglifyOptions: {
+          new TerserPlugin({
+            terserOptions: {
               parse: {
                 // we want uglify-js to parse ecma 8 code. However, we don't want it
                 // to apply any minfication steps that turns valid ecma 5 code
@@ -518,9 +518,6 @@ module.exports = (target = 'web', options) => {
                 ascii_only: true
               }
             },
-            // Use multi-process parallel running to improve the build speed
-            // Default number of concurrent runs: os.cpus().length - 1
-            parallel: true,
             sourceMap: !!devtool
           })
         ]
