@@ -37,7 +37,7 @@
     "core-js": "3.2.1",
     "history": "4.9.0",
     "lodash.isequal": "^4.5.0",
-    "qs": "6.6.0"
+    "qs": "^6.9.0"
   },
   "devDependencies": {
     "@apollo/react-common": "^3.1.3",

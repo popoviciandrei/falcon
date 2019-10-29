@@ -37,7 +37,6 @@ module.exports.main = async () => {
       ...Object.keys(packageJson.peerDependencies || {})
     ]),
     plugins: [
-      // TODO: remove `preferBuiltins: true` - this is because our extensions uses `fs` which is not available on window object!
       nodeResolve({ extensions, preferBuiltins: true }),
       commonjs(),
       babel({

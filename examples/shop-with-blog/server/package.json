@@ -8,6 +8,7 @@
     "start": "cross-env NODE_ENV=development nodemon index.js | logger-pretty",
     "start:dbg": "cross-env NODE_ENV=development nodemon --inspect index.js | logger-pretty",
     "start:dbg-brk": "cross-env NODE_ENV=development nodemon --inspect-brk index.js | logger-pretty",
+    "build:prod": "echo \"This script is not implemented. Implement it in package.json if required.\"",
     "start:prod": "cross-env NODE_ENV=production node index.js"
   },
   "engines": {
@@ -20,15 +21,11 @@
     "@deity/falcon-server": "^2.0.0",
     "@deity/falcon-shop-extension": "^1.0.0",
     "@deity/falcon-wordpress-api": "^1.0.0",
-    "apollo-env": "0.5.1",
     "config": "^2.0.1",
     "core-js": "3.2.1",
     "cross-env": "5.2.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
-  },
-  "resolutions": {
-    "apollo-env": "0.5.1"
   }
 }
