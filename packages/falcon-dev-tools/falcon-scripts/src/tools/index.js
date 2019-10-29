@@ -1,4 +1,5 @@
 const paths = require('./paths');
+const promise = require('./promise');
 const { getEntryPointFile } = require('./getEntryPointFile');
 
 const config = {
@@ -9,5 +10,6 @@ const config = {
 module.exports = {
   config,
   getEntryPointFile,
-  paths
+  paths,
+  promise
 };
