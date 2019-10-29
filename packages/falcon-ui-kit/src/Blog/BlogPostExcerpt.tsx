@@ -38,7 +38,8 @@ BlogPostExcerpt.propTypes = {
   slug: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]).isRequired,
   excerpt: PropTypes.string.isRequired,
-  image: PropTypes.exact({
+  // @ts-ignore https://github.com/facebook/prop-types/issues/296
+  image: PropTypes.shape({
     url: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired
   })

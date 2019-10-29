@@ -31,7 +31,8 @@ export const ProductCard: React.SFC<ProductCardProps> = ({ name, thumbnail, urlP
 ProductCard.propTypes = {
   name: PropTypes.string.isRequired,
   urlPath: PropTypes.string.isRequired,
-  price: PropTypes.exact({
+  // @ts-ignore https://github.com/facebook/prop-types/issues/296
+  price: PropTypes.shape({
     regular: PropTypes.number.isRequired,
     special: PropTypes.number
   }).isRequired,
