@@ -95,6 +95,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Falcon Scripts vNext
 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
+- fixed command error messages printing after its done ([#691](https://github.com/deity-io/falcon/pull/691))
 
 ### Example Shop with Blog vNext
 
@@ -103,6 +104,8 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Create Falcon App vNext
 
 - fixed yarn check which was creating an empty "yarn.lock" file ([#675](https://github.com/deity-io/falcon/pull/675))
+- fixed dependencies in generated client ([#696](https://github.com/deity-io/falcon/pull/696))
+- added placeholder for `build:prod` step in generated server code ([#696](https://github.com/deity-io/falcon/pull/696))
 
 ## Falcon v1.3 (2019-08-01)
 
