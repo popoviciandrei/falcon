@@ -7,7 +7,7 @@ import { stringify } from 'qs';
 import { GraphQLResolveInfo } from 'graphql';
 import { Cache } from '../cache/Cache';
 import { formatUrl } from '../helpers/url';
-import ContextHTTPCache from '../cache/ContextHTTPCache';
+import { ContextHTTPCache } from '../cache/ContextHTTPCache';
 import {
   ApolloServerConfig,
   ApiContainer,

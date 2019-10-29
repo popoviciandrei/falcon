@@ -3,7 +3,7 @@ import qs from 'qs';
 import urlJoin from 'proper-url-join';
 import { OperationInput } from '@deity/falcon-data';
 import { ProductListInput } from '@deity/falcon-shop-extension';
-import { ApiUrlPriority, htmlHelpers } from '@deity/falcon-server-env';
+import { ApiUrlPriority, stripHtml } from '@deity/falcon-server-env';
 import { Magento2ApiBase } from './Magento2ApiBase';
 
 const snakeCase = require('lodash/snakeCase');
@@ -288,7 +288,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   convertBreadcrumbs(breadcrumbs = []) {
     return breadcrumbs.map(item => {
-      item.name = htmlHelpers.stripHtml(item.name);
+      item.name = stripHtml(item.name);
       item.urlPath = this.convertPathToUrl(item.urlPath);
       item.urlQuery = null;
       if (item.urlQuery && Array.isArray(item.urlQuery)) {
@@ -511,7 +511,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       sku: data.sku,
       urlPath: this.convertPathToUrl(data.urlPath || customAttributes.urlKey),
       currency,
-      name: htmlHelpers.stripHtml(data.name),
+      name: stripHtml(data.name),
       description: customAttributes.description,
       thumbnail: data.image || customAttributes.image,
       gallery: resolveGallery(data),
@@ -1734,7 +1734,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       buckets: item.options.map(option => ({
         count: option.count,
         value: option.value,
-        title: htmlHelpers.stripHtml(option.label)
+        title: stripHtml(option.label)
       })),
       title: item.label
     }));
