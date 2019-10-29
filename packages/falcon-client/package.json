@@ -107,7 +107,7 @@
     "uglifyjs-webpack-plugin": "1.2.4",
     "webpack": "4.37.0",
     "webpack-bundle-analyzer": "3.3.2",
-    "webpack-dev-server-speedy": "3.1.1",
+    "webpack-dev-server": "3.9.0",
     "webpack-virtual-modules": "^0.1.10",
     "webpackbar": "3.2.0",
     "whatwg-fetch": "^3.0.0",
