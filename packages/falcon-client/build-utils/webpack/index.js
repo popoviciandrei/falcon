@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const chalk = require('chalk');
 const Logger = require('@deity/falcon-logger');
-const WebpackDevServer = require('webpack-dev-server-speedy');
+const WebpackDevServer = require('webpack-dev-server');
 const { measureFileSizesBeforeBuild, printFileSizesAfterBuild } = require('react-dev-utils/FileSizeReporter');
 const paths = require('../paths');
 const {
