@@ -8,7 +8,10 @@ process.on('uncaughtException', ex => {
 });
 
 const fs = require('fs-extra');
-const { paths } = require('../src/tools');
+const { paths, promise } = require('../src/tools');
+const dts = require('../src/build-dts');
+const esm = require('../src/build-esm');
+const cjs = require('../src/build-cjs');
 const test = require('../src/test');
 
 (async () => {
@@ -18,20 +21,28 @@ const test = require('../src/test');
   try {
     switch (script) {
       case 'build': {
-        await Promise.all(
+        const results = await promise.reflectAll(
           [
-            require('../src/build-dts').build({ packagePath }),
-            require('../src/build-esm').build({ packagePath }),
-            require('../src/build-cjs').main({ packagePath }),
-            fs.existsSync(paths.pkgBinSrc) && require('../src/build-cjs').bin({ packagePath })
+            dts.build({ packagePath }),
+            esm.build({ packagePath }),
+            cjs.main({ packagePath }),
+            fs.existsSync(paths.pkgBinSrc) && cjs.bin({ packagePath })
           ].filter(x => x)
         );
+
+        if (results.some(x => !x.isSuccess)) {
+          throw results.find(x => !x.isSuccess).error;
+        }
 
         break;
       }
 
       case 'watch': {
-        await Promise.all([require('../src/build-dts').watch({ packagePath }), require('../src/build-esm').watch()]);
+        const results = await promise.reflectAll([dts.watch({ packagePath }), esm.watch()]);
+
+        if (results.some(x => !x.isSuccess)) {
+          throw results.find(x => !x.isSuccess).error;
+        }
 
         break;
       }

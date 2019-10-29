@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { themed, PropsWithTheme } from '../theme';
 
@@ -34,7 +35,7 @@ const IconInner: React.SFC<IconProps & PropsWithTheme> = props => {
     return null;
   }
 
-  if (!src || !icons || !icons[src]) {
+  if (!icons || !icons[src]) {
     if (ENV !== 'production') {
       const errorMessage = `No icon with the name "${src}" was found in your theme.`;
       console.error(errorMessage);
@@ -48,3 +49,7 @@ const IconInner: React.SFC<IconProps & PropsWithTheme> = props => {
 };
 
 export const Icon = withTheme(IconInner) as React.SFC<IconProps>;
+
+Icon.propTypes = {
+  src: PropTypes.string.isRequired
+};
