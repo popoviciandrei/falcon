@@ -38,6 +38,7 @@ BlogPostExcerpt.propTypes = {
   slug: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]).isRequired,
   excerpt: PropTypes.string.isRequired,
+  // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/34692
   image: PropTypes.shape({
     url: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired

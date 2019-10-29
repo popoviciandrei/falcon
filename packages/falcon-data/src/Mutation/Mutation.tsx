@@ -4,15 +4,17 @@ import { Mutation as ApolloMutation, MutationComponentOptions } from '@apollo/re
 
 export type MutationProps<TData, TVariables> = MutationComponentOptions<TData, TVariables>;
 
-export class Mutation<TData = any, TVariables = OperationVariables> extends React.Component<
-  MutationProps<TData, TVariables>
-> {
+export class Mutation<
+  TData extends object = any,
+  TVariables extends OperationVariables = OperationVariables
+> extends React.Component<MutationProps<TData, TVariables>> {
   static propTypes = {
     ...ApolloMutation.propTypes
   };
 
   render() {
     const { children, ...restProps } = this.props;
+
     return (
       <ApolloMutation {...restProps}>
         {(mutation: MutationFunction<TData, TVariables>, result: MutationResult<TData>) => children(mutation, result)}
