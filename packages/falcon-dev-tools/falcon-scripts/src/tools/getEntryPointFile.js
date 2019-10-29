@@ -9,13 +9,16 @@ const glob = require('glob');
  * @returns {string}
  */
 module.exports.getEntryPointFile = (directory, fileName, supportedExtensions) => {
-  const files = glob.sync(`${path.join(directory, fileName)}@(${supportedExtensions.join('|')})`);
+  const extensions = supportedExtensions.join('|');
+  const entryPointFileName = `${fileName}[${extensions}]`;
+
+  const files = glob.sync(`${path.join(directory, fileName)}@(${extensions})`);
   if (files.length > 1) {
-    throw new Error(`Directory "${directory}" should contain single entry point '${fileName}.*' file!`);
+    throw new Error(`Directory "${directory}" should contain single entry point '${entryPointFileName}' file!`);
   }
 
   if (files.length === 0) {
-    console.warn(`No entry point '${fileName}.*' file found in directory '${directory}'. Nothing to compile.`);
+    console.warn(`No entry point '${entryPointFileName}' file found in directory '${directory}'. Nothing to compile.`);
 
     return undefined;
   }
