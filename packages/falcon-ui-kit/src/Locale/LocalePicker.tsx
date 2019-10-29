@@ -36,8 +36,7 @@ LocalePickerInnerDOM.propTypes = {
       name: PropTypes.string.isRequired
     })
   ).isRequired,
-  // @ts-ignore https://github.com/facebook/prop-types/issues/296
-  value: PropTypes.shape({
+  value: PropTypes.exact({
     code: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired
   }).isRequired,
