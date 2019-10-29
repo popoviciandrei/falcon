@@ -1,20 +1,19 @@
 import url from 'url';
 import qs from 'qs';
 import urlJoin from 'proper-url-join';
+import addMinutes from 'date-fns/add_minutes';
+import isEmpty from 'lodash/isEmpty';
+import pick from 'lodash/pick';
+import has from 'lodash/has';
+import forEach from 'lodash/forEach';
+import isPlainObject from 'lodash/isPlainObject';
+import snakeCase from 'lodash/snakeCase';
 import { OperationInput } from '@deity/falcon-data';
 import { ProductListInput } from '@deity/falcon-shop-extension';
 import { ApiUrlPriority, stripHtml } from '@deity/falcon-server-env';
 import { Magento2ApiBase } from './Magento2ApiBase';
-
-const snakeCase = require('lodash/snakeCase');
-const isEmpty = require('lodash/isEmpty');
-const pick = require('lodash/pick');
-const has = require('lodash/has');
-const forEach = require('lodash/forEach');
-const isPlainObject = require('lodash/isPlainObject');
-const addMinutes = require('date-fns/add_minutes');
-const { tryParseNumber } = require('./utils/number');
-const { typeResolverPathToString } = require('./utils/apollo');
+import { tryParseNumber } from './utils/number';
+import { typeResolverPathToString } from './utils/apollo';
 
 const FALCON_CART_ACTIONS = [
   '/save-payment-information-and-order',
