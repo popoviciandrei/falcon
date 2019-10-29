@@ -29,7 +29,7 @@ export const Breadcrumbs: React.SFC<BreadcrumbsProps> = ({ items, ...rest }) => 
   </FalconUiBreadcrumbs>
 );
 Breadcrumbs.propTypes = {
-  // @ts-ignore https://github.com/facebook/prop-types/issues/296
+  // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/34692
   items: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,

@@ -29,9 +29,8 @@ export const LocalePickerInnerDOM: React.SFC<LocalePickerProps> = ({ items, valu
   </Dropdown>
 );
 LocalePickerInnerDOM.propTypes = {
-  // @ts-ignore https://github.com/facebook/prop-types/issues/296
   items: PropTypes.arrayOf(
-    PropTypes.shape({
+    PropTypes.exact({
       code: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
     })

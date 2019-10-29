@@ -26,6 +26,6 @@ const errorType = PropTypes.shape({
   code: PropTypes.string.isRequired
 });
 ErrorSummary.propTypes = {
-  // @ts-ignore https://github.com/facebook/prop-types/issues/296
+  // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/34692
   errors: PropTypes.oneOfType([errorType, PropTypes.arrayOf(errorType)])
 };
