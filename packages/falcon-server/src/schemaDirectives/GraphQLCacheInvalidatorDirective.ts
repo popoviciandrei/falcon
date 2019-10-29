@@ -1,7 +1,6 @@
 import { SchemaDirectiveVisitor } from 'graphql-tools';
-import { GraphQLContext } from '@deity/falcon-server-env';
+import { GraphQLContext, extractTagsForIdPath, getTagsForField } from '@deity/falcon-server-env';
 import { defaultFieldResolver, GraphQLResolveInfo } from 'graphql';
-import { extractTagsForIdPath, getTagsForField } from '../graphqlUtils';
 import { FieldType, FieldTypeResolver } from './GraphQLCacheDirective';
 
 export type IdPathEntry = {

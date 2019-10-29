@@ -3,7 +3,7 @@ const qs = require('qs');
 const pick = require('lodash/pick');
 const isEmpty = require('lodash/isEmpty');
 const isObject = require('lodash/isObject');
-const { ApiDataSource, htmlHelpers } = require('@deity/falcon-server-env');
+const { ApiDataSource, stripHtmlEntities, stripHtmlTags, generateExcerpt } = require('@deity/falcon-server-env');
 
 module.exports = class WordpressApi extends ApiDataSource {
   constructor(params) {
@@ -172,7 +172,7 @@ module.exports = class WordpressApi extends ApiDataSource {
     }
 
     if (post.title && post.title.rendered) {
-      post.title = htmlHelpers.stripHtmlEntities(post.title.rendered);
+      post.title = stripHtmlEntities(post.title.rendered);
     }
 
     if (post.content) {
@@ -192,7 +192,7 @@ module.exports = class WordpressApi extends ApiDataSource {
     }
 
     post.content = post.content && post.content.rendered;
-    post.title = htmlHelpers.stripHtmlTags(post.title);
+    post.title = stripHtmlTags(post.title);
 
     return post;
   }
@@ -250,7 +250,7 @@ module.exports = class WordpressApi extends ApiDataSource {
 
     const reducedItem = pick(item, ['slug', 'acf', 'id', 'featured_image']);
 
-    reducedItem.title = item.title && item.title.rendered && htmlHelpers.stripHtmlEntities(item.title.rendered);
+    reducedItem.title = item.title && item.title.rendered && stripHtmlEntities(item.title.rendered);
     reducedItem.content = item.content && item.content.rendered;
     reducedItem.featured_image = this.reduceFeaturedImage(reducedItem.featured_image);
     this.reduceAcf(reducedItem.acf);
@@ -272,7 +272,7 @@ module.exports = class WordpressApi extends ApiDataSource {
 
   reduceRelatedPost(post) {
     // todo reduce to same format as normal post to clean components
-    post.title = htmlHelpers.stripHtmlEntities(post.title);
+    post.title = stripHtmlEntities(post.title);
 
     return post;
   }
@@ -286,9 +286,9 @@ module.exports = class WordpressApi extends ApiDataSource {
       content = data;
     }
 
-    content = htmlHelpers.stripHtmlEntities(content);
+    content = stripHtmlEntities(content);
 
-    return htmlHelpers.generateExcerpt(content, length);
+    return generateExcerpt(content, length);
   }
 
   reduceFeaturedImage(image) {
