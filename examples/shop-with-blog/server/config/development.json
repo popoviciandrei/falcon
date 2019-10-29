@@ -1,0 +1,9 @@
+{
+  "debug": true,
+  "logLevel": "trace",
+  "cache": {
+    "resolvers": {
+      "enabled": false
+    }
+  }
+}
