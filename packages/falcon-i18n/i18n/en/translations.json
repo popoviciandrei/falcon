@@ -163,7 +163,7 @@
     "failureMessage": "The reset password token you provided is invalid or has expired.",
     "requestAnotherToken": "Request another one",
     "successMessage": "Your password has been reset successfully!",
-    "submitButton": "Reset my password"
+    "submitButton": "Set my new password"
   },
   "signOut": {
     "link": "Logout"
