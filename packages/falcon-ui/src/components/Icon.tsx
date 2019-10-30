@@ -31,21 +31,28 @@ const IconInner: React.SFC<IconProps & PropsWithTheme> = props => {
   const { src, fallback, theme, ...rest } = props;
   const { icons } = theme;
 
+  // TODO: temporary fix for https://github.com/deity-io/falcon/issues/693, remove when resolved
   if (!icons) {
     return null;
   }
 
-  if (!icons || !icons[src]) {
-    if (ENV !== 'production') {
-      const errorMessage = `No icon with the name "${src}" was found in your theme.`;
-      console.error(errorMessage);
-    }
-    return fallback || null;
+  if (icons[src]) {
+    const { icon, ...otherProps } = icons[src];
+
+    return <IconRenderer as={icon} {...(otherProps as any)} {...rest} />;
   }
 
-  const { icon, ...otherProps } = icons[src];
+  if (fallback) {
+    return fallback;
+  }
 
-  return <IconRenderer as={icon} {...(otherProps as any)} {...rest} />;
+  if (ENV !== 'production') {
+    console.error(
+      `There is no icon "${src}" defined in your theme ("theme.icons"), nor has a fallback icon been defined.`
+    );
+  }
+
+  return null;
 };
 
 export const Icon = withTheme(IconInner) as React.SFC<IconProps>;
