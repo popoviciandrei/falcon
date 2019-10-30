@@ -8,7 +8,7 @@ export type SignUpFormProps = Partial<FormProps> & {
 };
 export const SignUpForm: React.SFC<SignUpFormProps> = ({ onSuccess, ...formProps }) => (
   <SignUpFormProvider onSuccess={onSuccess}>
-    {({ isSubmitting, status = {} }) => (
+    {({ status = {} }) => (
       <Form id="sign-up" i18nId="signUp" {...formProps}>
         <FormField name="firstname" type="text" required autoComplete="given-name" />
         <FormField name="lastname" type="text" required autoComplete="family-name" />
@@ -18,7 +18,7 @@ export const SignUpForm: React.SFC<SignUpFormProps> = ({ onSuccess, ...formProps
           {({ field }) => <PasswordRevealInput {...field} />}
         </FormField>
 
-        <FormSubmit submitting={isSubmitting} value="Create an account" />
+        <FormSubmit />
         {status.error && <ErrorSummary errors={status.error} />}
       </Form>
     )}
