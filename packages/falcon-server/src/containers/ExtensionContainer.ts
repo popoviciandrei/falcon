@@ -174,15 +174,10 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
       return ctx;
     };
 
-    config.schema = mergeSchemas({
-      schemas: [
-        makeExecutableSchema({
-          typeDefs: config.schemas,
-          resolvers: config.resolvers
-        })
-      ],
-      schemaDirectives: config.schemaDirectives,
-      resolvers: config.resolvers
+    config.schema = makeExecutableSchema({
+      typeDefs: config.schemas,
+      resolvers: config.resolvers,
+      schemaDirectives: config.schemaDirectives
     });
 
     // remove processed fields
