@@ -10,6 +10,7 @@ import {
   OnlyUnauthenticatedRoute,
   ProtectedRoute,
   LocaleProvider,
+  Locale,
   SearchProvider
 } from '@deity/falcon-front-kit';
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
@@ -20,19 +21,27 @@ import { Header, PageFooter, SidebarContainer, ErrorBoundary } from './component
 import { deityGreenTheme, globalCss } from './theme';
 
 const HeadMetaTags = () => (
-  <Helmet defaultTitle="Deity Shop with Blog" titleTemplate="%s | Deity Shop with Blog">
-    <meta name="description" content="This is example of Shop with Blog powered by Deity Falcon" />
-    <meta name="keywords" content="pwa,reactjs,ecommerce,magento,shop,webshop,deity" />
-    <meta name="theme-color" content="#fff" />
-    <meta name="format-detection" content="telephone=yes" />
-    <meta property="og:title" content="Deity Shop with Blog" />
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="This is example of Shop with Blog powered by Deity Falcon" />
-    <meta property="og:url" content="/" />
-    <meta property="og:image" content={logo} />
-    <meta property="og:image:width" content="300" />
-    <meta property="og:image:height" content="107" />
-  </Helmet>
+  <Locale>
+    {({ locale }) => (
+      <Helmet
+        htmlAttributes={{ lang: locale }}
+        defaultTitle="Deity Shop with Blog"
+        titleTemplate="%s | Deity Shop with Blog"
+      >
+        <meta name="description" content="This is example of Shop with Blog powered by Deity Falcon" />
+        <meta name="keywords" content="pwa,reactjs,ecommerce,magento,shop,webshop,deity" />
+        <meta name="theme-color" content="#fff" />
+        <meta name="format-detection" content="telephone=yes" />
+        <meta property="og:title" content="Deity Shop with Blog" />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="This is example of Shop with Blog powered by Deity Falcon" />
+        <meta property="og:url" content="/" />
+        <meta property="og:image" content={logo} />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="107" />
+      </Helmet>
+    )}
+  </Locale>
 );
 
 const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/home/Home'));
