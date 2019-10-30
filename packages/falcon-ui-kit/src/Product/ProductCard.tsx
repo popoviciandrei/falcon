@@ -31,6 +31,7 @@ export const ProductCard: React.SFC<ProductCardProps> = ({ name, thumbnail, urlP
 ProductCard.propTypes = {
   name: PropTypes.string.isRequired,
   urlPath: PropTypes.string.isRequired,
+  // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/34692
   price: PropTypes.shape({
     regular: PropTypes.number.isRequired,
     special: PropTypes.number
