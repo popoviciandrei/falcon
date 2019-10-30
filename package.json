@@ -6,6 +6,7 @@
   "repository": "git@github.com:deity-io/falcon.git",
   "scripts": {
     "new-package": "node scripts/new-package.js",
+    "deduplicate": "npx yarn-deduplicate yarn.lock",
     "cleanup": "rimraf packages/**/{dist,coverage} packages/create-falcon-app/examples ./**/node_modules",
     "cleanup:all": "rimraf yarn.lock && yarn cleanup",
     "test": "lerna run test:coverage",
@@ -13,6 +14,7 @@
     "watch": "lerna run watch --parallel",
     "start": "cross-env CI=true lerna run start:dbg --scope=@deity/example-shop-with-blog* --parallel",
     "prepublish": "rimraf node_modules/@emotion/core/types && lerna run --scope=@deity/falcon-ui --stream prepare",
+    "postinstall": "yarn deduplicate",
     "prepare": "lerna run --stream prepare",
     "lint": "eslint --ext js,ts,tsx ./"
   },
