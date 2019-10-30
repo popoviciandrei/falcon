@@ -70,57 +70,59 @@ if (process.env.NODE_ENV !== 'production') {
 const App = () => (
   <ErrorBoundary>
     <ServiceWorkerRegistrar>
-      <LocaleProvider>
-        <ScrollToTop />
-        <ThemeEditorState initial={deityGreenTheme}>
-          {props => (
-            <SearchProvider>
-              <ThemeProvider theme={props.theme} globalCss={globalCss}>
-                <HeadMetaTags />
-                <AppLayout>
-                  <ServiceWorker>
-                    {({ isWaiting, skipWaiting }) =>
-                      isWaiting ? (
-                        <Box>
-                          Site has updated. To see changes close other tabs or
-                          <Button size="ms" p="xs" m="sm" onClick={() => skipWaiting()}>
-                            click here
-                          </Button>
-                        </Box>
-                      ) : null
-                    }
-                  </ServiceWorker>
-                  <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
-                  <Header />
-                  <ErrorBoundary>
-                    <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route exact path="/blog/:page?" component={Blog} />
-                      <Route exact path="/cart" component={Cart} />
-                      <Route exact path="/checkout" component={Checkout} />
-                      <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
-                      <Route exact path="/checkout/failure" component={CheckoutFailure} />
-                      <ProtectedRoute path="/account" component={Account} />
-                      <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
-                      <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
-                      <DynamicRoute />
-                    </Switch>
-                    <PageFooter />
-                    <SidebarContainer>
-                      {sidebarProps => (
-                        <Sidebar {...sidebarProps}>
-                          <SidebarContents {...sidebarProps} />
-                        </Sidebar>
-                      )}
-                    </SidebarContainer>
-                  </ErrorBoundary>
-                </AppLayout>
-              </ThemeProvider>
-              {ThemeEditorComponent && <ThemeEditorComponent {...props} side="left" />}
-            </SearchProvider>
-          )}
-        </ThemeEditorState>
-      </LocaleProvider>
+      <ThemeEditorState initial={deityGreenTheme}>
+        {({ theme, ...editorRest }) => (
+          <React.Fragment>
+            <ThemeProvider theme={theme} globalCss={globalCss}>
+              <LocaleProvider>
+                <SearchProvider>
+                  <AppLayout>
+                    <ScrollToTop />
+                    <HeadMetaTags />
+                    <ServiceWorker>
+                      {({ isWaiting, skipWaiting }) =>
+                        isWaiting ? (
+                          <Box>
+                            Site has updated. To see changes close other tabs or
+                            <Button size="ms" p="xs" m="sm" onClick={() => skipWaiting()}>
+                              click here
+                            </Button>
+                          </Box>
+                        ) : null
+                      }
+                    </ServiceWorker>
+                    <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
+                    <Header />
+                    <ErrorBoundary>
+                      <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route exact path="/blog/:page?" component={Blog} />
+                        <Route exact path="/cart" component={Cart} />
+                        <Route exact path="/checkout" component={Checkout} />
+                        <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
+                        <Route exact path="/checkout/failure" component={CheckoutFailure} />
+                        <ProtectedRoute path="/account" component={Account} />
+                        <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
+                        <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
+                        <DynamicRoute />
+                      </Switch>
+                      <PageFooter />
+                      <SidebarContainer>
+                        {sidebarProps => (
+                          <Sidebar {...sidebarProps}>
+                            <SidebarContents {...sidebarProps} />
+                          </Sidebar>
+                        )}
+                      </SidebarContainer>
+                    </ErrorBoundary>
+                  </AppLayout>
+                </SearchProvider>
+              </LocaleProvider>
+            </ThemeProvider>
+            {ThemeEditorComponent && <ThemeEditorComponent theme={theme} {...editorRest} side="left" />}
+          </React.Fragment>
+        )}
+      </ThemeEditorState>
     </ServiceWorkerRegistrar>
   </ErrorBoundary>
 );
