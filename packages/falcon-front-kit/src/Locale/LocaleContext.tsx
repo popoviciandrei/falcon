@@ -28,21 +28,20 @@ export const LocaleProvider: React.SFC<LocaleProviderProps> = ({
     {({ data: { backendConfig } }) => {
       const { activeLocale, shop } = backendConfig;
 
-      const locale = activeLocale || 'en';
-      const localeFallback = 'en';
+      const localeFallback = 'en'; // TODO: - get from clientConfig;
       const currency = props.currency || shop.activeCurrency || 'EUR';
 
       return (
         <LocaleContext.Provider
           value={{
-            locale,
+            locale: activeLocale,
             localeFallback,
             currency,
-            priceFormat: priceFormatFactory([priceFormatOptions.locale, locale, localeFallback], {
+            priceFormat: priceFormatFactory([priceFormatOptions.locale, activeLocale, localeFallback], {
               currency,
               ...priceFormatOptions
             }),
-            dateTimeFormat: dateTimeFormatFactory([dateTimeFormatOptions.locale, locale, localeFallback], {
+            dateTimeFormat: dateTimeFormatFactory([dateTimeFormatOptions.locale, activeLocale, localeFallback], {
               ...dateTimeFormatOptions
             })
           }}

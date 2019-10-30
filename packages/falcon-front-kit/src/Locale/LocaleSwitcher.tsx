@@ -37,7 +37,11 @@ export const LocaleSwitcher: React.SFC<LocaleSwitcherProps> = ({ children }) => 
             {({ data: { backendConfig } }) => {
               const { activeLocale } = backendConfig;
 
-              const items = addCimodeLocale(backendConfig.locales).map(x => ({ code: x, name: t(`languages.${x}`) }));
+              const items = addCimodeLocale(backendConfig.locales).map(x => ({
+                code: x,
+                name: t(`languages.${x}`)
+              }));
+              // TODO: items = items ∩ clientConfig.i18n.whitelist
               const value = {
                 code: activeLocale,
                 name: t(`languages.${activeLocale}`)
