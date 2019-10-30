@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-ui",
   "license": "OSL-3.0",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "homepage": "https://falcon-ui.docs.deity.io/",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-ui",
   "publishConfig": {
@@ -26,8 +26,8 @@
     "size": "size-limit"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^1.0.0-beta.1",
-    "@deity/falcon-theme-editor": "^1.0.0-beta.1",
+    "@deity/falcon-scripts": "^1.0.0-beta.2",
+    "@deity/falcon-theme-editor": "^1.0.0-beta.2",
     "@mdx-js/tag": "0.16.1",
     "@size-limit/preset-big-lib": "2.1.6",
     "@types/react": "16.9.11",
