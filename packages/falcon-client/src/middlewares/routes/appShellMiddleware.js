@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { HelmetProvider } from 'react-helmet-async';
 import { ChunkExtractorManager } from '@loadable/server';
 import { APP_INIT } from '../../graphql/config.gql';
-import HtmlHead from '../../components/HtmlHead';
+import { HtmlHead } from '../../components';
 
 const helmetContext = {};
 

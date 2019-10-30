@@ -11,7 +11,7 @@ import { I18nProvider } from '@deity/falcon-i18n';
 import { getClientConfig } from '@deity/falcon-front-kit';
 import { HelmetProvider } from 'react-helmet-async';
 import { apolloClientWeb } from './service';
-import HtmlHead from './components/HtmlHead';
+import { HtmlHead } from './components';
 import App, { clientApolloSchema } from './clientApp';
 import i18nFactory from './i18n/i18nClientFactory';
 

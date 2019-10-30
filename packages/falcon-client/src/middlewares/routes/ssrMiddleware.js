@@ -1,11 +1,11 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { ApolloProvider } from '@apollo/react-common';
 import { getDataFromTree } from '@apollo/react-ssr';
-import { HelmetProvider } from 'react-helmet-async';
 import { ChunkExtractorManager } from '@loadable/server';
 import { I18nProvider } from '@deity/falcon-i18n';
-import HtmlHead from '../../components/HtmlHead';
+import { HtmlHead } from '../../components';
 
 const helmetContext = {};
 
