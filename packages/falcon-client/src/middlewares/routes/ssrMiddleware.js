@@ -20,20 +20,18 @@ export default ({ App }) => async (ctx, next) => {
   const routerContext = {};
 
   const markup = (
-    <ApolloProvider client={client}>
-      <HelmetProvider context={helmetContext}>
-        <ChunkExtractorManager extractor={chunkExtractor}>
-          <I18nProvider i18n={i18next}>
-            <StaticRouter context={routerContext} location={ctx.url}>
-              <React.Fragment>
-                <HtmlHead htmlLang={i18next.language} />
-                <App />
-              </React.Fragment>
-            </StaticRouter>
-          </I18nProvider>
-        </ChunkExtractorManager>
-      </HelmetProvider>
-    </ApolloProvider>
+    <ChunkExtractorManager extractor={chunkExtractor}>
+      <ApolloProvider client={client}>
+        <I18nProvider i18n={i18next}>
+          <StaticRouter context={routerContext} location={ctx.url}>
+            <HelmetProvider context={helmetContext}>
+              <HtmlHead htmlLang={i18next.language} />
+              <App />
+            </HelmetProvider>
+          </StaticRouter>
+        </I18nProvider>
+      </ApolloProvider>
+    </ChunkExtractorManager>
   );
 
   await serverTiming.profile(async () => getDataFromTree(markup), 'getDataFromTree()');

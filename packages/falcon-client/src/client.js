@@ -29,16 +29,14 @@ loadableReady()
   .then(({ apolloClient, i18next }) => {
     const markup = (
       <ApolloProvider client={apolloClient}>
-        <HelmetProvider>
-          <I18nProvider i18n={i18next}>
-            <BrowserRouter>
-              <React.Fragment>
-                <HtmlHead htmlLang={i18nConfig.lng} />
-                <App />
-              </React.Fragment>
-            </BrowserRouter>
-          </I18nProvider>
-        </HelmetProvider>
+        <I18nProvider i18n={i18next}>
+          <BrowserRouter>
+            <HelmetProvider>
+              <HtmlHead htmlLang={i18nConfig.lng} />
+              <App />
+            </HelmetProvider>
+          </BrowserRouter>
+        </I18nProvider>
       </ApolloProvider>
     );
 
