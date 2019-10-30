@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const StartServerPlugin = require('start-server-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBar = require('webpackbar');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -313,7 +314,11 @@ module.exports = (target = 'web', options) => {
 
     config.plugins = [
       new webpack.DefinePlugin(serializedClientEnv),
-      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+      new CopyPlugin([
+        { from: paths.ownViews, to: paths.appBuildViews },
+        { from: paths.appViews, to: paths.appBuildViews }
+      ])
     ];
 
     config.entry = [paths.ownServerIndexJs];
