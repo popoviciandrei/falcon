@@ -416,12 +416,14 @@ module.exports = (target = 'web', options) => {
         output: 'build/i18n',
         filter: i18n.filter || {}
       }),
+      !START_DEV_SERVER && new CopyPlugin([{ from: paths.appPublic, to: paths.appBuildPublic }]),
       new LoadablePlugin({
         outputAsset: false,
         filename: path.basename(paths.appWebpackAssets),
         writeToDisk: { filename: path.dirname(paths.appWebpackAssets) }
       })
-    ];
+    ].filter(x => x);
+
     if (options.analyze) {
       config.plugins.push(new BundleAnalyzerPlugin());
     }
