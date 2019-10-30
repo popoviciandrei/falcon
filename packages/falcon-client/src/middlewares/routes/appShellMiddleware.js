@@ -2,18 +2,18 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { HelmetProvider } from 'react-helmet-async';
 import { ChunkExtractorManager } from '@loadable/server';
-import { APP_INIT } from '../../graphql/config.gql';
 import { HtmlHead } from '../../components';
 
 const helmetContext = {};
 
 /**
- * App shell rendering middleware.
+ * Application html renderer middleware.
+ * @param {{ config }} params params
+ * @param {object} params.config configuration
  * @returns {import('koa').Middleware} Koa middleware
  */
-export default () => async (ctx, next) => {
-  const { client, chunkExtractor } = ctx.state;
-  const { config } = client.readQuery({ query: APP_INIT });
+export default ({ config }) => async (ctx, next) => {
+  const { chunkExtractor } = ctx.state;
 
   const markup = (
     <ChunkExtractorManager extractor={chunkExtractor}>
