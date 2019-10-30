@@ -16,7 +16,7 @@ import {
 } from '@deity/falcon-server-env';
 import { IResolvers } from 'apollo-server-koa';
 import { GraphQLResolveInfo } from 'graphql';
-import { mergeSchemas, makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema } from 'graphql-tools';
 import deepMerge from 'deepmerge';
 import { BackendConfig, ExtensionGraphQLConfig, ExtensionEntryMap } from '../types';
 import { BaseContainer } from './BaseContainer';

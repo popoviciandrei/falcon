@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
-import { makeExecutableSchema, mergeSchemas } from 'graphql-tools';
+import { makeExecutableSchema } from 'graphql-tools';
 import { SchemaLink } from 'apollo-link-schema';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
@@ -114,10 +114,7 @@ const createApolloClient = (resolvers: any) => {
     __resolveType: (obj: any) => (obj.orderId ? 'PlaceOrderSuccessfulResult' : 'PlaceOrder3dSecureResult')
   };
 
-  const schema = mergeSchemas({
-    schemas: [makeExecutableSchema({ typeDefs: [BaseSchema, Schema], resolvers })],
-    resolvers
-  });
+  const schema = makeExecutableSchema({ typeDefs: [BaseSchema, Schema], resolvers });
   const link = new SchemaLink({ schema });
   const cache = new InMemoryCache({ addTypename: false, fragmentMatcher });
   return new ApolloClient({
