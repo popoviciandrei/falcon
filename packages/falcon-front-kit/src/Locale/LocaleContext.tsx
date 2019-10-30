@@ -1,5 +1,6 @@
 import React from 'react';
 import { BackendConfigQuery } from '@deity/falcon-shop-data';
+import { ClientConfigQuery } from '../ClientConfig';
 import { dateTimeFormatFactory, DateTimeFormatOptions } from './dateTimeFormat';
 import { priceFormatFactory, PriceFormatOptions } from './priceFormat';
 
@@ -24,33 +25,37 @@ export const LocaleProvider: React.SFC<LocaleProviderProps> = ({
   dateTimeFormatOptions = {},
   ...props
 }) => (
-  <BackendConfigQuery>
-    {({ data: { backendConfig } }) => {
-      const { activeLocale, shop } = backendConfig;
+  <ClientConfigQuery>
+    {({ data: { clientConfig } }) => (
+      <BackendConfigQuery>
+        {({ data: { backendConfig } }) => {
+          const { activeLocale, shop } = backendConfig;
 
-      const localeFallback = 'en'; // TODO: - get from clientConfig;
-      const currency = props.currency || shop.activeCurrency || 'EUR';
+          const localeFallback = clientConfig.i18n.lng;
+          const currency = props.currency || shop.activeCurrency || 'EUR';
 
-      return (
-        <LocaleContext.Provider
-          value={{
-            locale: activeLocale,
-            localeFallback,
-            currency,
-            priceFormat: priceFormatFactory([priceFormatOptions.locale, activeLocale, localeFallback], {
-              currency,
-              ...priceFormatOptions
-            }),
-            dateTimeFormat: dateTimeFormatFactory([dateTimeFormatOptions.locale, activeLocale, localeFallback], {
-              ...dateTimeFormatOptions
-            })
-          }}
-        >
-          {children}
-        </LocaleContext.Provider>
-      );
-    }}
-  </BackendConfigQuery>
+          return (
+            <LocaleContext.Provider
+              value={{
+                locale: activeLocale,
+                localeFallback,
+                currency,
+                priceFormat: priceFormatFactory([priceFormatOptions.locale, activeLocale, localeFallback], {
+                  currency,
+                  ...priceFormatOptions
+                }),
+                dateTimeFormat: dateTimeFormatFactory([dateTimeFormatOptions.locale, activeLocale, localeFallback], {
+                  ...dateTimeFormatOptions
+                })
+              }}
+            >
+              {children}
+            </LocaleContext.Provider>
+          );
+        }}
+      </BackendConfigQuery>
+    )}
+  </ClientConfigQuery>
 );
 
 export type LocaleProps = {

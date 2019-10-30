@@ -2,6 +2,7 @@ import React from 'react';
 import { MutationFetchResult } from '@apollo/react-common';
 import { I18n } from '@deity/falcon-i18n';
 import { SetLocaleMutation, SetLocaleResponse, BackendConfigQuery } from '@deity/falcon-data';
+import { ClientConfigQuery } from '../ClientConfig';
 
 export const addCimodeLocale = (locales: string[]) => {
   if (process.env.NODE_ENV === 'development') {
@@ -33,30 +34,36 @@ export const LocaleSwitcher: React.SFC<LocaleSwitcherProps> = ({ children }) => 
     {(t, i18n) => (
       <SetLocaleMutation>
         {setLocale => (
-          <BackendConfigQuery>
-            {({ data: { backendConfig } }) => {
-              const { activeLocale } = backendConfig;
+          <ClientConfigQuery>
+            {({ data: { clientConfig } }) => (
+              <BackendConfigQuery>
+                {({ data: { backendConfig } }) => {
+                  const { locales, activeLocale } = backendConfig;
+                  const { whitelist } = clientConfig.i18n;
 
-              const items = addCimodeLocale(backendConfig.locales).map(x => ({
-                code: x,
-                name: t(`languages.${x}`)
-              }));
-              // TODO: items = items ∩ clientConfig.i18n.whitelist
-              const value = {
-                code: activeLocale,
-                name: t(`languages.${activeLocale}`)
-              };
+                  const whitelistedLocales = locales.filter(locale => whitelist.some(x => locale.startsWith(x)));
+                  const items = addCimodeLocale(whitelistedLocales).map(x => ({
+                    code: x,
+                    name: t(`languages.${x}`)
+                  }));
 
-              const onChange = (x: LocaleItem) =>
-                setLocale({ variables: { locale: x.code } }).then(
-                  ({ data }: MutationFetchResult<SetLocaleResponse>) => {
-                    i18n.changeLanguage(data.setLocale.activeLocale);
-                  }
-                );
+                  const value = {
+                    code: activeLocale,
+                    name: t(`languages.${activeLocale}`)
+                  };
 
-              return children && children({ items, value, onChange });
-            }}
-          </BackendConfigQuery>
+                  const onChange = (x: LocaleItem) =>
+                    setLocale({ variables: { locale: x.code } }).then(
+                      ({ data }: MutationFetchResult<SetLocaleResponse>) => {
+                        i18n.changeLanguage(data.setLocale.activeLocale);
+                      }
+                    );
+
+                  return children && children({ items, value, onChange });
+                }}
+              </BackendConfigQuery>
+            )}
+          </ClientConfigQuery>
         )}
       </SetLocaleMutation>
     )}
