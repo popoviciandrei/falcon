@@ -19,6 +19,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed `/graphQL` proxy error handling ([#632](https://github.com/deity-io/falcon/pull/632))
 - fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
 - fixed handling of redirects by serviceworker ([#594](https://github.com/deity-io/falcon/pull/594))
+- fixed the `next` value for sign-in redirects ([#689](https://github.com/deity-io/falcon/pull/689))
 
 ### Falcon UI vNext
 
@@ -37,6 +38,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed synchronisation of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+- added `Submit` component which provides context to form submit components ([#548](https://github.com/deity-io/falcon/pull/548))
 
 ### Falcon UI Kit v1.0.0
 
@@ -45,6 +47,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
 - fixed `ProductCard` component which should not require `thumbnail` ([#685](https://github.com/deity-io/falcon/pull/685))
+- integrated `FormSubmit` with Formik, which allows it to hook into form state ([#548](https://github.com/deity-io/falcon/pull/548))
 
 ### Falcon Data v1.0.0
 
@@ -92,10 +95,13 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Falcon Scripts vNext
 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
+- fixed command error messages printing after its done ([#691](https://github.com/deity-io/falcon/pull/691))
 
 ### Create Falcon App vNext
 
 - fixed yarn check which was creating an empty "yarn.lock" file ([#675](https://github.com/deity-io/falcon/pull/675))
+- fixed dependencies in generated client ([#696](https://github.com/deity-io/falcon/pull/696))
+- added placeholder for `build:prod` step in generated server code ([#696](https://github.com/deity-io/falcon/pull/696))
 
 ## Falcon v1.3 (2019-08-01)
 

@@ -28,7 +28,7 @@
   "devDependencies": {
     "@deity/falcon-payment-plugin": "^1.0.0-beta.1",
     "@deity/falcon-scripts": "^1.0.0-beta.1",
-    "@types/react": "16.9.5",
+    "@types/react": "16.9.11",
     "react": "16.10.2",
     "regenerator-runtime": "0.13.3"
   },
