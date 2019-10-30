@@ -31,6 +31,7 @@ export const ProductTierPrices: React.SFC<ProductTierPricesProps> = ({ items: ti
   );
 };
 ProductTierPrices.propTypes = {
+  // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/34692
   items: PropTypes.arrayOf(
     PropTypes.shape({
       qty: PropTypes.number.isRequired,

@@ -31,6 +31,7 @@ export default class Html extends Component {
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="generator" content="DEITY Falcon" />
           {helmetContext.base.toComponent()}
           {helmetContext.title.toComponent()}
           {helmetContext.meta.toComponent()}
