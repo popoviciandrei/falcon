@@ -6,7 +6,7 @@
   "repository": "git@github.com:deity-io/falcon.git",
   "scripts": {
     "new-package": "node scripts/new-package.js",
-    "deduplicate": "yarn yarn-deduplicate yarn.lock",
+    "deduplicate": "yarn-deduplicate yarn.lock",
     "cleanup": "rimraf packages/**/{dist,coverage} packages/create-falcon-app/examples ./**/node_modules",
     "cleanup:all": "rimraf yarn.lock && yarn cleanup",
     "test": "lerna run test:coverage",
