@@ -25,6 +25,6 @@ export default () => async (ctx, next) => {
     }
 
     ctx.status = response.status || 500;
-    await send(ctx, 'views/errors/500.html', { root: __dirname });
+    await send(ctx, 'views/500.html', { root: __dirname });
   }
 };
