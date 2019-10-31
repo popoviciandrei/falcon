@@ -7,7 +7,7 @@ import { Router } from '../Router';
 
 export type DynamicRouteComponentProps = Pick<ResourceMeta, 'id' | 'path'>;
 
-export type ComponentsMap = Record<string, React.ComponentType<DynamicRouteComponentProps>>;
+export type ComponentsMap = Record<string, React.ComponentType<DynamicRouteComponentProps> | object>;
 
 export type DynamicRouteProps = {
   location?: Location;
@@ -37,7 +37,7 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
                 return <Redirect to={url.path} />;
               }
 
-              const Component = components[url.type];
+              const Component = components[url.type] as React.ComponentType<DynamicRouteComponentProps>;
               if (!Component) {
                 throw new Error(`[DynamicRoute]: Please register component for '${url.type}' content type!`);
               }
@@ -52,6 +52,6 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
 };
 DynamicRoute.propTypes = {
   location: PropTypes.any,
-  components: PropTypes.objectOf(PropTypes.func.isRequired).isRequired,
+  components: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired).isRequired,
   notFound: PropTypes.func.isRequired
 };
