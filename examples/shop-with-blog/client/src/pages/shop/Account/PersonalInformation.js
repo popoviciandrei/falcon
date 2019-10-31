@@ -1,8 +1,15 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { T } from '@deity/falcon-i18n';
-import { H1, FlexLayout, GridLayout, Button, Link } from '@deity/falcon-ui';
-import { FormField, Form, ErrorSummary, TwoColumnsLayout, TwoColumnsLayoutArea } from '@deity/falcon-ui-kit';
+import { H1, FlexLayout, GridLayout, Link } from '@deity/falcon-ui';
+import {
+  Form,
+  FormField,
+  FormSubmit,
+  ErrorSummary,
+  TwoColumnsLayout,
+  TwoColumnsLayoutArea
+} from '@deity/falcon-ui-kit';
 import { EditCustomerFormProvider } from '@deity/falcon-front-kit';
 import { CustomerQuery } from '@deity/falcon-shop-data';
 
@@ -15,7 +22,7 @@ const PersonalInformation = () => (
       <CustomerQuery>
         {({ data: { customer } }) => (
           <EditCustomerFormProvider customer={customer}>
-            {({ isSubmitting, status = {} }) => (
+            {({ status = {} }) => (
               <GridLayout as={Form} id="edit-customer" i18nId="editCustomer" gridArea={TwoColumnsLayoutArea.left}>
                 <FormField name="firstname" required />
                 <FormField name="lastname" required />
@@ -24,9 +31,7 @@ const PersonalInformation = () => (
                   <Link as={RouterLink} to="/account/change-password">
                     <T id="editCustomer.changePassword" />
                   </Link>
-                  <Button type="submit" variant={isSubmitting ? 'loader' : undefined}>
-                    <T id="editCustomer.submitButton" />
-                  </Button>
+                  <FormSubmit />
                 </FlexLayout>
                 {status.error && <ErrorSummary errors={status.error} />}
               </GridLayout>
