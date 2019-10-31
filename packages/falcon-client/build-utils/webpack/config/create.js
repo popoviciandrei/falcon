@@ -315,10 +315,12 @@ module.exports = (target = 'web', options) => {
     config.plugins = [
       new webpack.DefinePlugin(serializedClientEnv),
       new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-      new CopyPlugin([
-        { from: paths.ownViews, to: paths.appBuildViews },
-        { from: paths.appViews, to: paths.appBuildViews }
-      ])
+      new CopyPlugin(
+        [
+          { from: paths.ownViews, to: paths.appBuildViews },
+          fs.existsSync(paths.appViews) && { from: paths.appViews, to: paths.appBuildViews, force: true }
+        ].filter(x => x)
+      )
     ];
 
     config.entry = [paths.ownServerIndexJs];
