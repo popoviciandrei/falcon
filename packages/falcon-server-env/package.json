@@ -22,7 +22,7 @@
     "test:coverage": "falcon-scripts test:coverage"
   },
   "dependencies": {
-    "@deity/falcon-logger": "^1.0.3-beta.3",
+    "@deity/falcon-logger": "^1.0.0-beta.3",
     "apollo-datasource": "^0.6.3",
     "apollo-datasource-rest": "^0.6.6",
     "apollo-server-caching": "^0.5.0",
