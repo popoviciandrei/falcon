@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      - name: Cache NPM packages
+      - name: Cache NPM/Yarn packages
         uses: actions/cache@preview
         with:
           path: ~/.cache/yarn
