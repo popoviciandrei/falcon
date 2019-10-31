@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const StartServerPlugin = require('start-server-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBar = require('webpackbar');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -313,7 +314,13 @@ module.exports = (target = 'web', options) => {
 
     config.plugins = [
       new webpack.DefinePlugin(serializedClientEnv),
-      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+      new CopyPlugin(
+        [
+          { from: paths.ownViews, to: paths.appBuildViews },
+          fs.existsSync(paths.appViews) && { from: paths.appViews, to: paths.appBuildViews, force: true }
+        ].filter(x => x)
+      )
     ];
 
     config.entry = [paths.ownServerIndexJs];
@@ -411,12 +418,14 @@ module.exports = (target = 'web', options) => {
         output: 'build/i18n',
         filter: i18n.filter || {}
       }),
+      !START_DEV_SERVER && new CopyPlugin([{ from: paths.appPublic, to: paths.appBuildPublic }]),
       new LoadablePlugin({
         outputAsset: false,
         filename: path.basename(paths.appWebpackAssets),
         writeToDisk: { filename: path.dirname(paths.appWebpackAssets) }
       })
-    ];
+    ].filter(x => x);
+
     if (options.analyze) {
       config.plugins.push(new BundleAnalyzerPlugin());
     }
