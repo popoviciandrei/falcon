@@ -29,7 +29,7 @@ jobs:
           path: ~/.cache/yarn
           key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-${{ matrix.node }}-yarn-
       - name: Check duplicates in yarn.lock
         if: matrix.node == '12'
         run: npx yarn-deduplicate --list --fail yarn.lock
