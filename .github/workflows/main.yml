@@ -23,13 +23,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      - name: Cache NPM/Yarn packages
+      - name: Cache NPM/Yarn dependencies
         uses: actions/cache@preview
         with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          path: node_modules
+          key: node-${{ matrix.node }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node }}-yarn-
+            node-${{ matrix.node }}-yarn-
       - name: Check duplicates in yarn.lock
         if: matrix.node == '12'
         run: npx yarn-deduplicate --list --fail yarn.lock
