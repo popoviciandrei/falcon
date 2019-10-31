@@ -21,7 +21,7 @@
     "node": ">=8.10"
   },
   "dependencies": {
-    "@deity/falcon-logger": "^1.0.3-beta.3",
+    "@deity/falcon-logger": "^1.0.0-beta.3",
     "cross-env": "5.2.0"
   },
   "devDependencies": {
