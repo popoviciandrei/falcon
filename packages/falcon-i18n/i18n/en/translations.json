@@ -153,7 +153,8 @@
   "forgotPassword": {
     "title": "Forgot Password",
     "emailFieldLabel": "Email",
-    "successMessage": "If there is an account associated with {{values.email}} you will receive an email with a link to reset your password."
+    "successMessage": "If there is an account associated with {{values.email}} you will receive an email with a link to reset your password.",
+    "submitButton": "Reset my password"
   },
   "resetPassword": {
     "title": "Reset Password",
@@ -161,7 +162,8 @@
     "passwordFieldPlaceholder": "At least 8 characters",
     "failureMessage": "The reset password token you provided is invalid or has expired.",
     "requestAnotherToken": "Request another one",
-    "successMessage": "Your password has been reset successfully!"
+    "successMessage": "Your password has been reset successfully!",
+    "submitButton": "Set my new password"
   },
   "signOut": {
     "link": "Logout"
@@ -172,7 +174,8 @@
     "lastnameFieldLabel": "Last Name",
     "emailFieldLabel": "Email",
     "passwordFieldLabel": "Password",
-    "passwordFieldPlaceholder": "At least 8 characters"
+    "passwordFieldPlaceholder": "At least 8 characters",
+    "submitButton": "Create an account"
   },
   "newAccount": {
     "title": "New Customers",

@@ -19,12 +19,14 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed `/graphQL` proxy error handling ([#632](https://github.com/deity-io/falcon/pull/632))
 - fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
 - fixed handling of redirects by serviceworker ([#594](https://github.com/deity-io/falcon/pull/594))
+- fixed the `next` value for sign-in redirects ([#689](https://github.com/deity-io/falcon/pull/689))
 
 ### Falcon UI vNext
 
 - fixed theme merging ([#551](https://github.com/deity-io/falcon/pull/551))
 - fixed duplicated conditions when extracting themed css ([#611](https://github.com/deity-io/falcon/pull/611))
 - fixed incompatible `css` prop typings ([#645](https://github.com/deity-io/falcon/pull/645))
+- added `console.error` when an icon is not defined in the theme during development ([#682](https://github.com/deity-io/falcon/pull/682))
 
 ### Falcon E-commerce UI Kit discontinued
 
@@ -38,6 +40,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
 - added `Add`/`EditAddressFormProvider` components to handle relevant form data ([#624](https://github.com/deity-io/falcon/pull/624))
+- added `Submit` component which provides context to form submit components ([#548](https://github.com/deity-io/falcon/pull/548))
 
 ### Falcon UI Kit v1.0.0
 
@@ -47,6 +50,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
 - added `AddressFormFields` and `Add`/`EditAddressForm` components to make address forms more reusable ([#624](https://github.com/deity-io/falcon/pull/624))
 - fixed `ProductCard` component which should not require `thumbnail` ([#685](https://github.com/deity-io/falcon/pull/685))
+- integrated `FormSubmit` with Formik, which allows it to hook into form state ([#548](https://github.com/deity-io/falcon/pull/548))
 
 ### Falcon Data v1.0.0
 

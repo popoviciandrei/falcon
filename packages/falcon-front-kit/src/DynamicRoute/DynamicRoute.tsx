@@ -1,19 +1,18 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line
 import { Location } from 'history';
 import { UrlQuery, ResourceMeta } from '@deity/falcon-data';
 import { Router } from '../Router';
 
 export type DynamicRouteComponentProps = Pick<ResourceMeta, 'id' | 'path'>;
 
-export type ComponentsMap = { [key: string]: React.ComponentType<DynamicRouteComponentProps> };
+export type ComponentsMap = Record<string, React.ComponentType<DynamicRouteComponentProps>>;
 
 export type DynamicRouteProps = {
   location?: Location;
   components: ComponentsMap;
-  notFound: React.ComponentType<any>;
+  notFound: React.ComponentType<{ location?: any }>;
 };
 
 export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
@@ -53,6 +52,6 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
 };
 DynamicRoute.propTypes = {
   location: PropTypes.any,
-  components: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired).isRequired,
-  notFound: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired
+  components: PropTypes.objectOf(PropTypes.func.isRequired).isRequired,
+  notFound: PropTypes.func.isRequired
 };
