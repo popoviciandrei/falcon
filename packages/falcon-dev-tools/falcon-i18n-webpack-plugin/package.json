@@ -1,6 +1,6 @@
 {
   "name": "@deity/falcon-i18n-webpack-plugin",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "license": "OSL-3.0",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-dev-tools/falcon-i18n-webpack-plugin",
   "main": "index.js",
