@@ -53,6 +53,7 @@
     "deepmerge": "^2.2.1",
     "emotion-theming": "10.0.19",
     "is-plain-object": "^2.0.4",
+    "prop-types": "^15.7.2",
     "react-powerplug": "1.0.0"
   },
   "peerDependencies": {
