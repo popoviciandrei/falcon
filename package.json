@@ -13,8 +13,8 @@
     "coverage": "codecov -p packages",
     "watch": "lerna run watch --parallel",
     "start": "cross-env CI=true lerna run start:dbg --scope=@deity/example-shop-with-blog* --parallel",
-    "prepublish": "rimraf node_modules/@emotion/core/types && lerna run --scope=@deity/falcon-ui --stream prepare",
-    "postinstall": "yarn deduplicate",
+    "postinstall": "rimraf node_modules/@emotion/core/types && yarn deduplicate",
+    "prepublish": "lerna run --scope=@deity/falcon-ui --stream prepare",
     "prepare": "lerna run --stream prepare",
     "lint": "eslint --ext js,ts,tsx ./"
   },
