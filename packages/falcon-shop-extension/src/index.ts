@@ -1,12 +1,13 @@
-export * from './types';
+import { PlaceOrderResult } from './types';
 
 /**
  * Shop Extension
  */
-export default () => ({
+const ShopExtension = () => ({
   resolvers: {
     PlaceOrderResult: {
-      __resolveType: ({ url }) => (url ? 'PlaceOrder3dSecureResult' : 'PlaceOrderSuccessfulResult')
+      __resolveType: (data: PlaceOrderResult) =>
+        'url' in data ? 'PlaceOrder3dSecureResult' : 'PlaceOrderSuccessfulResult'
     },
     BackendConfig: {
       // Returning an empty object to make ShopConfig resolvers work
@@ -14,3 +15,6 @@ export default () => ({
     }
   }
 });
+
+export * from './types';
+export { ShopExtension as Extension };

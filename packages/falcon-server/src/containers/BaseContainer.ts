@@ -8,11 +8,11 @@ declare type TryRequireResult<T> = {
   error?: Error;
 };
 
-const tryRequire = <T>(moduleName: string): TryRequireResult<T> => {
+const tryRequire = <T>(moduleName: string, key: string): TryRequireResult<T> => {
   try {
     const moduleResult = require(moduleName); // eslint-disable-line import/no-dynamic-require
     return {
-      module: typeof moduleResult.default === 'function' ? moduleResult.default : moduleResult,
+      module: typeof moduleResult[key] === 'function' ? moduleResult[key] : moduleResult,
       exists: true,
       error: undefined
     };
@@ -39,10 +39,11 @@ export class BaseContainer {
    * Imports the specified module (via "require()") by checking installed NPM package
    * (by package name) and your local project folder.
    * @param pathOrPackage Local path or package name of the module
+   * @param key Exported "key" to return from the module
    * @returns {T | undefined} Imported module
    */
-  importModule<T>(pathOrPackage: string): T | undefined {
-    const requiredPackage = tryRequire<T>(pathOrPackage);
+  importModule<T>(pathOrPackage: string, key: string = 'default'): T | undefined {
+    const requiredPackage = tryRequire<T>(pathOrPackage, key);
     if (requiredPackage.exists) {
       const { module: moduleResult, error } = requiredPackage;
       if (error) {
@@ -57,7 +58,7 @@ export class BaseContainer {
     }
 
     const modulePath: string = resolve(process.cwd(), pathOrPackage);
-    const requiredModule = tryRequire<T>(modulePath);
+    const requiredModule = tryRequire<T>(modulePath, key);
     if (requiredModule.exists) {
       const { module: moduleResult, error } = requiredModule;
       if (error) {

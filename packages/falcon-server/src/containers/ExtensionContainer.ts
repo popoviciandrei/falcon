@@ -49,7 +49,7 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
         const extension = extensions[extKey];
         const { config: extensionConfig = {} } = extension;
 
-        const ExtensionInstanceFn = this.importModule<ExtensionInitializer>(extension.package);
+        const ExtensionInstanceFn = this.importModule<ExtensionInitializer>(extension.package, 'Extension');
         if (ExtensionInstanceFn) {
           extGqlConfig = deepMerge(extGqlConfig, ExtensionInstanceFn(extensionConfig) || {});
         }
