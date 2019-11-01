@@ -16,7 +16,7 @@ import {
 } from '@deity/falcon-server-env';
 import { IResolvers } from 'apollo-server-koa';
 import { GraphQLResolveInfo } from 'graphql';
-import { mergeSchemas, makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema } from 'graphql-tools';
 import deepMerge from 'deepmerge';
 import { BackendConfig, ExtensionGraphQLConfig, ExtensionEntryMap } from '../types';
 import { BaseContainer } from './BaseContainer';
@@ -174,15 +174,10 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
       return ctx;
     };
 
-    config.schema = mergeSchemas({
-      schemas: [
-        makeExecutableSchema({
-          typeDefs: config.schemas,
-          resolvers: config.resolvers
-        })
-      ],
-      schemaDirectives: config.schemaDirectives,
-      resolvers: config.resolvers
+    config.schema = makeExecutableSchema({
+      typeDefs: config.schemas,
+      resolvers: config.resolvers,
+      schemaDirectives: config.schemaDirectives
     });
 
     // remove processed fields
