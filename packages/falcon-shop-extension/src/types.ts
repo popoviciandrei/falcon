@@ -373,7 +373,7 @@ export type CountryList = {
 
 export type Country = {
   id: number;
-  code?: string;
+  code: string;
   englishName?: string;
   localName?: string;
   regions: Region[];

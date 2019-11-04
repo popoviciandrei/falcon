@@ -679,7 +679,7 @@ type Country {
   # unique identifier of the country
   id: ID!
   # abbreviated form of the country name
-  code: String
+  code: String!
   # country name in English
   englishName: String
   # country name in locale language
