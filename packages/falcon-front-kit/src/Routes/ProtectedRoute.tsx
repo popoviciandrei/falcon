@@ -26,7 +26,7 @@ export class ProtectedRoute extends React.Component<ProtectedRouteProps> {
       <Route
         {...rest}
         render={props => (
-          <IsAuthenticatedQuery>
+          <IsAuthenticatedQuery fetchPolicy="network-only">
             {({ data }) => {
               if (data.customer) {
                 return <Component {...props} />;

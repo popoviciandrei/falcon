@@ -21,17 +21,11 @@ export const ErrorSummary: React.SFC<ErrorSummaryProps> = ({ errors, ...rest }) 
     </ErrorListLayout>
   );
 };
+const errorType = PropTypes.shape({
+  message: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired
+});
 ErrorSummary.propTypes = {
-  errors: PropTypes.oneOfType([
-    PropTypes.shape({
-      message: PropTypes.string.isRequired,
-      code: PropTypes.string.isRequired
-    }),
-    PropTypes.arrayOf(
-      PropTypes.shape({
-        message: PropTypes.string.isRequired,
-        code: PropTypes.string.isRequired
-      })
-    )
-  ])
+  // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/34692
+  errors: PropTypes.oneOfType([errorType, PropTypes.arrayOf(errorType)])
 };

@@ -6,13 +6,15 @@
   "repository": "git@github.com:deity-io/falcon.git",
   "scripts": {
     "new-package": "node scripts/new-package.js",
+    "deduplicate": "yarn-deduplicate yarn.lock",
     "cleanup": "rimraf packages/**/{dist,coverage} packages/create-falcon-app/examples ./**/node_modules",
     "cleanup:all": "rimraf yarn.lock && yarn cleanup",
     "test": "lerna run test:coverage",
     "coverage": "codecov -p packages",
     "watch": "lerna run watch --parallel",
     "start": "cross-env CI=true lerna run start:dbg --scope=@deity/example-shop-with-blog* --parallel",
-    "prepublish": "rimraf node_modules/@emotion/core/types && lerna run --scope=@deity/falcon-ui --stream prepare",
+    "postinstall": "rimraf node_modules/@emotion/core/types && yarn deduplicate",
+    "prepublish": "lerna run --scope=@deity/falcon-ui --stream prepare",
     "prepare": "lerna run --stream prepare",
     "lint": "eslint --ext js,ts,tsx ./"
   },
@@ -30,7 +32,8 @@
     "lerna": "3.16.2",
     "lint-staged": "9.2.0",
     "rimraf": "2.6.2",
-    "typescript": "3.6.4"
+    "typescript": "3.6.4",
+    "yarn-deduplicate": "1.1.1"
   },
   "engines": {
     "node": ">=8.10",
@@ -75,8 +78,7 @@
   },
   "resolutions": {
     "react": "16.10.2",
-    "prop-types": "15.7.2",
-    "@types/react": "16.9.5",
+    "@types/react": "16.9.11",
     "@types/enzyme": "3.10.3"
   }
 }
