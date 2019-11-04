@@ -43,18 +43,20 @@ module.exports = {
   nodePath,
 
   appPath: resolveApp('.'),
-  appSrc: resolveApp('src'),
   appIndexJs: resolveApp('index.js'),
   appSwJs: resolveApp('sw.js'),
   appBootstrapJs: resolveApp('bootstrap.js'),
   appBuildConfigJs: resolveApp('falcon-client.build.config.js'),
+  appSrc: resolveApp('src'),
   appWebmanifest: resolveApp('src/manifest.webmanifest'),
+  appViews: resolveApp('views'),
 
   appPackageJson: resolveApp('package.json'),
-  appBuild: resolveApp('build'),
-  appBuildPublic: resolveApp('build/public'),
   appPublic: resolveApp('public'),
+  appBuild: resolveApp('build'),
   appWebpackAssets: resolveApp('build/assets.json'),
+  appBuildPublic: resolveApp('build/public'),
+  appBuildViews: resolveApp('build/views'),
 
   testsSetup: resolveApp('src/setupTests.js'),
   appBabelRc: resolveApp('.babelrc'),
@@ -62,10 +64,11 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
 
   ownPath: resolveOwn('.'),
+  ownSwJs: resolveOwn('sw.js'),
   ownSrc: resolveOwn('src'),
   ownServerIndexJs: resolveOwn('src/index'),
   ownClientIndexJs: resolveOwn('src/client'),
-  ownSwJs: resolveOwn('sw.js'),
   ownWebmanifest: resolveOwn('src/manifest.webmanifest'),
+  ownViews: resolveOwn('views'),
   ownNodeModules: resolveOwn('node_modules')
 };

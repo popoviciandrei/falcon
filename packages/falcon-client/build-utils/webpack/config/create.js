@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const StartServerPlugin = require('start-server-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBar = require('webpackbar');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -313,7 +314,13 @@ module.exports = (target = 'web', options) => {
 
     config.plugins = [
       new webpack.DefinePlugin(serializedClientEnv),
-      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+      new CopyPlugin(
+        [
+          { from: paths.ownViews, to: paths.appBuildViews },
+          fs.existsSync(paths.appViews) && { from: paths.appViews, to: paths.appBuildViews, force: true }
+        ].filter(x => x)
+      )
     ];
 
     config.entry = [paths.ownServerIndexJs];
@@ -411,12 +418,14 @@ module.exports = (target = 'web', options) => {
         output: 'build/i18n',
         filter: i18n.filter || {}
       }),
+      !START_DEV_SERVER && new CopyPlugin([{ from: paths.appPublic, to: paths.appBuildPublic }]),
       new LoadablePlugin({
         outputAsset: false,
         filename: path.basename(paths.appWebpackAssets),
         writeToDisk: { filename: path.dirname(paths.appWebpackAssets) }
       })
-    ];
+    ].filter(x => x);
+
     if (options.analyze) {
       config.plugins.push(new BundleAnalyzerPlugin());
     }
@@ -437,11 +446,12 @@ module.exports = (target = 'web', options) => {
           clientLogLevel: 'none',
           compress: true, // enable gzip compression of generated files
           // watchContentBase: true,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          historyApiFallback: {
-            // Paths with dots should still use the history fallback. See https://github.com/facebookincubator/create-react-app/issues/387.
-            disableDotRule: true
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Cache-Control'
           },
+          historyApiFallback: false,
           host: 'localhost',
           port: devServerPort,
           hot: true,

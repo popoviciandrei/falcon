@@ -25,6 +25,14 @@ export type FormFieldProps<TValue = any> = {
   name: string;
   label?: string;
   placeholder?: string;
+  /**
+   * Allows you to extends default set of validators which are calculated based on HTML Input `type` attribute,
+   * also if `required`, `min` or `max` HTML Input Attributes are passed, then corresponding validator will be automatically added.
+   *
+   * Please pass empty array (`[]`) in order to disable all default validators.
+   * @see https://github.com/deity-io/falcon/blob/db40dc1c61fc17eb3276cdeb7a46c6ba77337314/packages/falcon-front-kit/src/Forms/getDefaultInputValidators.ts#L9
+   * @see https://www.w3schools.com/html/html_form_attributes.asp
+   */
   validate?: IValidator[];
   children?: (props: FormFieldRenderProps<TValue>) => React.ReactNode;
 } & React.InputHTMLAttributes<HTMLInputElement> &
