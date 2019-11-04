@@ -26,15 +26,13 @@ class AddressSection extends React.Component {
     const selectedAddressId = this.state.selectedAddressId || this.props.defaultSelected.id;
     const selectedAddress = this.props.availableAddresses.find(item => item.id === selectedAddressId);
 
-    // make sure we don't send __typename field
-    const addressInput = { ...selectedAddress };
-    delete addressInput.__typename; // eslint-disable-line no-underscore-dangle
-
-    // include ID fields instead of full country/region objects
-    addressInput.regionId = selectedAddress.region ? selectedAddress.region.id : undefined;
-    delete addressInput.region;
-    addressInput.countryId = selectedAddress.country.id;
-    delete addressInput.country;
+    const { __typename, region, country, ...rest } = selectedAddress; // make sure we don't send __typename field
+    const addressInput = {
+      ...rest,
+      // include ID fields instead of full country/region objects
+      regionId: region ? region.id : undefined,
+      countryId: country.id
+    };
 
     this.props.setAddress(addressInput);
   };
