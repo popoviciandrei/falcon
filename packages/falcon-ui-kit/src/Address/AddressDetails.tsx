@@ -10,8 +10,7 @@ export type AddressDetailsProps = {
   street: string[];
   postcode?: string;
   city: string;
-  country?: Country;
-  countryId?: string;
+  country: Country;
   telephone?: string;
 };
 
@@ -23,7 +22,6 @@ export const AddressDetails: React.SFC<AddressDetailsProps> = ({
   postcode,
   city,
   country,
-  countryId,
   telephone
 }) => (
   <AddressDetailsLayout>
@@ -34,7 +32,7 @@ export const AddressDetails: React.SFC<AddressDetailsProps> = ({
       // eslint-disable-next-line react/no-array-index-key
       <Text key={i}>{x}</Text>
     ))}
-    <Text>{`${postcode} ${city}, ${country ? country.code : countryId}`}</Text>
+    <Text>{`${postcode} ${city}, ${country.code}`}</Text>
     {telephone && <Text>{telephone}</Text>}
   </AddressDetailsLayout>
 );
