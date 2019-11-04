@@ -16,7 +16,7 @@ export type EditAddressFormProps = Partial<FormProps> & {
 export const EditAddressForm: React.SFC<EditAddressFormProps> = ({ id, onSuccess, onCancel, ...formProps }) => (
   <AddressQuery variables={{ id }}>
     {({ data: { address } }) => (
-      <EditAddressFormProvider id={id} address={address} onSuccess={onSuccess}>
+      <EditAddressFormProvider address={address} onSuccess={onSuccess}>
         {({ isSubmitting, status = {} }) => (
           <Form id="edit-address" i18nId="addressForm" {...formProps}>
             <AddressFormFields twoColumns askDefault />

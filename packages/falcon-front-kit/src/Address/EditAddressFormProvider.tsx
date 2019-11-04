@@ -20,12 +20,11 @@ export type EditAddressFormValues = {
 };
 
 export type EditAddressFormProviderProps = FormProviderProps<EditAddressFormValues> & {
-  id: number;
   address?: Address;
 };
 
 export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = props => {
-  const { id, address, onSuccess, initialValues, ...formikProps } = props;
+  const { address, onSuccess, initialValues, ...formikProps } = props;
   const defaultInitialValues = {
     firstname: address.firstname,
     lastname: address.lastname,
@@ -41,7 +40,7 @@ export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = 
   };
 
   const [editAddress] = useEditAddressMutation({
-    refetchQueries: ['Addresses', { query: GET_ADDRESS, variables: { id } }]
+    refetchQueries: ['Addresses', { query: GET_ADDRESS, variables: { id: address.id } }]
   });
   const [getUserError] = useGetUserError();
 
@@ -53,7 +52,7 @@ export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = 
           variables: {
             input: {
               ...values,
-              id,
+              id: address.id,
               street: [street1, street2]
             }
           }
