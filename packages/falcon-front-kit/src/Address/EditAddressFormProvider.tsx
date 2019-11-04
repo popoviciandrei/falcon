@@ -20,7 +20,7 @@ export type EditAddressFormValues = {
 };
 
 export type EditAddressFormProviderProps = FormProviderProps<EditAddressFormValues> & {
-  address?: Address;
+  address: Address;
 };
 
 export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = props => {
