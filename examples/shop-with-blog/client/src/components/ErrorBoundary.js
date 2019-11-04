@@ -12,11 +12,13 @@ export class ErrorBoundary extends React.Component {
 
   /** @param {Error} error */
   getMessageId(error) {
-    const { networkError } = error;
-    const code = (isNetworkError(error) && networkError.result && networkError.result.code) || 'UNKNOWN';
+    if (isNetworkError(error)) {
+      const { networkError } = error;
+      const code = (networkError.result && networkError.result.code) || 'UNKNOWN';
 
-    if (code === 'ECONNREFUSED' || networkError.message === 'Failed to fetch') {
-      return 'failedToFetch';
+      if (code === 'ECONNREFUSED' || networkError.message === 'Failed to fetch') {
+        return 'failedToFetch';
+      }
     }
 
     return 'unknown';

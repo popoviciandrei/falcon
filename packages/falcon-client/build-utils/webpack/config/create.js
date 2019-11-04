@@ -446,11 +446,12 @@ module.exports = (target = 'web', options) => {
           clientLogLevel: 'none',
           compress: true, // enable gzip compression of generated files
           // watchContentBase: true,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          historyApiFallback: {
-            // Paths with dots should still use the history fallback. See https://github.com/facebookincubator/create-react-app/issues/387.
-            disableDotRule: true
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Cache-Control'
           },
+          historyApiFallback: false,
           host: 'localhost',
           port: devServerPort,
           hot: true,
