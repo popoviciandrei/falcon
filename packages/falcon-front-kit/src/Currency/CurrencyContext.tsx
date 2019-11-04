@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { BackendConfigQuery } from '@deity/falcon-shop-data';
-import { ClientConfigQuery } from '../ClientConfig';
+import { useLocale } from '../Locale';
 import { priceFormatFactory, PriceFormatOptions } from './priceFormat';
 
 export type CurrencyContextType = {
@@ -11,37 +11,55 @@ export type CurrencyContextType = {
 const CurrencyContext = React.createContext<CurrencyContextType>({} as any);
 
 export type CurrencyProviderProps = {
+  /** if not provided  then `backendConfig.shop.activeCurrency` will be used */
   currency?: string;
   priceFormatOptions?: PriceFormatOptions;
 };
-export const CurrencyProvider: React.SFC<CurrencyProviderProps> = ({ children, priceFormatOptions = {}, ...props }) => (
-  <ClientConfigQuery>
-    {({ data: { clientConfig } }) => (
-      <BackendConfigQuery>
-        {({ data: { backendConfig } }) => {
-          const { activeLocale, shop } = backendConfig;
+/**
+ * Depends on `LocaleProvider`
+ */
+export const CurrencyProvider: React.SFC<CurrencyProviderProps> = ({ currency, priceFormatOptions = {}, children }) => {
+  const { locale, localeFallback } = useLocale();
 
-          const localeFallback = clientConfig.i18n.lng;
-          const currency = props.currency || shop.activeCurrency || 'EUR';
-
-          return (
-            <CurrencyContext.Provider
-              value={{
-                currency,
-                priceFormat: priceFormatFactory([priceFormatOptions.locale, activeLocale, localeFallback], {
-                  currency,
-                  ...priceFormatOptions
-                })
-              }}
-            >
-              {children}
-            </CurrencyContext.Provider>
-          );
+  if (currency) {
+    return (
+      <CurrencyContext.Provider
+        value={{
+          currency,
+          priceFormat: priceFormatFactory([priceFormatOptions.locale, locale, localeFallback], {
+            currency,
+            ...priceFormatOptions
+          })
         }}
-      </BackendConfigQuery>
-    )}
-  </ClientConfigQuery>
-);
+      >
+        {children}
+      </CurrencyContext.Provider>
+    );
+  }
+
+  return (
+    <BackendConfigQuery>
+      {({ data: { backendConfig } }) => {
+        const { shop } = backendConfig;
+        currency = (shop && shop.activeCurrency) || 'EUR';
+
+        return (
+          <CurrencyContext.Provider
+            value={{
+              currency,
+              priceFormat: priceFormatFactory([priceFormatOptions.locale, locale, localeFallback], {
+                currency,
+                ...priceFormatOptions
+              })
+            }}
+          >
+            {children}
+          </CurrencyContext.Provider>
+        );
+      }}
+    </BackendConfigQuery>
+  );
+};
 
 export const useCurrency = (): CurrencyContextType => useContext(CurrencyContext);
 
