@@ -376,7 +376,7 @@ export type Country = {
   code?: string;
   englishName?: string;
   localName?: string;
-  regions?: Region[];
+  regions: Region[];
 };
 
 export type Region = {
