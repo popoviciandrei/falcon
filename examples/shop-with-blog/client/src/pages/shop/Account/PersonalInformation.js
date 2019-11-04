@@ -1,57 +1,42 @@
 import React from 'react';
-import { Formik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
 import { T } from '@deity/falcon-i18n';
-import { H1, FlexLayout, GridLayout, Button, Link } from '@deity/falcon-ui';
-import { FormField, Form, FormErrorSummary, TwoColumnsLayout, TwoColumnsLayoutArea } from '@deity/falcon-ui-kit';
-import { CustomerQuery, EditCustomerMutation } from '@deity/falcon-shop-data';
+import { H1, FlexLayout, GridLayout, Link } from '@deity/falcon-ui';
+import {
+  Form,
+  FormField,
+  FormSubmit,
+  ErrorSummary,
+  TwoColumnsLayout,
+  TwoColumnsLayoutArea
+} from '@deity/falcon-ui-kit';
+import { EditCustomerFormProvider } from '@deity/falcon-front-kit';
+import { CustomerQuery } from '@deity/falcon-shop-data';
 
 const PersonalInformation = () => (
-  <GridLayout mb="md">
+  <GridLayout>
     <H1>
       <T id="editCustomer.title" />
     </H1>
-    <TwoColumnsLayout my="md">
+    <TwoColumnsLayout>
       <CustomerQuery>
         {({ data: { customer } }) => (
-          <EditCustomerMutation>
-            {(editCustomer, { loading, error }) => (
-              <Formik
-                initialValues={{
-                  firstname: customer.firstname,
-                  lastname: customer.lastname,
-                  email: customer.email
-                }}
-                onSubmit={values =>
-                  editCustomer({
-                    variables: {
-                      input: {
-                        ...values,
-                        websiteId: customer.websiteId
-                      }
-                    }
-                  })
-                }
-              >
-                {() => (
-                  <GridLayout as={Form} id="edit-customer" i18nId="editCustomer" gridArea={TwoColumnsLayoutArea.left}>
-                    <FormField name="firstname" required />
-                    <FormField name="lastname" required />
-                    <FormField name="email" required />
-                    <FlexLayout justifyContent="space-between" alignItems="center" mt="md">
-                      <Link as={RouterLink} to="/account/change-password">
-                        <T id="editCustomer.changePassword" />
-                      </Link>
-                      <Button type="submit" variant={loading ? 'loader' : undefined}>
-                        <T id="editCustomer.submitButton" />
-                      </Button>
-                    </FlexLayout>
-                    <FormErrorSummary errors={error && [error.message]} />
-                  </GridLayout>
-                )}
-              </Formik>
+          <EditCustomerFormProvider customer={customer}>
+            {({ status = {} }) => (
+              <GridLayout as={Form} id="edit-customer" i18nId="editCustomer" gridArea={TwoColumnsLayoutArea.left}>
+                <FormField name="firstname" required />
+                <FormField name="lastname" required />
+                <FormField name="email" type="email" required />
+                <FlexLayout justifyContent="space-between" alignItems="center" mt="md">
+                  <Link as={RouterLink} to="/account/change-password">
+                    <T id="editCustomer.changePassword" />
+                  </Link>
+                  <FormSubmit />
+                </FlexLayout>
+                {status.error && <ErrorSummary errors={status.error} />}
+              </GridLayout>
             )}
-          </EditCustomerMutation>
+          </EditCustomerFormProvider>
         )}
       </CustomerQuery>
     </TwoColumnsLayout>
