@@ -12,6 +12,16 @@ export type LocaleContextType = {
 
 const LocaleContext = React.createContext<LocaleContextType>({} as any);
 
+export const addCimodeLocale = (items: string[]) => {
+  if (process.env.NODE_ENV === 'development') {
+    if (!items.find(x => x === 'cimode')) {
+      items.unshift('cimode');
+    }
+  }
+
+  return items;
+};
+
 export type LocaleProviderProps = {
   dateTimeFormatOptions?: DateTimeFormatOptions;
 };
@@ -29,7 +39,7 @@ export const LocaleProvider: React.SFC<LocaleProviderProps> = ({ children, dateT
               value={{
                 locale: activeLocale,
                 localeFallback: fallbackLng,
-                locales: whitelistedLocales,
+                locales: addCimodeLocale(whitelistedLocales),
                 dateTimeFormat: dateTimeFormatFactory([dateTimeFormatOptions.locale, activeLocale, fallbackLng], {
                   ...dateTimeFormatOptions
                 })

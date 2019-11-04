@@ -4,16 +4,6 @@ import { I18n } from '@deity/falcon-i18n';
 import { SetLocaleMutation, SetLocaleResponse } from '@deity/falcon-data';
 import { Locale } from '../Locale';
 
-export const addCimodeLocale = (locales: string[]) => {
-  if (process.env.NODE_ENV === 'development') {
-    if (!locales.find(x => x === 'cimode')) {
-      locales.unshift('cimode');
-    }
-  }
-
-  return locales;
-};
-
 export type LocaleItem = {
   code: string;
   name: string;
@@ -34,7 +24,7 @@ export const LocaleSwitcher: React.SFC<LocaleSwitcherProps> = ({ children }) => 
         {setLocale => (
           <Locale>
             {({ locale, locales }) => {
-              const items = addCimodeLocale(locales).map(code => ({ code, name: t(`languages.${code}`) }));
+              const items = locales.map(code => ({ code, name: t(`languages.${code}`) }));
               const value = { code: locale, name: t(`languages.${locale}`) };
 
               const onChange = ({ code }: LocaleItem) =>
