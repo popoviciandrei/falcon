@@ -208,7 +208,7 @@ enum FilterOperator {
 }
 
 input EditCustomerInput {
-  websiteId: Int!
+  websiteId: ID!
   firstname: String
   lastname: String
   email: String
@@ -571,14 +571,14 @@ type RemoveCartItemPayload {
 }
 
 type Customer {
-  id: Int
-  websiteId: Int
-  addresses: [Address]
+  id: ID!
+  websiteId: ID!
+  addresses: [Address!]!
   defaultBilling: String
   defaultShipping: String
-  email: String
-  firstname: String
-  lastname: String
+  email: String!
+  firstname: String!
+  lastname: String!
   newsletterSubscriber: Boolean
 }
 
