@@ -4,8 +4,9 @@ import { T } from '@deity/falcon-i18n';
 import { ChangePasswordFormProvider } from '@deity/falcon-front-kit';
 import { H1, FlexLayout, GridLayout, Button } from '@deity/falcon-ui';
 import {
-  FormField,
   Form,
+  FormField,
+  FormSubmit,
   ErrorSummary,
   PasswordRevealInput,
   TwoColumnsLayout,
@@ -19,7 +20,7 @@ const ChangePassword = ({ history }) => (
     </H1>
     <TwoColumnsLayout>
       <ChangePasswordFormProvider onSuccess={() => history.push('/account')}>
-        {({ isSubmitting, status = {} }) => (
+        {({ status = {} }) => (
           <Form id="change-password" i18nId="changePassword" gridArea={TwoColumnsLayoutArea.left}>
             <FormField name="currentPassword" type="password" required validate={[]}>
               {({ field }) => <PasswordRevealInput {...field} />}
@@ -31,9 +32,7 @@ const ChangePassword = ({ history }) => (
               <Button as={NavLink} to="/account/personal-information" mr="md">
                 <T id="changePassword.cancelButton" />
               </Button>
-              <Button type="submit" variant={isSubmitting ? 'loader' : undefined}>
-                <T id="changePassword.submitButton" />
-              </Button>
+              <FormSubmit />
             </FlexLayout>
             {status.error && <ErrorSummary errors={status.error} />}
           </Form>
