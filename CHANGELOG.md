@@ -102,10 +102,6 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
 - fixed command error messages printing after its done ([#691](https://github.com/deity-io/falcon/pull/691))
 
-### Example Shop with Blog vNext
-
-- replace mentions of "invoice/delivery address" with "shipping/billing address" for consistency ([#624](https://github.com/deity-io/falcon/pull/624))
-
 ### Create Falcon App vNext
 
 - fixed yarn check which was creating an empty "yarn.lock" file ([#675](https://github.com/deity-io/falcon/pull/675))
