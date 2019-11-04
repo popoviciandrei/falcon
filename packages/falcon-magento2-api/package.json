@@ -22,8 +22,8 @@
   "scripts": {
     "prepare": "npm run clean && npm run build",
     "clean": "falcon-scripts clean",
-    "build": "falcon-scripts build --target=NODE",
-    "watch": "falcon-scripts watch --target=NODE",
+    "build": "falcon-scripts build",
+    "watch": "falcon-scripts watch",
     "test": "falcon-scripts test",
     "test:coverage": "falcon-scripts test:coverage"
   },
