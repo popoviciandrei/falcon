@@ -11,6 +11,7 @@ import {
   ProtectedRoute,
   LocaleProvider,
   Locale,
+  CurrencyProvider,
   SearchProvider
 } from '@deity/falcon-front-kit';
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
@@ -75,48 +76,50 @@ const App = () => (
           <React.Fragment>
             <ThemeProvider theme={theme} globalCss={globalCss}>
               <LocaleProvider>
-                <SearchProvider>
-                  <AppLayout>
-                    <ScrollToTop />
-                    <HeadMetaTags />
-                    <ServiceWorker>
-                      {({ isWaiting, skipWaiting }) =>
-                        isWaiting ? (
-                          <Box>
-                            Site has updated. To see changes close other tabs or
-                            <Button size="ms" p="xs" m="sm" onClick={() => skipWaiting()}>
-                              click here
-                            </Button>
-                          </Box>
-                        ) : null
-                      }
-                    </ServiceWorker>
-                    <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
-                    <Header />
-                    <ErrorBoundary>
-                      <Switch>
-                        <Route exact path="/" component={Home} />
-                        <Route exact path="/blog/:page?" component={Blog} />
-                        <Route exact path="/cart" component={Cart} />
-                        <Route exact path="/checkout" component={Checkout} />
-                        <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
-                        <Route exact path="/checkout/failure" component={CheckoutFailure} />
-                        <ProtectedRoute path="/account" component={Account} />
-                        <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
-                        <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
-                        <DynamicRoute />
-                      </Switch>
-                      <PageFooter />
-                      <SidebarContainer>
-                        {sidebarProps => (
-                          <Sidebar {...sidebarProps}>
-                            <SidebarContents {...sidebarProps} />
-                          </Sidebar>
-                        )}
-                      </SidebarContainer>
-                    </ErrorBoundary>
-                  </AppLayout>
-                </SearchProvider>
+                <CurrencyProvider>
+                  <SearchProvider>
+                    <AppLayout>
+                      <ScrollToTop />
+                      <HeadMetaTags />
+                      <ServiceWorker>
+                        {({ isWaiting, skipWaiting }) =>
+                          isWaiting ? (
+                            <Box>
+                              Site has updated. To see changes close other tabs or
+                              <Button size="ms" p="xs" m="sm" onClick={() => skipWaiting()}>
+                                click here
+                              </Button>
+                            </Box>
+                          ) : null
+                        }
+                      </ServiceWorker>
+                      <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
+                      <Header />
+                      <ErrorBoundary>
+                        <Switch>
+                          <Route exact path="/" component={Home} />
+                          <Route exact path="/blog/:page?" component={Blog} />
+                          <Route exact path="/cart" component={Cart} />
+                          <Route exact path="/checkout" component={Checkout} />
+                          <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
+                          <Route exact path="/checkout/failure" component={CheckoutFailure} />
+                          <ProtectedRoute path="/account" component={Account} />
+                          <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
+                          <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
+                          <DynamicRoute />
+                        </Switch>
+                        <PageFooter />
+                        <SidebarContainer>
+                          {sidebarProps => (
+                            <Sidebar {...sidebarProps}>
+                              <SidebarContents {...sidebarProps} />
+                            </Sidebar>
+                          )}
+                        </SidebarContainer>
+                      </ErrorBoundary>
+                    </AppLayout>
+                  </SearchProvider>
+                </CurrencyProvider>
               </LocaleProvider>
             </ThemeProvider>
             {ThemeEditorComponent && <ThemeEditorComponent theme={theme} {...editorRest} side="left" />}
