@@ -36,10 +36,11 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 - initial release
 - added convention for validation error messages translation ([#585](https://github.com/deity-io/falcon/pull/585))
-- fixed synchronisation of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
+- fixed synchronization of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
 - added `Submit` component which provides context to form submit components ([#548](https://github.com/deity-io/falcon/pull/548))
+- fixed `LocaleSwitcher` which did not take into account `whitelist`ed languages, and `LocaleContext` which hardcoded language fallback instead of taking it from `clientConfig` ([#698](https://github.com/deity-io/falcon/pull/698))
 
 ### Falcon UI Kit v1.0.0
 
