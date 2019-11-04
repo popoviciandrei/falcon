@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { Order, OrderItem, Address } from '@deity/falcon-shop-extension';
+import { Order, OrderItem, Address, Country } from '@deity/falcon-shop-extension';
 import { Query } from '@deity/falcon-data';
 
 export const GET_ORDER = gql`
@@ -73,12 +73,16 @@ export type OrderResponse = {
     items: Pick<OrderItem, 'itemId' | 'sku' | 'name' | 'rowTotalInclTax' | 'qty' | 'thumbnailUrl' | 'link'>[];
     billingAddress: Pick<
       Address,
-      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'country' | 'telephone'
-    >;
+      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'telephone'
+    > & {
+      country: Pick<Country, 'code'>;
+    };
     shippingAddress: Pick<
       Address,
-      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'country' | 'telephone'
-    >;
+      'company' | 'firstname' | 'lastname' | 'street' | 'city' | 'postcode' | 'telephone'
+    > & {
+      country: Pick<Country, 'code'>;
+    };
   };
 };
 
