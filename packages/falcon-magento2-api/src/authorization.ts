@@ -1,5 +1,5 @@
 import deepMerge from 'deepmerge';
-import OAuth from 'oauth';
+import { OAuth } from 'oauth';
 import { ContextRequestInit } from '@deity/falcon-server-env';
 
 /**
@@ -72,7 +72,7 @@ export class OAuth1Auth {
   }
 
   initialize() {
-    this.oAuthClient = new OAuth.OAuth(
+    this.oAuthClient = new OAuth(
       this.config.requestTokenUrl,
       this.config.accessTokenUrl,
       this.config.consumerKey,
