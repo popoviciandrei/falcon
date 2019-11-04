@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { BackendConfigQuery } from '@deity/falcon-shop-data';
+import { BackendConfigQuery } from '@deity/falcon-data';
 import { ClientConfigQuery } from '../ClientConfig';
 import { dateTimeFormatFactory, DateTimeFormatOptions } from './dateTimeFormat';
 
@@ -21,7 +21,7 @@ export const LocaleProvider: React.SFC<LocaleProviderProps> = ({ children, dateT
         {({ data: { backendConfig } }) => {
           const { activeLocale } = backendConfig;
 
-          const localeFallback = clientConfig.i18n.lng;
+          const localeFallback = clientConfig.i18n.fallbackLng;
 
           return (
             <LocaleContext.Provider
