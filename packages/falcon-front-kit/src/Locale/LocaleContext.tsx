@@ -6,6 +6,7 @@ import { dateTimeFormatFactory, DateTimeFormatOptions } from './dateTimeFormat';
 export type LocaleContextType = {
   locale: string;
   localeFallback: string;
+  locales: string[];
   dateTimeFormat: ReturnType<typeof dateTimeFormatFactory>;
 };
 
@@ -19,16 +20,17 @@ export const LocaleProvider: React.SFC<LocaleProviderProps> = ({ children, dateT
     {({ data: { clientConfig } }) => (
       <BackendConfigQuery>
         {({ data: { backendConfig } }) => {
-          const { activeLocale } = backendConfig;
-
-          const localeFallback = clientConfig.i18n.fallbackLng;
+          const { activeLocale, locales } = backendConfig;
+          const { fallbackLng, whitelist } = clientConfig.i18n;
+          const whitelistedLocales = locales.filter(locale => whitelist.some(x => locale.startsWith(x)));
 
           return (
             <LocaleContext.Provider
               value={{
                 locale: activeLocale,
-                localeFallback,
-                dateTimeFormat: dateTimeFormatFactory([dateTimeFormatOptions.locale, activeLocale, localeFallback], {
+                localeFallback: fallbackLng,
+                locales: whitelistedLocales,
+                dateTimeFormat: dateTimeFormatFactory([dateTimeFormatOptions.locale, activeLocale, fallbackLng], {
                   ...dateTimeFormatOptions
                 })
               }}
