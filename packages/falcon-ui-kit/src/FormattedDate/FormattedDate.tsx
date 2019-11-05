@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { themed, Text } from '@deity/falcon-ui';
-import { Locale, DateTimeFormatOptions } from '@deity/falcon-front-kit';
+import { useLocale, DateTimeFormatOptions } from '@deity/falcon-front-kit';
 
 type FormattedDateProps = {
   value: number | string | Date;
@@ -9,9 +9,11 @@ type FormattedDateProps = {
   formatOptions?: DateTimeFormatOptions;
 };
 
-const FormattedDateInnerDOM: React.SFC<FormattedDateProps> = ({ value, formatOptions, ...rest }) => (
-  <Locale>{({ dateTimeFormat }) => <Text {...rest}>{dateTimeFormat(value, formatOptions)}</Text>}</Locale>
-);
+const FormattedDateInnerDOM: React.SFC<FormattedDateProps> = ({ value, formatOptions, ...rest }) => {
+  const { dateTimeFormat } = useLocale();
+
+  return <Text {...rest}>{dateTimeFormat(value, formatOptions)}</Text>;
+};
 FormattedDateInnerDOM.propTypes = {
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.instanceOf(Date)]).isRequired
 };

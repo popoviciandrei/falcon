@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const chalk = require('chalk');
 const Logger = require('@deity/falcon-logger');
-const WebpackDevServer = require('webpack-dev-server-speedy');
+const WebpackDevServer = require('webpack-dev-server');
 const { measureFileSizesBeforeBuild, printFileSizesAfterBuild } = require('react-dev-utils/FileSizeReporter');
 const paths = require('../paths');
 const {
@@ -69,7 +69,6 @@ module.exports.build = async buildConfig => {
   try {
     const previousBuildSizes = await measureFileSizesBeforeBuild(paths.appBuildPublic);
     fs.emptyDirSync(paths.appBuild);
-    fs.copySync(paths.appPublic, paths.appBuildPublic, { dereference: true });
 
     // First compile the client. We need it to properly output assets.json
     // (asset manifest file with the correct hashes on file names BEFORE we can start the server compiler).
@@ -110,7 +109,6 @@ module.exports.size = async buildConfig => {
 
   try {
     fs.emptyDirSync(paths.appBuild);
-    fs.copySync(paths.appPublic, paths.appBuildPublic, { dereference: true });
 
     Logger.info('Compiling client...');
     const clientConfig = createConfig('web', { publicPath: PUBLIC_PATH, analyze: true, paths, buildConfig });

@@ -3,7 +3,7 @@ import { T } from '@deity/falcon-i18n';
 import { Text } from '@deity/falcon-ui';
 import { ForgotPasswordFormProvider } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '../Error';
-import { FormField, Form, FormSubmit, FormProps, FormErrorSummary } from '../Forms';
+import { FormField, Form, FormSubmit, FormProps } from '../Forms';
 
 export type ForgetPasswordFormProps = Partial<FormProps> & {
   onSuccess?: () => void;
@@ -17,7 +17,7 @@ export const ForgotPasswordForm: React.SFC<ForgetPasswordFormProps> = ({ onSucce
       return (
         <Form id="forgot-password" i18nId="forgotPassword" {...formProps}>
           <FormField name="email" required type="email" autoComplete="email" />
-          <FormSubmit submitting={isSubmitting} value="Reset my password" />
+          <FormSubmit />
           {status.error && <ErrorSummary errors={error} />}
 
           {submitSucceed && (

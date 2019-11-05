@@ -26,6 +26,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed theme merging ([#551](https://github.com/deity-io/falcon/pull/551))
 - fixed duplicated conditions when extracting themed css ([#611](https://github.com/deity-io/falcon/pull/611))
 - fixed incompatible `css` prop typings ([#645](https://github.com/deity-io/falcon/pull/645))
+- added `console.error` when an icon is not defined in the theme during development ([#682](https://github.com/deity-io/falcon/pull/682))
 
 ### Falcon E-commerce UI Kit discontinued
 
@@ -35,9 +36,14 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 - initial release
 - added convention for validation error messages translation ([#585](https://github.com/deity-io/falcon/pull/585))
-- fixed synchronisation of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
+- fixed synchronization of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+- added `Submit` component which provides context to form submit components ([#548](https://github.com/deity-io/falcon/pull/548))
+- fixed `LocaleSwitcher` which did not take into account `whitelist`ed languages, and `LocaleContext` which hardcoded language fallback instead of taking it from `clientConfig` ([#698](https://github.com/deity-io/falcon/pull/698))
+- extracted `CurrencyProvider` and `Currency` components from `LocaleProvider` and `Locale`, also introduced `useLocale` and `useCurrency` hooks ([#698](https://github.com/deity-io/falcon/pull/698))
+- updated Formik to version 2.0 ([#705](https://github.com/deity-io/falcon/pull/705))
+
 
 ### Falcon UI Kit v1.0.0
 
@@ -46,6 +52,8 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
 - fixed `ProductCard` component which should not require `thumbnail` ([#685](https://github.com/deity-io/falcon/pull/685))
+- integrated `FormSubmit` with Formik, which allows it to hook into form state ([#548](https://github.com/deity-io/falcon/pull/548))
+- updated Formik to version 2.0 ([#705](https://github.com/deity-io/falcon/pull/705))
 
 ### Falcon Data v1.0.0
 
@@ -64,6 +72,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 
+### Falcon Shop Extension v1.0.0
+
+- introduced Country and Region types to allow fetching more details with address queries ([#609](https://github.com/deity-io/falcon/pull/609))
+
 ### Falcon Server vNext
 
 - Falcon-Server has been fully migrated to [TypeScript](https://github.com/microsoft/TypeScript/) 🎉 ([#479](https://github.com/deity-io/falcon/pull/479))
@@ -76,6 +88,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed falsy value check when extracting a value by `fieldName` from the provided `sourceValue` ([#607](https://github.com/deity-io/falcon/pull/607))
 - fixed priority for `ApiDataSource.getExtraResolvers` values ([#678](https://github.com/deity-io/falcon/pull/678))
 - `graphqlUtils` methods moved to `falcon-server-env` package ([#686](https://github.com/deity-io/falcon/pull/686))
+- simplified schema stitching call on Falcon-Server ([#701](https://github.com/deity-io/falcon/pull/701))
 
 ### Falcon Server Env vNext
 
