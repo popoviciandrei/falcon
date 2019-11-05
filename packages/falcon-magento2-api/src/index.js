@@ -1,5 +1,6 @@
 const url = require('url');
 const qs = require('qs');
+const graphqlFields = require('graphql-fields');
 const urlJoin = require('proper-url-join');
 const snakeCase = require('lodash/snakeCase');
 const isEmpty = require('lodash/isEmpty');
@@ -1097,8 +1098,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   /**
    * Fetch info about customer order based on order id
    * @param {object} obj Parent object
-   * @param {object} params request params
-   * @param {number} params.id order id
+   * @param {{id: number}} params request params
    * @returns {Promise<Order>} - order info
    */
   async order(obj, params) {
@@ -1633,7 +1633,15 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     }
     this.removeCartData();
 
-    return this.order({ id: orderId, referenceNo: orderRealId }, { id: result.orderId }, context, info);
+    const orderFields = graphqlFields(info, {}, { excludedFields: ['__typename', 'url', 'method', 'fields'] });
+    if (Object.keys(orderFields).length <= 2 && orderFields.id && orderFields.referenceNo) {
+      return {
+        id: orderId,
+        referenceNo: orderRealId
+      };
+    }
+
+    return this.order({ id: orderId }, { id: result.orderId }, context, info);
   }
 
   /**
