@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { themed, Text } from '@deity/falcon-ui';
-import { Locale, PriceFormatOptions } from '@deity/falcon-front-kit';
+import { useCurrency, PriceFormatOptions } from '@deity/falcon-front-kit';
 
 export type PriceProps = {
   value: number;
@@ -9,17 +9,13 @@ export type PriceProps = {
   formatOptions?: PriceFormatOptions;
   ellipsis: boolean;
 };
-const PriceInnerDom: React.SFC<PriceProps> = props => {
-  const { value, formatOptions, ...rest } = props;
+const PriceInnerDom: React.SFC<PriceProps> = ({ value, formatOptions, ...rest }) => {
+  const { priceFormat } = useCurrency();
 
   return (
-    <Locale>
-      {({ priceFormat }) => (
-        <Text m="lg" {...rest}>
-          {priceFormat(value, formatOptions)}
-        </Text>
-      )}
-    </Locale>
+    <Text m="lg" {...rest}>
+      {priceFormat(value, formatOptions)}
+    </Text>
   );
 };
 PriceInnerDom.propTypes = {

@@ -3,6 +3,7 @@ export * from './Address';
 export * from './Apollo';
 export * from './Checkout';
 export * from './ClientConfig';
+export * from './Currency';
 export * from './DynamicRoute';
 export * from './EnsureTTI';
 export * from './Filters';

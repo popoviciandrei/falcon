@@ -10,6 +10,8 @@ import {
   OnlyUnauthenticatedRoute,
   ProtectedRoute,
   LocaleProvider,
+  Locale,
+  CurrencyProvider,
   SearchProvider
 } from '@deity/falcon-front-kit';
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
@@ -20,19 +22,27 @@ import { Header, PageFooter, SidebarContainer, ErrorBoundary } from './component
 import { deityGreenTheme, globalCss } from './theme';
 
 const HeadMetaTags = () => (
-  <Helmet defaultTitle="Deity Shop with Blog" titleTemplate="%s | Deity Shop with Blog">
-    <meta name="description" content="This is example of Shop with Blog powered by Deity Falcon" />
-    <meta name="keywords" content="pwa,reactjs,ecommerce,magento,shop,webshop,deity" />
-    <meta name="theme-color" content="#fff" />
-    <meta name="format-detection" content="telephone=yes" />
-    <meta property="og:title" content="Deity Shop with Blog" />
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="This is example of Shop with Blog powered by Deity Falcon" />
-    <meta property="og:url" content="/" />
-    <meta property="og:image" content={logo} />
-    <meta property="og:image:width" content="300" />
-    <meta property="og:image:height" content="107" />
-  </Helmet>
+  <Locale>
+    {({ locale }) => (
+      <Helmet
+        htmlAttributes={{ lang: locale }}
+        defaultTitle="Deity Shop with Blog"
+        titleTemplate="%s | Deity Shop with Blog"
+      >
+        <meta name="description" content="This is example of Shop with Blog powered by Deity Falcon" />
+        <meta name="keywords" content="pwa,reactjs,ecommerce,magento,shop,webshop,deity" />
+        <meta name="theme-color" content="#fff" />
+        <meta name="format-detection" content="telephone=yes" />
+        <meta property="og:title" content="Deity Shop with Blog" />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="This is example of Shop with Blog powered by Deity Falcon" />
+        <meta property="og:url" content="/" />
+        <meta property="og:image" content={logo} />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="107" />
+      </Helmet>
+    )}
+  </Locale>
 );
 
 const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/home/Home'));
@@ -61,57 +71,61 @@ if (process.env.NODE_ENV !== 'production') {
 const App = () => (
   <ErrorBoundary>
     <ServiceWorkerRegistrar>
-      <LocaleProvider>
-        <ScrollToTop />
-        <ThemeEditorState initial={deityGreenTheme}>
-          {props => (
-            <SearchProvider>
-              <ThemeProvider theme={props.theme} globalCss={globalCss}>
-                <HeadMetaTags />
-                <AppLayout>
-                  <ServiceWorker>
-                    {({ isWaiting, skipWaiting }) =>
-                      isWaiting ? (
-                        <Box>
-                          Site has updated. To see changes close other tabs or
-                          <Button size="ms" p="xs" m="sm" onClick={() => skipWaiting()}>
-                            click here
-                          </Button>
-                        </Box>
-                      ) : null
-                    }
-                  </ServiceWorker>
-                  <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
-                  <Header />
-                  <ErrorBoundary>
-                    <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route exact path="/blog/:page?" component={Blog} />
-                      <Route exact path="/cart" component={Cart} />
-                      <Route exact path="/checkout" component={Checkout} />
-                      <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
-                      <Route exact path="/checkout/failure" component={CheckoutFailure} />
-                      <ProtectedRoute path="/account" component={Account} />
-                      <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
-                      <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
-                      <DynamicRoute />
-                    </Switch>
-                    <PageFooter />
-                    <SidebarContainer>
-                      {sidebarProps => (
-                        <Sidebar {...sidebarProps}>
-                          <SidebarContents {...sidebarProps} />
-                        </Sidebar>
-                      )}
-                    </SidebarContainer>
-                  </ErrorBoundary>
-                </AppLayout>
-              </ThemeProvider>
-              {ThemeEditorComponent && <ThemeEditorComponent {...props} side="left" />}
-            </SearchProvider>
-          )}
-        </ThemeEditorState>
-      </LocaleProvider>
+      <ThemeEditorState initial={deityGreenTheme}>
+        {({ theme, ...editorRest }) => (
+          <React.Fragment>
+            <ThemeProvider theme={theme} globalCss={globalCss}>
+              <LocaleProvider>
+                <CurrencyProvider>
+                  <SearchProvider>
+                    <AppLayout>
+                      <ScrollToTop />
+                      <HeadMetaTags />
+                      <ServiceWorker>
+                        {({ isWaiting, skipWaiting }) =>
+                          isWaiting ? (
+                            <Box>
+                              Site has updated. To see changes close other tabs or
+                              <Button size="ms" p="xs" m="sm" onClick={() => skipWaiting()}>
+                                click here
+                              </Button>
+                            </Box>
+                          ) : null
+                        }
+                      </ServiceWorker>
+                      <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
+                      <Header />
+                      <ErrorBoundary>
+                        <Switch>
+                          <Route exact path="/" component={Home} />
+                          <Route exact path="/blog/:page?" component={Blog} />
+                          <Route exact path="/cart" component={Cart} />
+                          <Route exact path="/checkout" component={Checkout} />
+                          <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
+                          <Route exact path="/checkout/failure" component={CheckoutFailure} />
+                          <ProtectedRoute path="/account" component={Account} />
+                          <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
+                          <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
+                          <DynamicRoute />
+                        </Switch>
+                        <PageFooter />
+                        <SidebarContainer>
+                          {sidebarProps => (
+                            <Sidebar {...sidebarProps}>
+                              <SidebarContents {...sidebarProps} />
+                            </Sidebar>
+                          )}
+                        </SidebarContainer>
+                      </ErrorBoundary>
+                    </AppLayout>
+                  </SearchProvider>
+                </CurrencyProvider>
+              </LocaleProvider>
+            </ThemeProvider>
+            {ThemeEditorComponent && <ThemeEditorComponent theme={theme} {...editorRest} side="left" />}
+          </React.Fragment>
+        )}
+      </ThemeEditorState>
     </ServiceWorkerRegistrar>
   </ErrorBoundary>
 );

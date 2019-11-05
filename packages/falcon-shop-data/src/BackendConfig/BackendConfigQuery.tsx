@@ -22,7 +22,7 @@ export const GET_BACKEND_CONFIG = gql`
 `;
 
 export type ShopBackendConfig = BackendConfig & {
-  shop: Pick<ShopConfig, 'activeCurrency' | 'sortOrderList'>;
+  shop?: Pick<ShopConfig, 'activeCurrency' | 'sortOrderList'>;
 };
 
 export type BackendConfigResponse = {

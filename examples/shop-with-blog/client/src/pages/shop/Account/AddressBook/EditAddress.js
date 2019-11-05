@@ -41,7 +41,7 @@ const EditAddress = ({ match, history }) => {
                   street2: address.street.length > 1 ? address.street[1] : '',
                   postcode: address.postcode,
                   city: address.city,
-                  countryId: address.countryId,
+                  countryId: address.country.id,
                   company: address.company || undefined,
                   telephone: address.telephone,
                   defaultBilling: address.defaultBilling,

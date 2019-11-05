@@ -6,7 +6,6 @@ const isEmpty = require('lodash/isEmpty');
 const pick = require('lodash/pick');
 const has = require('lodash/has');
 const forEach = require('lodash/forEach');
-const isPlainObject = require('lodash/isPlainObject');
 const addMinutes = require('date-fns/add_minutes');
 const { ApiUrlPriority, stripHtml } = require('@deity/falcon-server-env');
 const { Magento2ApiBase } = require('./Magento2ApiBase');
@@ -62,6 +61,10 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       },
       PaymentMethod: {
         config: apiGetter((api, ...args) => api.getPaymentMethodConfig(...args))
+      },
+      Address: {
+        country: apiGetter((api, ...args) => api.country(...args)),
+        region: apiGetter((api, ...args) => api.addressRegion(...args))
       }
     };
   }
@@ -894,13 +897,24 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @returns {CountryList} parsed country list
    */
   async countryList() {
-    const response = await this.getAuth('/directory/countries', {}, { context: { isAuthRequired: false } });
-    const countries = response.map(item => ({
-      code: item.id,
-      englishName: item.full_name_english,
-      localName: item.full_name_locale,
-      regions: item.available_regions || []
-    }));
+    const countries = await this.getAuth(
+      '/directory/countries',
+      {},
+      {
+        cacheOptions: { ttl: 86400 }, // 24 hours cache
+        context: {
+          isAuthRequired: false,
+          didReceiveResult: result =>
+            result.map(item => ({
+              id: item.id,
+              code: item.two_letter_abbreviation,
+              englishName: item.full_name_english,
+              localName: item.full_name_locale,
+              regions: item.available_regions || []
+            }))
+        }
+      }
+    );
 
     return { items: countries };
   }
@@ -1052,10 +1066,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
 
     if (!has(response, 'defaultShipping')) {
       response.defaultShipping = false;
-    }
-
-    if (isPlainObject(response.region)) {
-      response.region = response.region.region;
     }
 
     return response;
@@ -1235,6 +1245,34 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     const response = await this.getForCustomer(`/falcon/customers/me/address/${id}`);
 
     return this.convertAddressData(response);
+  }
+
+  /**
+   * Get country details
+   * @param {object} obj parent object
+   * @param {ID} obj.countryId country ID
+   * @returns {promise<Country>} requested country data
+   */
+  async country({ countryId }) {
+    const countries = await this.countryList();
+    return countries.items.find(country => country.id === countryId);
+  }
+
+  /**
+   * Get region details
+   * @param {object} obj parent object
+   * @param {object} obj.region region object
+   * @returns {promise<Country>} requested region data
+   */
+  async addressRegion({ region }) {
+    if (!region || !region.region) {
+      return null;
+    }
+    return {
+      id: region.regionId,
+      code: region.regionCode,
+      name: region.region
+    };
   }
 
   /**
