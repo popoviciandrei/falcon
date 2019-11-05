@@ -1620,14 +1620,19 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       throw e;
     }
 
-    const { orderId, orderRealId, extensionAttributes } = result;
-    if (!orderId) {
+    if (!result.orderId) {
       throw new Error('no order id from magento.');
     }
 
-    this.session.orderId = orderId;
+    const order = {
+      id: result.orderId,
+      referenceNo: result.orderRealId
+    };
+
+    this.session.orderId = order.Id;
     this.session.orderQuoteId = this.session.cart.quoteId;
 
+    const { extensionAttributes } = result;
     if (extensionAttributes && extensionAttributes.adyenCc) {
       return this.handleAdyen3dSecure(extensionAttributes.adyenCc);
     }
@@ -1635,13 +1640,10 @@ module.exports = class Magento2Api extends Magento2ApiBase {
 
     const orderFields = graphqlFields(info, {}, { excludedFields: ['__typename', 'url', 'method', 'fields'] });
     if (Object.keys(orderFields).length <= 2 && orderFields.id && orderFields.referenceNo) {
-      return {
-        id: orderId,
-        referenceNo: orderRealId
-      };
+      return order;
     }
 
-    return this.order({ id: orderId }, { id: result.orderId }, context, info);
+    return this.order(order, { id: order.Id }, context, info);
   }
 
   /**
