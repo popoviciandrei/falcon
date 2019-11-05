@@ -51,7 +51,7 @@ extend type Mutation {
   resetPassword(input: ResetPasswordInput!): Boolean
   editAddress(input: EditAddressInput!): Address
   addAddress(input: AddAddressInput!): Address
-  removeAddress(id: Int!): Boolean
+  removeAddress(id: ID!): Boolean!
   """
   **Checkout Step 1/7 🛒 (start)**
 
@@ -222,7 +222,7 @@ input CheckoutAddressInput {
   lastname: String!
   city: String
   customerId: Int
-  customerAddressId: Int
+  customerAddressId: ID
   postcode: String
   sameAsBilling: Int
   saveInAddressBook: Int
@@ -248,11 +248,11 @@ input AddAddressInput {
   countryId: ID!
   defaultBilling: Boolean
   defaultShipping: Boolean
-  regionId: Int
+  regionId: ID
 }
 
 input EditAddressInput {
-  id: Int!
+  id: ID!
   company: String
   firstname: String!
   lastname: String!
@@ -263,7 +263,7 @@ input EditAddressInput {
   countryId: ID!
   defaultBilling: Boolean
   defaultShipping: Boolean
-  regionId: Int
+  regionId: ID
 }
 
 input ChangePasswordInput {
@@ -590,9 +590,8 @@ type Address {
   street: [String!]!
   city: String!
   postcode: String!
-  countryId: String!
-  region: String
-  regionId: Int
+  country: Country!
+  region: Region
   telephone: String
   fax: String
   defaultBilling: Boolean!
@@ -657,9 +656,9 @@ type BundleProductOptionLink {
   canChangeQuantity: Int
   name: String
   catalogDisplayPrice: String
-  id: String
+  id: ID
   isDefault: Boolean
-  optionId: Int
+  optionId: ID
   position: Int
   price: String
   priceType: String
@@ -668,15 +667,24 @@ type BundleProductOptionLink {
 }
 
 type Region {
+  # unique identifier of the region
   id: ID!
-  code: String!
+  # abbreviated form of the region name
+  code: String
+  # region name
   name: String
 }
 
 type Country {
+  # unique identifier of the country
+  id: ID!
+  # abbreviated form of the country name
   code: String!
+  # country name in English
   englishName: String
+  # country name in locale language
   localName: String
+  # regions included in the country
   regions: [Region!]!
 }
 
