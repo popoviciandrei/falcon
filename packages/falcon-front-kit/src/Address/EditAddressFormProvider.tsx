@@ -32,7 +32,7 @@ export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = 
     street2: address.street.length > 1 ? address.street[1] : undefined,
     postcode: address.postcode,
     city: address.city,
-    countryId: address.countryId,
+    countryId: address.country.id,
     company: address.company || undefined,
     telephone: address.telephone,
     defaultBilling: address.defaultBilling,

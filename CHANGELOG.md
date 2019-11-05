@@ -72,6 +72,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 
+### Falcon Shop Extension v1.0.0
+
+- introduced Country and Region types to allow fetching more details with address queries ([#609](https://github.com/deity-io/falcon/pull/609))
+
 ### Falcon Server vNext
 
 - Falcon-Server has been fully migrated to [TypeScript](https://github.com/microsoft/TypeScript/) 🎉 ([#479](https://github.com/deity-io/falcon/pull/479))
