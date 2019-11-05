@@ -47,7 +47,7 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
           variables: {
             input: {
               ...values,
-              street: [street1, street2]
+              street: [street1, street2].filter(Boolean)
             }
           }
         })
