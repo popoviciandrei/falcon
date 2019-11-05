@@ -1618,12 +1618,11 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       throw e;
     }
 
-    this.session.orderId = placeOrderResult.orderId;
-
-    if (!this.session.orderId) {
+    if (!placeOrderResult.orderId) {
       throw new Error('no order id from magento.');
     }
 
+    this.session.orderId = placeOrderResult.orderId;
     this.session.orderQuoteId = this.session.cart.quoteId;
 
     if (placeOrderResult.extensionAttributes && placeOrderResult.extensionAttributes.adyenCc) {
@@ -1631,7 +1630,10 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     }
     this.removeCartData();
 
-    return placeOrderResult;
+    return {
+      orderId: placeOrderResult.orderId,
+      orderReferenceNo: placeOrderResult.orderRealId
+    };
   }
 
   /**
