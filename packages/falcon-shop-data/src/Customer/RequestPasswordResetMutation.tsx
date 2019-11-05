@@ -3,7 +3,7 @@ import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { RequestPasswordResetInput } from '@deity/falcon-shop-extension';
 
-export const REQUEST_PASSWORD_RESET_TOKEN_MUTATION = gql`
+export const REQUEST_PASSWORD_RESET_TOKEN = gql`
   mutation RequestPasswordReset($input: RequestPasswordResetInput!) {
     requestPasswordReset(input: $input)
   }
@@ -18,10 +18,10 @@ export class RequestPasswordResetMutation extends Mutation<
   OperationInput<RequestPasswordResetInput>
 > {
   static defaultProps = {
-    mutation: REQUEST_PASSWORD_RESET_TOKEN_MUTATION
+    mutation: REQUEST_PASSWORD_RESET_TOKEN
   };
 }
 
 export const useRequestPasswordResetMutation = (
   options: MutationHookOptions<RequestPasswordResetResponse, OperationInput<RequestPasswordResetInput>> = {}
-) => useMutation(REQUEST_PASSWORD_RESET_TOKEN_MUTATION, options);
+) => useMutation(REQUEST_PASSWORD_RESET_TOKEN, options);

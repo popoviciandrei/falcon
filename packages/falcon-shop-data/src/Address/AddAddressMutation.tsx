@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
-import { AddAddressInput, Address } from '@deity/falcon-shop-extension';
+import { Address, AddAddressInput } from '@deity/falcon-shop-extension';
 
 export const ADD_ADDRESS = gql`
   mutation AddAddress($input: AddAddressInput!) {
@@ -20,3 +21,11 @@ export class AddAddressMutation extends Mutation<AddAddressResponse, OperationIn
     refetchQueries: ['AddressList']
   };
 }
+
+export const useAddAddressMutation = (
+  options: MutationHookOptions<AddAddressResponse, OperationInput<AddAddressInput>> = {}
+) =>
+  useMutation(ADD_ADDRESS, {
+    refetchQueries: ['AddressList'],
+    ...options
+  });
