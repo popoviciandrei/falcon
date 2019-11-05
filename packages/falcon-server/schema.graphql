@@ -14,7 +14,7 @@ type Mutation {
   """
   Sets the locale (for example, "en-US")
   """
-  setLocale(locale: String!): BackendConfig
+  setLocale(locale: String!): BackendConfig!
 }
 
 type Subscription {
@@ -28,7 +28,7 @@ type Query {
   """
   Returns a compiled backend config
   """
-  backendConfig: BackendConfig
+  backendConfig: BackendConfig!
   """
   Resolves dynamic resource metadata
   """

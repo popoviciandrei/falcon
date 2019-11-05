@@ -11,7 +11,7 @@ import { I18nProvider } from '@deity/falcon-i18n';
 import { getClientConfig } from '@deity/falcon-front-kit';
 import { HelmetProvider } from 'react-helmet-async';
 import { apolloClientWeb } from './service';
-import HtmlHead from './components/HtmlHead';
+import { HtmlHead } from './components';
 import App, { clientApolloSchema } from './clientApp';
 import i18nFactory from './i18n/i18nClientFactory';
 
@@ -29,16 +29,14 @@ loadableReady()
   .then(({ apolloClient, i18next }) => {
     const markup = (
       <ApolloProvider client={apolloClient}>
-        <HelmetProvider>
-          <I18nProvider i18n={i18next}>
-            <BrowserRouter>
-              <React.Fragment>
-                <HtmlHead htmlLang={i18nConfig.lng} />
-                <App />
-              </React.Fragment>
-            </BrowserRouter>
-          </I18nProvider>
-        </HelmetProvider>
+        <I18nProvider i18n={i18next}>
+          <BrowserRouter>
+            <HelmetProvider>
+              <HtmlHead htmlLang={i18nConfig.lng} />
+              <App />
+            </HelmetProvider>
+          </BrowserRouter>
+        </I18nProvider>
       </ApolloProvider>
     );
 

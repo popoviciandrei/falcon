@@ -1,11 +1,11 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { ApolloProvider } from '@apollo/react-common';
 import { getDataFromTree } from '@apollo/react-ssr';
-import { HelmetProvider } from 'react-helmet-async';
 import { ChunkExtractorManager } from '@loadable/server';
 import { I18nProvider } from '@deity/falcon-i18n';
-import HtmlHead from '../../components/HtmlHead';
+import { HtmlHead } from '../../components';
 
 const helmetContext = {};
 
@@ -20,20 +20,18 @@ export default ({ App }) => async (ctx, next) => {
   const routerContext = {};
 
   const markup = (
-    <ApolloProvider client={client}>
-      <HelmetProvider context={helmetContext}>
-        <ChunkExtractorManager extractor={chunkExtractor}>
-          <I18nProvider i18n={i18next}>
-            <StaticRouter context={routerContext} location={ctx.url}>
-              <React.Fragment>
-                <HtmlHead htmlLang={i18next.language} />
-                <App />
-              </React.Fragment>
-            </StaticRouter>
-          </I18nProvider>
-        </ChunkExtractorManager>
-      </HelmetProvider>
-    </ApolloProvider>
+    <ChunkExtractorManager extractor={chunkExtractor}>
+      <ApolloProvider client={client}>
+        <I18nProvider i18n={i18next}>
+          <StaticRouter context={routerContext} location={ctx.url}>
+            <HelmetProvider context={helmetContext}>
+              <HtmlHead htmlLang={i18next.language} />
+              <App />
+            </HelmetProvider>
+          </StaticRouter>
+        </I18nProvider>
+      </ApolloProvider>
+    </ChunkExtractorManager>
   );
 
   await serverTiming.profile(async () => getDataFromTree(markup), 'getDataFromTree()');

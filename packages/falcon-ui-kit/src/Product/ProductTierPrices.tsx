@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { T } from '@deity/falcon-i18n';
 import { Box, BoxProps, Text } from '@deity/falcon-ui';
-import { Locale } from '@deity/falcon-front-kit';
+import { useCurrency } from '@deity/falcon-front-kit';
 
 export type ProductTierPricesProps = BoxProps & {
   items: {
@@ -16,17 +16,14 @@ export const ProductTierPrices: React.SFC<ProductTierPricesProps> = ({ items: ti
     return null;
   }
 
+  const { priceFormat } = useCurrency();
   return (
     <Box {...rest}>
-      <Locale>
-        {({ priceFormat }) =>
-          tierPrices.map(x => (
-            <Text key={x.qty}>
-              <T id="product.tierPriceDescription" qty={x.qty} price={priceFormat(x.value)} discount={x.discount} />
-            </Text>
-          ))
-        }
-      </Locale>
+      {tierPrices.map(x => (
+        <Text key={x.qty}>
+          <T id="product.tierPriceDescription" qty={x.qty} price={priceFormat(x.value)} discount={x.discount} />
+        </Text>
+      ))}
     </Box>
   );
 };
