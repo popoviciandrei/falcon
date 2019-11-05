@@ -9,7 +9,7 @@ export const PLACE_ORDER = gql`
       __typename
       ... on PlaceOrderSuccessfulResult {
         orderId
-        orderRealId
+        orderReferenceNo
       }
       ... on PlaceOrder3dSecureResult {
         url

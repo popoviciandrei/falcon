@@ -314,7 +314,7 @@ type PlaceOrderSuccessfulResult {
   """
   like 0000001 - used for reference by customer
   """
-  orderRealId: ID!
+  orderReferenceNo: String!
 }
 
 """

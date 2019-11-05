@@ -453,7 +453,7 @@ export type PlaceOrderResult = PlaceOrderSuccessfulResult | PlaceOrder3dSecureRe
 
 export type PlaceOrderSuccessfulResult = {
   orderId: string;
-  orderRealId: string;
+  orderReferenceNo: string;
 };
 
 export type PlaceOrder3dSecureResult = {

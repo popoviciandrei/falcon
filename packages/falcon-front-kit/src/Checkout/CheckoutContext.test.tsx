@@ -76,7 +76,7 @@ const resolversWithoutErrors = {
     setShippingMethod: () => true,
     placeOrder: () => ({
       orderId: '10',
-      orderRealId: '010'
+      orderReferenceNo: '010'
     })
   }
 };
