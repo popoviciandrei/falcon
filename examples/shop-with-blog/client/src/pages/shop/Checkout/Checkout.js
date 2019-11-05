@@ -171,7 +171,7 @@ class CheckoutWizard extends React.Component {
             <Test3dSecure {...result} />
           </Box>
         );
-      } else if (result.orderId) {
+      } else if (result.id) {
         // order has been placed successfully so we show confirmation
         orderResult = <Redirect to="/checkout/confirmation" />;
       }

@@ -1590,10 +1590,12 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * Place order
    * @param {object} obj Parent object
    * @param {PlaceOrderInput} input form data
+   * @param {object} context context
+   * @param {object} info info
    * @returns {Promise<PlaceOrderResult>} order data
    */
-  async placeOrder(obj, { input }) {
-    let placeOrderResult;
+  async placeOrder(obj, { input }, context, info) {
+    let result;
     const { paymentMethod: paymentData } = input;
     const { method: paymentMethod, data: additionalData } = paymentData;
 
@@ -1602,7 +1604,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     }
 
     try {
-      placeOrderResult = await this.performCartAction('/place-order', 'put', {
+      result = await this.performCartAction('/place-order', 'put', {
         ...input,
         paymentMethod: {
           method: paymentMethod,
@@ -1618,22 +1620,20 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       throw e;
     }
 
-    if (!placeOrderResult.orderId) {
+    const { orderId, orderRealId, extensionAttributes } = result;
+    if (!orderId) {
       throw new Error('no order id from magento.');
     }
 
-    this.session.orderId = placeOrderResult.orderId;
+    this.session.orderId = orderId;
     this.session.orderQuoteId = this.session.cart.quoteId;
 
-    if (placeOrderResult.extensionAttributes && placeOrderResult.extensionAttributes.adyenCc) {
-      return this.handleAdyen3dSecure(placeOrderResult.extensionAttributes.adyenCc);
+    if (extensionAttributes && extensionAttributes.adyenCc) {
+      return this.handleAdyen3dSecure(extensionAttributes.adyenCc);
     }
     this.removeCartData();
 
-    return {
-      orderId: placeOrderResult.orderId,
-      orderReferenceNo: placeOrderResult.orderRealId
-    };
+    return this.order({ id: orderId, referenceNo: orderRealId }, { id: result.orderId }, context, info);
   }
 
   /**

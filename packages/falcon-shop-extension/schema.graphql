@@ -304,20 +304,6 @@ type Order {
 }
 
 """
-Successful placeOrder result
-"""
-type PlaceOrderSuccessfulResult {
-  """
-  Increment order id
-  """
-  orderId: ID!
-  """
-  like 0000001 - used for reference by customer
-  """
-  orderReferenceNo: String!
-}
-
-"""
 3D-secure placeOrder result
 """
 type PlaceOrder3dSecureResult {
@@ -343,7 +329,7 @@ type PlaceOrder3dSecureField {
 """
 Mixed result for "Mutation.placeOrder" mutation
 """
-union PlaceOrderResult = PlaceOrderSuccessfulResult | PlaceOrder3dSecureResult
+union PlaceOrderResult = Order | PlaceOrder3dSecureResult
 
 type ProductPrice {
   regular: Float!
