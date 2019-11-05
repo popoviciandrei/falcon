@@ -8,15 +8,15 @@ import { FormProviderProps } from '../Forms';
 export type EditAddressFormValues = {
   firstname: string;
   lastname: string;
-  street1: string;
-  street2: string;
+  street1?: string;
+  street2?: string;
   postcode: string;
   city: string;
   countryId: string;
-  company: string;
-  telephone: string;
-  defaultBilling: boolean;
-  defaultShipping: boolean;
+  company?: string;
+  telephone?: string;
+  defaultBilling?: boolean;
+  defaultShipping?: boolean;
 };
 
 export type EditAddressFormProviderProps = FormProviderProps<EditAddressFormValues> & {
