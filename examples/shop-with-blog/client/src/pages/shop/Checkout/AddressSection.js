@@ -70,13 +70,16 @@ class AddressSection extends React.Component {
     };
 
     if (!open && selectedAddress) {
+      // WORKAROUND: because `selectedAddress` actually contain CheckoutAddressInput instead of Address
+      const selectedAddressForDetails = this.props.availableAddresses.find(item => item.id === selectedAddress.id);
+
       header = (
         <SectionHeader
           title={title}
           onActionClick={onEditRequested}
           editLabel="Edit"
           complete
-          summary={<AddressDetails {...selectedAddress} />}
+          summary={<AddressDetails {...selectedAddressForDetails} />}
         />
       );
     } else {
