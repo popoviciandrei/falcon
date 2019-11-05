@@ -1595,7 +1595,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @returns {Promise<PlaceOrderResult>} order data
    */
   async placeOrder(obj, { input }, context, info) {
-    let result;
     const { paymentMethod: paymentData } = input;
     const { method: paymentMethod, data: additionalData } = paymentData;
 
@@ -1603,40 +1602,30 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       return this.handlePayPalToken(input);
     }
 
-    try {
-      result = await this.performCartAction('/place-order', 'put', {
-        ...input,
-        paymentMethod: {
-          method: paymentMethod,
-          additionalData
-        }
-      });
-    } catch (e) {
-      // todo: use new version of error handler
-      if (e.statusCode === 400) {
-        e.userMessage = true;
-        e.noLogging = true;
+    const { orderId, orderRealId, extensionAttributes } = await this.performCartAction('/place-order', 'put', {
+      ...input,
+      paymentMethod: {
+        method: paymentMethod,
+        additionalData
       }
-      throw e;
-    }
+    });
 
-    if (!result.orderId) {
+    if (!orderId) {
       throw new Error('no order id from magento.');
     }
 
-    const order = {
-      id: result.orderId,
-      referenceNo: result.orderRealId
-    };
-
-    this.session.orderId = order.Id;
+    this.session.orderId = orderId;
     this.session.orderQuoteId = this.session.cart.quoteId;
 
-    const { extensionAttributes } = result;
     if (extensionAttributes && extensionAttributes.adyenCc) {
       return this.handleAdyen3dSecure(extensionAttributes.adyenCc);
     }
     this.removeCartData();
+
+    const order = {
+      id: orderId,
+      referenceNo: orderRealId
+    };
 
     const orderFields = graphqlFields(info, {}, { excludedFields: ['__typename', 'url', 'method', 'fields'] });
     if (Object.keys(orderFields).length <= 2 && orderFields.id && orderFields.referenceNo) {
