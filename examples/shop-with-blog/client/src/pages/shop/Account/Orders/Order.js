@@ -11,7 +11,7 @@ import {
   PropertyRowLayout,
   Price
 } from '@deity/falcon-ui-kit';
-import { LocaleProvider } from '@deity/falcon-front-kit';
+import { CurrencyProvider } from '@deity/falcon-front-kit';
 
 const Order = ({ match }) => {
   const id = parseInt(match.params.id, 10);
@@ -20,7 +20,7 @@ const Order = ({ match }) => {
     <GridLayout>
       <OrderQuery variables={{ id }}>
         {({ data: { order } }) => (
-          <LocaleProvider currency={order.orderCurrencyCode}>
+          <CurrencyProvider currency={order.orderCurrencyCode}>
             <H1>
               <T id="order.title" orderId={order.referenceNo} />
             </H1>
@@ -89,7 +89,7 @@ const Order = ({ match }) => {
                 </Box>
               </GridLayout>
             </OrderLayout>
-          </LocaleProvider>
+          </CurrencyProvider>
         )}
       </OrderQuery>
     </GridLayout>
