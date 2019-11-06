@@ -29,6 +29,7 @@ import {
   CheckoutContextData,
   CheckoutContextValues
 } from './CheckoutContext';
+import { CheckoutAddress, addressToCheckoutAddressInput } from './CheckoutAddress';
 
 export type CheckoutProviderProps = {
   initialValues?: CheckoutContextValues;
@@ -36,9 +37,12 @@ export type CheckoutProviderProps = {
 };
 
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
-  const { children } = props;
+  const { children, initialValues } = props;
   const [state, setState] = useState<CheckoutContextData>({
-    values: { billingSameAsShipping: false },
+    values: {
+      billingSameAsShipping: false,
+      ...initialValues
+    },
     errors: {},
     availablePaymentMethods: [],
     availableShippingMethods: []
@@ -191,7 +195,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     setBillingAddress(state.values.shippingAddress);
   };
 
-  const setShippingAddress = (shippingAddress: CheckoutAddressInput) => {
+  const setShippingAddress = (shippingAddress: CheckoutAddress) => {
     const values = { shippingAddress } as CheckoutContextValues;
     // if billing is set to the same as shipping then set it also to received value
     if (state.values.billingSameAsShipping) {
@@ -199,11 +203,11 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     }
     setPartialState({ values });
     setShippingAddressMutation({
-      variables: { input: shippingAddress }
+      variables: { input: addressToCheckoutAddressInput(shippingAddress) }
     });
   };
 
-  const setBillingAddress = (billingAddress?: CheckoutAddressInput) => {
+  const setBillingAddress = (billingAddress?: CheckoutAddress) => {
     setPartialState({
       values: {
         billingAddress: billingAddress || state.values.billingAddress
@@ -211,7 +215,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     });
     setBillingAddressMutation({
       variables: {
-        input: billingAddress || state.values.billingAddress
+        input: addressToCheckoutAddressInput(billingAddress || state.values.billingAddress)
       }
     });
   };
@@ -231,8 +235,8 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       variables: {
         input: {
           email: state.values.email,
-          billingAddress: state.values.billingAddress,
-          shippingAddress: state.values.shippingAddress,
+          billingAddress: addressToCheckoutAddressInput(state.values.billingAddress),
+          shippingAddress: addressToCheckoutAddressInput(state.values.shippingAddress),
           shippingMethod: state.values.shippingMethod,
           paymentMethod: state.values.paymentMethod
         }

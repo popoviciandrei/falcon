@@ -1,17 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
-import {
-  PlaceOrderResult,
-  CheckoutAddressInput,
-  CheckoutDetailsInput,
-  ShippingMethod,
-  PaymentMethod
-} from '@deity/falcon-shop-extension';
+import React from 'react';
+import { PlaceOrderResult, CheckoutDetailsInput, ShippingMethod, PaymentMethod } from '@deity/falcon-shop-extension';
+import { CheckoutAddress } from './CheckoutAddress';
 
 export type CheckoutContextValues = {
   email?: string;
-  shippingAddress?: CheckoutAddressInput;
-  billingAddress?: CheckoutAddressInput;
-  billingSameAsShipping?: boolean;
+  shippingAddress?: CheckoutAddress;
+  billingAddress?: CheckoutAddress;
   shippingMethod?: CheckoutDetailsInput;
   paymentMethod?: CheckoutDetailsInput;
 };
@@ -41,9 +35,9 @@ type CheckoutContextErrors = {
 export type CheckoutProviderRenderProps = {
   loading: boolean;
   setEmail(email: string): void;
-  setShippingAddress(address: CheckoutAddressInput): void;
+  setShippingAddress(address: CheckoutAddress): void;
   setBillingSameAsShipping(same: boolean): void;
-  setBillingAddress(address: CheckoutAddressInput): void;
+  setBillingAddress(address: CheckoutAddress): void;
   setShippingMethod(shipping: CheckoutDetailsInput): void;
   setPaymentMethod(payment: CheckoutDetailsInput): void;
   placeOrder(): void;

@@ -8,8 +8,10 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-common';
 import { PlaceOrderSuccessfulResult } from '@deity/falcon-shop-extension';
-import { Checkout, CheckoutProviderRenderProps } from './CheckoutContext';
+import { CheckoutProviderRenderProps, CheckoutContextValues } from './CheckoutContext';
 import { CheckoutProvider } from './CheckoutProvider';
+import { Checkout } from './CheckoutConsumer';
+import { CheckoutAddress } from './CheckoutAddress';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
 const Schema = readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');
@@ -37,14 +39,14 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: fragmentTypes
 });
 
-const sampleAddress = {
+const sampleAddress: CheckoutAddress = {
   id: 1,
   firstname: 'foo',
   lastname: 'bar',
   city: 'Sample City',
   postcode: '00000',
   street: ['Sample Street 12'],
-  countryId: 'NL',
+  country: { id: 'NL', code: 'NL', regions: [] },
   telephone: '000000000'
 };
 
@@ -133,28 +135,27 @@ const createApolloClient = (resolvers: any) => {
   });
 };
 
-declare type RenderCheckoutLogicArgs = {
+type IRenderCheckout = (props?: {
+  initialValues?: CheckoutContextValues;
   onStateUpdated?: (data: CheckoutProviderRenderProps) => void;
+}) => {
+  getProps: () => CheckoutProviderRenderProps;
+  wrapper: ReactWrapper<any, any>;
 };
 
 describe('<CheckoutContext/>', () => {
   let wrapper: ReactWrapper<any, any> | null;
   let client: ApolloClient<any>;
 
-  const renderCheckoutLogic = (
-    data?: RenderCheckoutLogicArgs
-  ): {
-    getProps: () => CheckoutProviderRenderProps;
-    wrapper: ReactWrapper<any, any>;
-  } => {
+  const renderCheckoutLogic: IRenderCheckout = ({ onStateUpdated, initialValues } = {}) => {
     let renderedProps: CheckoutProviderRenderProps;
     wrapper = mount(
       <ApolloProvider client={client}>
-        <CheckoutProvider>
+        <CheckoutProvider initialValues={initialValues}>
           <Checkout>
             {logicData => {
-              if (data && data.onStateUpdated) {
-                data.onStateUpdated(logicData);
+              if (onStateUpdated) {
+                onStateUpdated(logicData);
               }
               renderedProps = logicData;
 
@@ -238,7 +239,11 @@ describe('<CheckoutContext/>', () => {
       const { getProps } = renderCheckoutLogic();
       await act(async () => {
         getProps().setShippingAddress(sampleAddress);
+      });
+      await act(async () => {
         getProps().setBillingSameAsShipping(true);
+      });
+      await act(async () => {
         getProps().setShippingMethod({
           method: sampleShippingMethod.methodCode,
           data: {
@@ -313,12 +318,19 @@ describe('<CheckoutContext/>', () => {
     });
 
     it('should pass errors passed from backend for placeOrder', async () => {
-      const { getProps } = renderCheckoutLogic();
+      const { getProps } = renderCheckoutLogic({
+        initialValues: {
+          billingAddress: sampleAddress,
+          shippingAddress: sampleAddress
+        }
+      });
       await act(async () => {
         getProps().setPaymentMethod({
           method: samplePaymentMethod.code,
           data: {}
         });
+      });
+      await act(async () => {
         getProps().placeOrder();
       });
       expect(getProps().errors.order).toBeDefined();
@@ -388,6 +400,10 @@ describe('<CheckoutContext/>', () => {
     it('should set loading flag to true when placeOrder mutation starts', async () => {
       let loadingChangedTimes = 0;
       const { getProps } = renderCheckoutLogic({
+        initialValues: {
+          billingAddress: sampleAddress,
+          shippingAddress: sampleAddress
+        },
         onStateUpdated: data => {
           if (data.loading) {
             loadingChangedTimes++;
