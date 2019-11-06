@@ -50,8 +50,3 @@ export type CheckoutProviderRenderProps = {
 } & CheckoutContextData;
 
 export const CheckoutContext = React.createContext<CheckoutProviderRenderProps>({} as any);
-
-export const useCheckoutContext = () => useContext(CheckoutContext);
-
-export const CheckoutConsumer: React.SFC<{ children: (props: CheckoutProviderRenderProps) => any }> = ({ children }) =>
-  children({ ...useCheckoutContext() });

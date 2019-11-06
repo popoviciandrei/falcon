@@ -8,7 +8,7 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-common';
 import { PlaceOrderSuccessfulResult } from '@deity/falcon-shop-extension';
-import { CheckoutConsumer, CheckoutProviderRenderProps } from './CheckoutContext';
+import { Checkout, CheckoutProviderRenderProps } from './CheckoutContext';
 import { CheckoutProvider } from './CheckoutProvider';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
@@ -151,7 +151,7 @@ describe('<CheckoutContext/>', () => {
     wrapper = mount(
       <ApolloProvider client={client}>
         <CheckoutProvider>
-          <CheckoutConsumer>
+          <Checkout>
             {logicData => {
               if (data && data.onStateUpdated) {
                 data.onStateUpdated(logicData);
@@ -160,7 +160,7 @@ describe('<CheckoutContext/>', () => {
 
               return <div />;
             }}
-          </CheckoutConsumer>
+          </Checkout>
         </CheckoutProvider>
       </ApolloProvider>
     );
