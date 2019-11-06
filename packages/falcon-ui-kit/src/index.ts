@@ -21,6 +21,7 @@ export * from './Menu';
 export * from './MiniCart';
 export * from './Newsletter';
 export * from './Order';
+export * from './Picker';
 export * from './Price';
 export * from './Product';
 export * from './Responsive';
