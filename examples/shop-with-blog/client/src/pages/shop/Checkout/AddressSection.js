@@ -11,9 +11,12 @@ import AddressPicker from './AddressPicker';
 class AddressSection extends React.Component {
   constructor(props) {
     super(props);
+
+    const { selectedAddress, defaultSelected, useTheSame } = props;
+
     this.state = {
-      useTheSame: !!props.useTheSame,
-      selectedAddressId: null
+      useTheSame: !!useTheSame,
+      selectedAddressId: (selectedAddress && selectedAddress.id) || (defaultSelected && defaultSelected.id) || null
     };
   }
 
@@ -47,8 +50,7 @@ class AddressSection extends React.Component {
       onEditRequested,
       submitLabel,
       errors,
-      availableAddresses,
-      defaultSelected
+      availableAddresses
     } = this.props;
 
     const { street = [], ...selectedAddressRest } = selectedAddress || {};
@@ -88,19 +90,11 @@ class AddressSection extends React.Component {
       header = <SectionHeader title={title} />;
     }
 
+    const { selectedAddressId } = this.state;
     let selectedAvailableAddress;
     // if available addresses are passed then we should display dropdown so the user can pick his saved address
     if (availableAddresses) {
-      // get address ID that should be selected in the dropdown
-      const selectedId =
-        // if we have locally selected address id then use it
-        this.state.selectedAddressId ||
-        // if there's passed selected address then use it
-        (selectedAddress && selectedAddress.id) ||
-        // if default that should be selected is passed then use it
-        (defaultSelected && defaultSelected.id);
-
-      selectedAvailableAddress = availableAddresses.find(item => item.id === selectedId);
+      selectedAvailableAddress = availableAddresses.find(item => item.id === selectedAddressId);
     }
 
     // lets the user manually enter an address
