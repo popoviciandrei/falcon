@@ -110,12 +110,12 @@ class AddressSection extends React.Component {
             onChange={value => this.setState({ selectedAddress: value })}
           />
         )}
-        {selectedAddr === 'Other' && addressForm}
-        {!!selectedAddr && (
+        {selectedAddr !== 'Other' && (
           <Button my="sm" onClick={this.submitSelectedAddress}>
             <T id="continue" />
           </Button>
         )}
+        {selectedAddr === 'Other' && addressForm}
       </React.Fragment>
     );
 
