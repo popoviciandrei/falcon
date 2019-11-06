@@ -1,6 +1,5 @@
 const url = require('url');
 const qs = require('qs');
-const graphqlFields = require('graphql-fields');
 const urlJoin = require('proper-url-join');
 const snakeCase = require('lodash/snakeCase');
 const isEmpty = require('lodash/isEmpty');
@@ -8,7 +7,7 @@ const pick = require('lodash/pick');
 const has = require('lodash/has');
 const forEach = require('lodash/forEach');
 const addMinutes = require('date-fns/add_minutes');
-const { ApiUrlPriority, stripHtml } = require('@deity/falcon-server-env');
+const { ApiUrlPriority, stripHtml, graphqlFragmentFields } = require('@deity/falcon-server-env');
 const { Magento2ApiBase } = require('./Magento2ApiBase');
 const { tryParseNumber } = require('./utils/number');
 const { typeResolverPathToString } = require('./utils/apollo');
@@ -1627,12 +1626,12 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       referenceNo: orderRealId
     };
 
-    const orderFields = graphqlFields(info, {}, { excludedFields: ['__typename', 'url', 'method', 'fields'] });
+    const orderFields = graphqlFragmentFields(info, 'Order');
     if (Object.keys(orderFields).length <= 2 && orderFields.id && orderFields.referenceNo) {
       return order;
     }
 
-    return this.order(order, { id: order.Id }, context, info);
+    return this.order(order, { id: order.id }, context, info);
   }
 
   /**
