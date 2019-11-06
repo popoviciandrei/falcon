@@ -6,7 +6,7 @@ import { T, I18n } from '@deity/falcon-i18n';
 import { AddressDetails, Form, AddressFormFields } from '@deity/falcon-ui-kit';
 import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker } from './AddressPicker';
+import { AddressPicker } from './components/AddressPicker';
 
 class AddressSection extends React.Component {
   constructor(props) {

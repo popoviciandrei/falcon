@@ -13,5 +13,3 @@ export const AddressPicker = ({ options, selected, onChange }) => {
     />
   );
 };
-
-export default AddressPicker;
