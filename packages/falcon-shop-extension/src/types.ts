@@ -1,4 +1,5 @@
 import {
+  ID,
   Pagination,
   PaginationInput,
   Aggregation,
@@ -47,9 +48,9 @@ export type Address = AddressBase & {
 } & GraphQLBase;
 
 export type CheckoutAddressInput = AddressBase & {
-  id?: number;
-  regionId?: string;
-  countryId: string;
+  id?: ID;
+  regionId?: ID;
+  countryId: ID;
   email?: string;
   saveInAddressBook?: number;
   sameAsBilling?: number;
@@ -372,7 +373,7 @@ export type CountryList = {
 };
 
 export type Country = {
-  id: number;
+  id: ID;
   code: string;
   englishName?: string;
   localName?: string;
@@ -380,7 +381,7 @@ export type Country = {
 };
 
 export type Region = {
-  id: string;
+  id: ID;
   code?: string;
   name?: string;
 };
