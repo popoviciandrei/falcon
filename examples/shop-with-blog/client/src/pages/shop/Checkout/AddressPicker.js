@@ -1,30 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Dropdown, DropdownLabel, DropdownMenu, DropdownMenuItem } from '@deity/falcon-ui';
 import { addressToString } from '@deity/falcon-front-kit';
+import { Picker } from '@deity/falcon-ui-kit';
 
-const AddressPicker = ({ addresses, selectedAddressId, onChange }) => {
-  const selected = addresses.find(item => item.id === selectedAddressId);
+export const AddressPicker = ({ options, selected, onChange }) => {
+  const noSelectionOption = { value: 'Other', label: 'Other' };
 
   return (
-    <Dropdown key={selectedAddressId || 'none'} onChange={onChange}>
-      <DropdownLabel>{selected ? addressToString(selected) : 'Other'}</DropdownLabel>
-      <DropdownMenu>
-        {addresses.map(item => (
-          <DropdownMenuItem value={item.id} key={item.id}>
-            {addressToString(item)}
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuItem value={-1}>Other</DropdownMenuItem>
-      </DropdownMenu>
-    </Dropdown>
+    <Picker
+      options={[...options.map(value => ({ value, label: addressToString(value) })), noSelectionOption]}
+      selected={typeof selected === 'object' ? addressToString(selected) : selected}
+      onChange={value => onChange(value)}
+    />
   );
-};
-
-AddressPicker.propTypes = {
-  addresses: PropTypes.arrayOf(PropTypes.shape({})),
-  selectedAddressId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  onChange: PropTypes.func
 };
 
 export default AddressPicker;

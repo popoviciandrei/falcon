@@ -6,7 +6,7 @@ import { T, I18n } from '@deity/falcon-i18n';
 import { AddressDetails, Form, AddressFormFields } from '@deity/falcon-ui-kit';
 import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';
-import AddressPicker from './AddressPicker';
+import { AddressPicker } from './AddressPicker';
 
 class AddressSection extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class AddressSection extends React.Component {
 
     this.state = {
       useTheSame: !!useTheSame,
-      selectedAddressId: (selectedAddress && selectedAddress.id) || (defaultSelected && defaultSelected.id) || null
+      selectedAddress: selectedAddress || defaultSelected || null
     };
   }
 
@@ -25,9 +25,7 @@ class AddressSection extends React.Component {
   };
 
   submitSelectedAddress = () => {
-    const selectedAddressId = this.state.selectedAddressId || this.props.defaultSelected.id;
-    const selectedAddress = this.props.availableAddresses.find(item => item.id === selectedAddressId);
-
+    const { selectedAddress } = this.state;
     const { __typename, region, country, ...rest } = selectedAddress; // make sure we don't send __typename field
     const addressInput = {
       ...rest,
@@ -46,11 +44,11 @@ class AddressSection extends React.Component {
       title,
       labelUseTheSame,
       setUseTheSame,
-      selectedAddress,
       onEditRequested,
       submitLabel,
       errors,
-      availableAddresses
+      availableAddresses,
+      selectedAddress
     } = this.props;
 
     const { street = [], ...selectedAddressRest } = selectedAddress || {};
@@ -90,12 +88,7 @@ class AddressSection extends React.Component {
       header = <SectionHeader title={title} />;
     }
 
-    const { selectedAddressId } = this.state;
-    let selectedAvailableAddress;
-    // if available addresses are passed then we should display dropdown so the user can pick his saved address
-    if (availableAddresses) {
-      selectedAvailableAddress = availableAddresses.find(item => item.id === selectedAddressId);
-    }
+    const { selectedAddress: selectedAddr } = this.state;
 
     // lets the user manually enter an address
     const addressForm = (
@@ -112,13 +105,13 @@ class AddressSection extends React.Component {
       <React.Fragment>
         {availableAddresses && (
           <AddressPicker
-            addresses={availableAddresses}
-            selectedAddressId={selectedAvailableAddress ? selectedAvailableAddress.id : 0}
-            onChange={addrId => this.setState({ selectedAddressId: addrId })}
+            options={availableAddresses}
+            selected={selectedAddr}
+            onChange={value => this.setState({ selectedAddress: value })}
           />
         )}
-        {!selectedAvailableAddress && addressForm}
-        {!!selectedAvailableAddress && (
+        {selectedAddr === 'Other' && addressForm}
+        {!!selectedAddr && (
           <Button my="sm" onClick={this.submitSelectedAddress}>
             <T id="continue" />
           </Button>
