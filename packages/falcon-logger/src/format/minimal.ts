@@ -6,7 +6,7 @@ const colorizer = colors(true);
 const messageKey = CONSTANTS.MESSAGE_KEY;
 const errorLikeObjectKeys = CONSTANTS.ERROR_LIKE_KEYS;
 
-export default ({ IDENT, EOL }) => inputData => {
+const formatMessage = ({ IDENT, EOL }, inputData) => {
   let log;
   let line = '';
   if (!isObject(inputData)) {
@@ -64,4 +64,12 @@ export default ({ IDENT, EOL }) => inputData => {
   }
 
   return line;
+};
+
+export default ({ IDENT, EOL }) => inputData => {
+  try {
+    return formatMessage({ IDENT, EOL }, inputData);
+  } catch {
+    return typeof inputData === 'string' ? inputData : JSON.stringify(inputData);
+  }
 };
