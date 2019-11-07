@@ -54,7 +54,6 @@ export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = 
               ...values,
               id: address.id,
               street: [street1, street2].filter(Boolean),
-
               countryId: country.id
             }
           }

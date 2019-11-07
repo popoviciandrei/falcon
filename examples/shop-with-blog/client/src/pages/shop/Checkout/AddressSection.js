@@ -26,12 +26,11 @@ class AddressSection extends React.Component {
 
   submitSelectedAddress = () => {
     const { selectedAddress } = this.state;
-    const { __typename, region, country, ...rest } = selectedAddress; // make sure we don't send __typename field
+    const { __typename, region, ...rest } = selectedAddress; // make sure we don't send __typename field
     const addressInput = {
       ...rest,
       // include ID fields instead of full country/region objects
-      regionId: region ? region.id : undefined,
-      countryId: country.id
+      regionId: region ? region.id : undefined
     };
 
     this.props.setAddress(addressInput);
@@ -60,7 +59,7 @@ class AddressSection extends React.Component {
       postcode: '',
       city: '',
       telephone: '',
-      countryId: '',
+      country: undefined,
       ...selectedAddressRest
     };
 
@@ -68,9 +67,6 @@ class AddressSection extends React.Component {
     let content;
 
     if (!open && selectedAddress) {
-      // WORKAROUND: because `selectedAddress` actually contain CheckoutAddressInput instead of Address
-      const selectedAddressForDetails = availableAddresses.find(item => item.id === selectedAddress.id);
-
       header = (
         <I18n>
           {t => (
@@ -79,7 +75,7 @@ class AddressSection extends React.Component {
               onActionClick={onEditRequested}
               editLabel={t('edit')}
               complete
-              summary={<AddressDetails {...selectedAddressForDetails} />}
+              summary={<AddressDetails {...selectedAddress} />}
             />
           )}
         </I18n>
@@ -103,7 +99,7 @@ class AddressSection extends React.Component {
     // lets the user pick an existing address or show the address form
     const addressEditor = (
       <React.Fragment>
-        {availableAddresses && (
+        {!!availableAddresses.length && (
           <AddressPicker
             options={availableAddresses}
             selected={selectedAddr}
@@ -115,7 +111,7 @@ class AddressSection extends React.Component {
             <T id="continue" />
           </Button>
         )}
-        {selectedAddr === 'Other' && addressForm}
+        {(selectedAddr === 'Other' || !availableAddresses.length) && addressForm}
       </React.Fragment>
     );
 
