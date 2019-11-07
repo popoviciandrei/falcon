@@ -65,7 +65,7 @@ export const falconPrettyFactory = (options: object) => {
     if (!isObject(inputData)) {
       const parsed = jsonParser(inputData as string);
       log = parsed.value;
-      if (parsed.err) {
+      if (parsed.err || !isObject(log)) {
         // pass through
         return inputData + EOL;
       }
