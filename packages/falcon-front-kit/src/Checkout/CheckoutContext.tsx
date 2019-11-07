@@ -6,6 +6,7 @@ export type CheckoutContextValues = {
   email?: string;
   shippingAddress?: CheckoutAddress;
   billingAddress?: CheckoutAddress;
+  billingSameAsShipping?: boolean; // TODO: do we really need this flag here?
   shippingMethod?: CheckoutDetailsInput;
   paymentMethod?: CheckoutDetailsInput;
 };

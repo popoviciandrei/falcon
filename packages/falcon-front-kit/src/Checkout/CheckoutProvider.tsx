@@ -230,7 +230,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     setPaymentMethodMutation({ variables: { input: paymentMethod } });
   };
 
-  const placeOrder = () => {
+  const placeOrder = (/** TODO: I would like to pass all necessary date here to do 1 click checkout */) => {
     placeOrderMutation({
       variables: {
         input: {
