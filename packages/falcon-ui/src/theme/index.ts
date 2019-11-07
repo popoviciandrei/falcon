@@ -72,26 +72,20 @@ export type BaseThemingProps = {
 };
 export type InlineCss<TProps> = ((props: PropsWithTheme<TProps>) => CSSObject) | CSSObject;
 
-export type PropsWithInlineCss<TProps> = TProps & { css?: InlineCss<TProps> };
-
-export interface ThemedComponentProps<TProps = {}> extends BaseThemingProps {
+/** old `ThemedComponentProps` */
+export type ThemingProps<TProps = any> = BaseThemingProps & {
+  // as: Tag
+  // defaultTheme?: ComponentTheme<TProps> | { [name: string]: ComponentTheme<TProps> };
+  variant?: string;
   css?: InlineCss<TProps>;
-}
+};
 
-// TODO: use below type instead of `ThemedComponentProps<TProps>`
-// export type WithThemedComponentProps<TProps> = PropsWithInlineCss<
-//   {
-//     variant?: string;
-//     defaultTheme?: ComponentTheme<TProps> | { [name: string]: ComponentTheme<TProps> };
-//   } & TProps &
-//     BaseThemingProps
-// >;
+export type PropsWithThemingProps<TProps> = TProps & ThemingProps<TProps>;
 
-export type ComponentTheme<TProps> = {
-  variants?: {
-    [variantKey: string]: ThemedComponentProps<TProps>;
-  };
-} & ThemedComponentProps<TProps>;
+type ComponentThemeVariant<TProps> = BaseThemingProps & { css?: InlineCss<TProps> };
+export type ComponentTheme<TProps> = ComponentThemeVariant<TProps> & {
+  variants?: { [variantKey: string]: ComponentThemeVariant<TProps> };
+};
 
 export interface ThemeComponents {
   [key: string]: ComponentTheme<{}>;
@@ -100,7 +94,7 @@ export interface ThemeComponents {
 export type ThemeIcons = {
   [name: string]: {
     icon: React.ComponentType | ((props: any) => JSX.Element);
-  } & ThemedComponentProps;
+  } & ThemingProps<any>;
 };
 
 type Colors = typeof defaultBaseTheme.colors;

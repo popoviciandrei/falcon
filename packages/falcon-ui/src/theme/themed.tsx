@@ -4,7 +4,7 @@ import isPropValid from '@emotion/is-prop-valid';
 import { extractThemableProps } from './utils';
 import { defaultBaseTheme } from './theme';
 import { mappings, PropsMappings, ResponsivePropMapping } from './responsiveprops';
-import { Theme, CSSObject, PropsWithTheme, ThemedComponentProps, ComponentTheme, InlineCss } from './index';
+import { Theme, CSSObject, PropsWithTheme, ThemingProps, ComponentTheme, InlineCss } from './index';
 
 const NESTED_CSS_OBJECT_SELECTORS = [':', '&', '*', '>', '@'];
 const propsMappingKeys = Object.keys(mappings) as (keyof PropsMappings)[];
@@ -31,17 +31,13 @@ const convertPropToCss = (
   };
 };
 
-type PropsWithVariant = {
-  variant?: string;
-};
-
 type PropsWithDefaultTheme<TProps> = {
   defaultTheme?: ComponentTheme<TProps> | { [name: string]: ComponentTheme<TProps> };
 };
 
-type ThemedProps = PropsWithTheme<ThemedComponentProps & PropsWithVariant & PropsWithDefaultTheme<{}>>;
+type ThemedProps = PropsWithTheme<ThemingProps & PropsWithDefaultTheme<{}>>;
 
-const convertThemedPropsToCss = (props: ThemedComponentProps, theme: Theme): CSSObject => {
+const convertThemedPropsToCss = (props: ThemingProps, theme: Theme): CSSObject => {
   //  if theme is not provided via theme provider do not map anything
   if (!theme) {
     return {};
@@ -181,7 +177,7 @@ function getThemedCss(props: ThemedProps) {
   const themedPropsToMerge: any[] = [];
   const cssPropsToMerge: any[] = [];
 
-  const addPropsToMerge = (propsToMerge: ThemedComponentProps) => {
+  const addPropsToMerge = (propsToMerge: ThemingProps) => {
     const { css, ...rest } = propsToMerge;
     if (css) {
       cssPropsToMerge.push(getCss(css, props));
@@ -327,10 +323,9 @@ export function themed<TProps, TTag extends Tag = Tag>(options: ThemedOptions<TT
       {
         as?: TAsTag;
         defaultTheme?: DefaultThemeProps;
-        variant?: string;
       } & Partial<typeof options['defaultProps']> &
-        TagProps<TAsTag> &
-        ThemedComponentProps
+        ThemingProps<TProps> &
+        TagProps<TAsTag>
     >
   ) => JSX.Element;
 }
