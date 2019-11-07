@@ -21,11 +21,14 @@ const test = require('../src/test');
   try {
     switch (script) {
       case 'build': {
+        // eslint-disable-next-line
+        const packageJson = require(paths.pkgPackageJson);
+
         const results = await promise.reflectAll(
           [
             dts.build({ packagePath }),
-            esm.build({ packagePath }),
-            cjs.main({ packagePath }),
+            packageJson.module && esm.build({ packagePath }),
+            packageJson.main && cjs.main({ packagePath }),
             fs.existsSync(paths.pkgBinSrc) && cjs.bin({ packagePath })
           ].filter(x => x)
         );
