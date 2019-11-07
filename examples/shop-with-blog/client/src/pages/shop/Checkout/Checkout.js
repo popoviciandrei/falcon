@@ -269,10 +269,11 @@ class CheckoutWizard extends React.Component {
                   <T id="checkout.placeOrder" />
                 </Button>
               )}
+
+              {orderResult}
             </Box>
           )}
         </I18n>
-        {orderResult}
       </Box>
     );
   }
