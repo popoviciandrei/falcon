@@ -56,8 +56,8 @@ export type CheckoutAddressInput = AddressBase & {
 };
 
 export type AddAddressInput = AddressBase & {
-  regionId?: number;
-  countryId: number;
+  regionId?: string;
+  countryId: string;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };

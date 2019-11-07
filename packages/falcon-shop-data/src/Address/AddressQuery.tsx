@@ -18,6 +18,9 @@ export const GET_ADDRESS = gql`
       country {
         id
         code
+        regions {
+          id
+        }
       }
       company
       defaultBilling
@@ -41,7 +44,9 @@ export type AddressResponse = {
     | 'defaultShipping'
   > & {
     region: Pick<Region, 'id'>;
-    country: Pick<Country, 'id' | 'code'>;
+    country: Pick<Country, 'id' | 'code'> & {
+      regions: Pick<Region, 'id'>[];
+    };
   };
 };
 export class AddressQuery extends Query<AddressResponse> {

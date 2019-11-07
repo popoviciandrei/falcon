@@ -3,7 +3,7 @@ import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
 import { CheckoutConsumer, CheckoutProvider } from '@deity/falcon-front-kit';
 import { toGridTemplate, Loader } from '@deity/falcon-ui-kit';
-import { CustomerQuery, GET_CUSTOMER_WITH_ADDRESSES, CartQuery, CountryListQuery } from '@deity/falcon-shop-data';
+import { CartQuery, CustomerQuery, GET_CUSTOMER_WITH_ADDRESSES } from '@deity/falcon-shop-data';
 import { T, I18n } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import ErrorList from '../components/ErrorList';
@@ -178,115 +178,108 @@ class CheckoutWizard extends React.Component {
     }
 
     return (
-      <CountryListQuery>
-        {({ data: { countryList } }) => (
-          <CartQuery>
-            {({ data: { cart } }) => {
-              // cart is empty and it's not a "placeOrder" result so redirect user to the homepage
-              if (!loading && !orderResult && cart.itemsQty === 0) {
-                return <Redirect to="/" />;
-              }
+      <CartQuery>
+        {({ data: { cart } }) => {
+          // cart is empty and it's not a "placeOrder" result so redirect user to the homepage
+          if (!loading && !orderResult && cart.itemsQty === 0) {
+            return <Redirect to="/" />;
+          }
 
-              return (
-                <Box defaultTheme={checkoutLayout}>
-                  <Box gridArea={CheckoutArea.cart}>
-                    <H2 fontSize="md" mb="md">
-                      <T id="checkout.summary" />
-                    </H2>
-                    <CheckoutCartSummary cart={cart} />
-                    <Button as={RouterLink} mt="md" to="/cart">
-                      <T id="checkout.editCart" />
-                    </Button>
-                  </Box>
-                  <Divider gridArea={CheckoutArea.divider} />
-                  <I18n>
-                    {t => (
-                      <Box gridArea={CheckoutArea.checkout} position="relative">
-                        {(loading || result) && <Loader variant="overlay" />}
-                        <CustomerSelector
-                          open={currentStep === CHECKOUT_STEPS.EMAIL}
-                          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.EMAIL)}
-                          email={values.email}
-                          setEmail={setEmail}
-                        />
+          return (
+            <Box defaultTheme={checkoutLayout}>
+              <Box gridArea={CheckoutArea.cart}>
+                <H2 fontSize="md" mb="md">
+                  <T id="checkout.summary" />
+                </H2>
+                <CheckoutCartSummary cart={cart} />
+                <Button as={RouterLink} mt="md" to="/cart">
+                  <T id="checkout.editCart" />
+                </Button>
+              </Box>
+              <Divider gridArea={CheckoutArea.divider} />
+              <I18n>
+                {t => (
+                  <Box gridArea={CheckoutArea.checkout} position="relative">
+                    {(loading || result) && <Loader variant="overlay" />}
+                    <CustomerSelector
+                      open={currentStep === CHECKOUT_STEPS.EMAIL}
+                      onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.EMAIL)}
+                      email={values.email}
+                      setEmail={setEmail}
+                    />
 
-                        <Divider my="md" />
+                    <Divider my="md" />
 
-                        <AddressSection
-                          id="shipping-address"
-                          open={currentStep === CHECKOUT_STEPS.SHIPPING_ADDRESS}
-                          countries={countryList.items}
-                          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING_ADDRESS)}
-                          title={t('checkout.shippingAddress')}
-                          submitLabel={t('checkout.nextStep')}
-                          selectedAddress={values.shippingAddress}
-                          setAddress={setShippingAddress}
-                          errors={errors.shippingAddress}
-                          availableAddresses={addresses}
-                          defaultSelected={defaultShippingAddress}
-                        />
+                    <AddressSection
+                      id="shipping-address"
+                      open={currentStep === CHECKOUT_STEPS.SHIPPING_ADDRESS}
+                      onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING_ADDRESS)}
+                      title={t('checkout.shippingAddress')}
+                      submitLabel={t('checkout.nextStep')}
+                      selectedAddress={values.shippingAddress}
+                      setAddress={setShippingAddress}
+                      errors={errors.shippingAddress}
+                      availableAddresses={addresses}
+                      defaultSelected={defaultShippingAddress}
+                    />
 
-                        <Divider my="md" />
+                    <Divider my="md" />
 
-                        <AddressSection
-                          id="billing-address"
-                          open={currentStep === CHECKOUT_STEPS.BILLING_ADDRESS}
-                          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.BILLING_ADDRESS)}
-                          title={t('checkout.billingAddress')}
-                          submitLabel={t('checkout.nextStep')}
-                          countries={countryList.items}
-                          selectedAddress={values.billingAddress}
-                          setAddress={setBillingAddress}
-                          setUseTheSame={setBillingSameAsShipping}
-                          useTheSame={values.billingSameAsShipping}
-                          labelUseTheSame={t('checkout.useTheSameAddress')}
-                          errors={errors.billingAddress}
-                          availableAddresses={addresses}
-                          defaultSelected={defaultBillingAddress}
-                        />
+                    <AddressSection
+                      id="billing-address"
+                      open={currentStep === CHECKOUT_STEPS.BILLING_ADDRESS}
+                      onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.BILLING_ADDRESS)}
+                      title={t('checkout.billingAddress')}
+                      submitLabel={t('checkout.nextStep')}
+                      selectedAddress={values.billingAddress}
+                      setAddress={setBillingAddress}
+                      setUseTheSame={setBillingSameAsShipping}
+                      useTheSame={values.billingSameAsShipping}
+                      labelUseTheSame={t('checkout.useTheSameAddress')}
+                      availableAddresses={addresses}
+                      defaultSelected={defaultBillingAddress}
+                    />
 
-                        <Divider my="md" />
+                    <Divider my="md" />
 
-                        <ShippingMethodSection
-                          open={currentStep === CHECKOUT_STEPS.SHIPPING}
-                          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING)}
-                          shippingAddress={values.shippingAddress}
-                          selectedShipping={values.shippingMethod}
-                          setShippingAddress={setShippingAddress}
-                          availableShippingMethods={availableShippingMethods}
-                          setShipping={setShippingMethod}
-                          errors={errors.shippingMethod}
-                        />
+                    <ShippingMethodSection
+                      open={currentStep === CHECKOUT_STEPS.SHIPPING}
+                      onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING)}
+                      shippingAddress={values.shippingAddress}
+                      selectedShipping={values.shippingMethod}
+                      setShippingAddress={setShippingAddress}
+                      availableShippingMethods={availableShippingMethods}
+                      setShipping={setShippingMethod}
+                      errors={errors.shippingMethod}
+                    />
 
-                        <Divider my="md" />
+                    <Divider my="md" />
 
-                        <PaymentMethodSection
-                          open={currentStep === CHECKOUT_STEPS.PAYMENT}
-                          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.PAYMENT)}
-                          selectedPayment={values.paymentMethod}
-                          availablePaymentMethods={availablePaymentMethods}
-                          setPayment={setPaymentMethod}
-                          errors={errors.paymentMethod}
-                        />
+                    <PaymentMethodSection
+                      open={currentStep === CHECKOUT_STEPS.PAYMENT}
+                      onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.PAYMENT)}
+                      selectedPayment={values.paymentMethod}
+                      availablePaymentMethods={availablePaymentMethods}
+                      setPayment={setPaymentMethod}
+                      errors={errors.paymentMethod}
+                    />
 
-                        <Divider my="md" />
+                    <Divider my="md" />
 
-                        <ErrorList errors={errors.order} />
-                        {currentStep === CHECKOUT_STEPS.CONFIRMATION && (
-                          <Button onClick={placeOrder}>
-                            <T id="checkout.placeOrder" />
-                          </Button>
-                        )}
-                      </Box>
+                    <ErrorList errors={errors.order} />
+                    {currentStep === CHECKOUT_STEPS.CONFIRMATION && (
+                      <Button onClick={placeOrder}>
+                        <T id="checkout.placeOrder" />
+                      </Button>
                     )}
-                  </I18n>
-                  {orderResult}
-                </Box>
-              );
-            }}
-          </CartQuery>
-        )}
-      </CountryListQuery>
+                  </Box>
+                )}
+              </I18n>
+              {orderResult}
+            </Box>
+          );
+        }}
+      </CartQuery>
     );
   }
 }

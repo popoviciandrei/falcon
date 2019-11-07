@@ -39,6 +39,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed synchronization of account and sign in icon with customer logging in and out state ([#521](https://github.com/deity-io/falcon/pull/521))
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+- added `Add`/`EditAddressFormProvider` components to handle relevant form data ([#624](https://github.com/deity-io/falcon/pull/624))
 - added `Submit` component which provides context to form submit components ([#548](https://github.com/deity-io/falcon/pull/548))
 - fixed `LocaleSwitcher` which did not take into account `whitelist`ed languages, and `LocaleContext` which hardcoded language fallback instead of taking it from `clientConfig` ([#698](https://github.com/deity-io/falcon/pull/698))
 - extracted `CurrencyProvider` and `Currency` components from `LocaleProvider` and `Locale`, also introduced `useLocale` and `useCurrency` hooks ([#698](https://github.com/deity-io/falcon/pull/698))
@@ -51,6 +52,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - fixed warning when `AddressDetails` receives non-unique values ([#614](https://github.com/deity-io/falcon/pull/614))
 - changed `Grid` component default `gridGap` to `md` ([#636](https://github.com/deity-io/falcon/pull/636))
+- added `AddressFormFields` and `Add`/`EditAddressForm` components to make address forms more reusable ([#624](https://github.com/deity-io/falcon/pull/624))
 - fixed `ProductCard` component which should not require `thumbnail` ([#685](https://github.com/deity-io/falcon/pull/685))
 - integrated `FormSubmit` with Formik, which allows it to hook into form state ([#548](https://github.com/deity-io/falcon/pull/548))
 - updated Formik to version 2.0 ([#705](https://github.com/deity-io/falcon/pull/705))
@@ -66,6 +68,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
+- fixed response types of `AddressQuery` and `CountryListQuery` ([#624](https://github.com/deity-io/falcon/pull/624))
 
 ### Falcon Blog Data v1.0.0
 
@@ -102,6 +105,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added basic filtration into `productList` query resolver ([#575](https://github.com/deity-io/falcon/pull/575))
 - fixed `lastOrder` resolver ([#616](https://github.com/deity-io/falcon/pull/616))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+- configured TypeScript ([#468](https://github.com/deity-io/falcon/pull/468))
 
 ### Falcon Scripts vNext
 

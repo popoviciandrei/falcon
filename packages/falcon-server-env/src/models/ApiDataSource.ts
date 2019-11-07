@@ -235,13 +235,13 @@ export abstract class ApiDataSource<TContext extends GraphQLContext = GraphQLCon
   }
 
   protected async didReceiveResponse<TResult = any>(res: ContextFetchResponse, req: Request): Promise<TResult> {
-    const result: TResult = await super.didReceiveResponse<TResult>(res, req);
-    const { context } = res;
+    if (res.context && res.context.didReceiveResult) {
+      const result = await super.didReceiveResponse(res, req);
 
-    if (context && context.didReceiveResult) {
-      return context.didReceiveResult(result, res);
+      return res.context.didReceiveResult(result, res);
     }
-    return result;
+
+    return super.didReceiveResponse<TResult>(res, req);
   }
 
   private ensureContextPassed(init?: ContextRequestInit): ContextRequestInit {
