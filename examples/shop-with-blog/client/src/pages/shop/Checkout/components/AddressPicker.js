@@ -8,7 +8,7 @@ export const AddressPicker = ({ options, selected, onChange }) => {
   return (
     <Picker
       options={[...options.map(value => ({ value, label: addressToString(value) })), noSelectionOption]}
-      selected={typeof selected === 'object' ? addressToString(selected) : selected}
+      selected={selected && typeof selected === 'object' ? addressToString(selected) : selected}
       onChange={value => onChange(value)}
     />
   );
