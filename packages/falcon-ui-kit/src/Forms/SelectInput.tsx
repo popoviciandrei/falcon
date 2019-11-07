@@ -2,7 +2,7 @@ import React from 'react';
 import { Select, Option, ThemedComponentProps } from '@deity/falcon-ui';
 
 export type SelectInputOption = {
-  value: string;
+  value: string | number;
   label: string;
 };
 export type SelectInputProps = ThemedComponentProps &
