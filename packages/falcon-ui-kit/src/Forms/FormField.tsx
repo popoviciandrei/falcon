@@ -12,6 +12,7 @@ export type FormFieldRenderProps<TValue = any> = {
   };
   field: FormikFieldProps<TValue>['field'] &
     React.InputHTMLAttributes<HTMLInputElement> &
+    React.SelectHTMLAttributes<HTMLSelectElement> &
     ThemedComponentProps & {
       id?: string;
       placeholder?: string;
@@ -35,6 +36,7 @@ export type FormFieldProps<TValue = any> = {
   validate?: IValidator[];
   children?: (props: FormFieldRenderProps<TValue>) => React.ReactNode;
 } & React.InputHTMLAttributes<HTMLInputElement> &
+  React.SelectHTMLAttributes<HTMLSelectElement> &
   ThemedComponentProps;
 
 export const FormField: React.SFC<FormFieldProps> = props => {

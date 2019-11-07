@@ -3,7 +3,7 @@ import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { Customer, EditCustomerInput } from '@deity/falcon-shop-extension';
 
-export const EDIT_CUSTOMER_MUTATION = gql`
+export const EDIT_CUSTOMER = gql`
   mutation EditCustomer($input: EditCustomerInput!) {
     editCustomer(input: $input) {
       id
@@ -17,7 +17,7 @@ export type EditCustomerResponse = {
 
 export class EditCustomerMutation extends Mutation<EditCustomerResponse, OperationInput<EditCustomerInput>> {
   static defaultProps = {
-    mutation: EDIT_CUSTOMER_MUTATION,
+    mutation: EDIT_CUSTOMER,
     refetchQueries: ['Customer', 'CustomerWithAddresses']
   };
 }
@@ -25,7 +25,7 @@ export class EditCustomerMutation extends Mutation<EditCustomerResponse, Operati
 export const useEditCustomerMutation = (
   options: MutationHookOptions<EditCustomerResponse, OperationInput<EditCustomerInput>> = {}
 ) =>
-  useMutation(EDIT_CUSTOMER_MUTATION, {
+  useMutation(EDIT_CUSTOMER, {
     refetchQueries: ['Customer', 'CustomerWithAddresses'],
     ...options
   });

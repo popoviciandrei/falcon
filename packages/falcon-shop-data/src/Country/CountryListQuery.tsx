@@ -15,7 +15,9 @@ export const GET_COUNTRY_LIST = gql`
 `;
 
 export type CountryListResponse = {
-  items: Pick<Country, 'code' | 'localName' | 'englishName'>[];
+  countryList: {
+    items: Pick<Country, 'code' | 'localName' | 'englishName'>[];
+  };
 };
 
 export class CountryListQuery extends Query<CountryListResponse> {
