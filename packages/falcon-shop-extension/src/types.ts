@@ -41,7 +41,7 @@ export type AddressBase = {
 export type Address = AddressBase & {
   id: number;
   region?: Region;
-  country: Country;
+  country: AddressCountry;
   fax?: string;
   defaultBilling: boolean;
   defaultShipping: boolean;
@@ -372,11 +372,14 @@ export type CountryList = {
   items: Country[];
 };
 
-export type Country = {
+export type AddressCountry = {
   id: ID;
   code: string;
   englishName?: string;
   localName?: string;
+};
+
+export type Country = AddressCountry & {
   regions: Region[];
 };
 
