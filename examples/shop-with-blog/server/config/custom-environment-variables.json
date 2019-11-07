@@ -1,6 +1,11 @@
 {
   "cache": {
     "url": "CACHE_URL",
+    "type": "CACHE_TYPE",
+    "options": {
+      "__name": "CACHE_OPTIONS",
+      "__format": "json"
+    },
     "resolvers": {
       "enabled": {
         "__name": "CACHE_RESOLVERS_ENABLED",
