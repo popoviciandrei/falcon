@@ -12,7 +12,7 @@ export default ({ IDENT, EOL }) => inputData => {
   if (!isObject(inputData)) {
     const parsed = jsonParser(inputData);
     log = parsed.value;
-    if (parsed.err) {
+    if (parsed.err || !isObject(log)) {
       // pass through
       return inputData + EOL;
     }

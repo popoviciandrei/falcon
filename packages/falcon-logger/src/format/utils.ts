@@ -72,7 +72,7 @@ export const prettifyGraphQLErrorLog: PrettifyGraphQLErrorLogFn = ({
   }
 
   const stack: string[] = extensions && extensions.exception && extensions.exception.stacktrace;
-  if (stack && stack.length) {
+  if (stack && stack.length > 1) {
     const codeLine: string = stack[1];
     // Highlighting the actual code line
     stack[1] = colorizer.error(codeLine);
@@ -174,6 +174,9 @@ export const prettifyErrorLog: PrettifyErrorLogFn = ({
 };
 
 export const readSourceFromStack: ReadSourceFn = ({ colorizer, stack, setLineNumber = false, paddingLines = 0 }) => {
+  if (!stack || stack.length < 2) {
+    return [];
+  }
   const match = stack[1].match(/\((.+):(\d+):(\d+)\)/);
   if (!match) {
     return [];
