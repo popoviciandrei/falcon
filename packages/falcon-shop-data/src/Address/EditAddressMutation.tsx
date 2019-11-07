@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { Address, EditAddressInput } from '@deity/falcon-shop-extension';
 
@@ -20,3 +21,11 @@ export class EditAddressMutation extends Mutation<EditAddressResponse, Operation
     refetchQueries: ['AddressList']
   };
 }
+
+export const useEditAddressMutation = (
+  options: MutationHookOptions<EditAddressResponse, OperationInput<EditAddressInput>> = {}
+) =>
+  useMutation(EDIT_ADDRESS, {
+    refetchQueries: ['AddressList'],
+    ...options
+  });
