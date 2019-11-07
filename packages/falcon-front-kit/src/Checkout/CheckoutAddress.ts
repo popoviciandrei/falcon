@@ -1,10 +1,10 @@
 import { ID } from '@deity/falcon-data';
-import { AddressBase, Country, Region, CheckoutAddressInput } from '@deity/falcon-shop-extension';
+import { AddressBase, AddressCountry, Region, CheckoutAddressInput } from '@deity/falcon-shop-extension';
 
 export type CheckoutAddress = AddressBase & {
   id?: ID;
   region?: Region;
-  country: Country;
+  country: Pick<AddressCountry, 'id'>;
   email?: string;
   saveInAddressBook?: number;
 };
