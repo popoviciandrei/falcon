@@ -33,14 +33,8 @@ export interface Theme {
   keyframes: ThemeKeyframes;
   zIndex: ThemeZIndex;
   components: ThemeComponents;
-  icons: ThemedIcons;
+  icons: ThemeIcons;
 }
-
-export type ThemedIcons = {
-  [name: string]: {
-    icon: React.ComponentType | ((props: any) => JSX.Element);
-  } & ThemedComponentProps;
-};
 
 type ThemedPropMapping = {
   themeProp: keyof Theme;
@@ -106,6 +100,13 @@ export type ComponentTheme<TProps> = {
 export interface ThemeComponents {
   [key: string]: ComponentTheme<{}>;
 }
+
+export type ThemeIcons = {
+  [name: string]: {
+    icon: React.ComponentType | ((props: any) => JSX.Element);
+  } & ThemedComponentProps;
+};
+
 type NumberOrStringValues<T> = { readonly [P in keyof T]: number | string };
 
 type Colors = typeof defaultBaseTheme.colors;
