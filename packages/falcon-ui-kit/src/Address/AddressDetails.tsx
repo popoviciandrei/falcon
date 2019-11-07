@@ -8,7 +8,7 @@ export type AddressDetailsProps = {
   firstname: string;
   lastname: string;
   street: string[];
-  postcode?: string;
+  postcode: string;
   city: string;
   country: {
     code: string;
@@ -44,7 +44,7 @@ AddressDetails.propTypes = {
   firstname: PropTypes.string.isRequired,
   lastname: PropTypes.string.isRequired,
   street: PropTypes.arrayOf(PropTypes.string).isRequired,
-  postcode: PropTypes.string, // TODO: check why it is optional ?
+  postcode: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
   // @ts-ignore
   country: PropTypes.shape({
