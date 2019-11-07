@@ -2,18 +2,16 @@ import CSS from 'csstype';
 import { Keyframes } from '@emotion/serialize';
 import { defaultBaseTheme } from './theme';
 import { PropsMappings } from './responsiveprops';
-import { mergeThemes } from './utils';
+import { mergeThemes, RecursivePartial } from './utils';
+
+// export themed component factory
+export * from './themed';
+export * from './utils';
+export * from './responsiveprops';
 
 export function createTheme(themeOverride: RecursivePartial<Theme> = {}): Theme {
   return mergeThemes(defaultBaseTheme, themeOverride);
 }
-
-// export themed component factory
-export * from './themed';
-
-export * from './utils';
-
-export * from './responsiveprops';
 
 // --- exported type definitions for theme  ----
 export interface Theme {
@@ -45,8 +43,6 @@ type CssProps = CSS.PropertiesFallback<number | string>;
 type ResponsivePropMapping = {
   cssProp: keyof CssProps;
 };
-
-export type RecursivePartial<T> = { [key in keyof T]?: RecursivePartial<T[key]> };
 
 type CSSPseudoObject = {
   [key in CSS.SimplePseudos]?: CSSObject;
