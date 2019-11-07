@@ -1,16 +1,18 @@
-const url = require('url');
-const qs = require('qs');
-const urlJoin = require('proper-url-join');
-const snakeCase = require('lodash/snakeCase');
-const isEmpty = require('lodash/isEmpty');
-const pick = require('lodash/pick');
-const has = require('lodash/has');
-const forEach = require('lodash/forEach');
-const addMinutes = require('date-fns/add_minutes');
-const { ApiUrlPriority, stripHtml } = require('@deity/falcon-server-env');
-const { Magento2ApiBase } = require('./Magento2ApiBase');
-const { tryParseNumber } = require('./utils/number');
-const { typeResolverPathToString } = require('./utils/apollo');
+import url from 'url';
+import qs from 'qs';
+import urlJoin from 'proper-url-join';
+import addMinutes from 'date-fns/add_minutes';
+import isEmpty from 'lodash/isEmpty';
+import pick from 'lodash/pick';
+import has from 'lodash/has';
+import forEach from 'lodash/forEach';
+import snakeCase from 'lodash/snakeCase';
+import { OperationInput } from '@deity/falcon-data';
+import { ProductListInput } from '@deity/falcon-shop-extension';
+import { ApiUrlPriority, stripHtml } from '@deity/falcon-server-env';
+import { Magento2ApiBase } from './Magento2ApiBase';
+import { tryParseNumber } from './utils/number';
+import { typeResolverPathToString } from './utils/apollo';
 
 const FALCON_CART_ACTIONS = [
   '/save-payment-information-and-order',
@@ -174,10 +176,11 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   /**
    * Fetch products for fetched category
    * @param {object} obj fetched category
-   * @param {object} params query params
+   * @param params query params
    * @returns {Promise<CategoryProductList>} - fetched list of products
    */
-  async categoryProductList(obj, { input = {} }) {
+  async categoryProductList(obj, params: Partial<OperationInput<ProductListInput>> = {}) {
+    const { input = {} } = params;
     const { pagination = {} } = input;
 
     const searchCriteria = this.createSearchCriteria(input);
@@ -372,7 +375,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {string} operator condition type of the filter
    * @returns {object} - request params with additional filter
    */
-  addSearchFilter(params = {}, field, value, operator = 'eq') {
+  addSearchFilter(params: any = {}, field, value, operator = 'eq') {
     params.filterGroups = isEmpty(params.filterGroups) ? [] : params.filterGroups;
     const newFilterGroups = this.createMagentoFilter(field, value, operator);
     newFilterGroups.forEach(filterGroup => params.filterGroups.push(filterGroup));
@@ -477,7 +480,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {object} params params with filters
    * @returns {boolean} if filter is set
    */
-  isFilterSet(filterName, params = {}) {
+  isFilterSet(filterName, params: any = {}) {
     const { filters = [] } = params || {};
 
     return filters.some(({ filters: filterItems = [] }) =>
@@ -648,7 +651,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       { url: path.replace(/^\//, '') },
       {
         context: {
-          didReceiveResult: result => ({
+          didReceiveResult: async result => ({
             id: result.entity_id,
             path: `/${result.canonical_url.replace(/^\//, '')}`,
             type: `shop-${result.entity_type.toLowerCase().replace('cms-', '')}`
@@ -693,7 +696,8 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       cart_item: {
         sku: input.sku,
         qty: input.qty,
-        quote_id: cartData.quoteId
+        quote_id: cartData.quoteId,
+        product_option: undefined
       }
     };
 
@@ -854,7 +858,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
 
     // prepare totals
     quoteData.totals = totalsData.totalSegments.map(segment => ({
-      ...this.processPrice(segment, ['value'], quoteData.quoteCurrency)
+      ...this.processPrice(segment, ['value'])
     }));
 
     // merge items data
@@ -863,19 +867,15 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       const { extensionAttributes } = totalsDataItem;
       delete totalsDataItem.extensionAttributes;
 
-      this.processPrice(
-        totalsDataItem,
-        [
-          'price',
-          'priceInclTax',
-          'rowTotalInclTax',
-          'rowTotalWithDiscount',
-          'taxAmount',
-          'discountAmount',
-          'weeeTaxAmount'
-        ],
-        quoteData.quoteCurrency
-      );
+      this.processPrice(totalsDataItem, [
+        'price',
+        'priceInclTax',
+        'rowTotalInclTax',
+        'rowTotalWithDiscount',
+        'taxAmount',
+        'discountAmount',
+        'weeeTaxAmount'
+      ]);
 
       extensionAttributes.availableQty = parseFloat(extensionAttributes.availableQty);
 
@@ -928,7 +928,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @returns {Promise<boolean>} true if login was successful
    */
   async signIn(obj, { input }) {
-    const { cart: { quoteId } = {} } = this.session;
+    const { cart: { quoteId } = { quoteId: undefined } } = this.session;
     const dateNow = Date.now();
 
     try {
@@ -1462,7 +1462,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @param {object} data request data
    * @returns {Promise<object>} response data
    */
-  async performCartAction(path, method, data) {
+  async performCartAction(path, method, data?: any) {
     const { cart } = this.session;
 
     if (!cart.quoteId) {

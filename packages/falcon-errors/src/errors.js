@@ -36,6 +36,7 @@ class EntityNotFoundError extends FalconError {
 }
 
 module.exports = {
+  FalconError,
   AuthenticationError,
   EntityNotFoundError
 };
