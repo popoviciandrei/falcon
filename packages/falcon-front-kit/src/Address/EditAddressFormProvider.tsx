@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
+import { Address, AddressCountry } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
 import { useEditAddressMutation, GET_ADDRESS } from '@deity/falcon-shop-data';
-import { Address } from '@deity/falcon-shop-extension';
 import { FormProviderProps } from '../Forms';
 
 export type EditAddressFormValues = {
@@ -12,7 +12,7 @@ export type EditAddressFormValues = {
   street2?: string;
   postcode: string;
   city: string;
-  countryId: string;
+  country: AddressCountry;
   company?: string;
   telephone?: string;
   defaultBilling?: boolean;
@@ -32,7 +32,7 @@ export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = 
     street2: address.street.length > 1 ? address.street[1] : undefined,
     postcode: address.postcode,
     city: address.city,
-    countryId: address.country.id,
+    country: address.country,
     company: address.company || undefined,
     telephone: address.telephone,
     defaultBilling: address.defaultBilling,
@@ -47,13 +47,15 @@ export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = 
   return (
     <Formik
       initialValues={initialValues || defaultInitialValues}
-      onSubmit={({ street1, street2, ...values }, { setSubmitting, setStatus }) =>
+      onSubmit={({ street1, street2, country, ...values }, { setSubmitting, setStatus }) =>
         editAddress({
           variables: {
             input: {
               ...values,
               id: address.id,
-              street: [street1, street2].filter(Boolean)
+              street: [street1, street2].filter(Boolean),
+
+              countryId: country.id
             }
           }
         })

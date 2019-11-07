@@ -52,8 +52,8 @@ export type CheckoutAddressInput = AddressBase & {
   regionId?: ID;
   countryId: ID;
   email?: string;
-  saveInAddressBook?: number;
-  sameAsBilling?: number;
+  saveInAddressBook?: number; // TODO: create issue on GH to implement this feature?
+  sameAsBilling?: number; // TODO: check if it is used, if not, please remove!
 };
 
 export type AddAddressInput = AddressBase & {
@@ -64,8 +64,10 @@ export type AddAddressInput = AddressBase & {
 };
 
 export type EditAddressInput = AddressBase & {
-  id: number;
+  id: ID;
   telephone?: string;
+  regionId?: ID;
+  countryId: ID;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
