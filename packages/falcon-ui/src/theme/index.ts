@@ -18,15 +18,15 @@ export * from './responsiveprops';
 // --- exported type definitions for theme  ----
 export interface Theme {
   colors: ThemeColors;
-  breakpoints: ThemeBreakpoints;
-  spacing: ThemeSpacing;
+  breakpoints: Readonly<ThemeBreakpoints>;
+  spacing: Readonly<ThemeSpacing>;
   fonts: ThemeFonts;
-  fontSizes: ThemeFontSizes;
+  fontSizes: Readonly<ThemeFontSizes>;
   fontWeights: ThemeFontWeights;
-  lineHeights: ThemeLineHeights;
-  letterSpacings: ThemeLetterSpacings;
+  lineHeights: Readonly<ThemeLineHeights>;
+  letterSpacings: Readonly<ThemeLetterSpacings>;
   borders: ThemeBorders;
-  borderRadius: ThemeBorderRadius;
+  borderRadius: Readonly<ThemeBorderRadius>;
   boxShadows: ThemeBoxShadows;
   easingFunctions: ThemeEasingFunctions;
   transitionDurations: ThemeTransitionDurations;
@@ -107,36 +107,34 @@ export type ThemeIcons = {
   } & ThemedComponentProps;
 };
 
-type NumberOrStringValues<T> = { readonly [P in keyof T]: number | string };
-
 type Colors = typeof defaultBaseTheme.colors;
 export interface ThemeColors extends Colors {}
 
-type Breakpoints = NumberOrStringValues<typeof defaultBaseTheme.breakpoints>;
+type Breakpoints = Record<keyof typeof defaultBaseTheme.breakpoints, number | string>;
 export interface ThemeBreakpoints extends Breakpoints {}
 
-type Spacing = NumberOrStringValues<typeof defaultBaseTheme.spacing>;
+type Spacing = Record<keyof typeof defaultBaseTheme.spacing, number | string>;
 export interface ThemeSpacing extends Spacing {}
 
 type Fonts = typeof defaultBaseTheme.fonts;
 export interface ThemeFonts extends Fonts {}
 
-type FontSizes = NumberOrStringValues<typeof defaultBaseTheme.fontSizes>;
+type FontSizes = Record<keyof typeof defaultBaseTheme.fontSizes, number | string>;
 export interface ThemeFontSizes extends FontSizes {}
 
 type FontWeights = typeof defaultBaseTheme.fontWeights;
 export interface ThemeFontWeights extends FontWeights {}
 
-type LineHeights = NumberOrStringValues<typeof defaultBaseTheme.lineHeights>;
+type LineHeights = Record<keyof typeof defaultBaseTheme.lineHeights, number | string>;
 export interface ThemeLineHeights extends LineHeights {}
 
-type LetterSpacings = NumberOrStringValues<typeof defaultBaseTheme.letterSpacings>;
+type LetterSpacings = Record<keyof typeof defaultBaseTheme.letterSpacings, number | string>;
 export interface ThemeLetterSpacings extends LetterSpacings {}
 
 type Borders = typeof defaultBaseTheme.borders;
 export interface ThemeBorders extends Borders {}
 
-type BorderRadius = NumberOrStringValues<typeof defaultBaseTheme.borderRadius>;
+type BorderRadius = Record<keyof typeof defaultBaseTheme.borderRadius, number | string>;
 export interface ThemeBorderRadius extends BorderRadius {}
 
 type BoxShadows = typeof defaultBaseTheme.boxShadows;
