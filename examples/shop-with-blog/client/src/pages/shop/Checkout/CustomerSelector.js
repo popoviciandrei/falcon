@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from '@apollo/react-hoc';
-import { Formik, Form } from 'formik';
+import { Formik } from 'formik';
 import { SignOutMutation, GET_CUSTOMER } from '@deity/falcon-shop-data';
-import { Box, Text, Link, Button, Details, DetailsContent } from '@deity/falcon-ui';
-import { FormField, ErrorSummary, toGridTemplate } from '@deity/falcon-ui-kit';
+import { Box, Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
+import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
 import { I18n, T } from '@deity/falcon-i18n';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 import SectionHeader from './CheckoutSectionHeader';
@@ -31,15 +31,13 @@ const customerEmailFormLayout = {
 
 const EmailForm = ({ email = '', setEmail }) => (
   <Formik initialStatus={{}} initialValues={{ email }} onSubmit={values => setEmail(values.email)}>
-    {({ status: { error }, errors }) => (
-      <Form>
+    {({ status: { error } }) => (
+      <Form i18nId="customerSelector">
         <Box defaultTheme={customerEmailFormLayout}>
           <Box gridArea="input">
             <FormField name="email" required type="email" autoComplete="email" />
           </Box>
-          <Button gridArea="button" disabled={errors.email} type="submit">
-            <T id="customerSelector.guestContinue" />
-          </Button>
+          <FormSubmit gridArea="button" my="xs" />
           {error && <ErrorSummary errors={error} />}
         </Box>
       </Form>

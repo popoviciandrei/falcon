@@ -239,7 +239,7 @@
     "ifAlreadyRegistered": "if you are already registered",
     "invalidEmail": "Invalid email address",
     "guestPrompt": "Type your email and continue as guest:",
-    "guestContinue": "Continue as guest"
+    "submitButton": "Continue as guest"
   },
   "addressForm": {
     "emailFieldLabel": "Email",
