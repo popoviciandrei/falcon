@@ -8,6 +8,7 @@ import { I18n, T } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import CheckoutCartSummary from './CheckoutCartSummary';
 import { EmailSection } from './EmailSection';
+import { ShippingAddressSection } from './ShippingAddressSection';
 import ShippingMethodSection from './ShippingMethodSection';
 import PaymentMethodSection from './PaymentMethodSection';
 import AddressSection from './AddressSection';
@@ -192,8 +193,7 @@ class CheckoutWizard extends React.Component {
 
             <Divider my="md" />
 
-            <AddressSection
-              id="shipping-address"
+            <ShippingAddressSection
               open={currentStep === CHECKOUT_STEPS.SHIPPING_ADDRESS}
               onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING_ADDRESS)}
               title={t('checkout.shippingAddress')}
