@@ -63,8 +63,8 @@ export const EmailSection = props => {
         }
 
         return (
-          <Details open={open}>
-            {!open && (
+          <Details open={!customer && open}>
+            {(!open || customer) && (
               <SignOutMutation>
                 {signOut => (
                   <SectionHeader
@@ -72,12 +72,12 @@ export const EmailSection = props => {
                     editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
                     onActionClick={customer ? signOut : onEditRequested}
                     complete
-                    summary={<Text>{values.email}</Text>}
+                    summary={<Text>{customer.email || values.email}</Text>}
                   />
                 )}
               </SignOutMutation>
             )}
-            {open && (
+            {!customer && open && (
               <React.Fragment>
                 <SectionHeader title={t('customerSelector.title')} />
                 <DetailsContent>
