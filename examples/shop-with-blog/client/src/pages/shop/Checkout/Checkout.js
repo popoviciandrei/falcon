@@ -13,13 +13,13 @@ import ShippingMethodSection from './ShippingMethodSection';
 import PaymentMethodSection from './PaymentMethodSection';
 import AddressSection from './AddressSection';
 
-const CHECKOUT_STEPS = {
-  EMAIL: 'EMAIL',
-  SHIPPING_ADDRESS: 'SHIPPING_ADDRESS',
-  BILLING_ADDRESS: 'BILLING_ADDRESS',
-  SHIPPING: 'SHIPPING',
-  PAYMENT: 'PAYMENT',
-  CONFIRMATION: 'CONFIRMATION'
+const CheckoutStep = {
+  Email: 'EMAIL',
+  ShippingAddress: 'SHIPPING_ADDRESS',
+  BillingAddress: 'BILLING_ADDRESS',
+  Shipping: 'SHIPPING',
+  Payment: 'PAYMENT',
+  Confirmation: 'CONFIRMATION'
 };
 
 const CheckoutArea = {
@@ -74,26 +74,26 @@ const checkoutLayout = {
 // helper that computes step that should be open based on values from CheckoutLogic
 const computeStepFromValues = (values, errors) => {
   if (!values.email || errors.email) {
-    return CHECKOUT_STEPS.EMAIL;
+    return CheckoutStep.Email;
   }
 
   if (!values.shippingAddress || errors.shippingAddress) {
-    return CHECKOUT_STEPS.SHIPPING_ADDRESS;
+    return CheckoutStep.ShippingAddress;
   }
 
   if (!values.billingAddress || errors.billingAddress) {
-    return CHECKOUT_STEPS.BILLING_ADDRESS;
+    return CheckoutStep.BillingAddress;
   }
 
   if (!values.shippingMethod || errors.shippingMethod) {
-    return CHECKOUT_STEPS.SHIPPING;
+    return CheckoutStep.Shipping;
   }
 
   if (!values.paymentMethod || errors.paymentMethod) {
-    return CHECKOUT_STEPS.PAYMENT;
+    return CheckoutStep.Payment;
   }
 
-  return CHECKOUT_STEPS.CONFIRMATION;
+  return CheckoutStep.Confirmation;
 };
 
 class CheckoutWizard extends React.Component {
@@ -101,7 +101,7 @@ class CheckoutWizard extends React.Component {
     super(props);
 
     this.state = {
-      currentStep: CHECKOUT_STEPS.EMAIL,
+      currentStep: CheckoutStep.Email,
       getCurrentProps: () => this.props // eslint-disable-line react/no-unused-state
     };
   }
@@ -187,15 +187,15 @@ class CheckoutWizard extends React.Component {
             {(loading || result) && <Loader variant="overlay" />}
 
             <EmailSection
-              open={currentStep === CHECKOUT_STEPS.EMAIL}
-              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.EMAIL)}
+              open={currentStep === CheckoutStep.Email}
+              onEditRequested={() => this.setCurrentStep(CheckoutStep.Email)}
             />
 
             <Divider my="md" />
 
             <ShippingAddressSection
-              open={currentStep === CHECKOUT_STEPS.SHIPPING_ADDRESS}
-              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING_ADDRESS)}
+              open={currentStep === CheckoutStep.ShippingAddress}
+              onEditRequested={() => this.setCurrentStep(CheckoutStep.ShippingAddress)}
               title={t('checkout.shippingAddress')}
               submitLabel={t('checkout.nextStep')}
               selectedAddress={values.shippingAddress}
@@ -209,8 +209,8 @@ class CheckoutWizard extends React.Component {
 
             <AddressSection
               id="billing-address"
-              open={currentStep === CHECKOUT_STEPS.BILLING_ADDRESS}
-              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.BILLING_ADDRESS)}
+              open={currentStep === CheckoutStep.BillingAddress}
+              onEditRequested={() => this.setCurrentStep(CheckoutStep.BillingAddress)}
               title={t('checkout.billingAddress')}
               submitLabel={t('checkout.nextStep')}
               selectedAddress={values.billingAddress}
@@ -225,8 +225,8 @@ class CheckoutWizard extends React.Component {
             <Divider my="md" />
 
             <ShippingMethodSection
-              open={currentStep === CHECKOUT_STEPS.SHIPPING}
-              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING)}
+              open={currentStep === CheckoutStep.Shipping}
+              onEditRequested={() => this.setCurrentStep(CheckoutStep.Shipping)}
               shippingAddress={values.shippingAddress}
               selectedShipping={values.shippingMethod}
               setShippingAddress={setShippingAddress}
@@ -238,8 +238,8 @@ class CheckoutWizard extends React.Component {
             <Divider my="md" />
 
             <PaymentMethodSection
-              open={currentStep === CHECKOUT_STEPS.PAYMENT}
-              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.PAYMENT)}
+              open={currentStep === CheckoutStep.Payment}
+              onEditRequested={() => this.setCurrentStep(CheckoutStep.Payment)}
               selectedPayment={values.paymentMethod}
               availablePaymentMethods={availablePaymentMethods}
               setPayment={setPaymentMethod}
@@ -250,7 +250,7 @@ class CheckoutWizard extends React.Component {
 
             <ErrorSummary errors={errors.order} />
 
-            {currentStep === CHECKOUT_STEPS.CONFIRMATION && (
+            {currentStep === CheckoutStep.Confirmation && (
               <Button onClick={placeOrder}>
                 <T id="checkout.placeOrder" />
               </Button>
