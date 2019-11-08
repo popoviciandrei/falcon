@@ -29,31 +29,14 @@ const customerEmailFormLayout = {
   }
 };
 
-const EmailForm = ({ email = '', setEmail }) => (
-  <Formik initialStatus={{}} initialValues={{ email }} onSubmit={values => setEmail(values.email)}>
-    {({ status: { error } }) => (
-      <Form id="checkout-customer-email" i18nId="customerSelector">
-        <Box defaultTheme={customerEmailFormLayout}>
-          <Box gridArea="input">
-            <FormField name="email" required type="email" autoComplete="email" />
-          </Box>
-          <FormSubmit gridArea="button" my="xs" />
-          {error && <ErrorSummary errors={error} />}
-        </Box>
-      </Form>
-    )}
-  </Formik>
-);
-EmailForm.propTypes = {
-  setEmail: PropTypes.func.isRequired,
-  email: PropTypes.string
-};
-
 export const EmailSection = props => {
   const { open, onEditRequested } = props;
   const { t } = useI18n();
-  const { setEmail, values } = useCheckout();
   const [signOut] = useSignOutMutation();
+  const {
+    setEmail,
+    values: { email }
+  } = useCheckout();
 
   return (
     <CustomerQuery>
@@ -61,15 +44,17 @@ export const EmailSection = props => {
         if (customer) {
           setEmail(customer.email);
           // TODO: go to next step;
+        }
 
+        if (customer || !open) {
           return (
             <Details>
               <SectionHeader
                 title={t('customerSelector.title')}
-                editLabel={t('customerSelector.edit')}
-                onActionClick={signOut}
+                editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
+                onActionClick={customer ? signOut : onEditRequested}
                 complete
-                summary={<Text>{customer.email || values.email}</Text>}
+                summary={<Text>{(customer && customer.email) || email}</Text>}
               />
             </Details>
           );
@@ -77,41 +62,40 @@ export const EmailSection = props => {
 
         return (
           <Details open={open}>
-            {!open && (
-              <SectionHeader
-                title={t('customerSelector.title')}
-                editLabel={t('customerSelector.edit')}
-                onActionClick={onEditRequested}
-                complete
-                summary={<Text>{values.email}</Text>}
-              />
-            )}
-            {open && (
-              <React.Fragment>
-                <SectionHeader title={t('customerSelector.title')} />
-                <DetailsContent>
-                  <Text>
-                    <T id="customerSelector.guestPrompt" />
-                  </Text>
-                  <EmailForm email={values.email} setEmail={setEmail} />
-                  <Text>
-                    <T id="customerSelector.or" />
-                    <OpenSidebarMutation>
-                      {openSidebar => (
-                        <Link
-                          mx="xs"
-                          color="primary"
-                          onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
-                        >
-                          <T id="customerSelector.signInLink" />
-                        </Link>
-                      )}
-                    </OpenSidebarMutation>
-                    <T id="customerSelector.ifAlreadyRegistered" />
-                  </Text>
-                </DetailsContent>
-              </React.Fragment>
-            )}
+            <SectionHeader title={t('customerSelector.title')} />
+            <DetailsContent>
+              <Text>
+                <T id="customerSelector.guestPrompt" />
+              </Text>
+              <Formik initialStatus={{}} initialValues={{ email }} onSubmit={x => setEmail(x.email)}>
+                {({ status: { error } }) => (
+                  <Form id="checkout-customer-email" i18nId="customerSelector">
+                    <Box defaultTheme={customerEmailFormLayout}>
+                      <Box gridArea="input">
+                        <FormField name="email" required type="email" autoComplete="email" />
+                      </Box>
+                      <FormSubmit gridArea="button" my="xs" />
+                      {error && <ErrorSummary errors={error} />}
+                    </Box>
+                  </Form>
+                )}
+              </Formik>
+              <Text>
+                <T id="customerSelector.or" />
+                <OpenSidebarMutation>
+                  {openSidebar => (
+                    <Link
+                      mx="xs"
+                      color="primary"
+                      onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
+                    >
+                      <T id="customerSelector.signInLink" />
+                    </Link>
+                  )}
+                </OpenSidebarMutation>
+                <T id="customerSelector.ifAlreadyRegistered" />
+              </Text>
+            </DetailsContent>
           </Details>
         );
       }}
