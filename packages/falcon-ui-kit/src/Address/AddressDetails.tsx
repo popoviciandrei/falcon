@@ -43,6 +43,7 @@ AddressDetails.propTypes = {
   street: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   postcode: PropTypes.string,
   city: PropTypes.string.isRequired,
-  country: PropTypes.exact({ code: PropTypes.string.isRequired, localName: PropTypes.string }).isRequired,
+  // @ts-ignore
+  country: PropTypes.shape({ code: PropTypes.string.isRequired, localName: PropTypes.string }).isRequired,
   telephone: PropTypes.string
 };
