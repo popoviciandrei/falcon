@@ -122,8 +122,6 @@ export class ShippingAddressSection extends React.Component {
   }
 }
 ShippingAddressSection.propTypes = {
-  // id of the form - used for generating unique ids for form fields inside
-  id: PropTypes.string,
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
   // title of the section
