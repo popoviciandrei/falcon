@@ -128,27 +128,25 @@ class EmailSection extends React.Component {
               <React.Fragment>
                 <SectionHeader title={t('customerSelector.title')} />
                 <DetailsContent>
-                  <OpenSidebarMutation>
-                    {openSidebar => (
-                      <Box>
-                        <Text>
-                          <T id="customerSelector.guestPrompt" />
-                        </Text>
-                        <EmailForm email={this.state.email} setEmail={this.props.setEmail} />
-                        <Text>
-                          <T id="customerSelector.or" />
-                          <Link
-                            mx="xs"
-                            color="primary"
-                            onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
-                          >
-                            <T id="customerSelector.signInLink" />
-                          </Link>
-                          <T id="customerSelector.ifAlreadyRegistered" />
-                        </Text>
-                      </Box>
-                    )}
-                  </OpenSidebarMutation>
+                  <Text>
+                    <T id="customerSelector.guestPrompt" />
+                  </Text>
+                  <EmailForm email={this.state.email} setEmail={this.props.setEmail} />
+                  <Text>
+                    <T id="customerSelector.or" />
+                    <OpenSidebarMutation>
+                      {openSidebar => (
+                        <Link
+                          mx="xs"
+                          color="primary"
+                          onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
+                        >
+                          <T id="customerSelector.signInLink" />
+                        </Link>
+                      )}
+                    </OpenSidebarMutation>
+                    <T id="customerSelector.ifAlreadyRegistered" />
+                  </Text>
                 </DetailsContent>
               </React.Fragment>
             )}
