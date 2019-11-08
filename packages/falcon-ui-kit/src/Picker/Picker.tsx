@@ -21,7 +21,7 @@ export type PickerProps<TItem extends PickerItem = PickerItem> = ThemedComponent
 
 export const PickerInnerDOM: React.SFC<PickerProps> = ({ options, selected, ...rest }) => (
   <Dropdown {...rest}>
-    <DropdownLabel>{typeof selected === 'object' ? selected.label : selected}</DropdownLabel>
+    <DropdownLabel>{selected && typeof selected === 'object' ? selected.label : selected}</DropdownLabel>
     <DropdownMenu>
       {options.map(x => (
         <DropdownMenuItem key={x.label} value={x.value}>
