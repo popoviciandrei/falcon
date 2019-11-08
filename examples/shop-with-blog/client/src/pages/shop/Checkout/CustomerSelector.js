@@ -122,31 +122,8 @@ class EmailSection extends React.Component {
   }
 
   render() {
-    let header;
     const { open, data, onEditRequested } = this.props;
     const isSignedIn = !!data.customer;
-
-    if (!open) {
-      header = (
-        <SignOutMutation>
-          {signOut => (
-            <I18n>
-              {t => (
-                <SectionHeader
-                  title={t('customerSelector.title')}
-                  editLabel={t(isSignedIn ? 'customerSelector.signOut' : 'customerSelector.edit')}
-                  onActionClick={isSignedIn ? signOut : onEditRequested}
-                  complete
-                  summary={<Text>{this.state.email}</Text>}
-                />
-              )}
-            </I18n>
-          )}
-        </SignOutMutation>
-      );
-    } else {
-      header = <I18n>{t => <SectionHeader title={t('customerSelector.title')} />}</I18n>;
-    }
 
     const content = (
       <OpenSidebarMutation>
@@ -170,10 +147,28 @@ class EmailSection extends React.Component {
     );
 
     return (
-      <Details open={open}>
-        {header}
-        {content ? <DetailsContent>{content}</DetailsContent> : null}
-      </Details>
+      <I18n>
+        {t => (
+          <Details open={open}>
+            {open ? (
+              <SectionHeader title={t('customerSelector.title')} />
+            ) : (
+              <SignOutMutation>
+                {signOut => (
+                  <SectionHeader
+                    title={t('customerSelector.title')}
+                    editLabel={t(isSignedIn ? 'customerSelector.signOut' : 'customerSelector.edit')}
+                    onActionClick={isSignedIn ? signOut : onEditRequested}
+                    complete
+                    summary={<Text>{this.state.email}</Text>}
+                  />
+                )}
+              </SignOutMutation>
+            )}
+            {content ? <DetailsContent>{content}</DetailsContent> : null}
+          </Details>
+        )}
+      </I18n>
     );
   }
 }
