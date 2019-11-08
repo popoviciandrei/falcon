@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { I18n, T } from '@deity/falcon-i18n';
+import { useI18n, T } from '@deity/falcon-i18n';
 import { CustomerQuery, SignOutMutation } from '@deity/falcon-shop-data';
 import { useCheckout } from '@deity/falcon-front-kit';
 import { Box, Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
@@ -52,6 +52,7 @@ EmailForm.propTypes = {
 export const EmailSection = props => {
   const { open, onEditRequested } = props;
   const { setEmail, values } = useCheckout();
+  const { t } = useI18n();
 
   return (
     <CustomerQuery>
@@ -62,51 +63,47 @@ export const EmailSection = props => {
         }
 
         return (
-          <I18n>
-            {t => (
-              <Details open={open}>
-                {!open && (
-                  <SignOutMutation>
-                    {signOut => (
-                      <SectionHeader
-                        title={t('customerSelector.title')}
-                        editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
-                        onActionClick={customer ? signOut : onEditRequested}
-                        complete
-                        summary={<Text>{values.email}</Text>}
-                      />
-                    )}
-                  </SignOutMutation>
+          <Details open={open}>
+            {!open && (
+              <SignOutMutation>
+                {signOut => (
+                  <SectionHeader
+                    title={t('customerSelector.title')}
+                    editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
+                    onActionClick={customer ? signOut : onEditRequested}
+                    complete
+                    summary={<Text>{values.email}</Text>}
+                  />
                 )}
-                {open && (
-                  <React.Fragment>
-                    <SectionHeader title={t('customerSelector.title')} />
-                    <DetailsContent>
-                      <Text>
-                        <T id="customerSelector.guestPrompt" />
-                      </Text>
-                      <EmailForm email={values.email} setEmail={setEmail} />
-                      <Text>
-                        <T id="customerSelector.or" />
-                        <OpenSidebarMutation>
-                          {openSidebar => (
-                            <Link
-                              mx="xs"
-                              color="primary"
-                              onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
-                            >
-                              <T id="customerSelector.signInLink" />
-                            </Link>
-                          )}
-                        </OpenSidebarMutation>
-                        <T id="customerSelector.ifAlreadyRegistered" />
-                      </Text>
-                    </DetailsContent>
-                  </React.Fragment>
-                )}
-              </Details>
+              </SignOutMutation>
             )}
-          </I18n>
+            {open && (
+              <React.Fragment>
+                <SectionHeader title={t('customerSelector.title')} />
+                <DetailsContent>
+                  <Text>
+                    <T id="customerSelector.guestPrompt" />
+                  </Text>
+                  <EmailForm email={values.email} setEmail={setEmail} />
+                  <Text>
+                    <T id="customerSelector.or" />
+                    <OpenSidebarMutation>
+                      {openSidebar => (
+                        <Link
+                          mx="xs"
+                          color="primary"
+                          onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
+                        >
+                          <T id="customerSelector.signInLink" />
+                        </Link>
+                      )}
+                    </OpenSidebarMutation>
+                    <T id="customerSelector.ifAlreadyRegistered" />
+                  </Text>
+                </DetailsContent>
+              </React.Fragment>
+            )}
+          </Details>
         );
       }}
     </CustomerQuery>
