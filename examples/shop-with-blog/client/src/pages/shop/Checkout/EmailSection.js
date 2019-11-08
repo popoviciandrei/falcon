@@ -43,7 +43,6 @@ export const EmailSection = props => {
       {({ data: { customer } }) => {
         if (customer) {
           setEmail(customer.email);
-          // TODO: go to next step;
         }
 
         if (customer || !open) {
