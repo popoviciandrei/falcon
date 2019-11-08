@@ -13,15 +13,6 @@ import ShippingMethodSection from './ShippingMethodSection';
 import PaymentMethodSection from './PaymentMethodSection';
 import AddressSection from './AddressSection';
 
-const CheckoutStep = {
-  Email: 'EMAIL',
-  ShippingAddress: 'SHIPPING_ADDRESS',
-  BillingAddress: 'BILLING_ADDRESS',
-  Shipping: 'SHIPPING',
-  Payment: 'PAYMENT',
-  Confirmation: 'CONFIRMATION'
-};
-
 const CheckoutArea = {
   checkout: 'checkout',
   cart: 'cart',
@@ -69,6 +60,15 @@ const checkoutLayout = {
       }
     })
   }
+};
+
+const CheckoutStep = {
+  Email: 'EMAIL',
+  ShippingAddress: 'SHIPPING_ADDRESS',
+  BillingAddress: 'BILLING_ADDRESS',
+  Shipping: 'SHIPPING',
+  Payment: 'PAYMENT',
+  Confirmation: 'CONFIRMATION'
 };
 
 // helper that computes step that should be open based on values from CheckoutLogic

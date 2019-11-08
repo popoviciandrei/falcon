@@ -1,12 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import isEqual from 'lodash.isequal';
-import {
-  PlaceOrderResult,
-  CheckoutAddressInput,
-  CheckoutDetailsInput,
-  ShippingMethod,
-  PaymentMethod
-} from '@deity/falcon-shop-extension';
+import { CheckoutDetailsInput } from '@deity/falcon-shop-extension';
 import {
   // Step 1
   useSetShippingAddressMutation,
