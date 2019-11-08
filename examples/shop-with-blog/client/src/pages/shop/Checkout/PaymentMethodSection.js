@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { I18n, T } from '@deity/falcon-i18n';
 import { TwoStepWizard } from '@deity/falcon-front-kit';
+import { ErrorSummary } from '@deity/falcon-ui-kit';
 import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
-import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';
 
 // Loading "PaymentMethodItem" component via loadable package
@@ -80,7 +80,7 @@ class PaymentSection extends React.Component {
               }
             </TwoStepWizard>
           )}
-          <ErrorList errors={errors} />
+          <ErrorSummary errors={errors} />
           {availablePaymentMethods.length > 0 && (
             <Button disabled={!this.state.selectedPayment} onClick={this.submitPayment}>
               <T id="continue" />

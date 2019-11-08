@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { FlexLayout, Checkbox, Label, Details, DetailsContent, Button } from '@deity/falcon-ui';
 import { T, I18n } from '@deity/falcon-i18n';
-import { AddressDetails, Form, AddressFormFields } from '@deity/falcon-ui-kit';
-import ErrorList from '../components/ErrorList';
+import { AddressDetails, Form, AddressFormFields, ErrorSummary } from '@deity/falcon-ui-kit';
 import SectionHeader from './CheckoutSectionHeader';
 import { AddressPicker } from './components/AddressPicker';
 
@@ -153,7 +152,7 @@ class AddressSection extends React.Component {
         {header}
         <DetailsContent>
           {content}
-          <ErrorList errors={errors} />
+          <ErrorSummary errors={errors} />
         </DetailsContent>
       </Details>
     );

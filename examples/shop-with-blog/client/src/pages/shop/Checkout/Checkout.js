@@ -2,11 +2,10 @@ import React from 'react';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
 import { Checkout, CheckoutProvider } from '@deity/falcon-front-kit';
-import { toGridTemplate, Loader, PageLayout } from '@deity/falcon-ui-kit';
+import { toGridTemplate, Loader, PageLayout, ErrorSummary } from '@deity/falcon-ui-kit';
 import { CartQuery, CustomerQuery, GET_CUSTOMER_WITH_ADDRESSES } from '@deity/falcon-shop-data';
 import { useI18n, T } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
-import ErrorList from '../components/ErrorList';
 import CheckoutCartSummary from './CheckoutCartSummary';
 import { EmailSection } from './EmailSection';
 import ShippingMethodSection from './ShippingMethodSection';
@@ -249,7 +248,8 @@ class CheckoutWizard extends React.Component {
 
         <Divider my="md" />
 
-        <ErrorList errors={errors.order} />
+        <ErrorSummary errors={errors.order} />
+
         {currentStep === CHECKOUT_STEPS.CONFIRMATION && (
           <Button onClick={placeOrder}>
             <T id="checkout.placeOrder" />
