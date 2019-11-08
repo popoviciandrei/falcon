@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { useI18n, T } from '@deity/falcon-i18n';
-import { CustomerQuery, SignOutMutation } from '@deity/falcon-shop-data';
+import { CustomerQuery, useSignOutMutation } from '@deity/falcon-shop-data';
 import { useCheckout } from '@deity/falcon-front-kit';
 import { Box, Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
 import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
@@ -51,8 +51,9 @@ EmailForm.propTypes = {
 
 export const EmailSection = props => {
   const { open, onEditRequested } = props;
-  const { setEmail, values } = useCheckout();
   const { t } = useI18n();
+  const { setEmail, values } = useCheckout();
+  const [signOut] = useSignOutMutation();
 
   return (
     <CustomerQuery>
@@ -60,24 +61,32 @@ export const EmailSection = props => {
         if (customer) {
           setEmail(customer.email);
           // TODO: go to next step;
+
+          return (
+            <Details>
+              <SectionHeader
+                title={t('customerSelector.title')}
+                editLabel={t('customerSelector.edit')}
+                onActionClick={signOut}
+                complete
+                summary={<Text>{customer.email || values.email}</Text>}
+              />
+            </Details>
+          );
         }
 
         return (
-          <Details open={!customer && open}>
-            {(!open || customer) && (
-              <SignOutMutation>
-                {signOut => (
-                  <SectionHeader
-                    title={t('customerSelector.title')}
-                    editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
-                    onActionClick={customer ? signOut : onEditRequested}
-                    complete
-                    summary={<Text>{customer.email || values.email}</Text>}
-                  />
-                )}
-              </SignOutMutation>
+          <Details open={open}>
+            {!open && (
+              <SectionHeader
+                title={t('customerSelector.title')}
+                editLabel={t('customerSelector.edit')}
+                onActionClick={onEditRequested}
+                complete
+                summary={<Text>{values.email}</Text>}
+              />
             )}
-            {!customer && open && (
+            {open && (
               <React.Fragment>
                 <SectionHeader title={t('customerSelector.title')} />
                 <DetailsContent>
