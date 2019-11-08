@@ -144,7 +144,6 @@ class CheckoutWizard extends React.Component {
       result,
       availableShippingMethods,
       availablePaymentMethods,
-      setEmail,
       setShippingAddress,
       setBillingAddress,
       setBillingSameAsShipping,
@@ -187,11 +186,10 @@ class CheckoutWizard extends React.Component {
         {t => (
           <Box position="relative">
             {(loading || result) && <Loader variant="overlay" />}
+
             <EmailSection
               open={currentStep === CHECKOUT_STEPS.EMAIL}
               onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.EMAIL)}
-              email={values.email}
-              setEmail={setEmail}
             />
 
             <Divider my="md" />

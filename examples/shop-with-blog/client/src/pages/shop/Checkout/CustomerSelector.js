@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
+import { I18n, T } from '@deity/falcon-i18n';
 import { CustomerQuery, SignOutMutation } from '@deity/falcon-shop-data';
+import { useCheckout } from '@deity/falcon-front-kit';
 import { Box, Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
 import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
-import { I18n, T } from '@deity/falcon-i18n';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 import SectionHeader from './CheckoutSectionHeader';
 
@@ -49,7 +50,8 @@ EmailForm.propTypes = {
 };
 
 export const EmailSection = props => {
-  const { open, onEditRequested, setEmail, email } = props;
+  const { open, onEditRequested } = props;
+  const { setEmail, values } = useCheckout();
 
   return (
     <CustomerQuery>
@@ -71,7 +73,7 @@ export const EmailSection = props => {
                         editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
                         onActionClick={customer ? signOut : onEditRequested}
                         complete
-                        summary={<Text>{email}</Text>}
+                        summary={<Text>{values.email}</Text>}
                       />
                     )}
                   </SignOutMutation>
@@ -83,7 +85,7 @@ export const EmailSection = props => {
                       <Text>
                         <T id="customerSelector.guestPrompt" />
                       </Text>
-                      <EmailForm email={email} setEmail={setEmail} />
+                      <EmailForm email={values.email} setEmail={setEmail} />
                       <Text>
                         <T id="customerSelector.or" />
                         <OpenSidebarMutation>
@@ -110,14 +112,7 @@ export const EmailSection = props => {
     </CustomerQuery>
   );
 };
-EmailSection.defaultProps = {
-  email: ''
-};
 EmailSection.propTypes = {
-  // currently selected email
-  email: PropTypes.string,
-  // callback that sets email
-  setEmail: PropTypes.func.isRequired,
   // callback that should be called when user requests edit of this particular section
   onEditRequested: PropTypes.func,
   // flag that indicates if the section is currently open
