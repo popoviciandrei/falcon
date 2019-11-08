@@ -4,7 +4,7 @@ import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
 import { Checkout, CheckoutProvider } from '@deity/falcon-front-kit';
 import { toGridTemplate, Loader, PageLayout, ErrorSummary } from '@deity/falcon-ui-kit';
 import { CartQuery, CustomerQuery, GET_CUSTOMER_WITH_ADDRESSES } from '@deity/falcon-shop-data';
-import { useI18n, T } from '@deity/falcon-i18n';
+import { I18n, T } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import CheckoutCartSummary from './CheckoutCartSummary';
 import { EmailSection } from './EmailSection';
@@ -157,8 +157,6 @@ class CheckoutWizard extends React.Component {
     const defaultShippingAddress = addresses.find(item => item.defaultShipping);
     const defaultBillingAddress = addresses.find(item => item.defaultBilling);
 
-    const { t } = useI18n();
-
     let orderResult = null;
     if (!loading && result) {
       if (result.url) {
@@ -182,82 +180,86 @@ class CheckoutWizard extends React.Component {
     }
 
     return (
-      <Box position="relative">
-        {(loading || result) && <Loader variant="overlay" />}
+      <I18n>
+        {t => (
+          <Box position="relative">
+            {(loading || result) && <Loader variant="overlay" />}
 
-        <EmailSection
-          open={currentStep === CHECKOUT_STEPS.EMAIL}
-          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.EMAIL)}
-        />
+            <EmailSection
+              open={currentStep === CHECKOUT_STEPS.EMAIL}
+              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.EMAIL)}
+            />
 
-        <Divider my="md" />
+            <Divider my="md" />
 
-        <AddressSection
-          id="shipping-address"
-          open={currentStep === CHECKOUT_STEPS.SHIPPING_ADDRESS}
-          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING_ADDRESS)}
-          title={t('checkout.shippingAddress')}
-          submitLabel={t('checkout.nextStep')}
-          selectedAddress={values.shippingAddress}
-          setAddress={setShippingAddress}
-          errors={errors.shippingAddress}
-          availableAddresses={addresses}
-          defaultSelected={defaultShippingAddress}
-        />
+            <AddressSection
+              id="shipping-address"
+              open={currentStep === CHECKOUT_STEPS.SHIPPING_ADDRESS}
+              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING_ADDRESS)}
+              title={t('checkout.shippingAddress')}
+              submitLabel={t('checkout.nextStep')}
+              selectedAddress={values.shippingAddress}
+              setAddress={setShippingAddress}
+              errors={errors.shippingAddress}
+              availableAddresses={addresses}
+              defaultSelected={defaultShippingAddress}
+            />
 
-        <Divider my="md" />
+            <Divider my="md" />
 
-        <AddressSection
-          id="billing-address"
-          open={currentStep === CHECKOUT_STEPS.BILLING_ADDRESS}
-          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.BILLING_ADDRESS)}
-          title={t('checkout.billingAddress')}
-          submitLabel={t('checkout.nextStep')}
-          selectedAddress={values.billingAddress}
-          setAddress={setBillingAddress}
-          setUseTheSame={setBillingSameAsShipping}
-          useTheSame={values.billingSameAsShipping}
-          labelUseTheSame={t('checkout.useTheSameAddress')}
-          availableAddresses={addresses}
-          defaultSelected={defaultBillingAddress}
-        />
+            <AddressSection
+              id="billing-address"
+              open={currentStep === CHECKOUT_STEPS.BILLING_ADDRESS}
+              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.BILLING_ADDRESS)}
+              title={t('checkout.billingAddress')}
+              submitLabel={t('checkout.nextStep')}
+              selectedAddress={values.billingAddress}
+              setAddress={setBillingAddress}
+              setUseTheSame={setBillingSameAsShipping}
+              useTheSame={values.billingSameAsShipping}
+              labelUseTheSame={t('checkout.useTheSameAddress')}
+              availableAddresses={addresses}
+              defaultSelected={defaultBillingAddress}
+            />
 
-        <Divider my="md" />
+            <Divider my="md" />
 
-        <ShippingMethodSection
-          open={currentStep === CHECKOUT_STEPS.SHIPPING}
-          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING)}
-          shippingAddress={values.shippingAddress}
-          selectedShipping={values.shippingMethod}
-          setShippingAddress={setShippingAddress}
-          availableShippingMethods={availableShippingMethods}
-          setShipping={setShippingMethod}
-          errors={errors.shippingMethod}
-        />
+            <ShippingMethodSection
+              open={currentStep === CHECKOUT_STEPS.SHIPPING}
+              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.SHIPPING)}
+              shippingAddress={values.shippingAddress}
+              selectedShipping={values.shippingMethod}
+              setShippingAddress={setShippingAddress}
+              availableShippingMethods={availableShippingMethods}
+              setShipping={setShippingMethod}
+              errors={errors.shippingMethod}
+            />
 
-        <Divider my="md" />
+            <Divider my="md" />
 
-        <PaymentMethodSection
-          open={currentStep === CHECKOUT_STEPS.PAYMENT}
-          onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.PAYMENT)}
-          selectedPayment={values.paymentMethod}
-          availablePaymentMethods={availablePaymentMethods}
-          setPayment={setPaymentMethod}
-          errors={errors.paymentMethod}
-        />
+            <PaymentMethodSection
+              open={currentStep === CHECKOUT_STEPS.PAYMENT}
+              onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.PAYMENT)}
+              selectedPayment={values.paymentMethod}
+              availablePaymentMethods={availablePaymentMethods}
+              setPayment={setPaymentMethod}
+              errors={errors.paymentMethod}
+            />
 
-        <Divider my="md" />
+            <Divider my="md" />
 
-        <ErrorSummary errors={errors.order} />
+            <ErrorSummary errors={errors.order} />
 
-        {currentStep === CHECKOUT_STEPS.CONFIRMATION && (
-          <Button onClick={placeOrder}>
-            <T id="checkout.placeOrder" />
-          </Button>
+            {currentStep === CHECKOUT_STEPS.CONFIRMATION && (
+              <Button onClick={placeOrder}>
+                <T id="checkout.placeOrder" />
+              </Button>
+            )}
+
+            {orderResult}
+          </Box>
         )}
-
-        {orderResult}
-      </Box>
+      </I18n>
     );
   }
 }
