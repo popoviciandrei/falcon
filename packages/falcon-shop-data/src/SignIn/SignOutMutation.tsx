@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation } from '@deity/falcon-data';
 
 export const SIGN_OUT = gql`
@@ -15,3 +16,9 @@ export class SignOutMutation extends Mutation<SignOutResponse> {
     refetchQueries: ['Customer', 'Cart']
   };
 }
+
+export const useSignOutMutation = (options: MutationHookOptions<SignOutResponse> = {}) =>
+  useMutation(SIGN_OUT, {
+    refetchQueries: ['Customer', 'Cart'],
+    ...options
+  });
