@@ -32,7 +32,7 @@ const customerEmailFormLayout = {
 const EmailForm = ({ email = '', setEmail }) => (
   <Formik initialStatus={{}} initialValues={{ email }} onSubmit={values => setEmail(values.email)}>
     {({ status: { error } }) => (
-      <Form i18nId="customerSelector">
+      <Form id="checkout-customer-email" i18nId="customerSelector">
         <Box defaultTheme={customerEmailFormLayout}>
           <Box gridArea="input">
             <FormField name="email" required type="email" autoComplete="email" />
@@ -44,7 +44,6 @@ const EmailForm = ({ email = '', setEmail }) => (
     )}
   </Formik>
 );
-
 EmailForm.propTypes = {
   setEmail: PropTypes.func.isRequired,
   email: PropTypes.string
@@ -108,37 +107,11 @@ class EmailSection extends React.Component {
     const { open, data, onEditRequested } = this.props;
     const isSignedIn = !!data.customer;
 
-    const content = (
-      <OpenSidebarMutation>
-        {openSidebar => (
-          <Box>
-            <Text>
-              <T id="customerSelector.guestPrompt" />
-            </Text>
-            <EmailForm email={this.state.email} setEmail={this.props.setEmail} />
-            <Text>
-              <T id="customerSelector.or" />
-              <Link
-                mx="xs"
-                color="primary"
-                onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
-              >
-                <T id="customerSelector.signInLink" />
-              </Link>
-              <T id="customerSelector.ifAlreadyRegistered" />
-            </Text>
-          </Box>
-        )}
-      </OpenSidebarMutation>
-    );
-
     return (
       <I18n>
         {t => (
           <Details open={open}>
-            {open ? (
-              <SectionHeader title={t('customerSelector.title')} />
-            ) : (
+            {!open && (
               <SignOutMutation>
                 {signOut => (
                   <SectionHeader
@@ -151,7 +124,34 @@ class EmailSection extends React.Component {
                 )}
               </SignOutMutation>
             )}
-            {content ? <DetailsContent>{content}</DetailsContent> : null}
+            {open && (
+              <React.Fragment>
+                <SectionHeader title={t('customerSelector.title')} />
+                <DetailsContent>
+                  <OpenSidebarMutation>
+                    {openSidebar => (
+                      <Box>
+                        <Text>
+                          <T id="customerSelector.guestPrompt" />
+                        </Text>
+                        <EmailForm email={this.state.email} setEmail={this.props.setEmail} />
+                        <Text>
+                          <T id="customerSelector.or" />
+                          <Link
+                            mx="xs"
+                            color="primary"
+                            onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
+                          >
+                            <T id="customerSelector.signInLink" />
+                          </Link>
+                          <T id="customerSelector.ifAlreadyRegistered" />
+                        </Text>
+                      </Box>
+                    )}
+                  </OpenSidebarMutation>
+                </DetailsContent>
+              </React.Fragment>
+            )}
           </Details>
         )}
       </I18n>
