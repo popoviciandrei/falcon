@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from '@apollo/react-hoc';
 import { Formik } from 'formik';
-import { SignOutMutation, GET_CUSTOMER } from '@deity/falcon-shop-data';
+import { CustomerQuery, SignOutMutation } from '@deity/falcon-shop-data';
 import { Box, Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
 import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
 import { I18n, T } from '@deity/falcon-i18n';
@@ -50,67 +49,71 @@ EmailForm.propTypes = {
 };
 
 export const EmailSection = props => {
-  const { open, data: { customer } = {}, onEditRequested, setEmail, email } = props;
-
-  if (customer) {
-    setEmail(customer.email);
-    // TODO: go to next step;
-  }
+  const { open, onEditRequested, setEmail, email } = props;
 
   return (
-    <I18n>
-      {t => (
-        <Details open={open}>
-          {!open && (
-            <SignOutMutation>
-              {signOut => (
-                <SectionHeader
-                  title={t('customerSelector.title')}
-                  editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
-                  onActionClick={customer ? signOut : onEditRequested}
-                  complete
-                  summary={<Text>{email}</Text>}
-                />
-              )}
-            </SignOutMutation>
-          )}
-          {open && (
-            <React.Fragment>
-              <SectionHeader title={t('customerSelector.title')} />
-              <DetailsContent>
-                <Text>
-                  <T id="customerSelector.guestPrompt" />
-                </Text>
-                <EmailForm email={email} setEmail={setEmail} />
-                <Text>
-                  <T id="customerSelector.or" />
-                  <OpenSidebarMutation>
-                    {openSidebar => (
-                      <Link
-                        mx="xs"
-                        color="primary"
-                        onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
-                      >
-                        <T id="customerSelector.signInLink" />
-                      </Link>
+    <CustomerQuery>
+      {({ data: { customer } }) => {
+        if (customer) {
+          setEmail(customer.email);
+          // TODO: go to next step;
+        }
+
+        return (
+          <I18n>
+            {t => (
+              <Details open={open}>
+                {!open && (
+                  <SignOutMutation>
+                    {signOut => (
+                      <SectionHeader
+                        title={t('customerSelector.title')}
+                        editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
+                        onActionClick={customer ? signOut : onEditRequested}
+                        complete
+                        summary={<Text>{email}</Text>}
+                      />
                     )}
-                  </OpenSidebarMutation>
-                  <T id="customerSelector.ifAlreadyRegistered" />
-                </Text>
-              </DetailsContent>
-            </React.Fragment>
-          )}
-        </Details>
-      )}
-    </I18n>
+                  </SignOutMutation>
+                )}
+                {open && (
+                  <React.Fragment>
+                    <SectionHeader title={t('customerSelector.title')} />
+                    <DetailsContent>
+                      <Text>
+                        <T id="customerSelector.guestPrompt" />
+                      </Text>
+                      <EmailForm email={email} setEmail={setEmail} />
+                      <Text>
+                        <T id="customerSelector.or" />
+                        <OpenSidebarMutation>
+                          {openSidebar => (
+                            <Link
+                              mx="xs"
+                              color="primary"
+                              onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.account } })}
+                            >
+                              <T id="customerSelector.signInLink" />
+                            </Link>
+                          )}
+                        </OpenSidebarMutation>
+                        <T id="customerSelector.ifAlreadyRegistered" />
+                      </Text>
+                    </DetailsContent>
+                  </React.Fragment>
+                )}
+              </Details>
+            )}
+          </I18n>
+        );
+      }}
+    </CustomerQuery>
   );
 };
 EmailSection.defaultProps = {
   email: ''
 };
 EmailSection.propTypes = {
-  // data form GET_CUSTOMER query
-  data: PropTypes.shape({}),
   // currently selected email
   email: PropTypes.string,
   // callback that sets email
@@ -120,5 +123,3 @@ EmailSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool
 };
-
-export default graphql(GET_CUSTOMER)(EmailSection);

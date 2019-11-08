@@ -8,7 +8,7 @@ import { T, I18n } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import ErrorList from '../components/ErrorList';
 import CheckoutCartSummary from './CheckoutCartSummary';
-import CustomerSelector from './CustomerSelector';
+import { EmailSection } from './CustomerSelector';
 import ShippingMethodSection from './ShippingMethodSection';
 import PaymentMethodSection from './PaymentMethodSection';
 import AddressSection from './AddressSection';
@@ -181,12 +181,13 @@ class CheckoutWizard extends React.Component {
       return <Redirect to="/" />;
     }
 
+    console.log(currentStep);
     return (
       <I18n>
         {t => (
           <Box position="relative">
             {(loading || result) && <Loader variant="overlay" />}
-            <CustomerSelector
+            <EmailSection
               open={currentStep === CHECKOUT_STEPS.EMAIL}
               onEditRequested={() => this.setCurrentStep(CHECKOUT_STEPS.EMAIL)}
               email={values.email}
