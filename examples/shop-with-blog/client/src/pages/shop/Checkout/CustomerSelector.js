@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { useI18n, T } from '@deity/falcon-i18n';
 import { CustomerQuery, useSignOutMutation } from '@deity/falcon-shop-data';
 import { useCheckout } from '@deity/falcon-front-kit';
-import { Box, Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
+import { Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
 import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 import SectionHeader from './CheckoutSectionHeader';
@@ -13,7 +13,7 @@ const customerEmailFormLayout = {
   customerEmailFormLayout: {
     display: 'grid',
     my: 'xs',
-    gridGap: 'sm',
+    gridGap: { xs: 'xs', md: 'md' },
     // prettier-ignore
     gridTemplate: {
       xs: toGridTemplate([
@@ -69,14 +69,10 @@ export const EmailSection = props => {
               </Text>
               <Formik initialStatus={{}} initialValues={{ email }} onSubmit={x => setEmail(x.email)}>
                 {({ status: { error } }) => (
-                  <Form id="checkout-customer-email" i18nId="customerSelector">
-                    <Box defaultTheme={customerEmailFormLayout}>
-                      <Box gridArea="input">
-                        <FormField name="email" required type="email" autoComplete="email" />
-                      </Box>
-                      <FormSubmit gridArea="button" my="xs" />
-                      {error && <ErrorSummary errors={error} />}
-                    </Box>
+                  <Form id="checkout-customer-email" i18nId="customerSelector" defaultTheme={customerEmailFormLayout}>
+                    <FormField name="email" required type="email" autoComplete="email" gridArea="input" />
+                    <FormSubmit my="xs" gridArea="button" />
+                    {error && <ErrorSummary errors={error} />}
                   </Form>
                 )}
               </Formik>
