@@ -180,7 +180,11 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     });
   };
 
-  const setEmail = (email: string) => setPartialState({ values: { email } });
+  const setEmail = (email: string) => {
+    if (email !== state.values.email) {
+      setPartialState({ values: { email } });
+    }
+  };
 
   /**
    * @param {boolean} same Whether the billing address should be the same as shipping address
