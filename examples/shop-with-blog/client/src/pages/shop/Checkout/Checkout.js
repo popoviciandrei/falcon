@@ -8,7 +8,7 @@ import { T, I18n } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import ErrorList from '../components/ErrorList';
 import CheckoutCartSummary from './CheckoutCartSummary';
-import { EmailSection } from './CustomerSelector';
+import { EmailSection } from './EmailSection';
 import ShippingMethodSection from './ShippingMethodSection';
 import PaymentMethodSection from './PaymentMethodSection';
 import AddressSection from './AddressSection';
