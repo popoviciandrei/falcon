@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Formik, Form, ErrorMessage } from 'formik';
 import { graphql } from '@apollo/react-hoc';
-import { Box, Text, Link, Input, Button, Details, DetailsContent } from '@deity/falcon-ui';
+import { Formik, Form } from 'formik';
 import { SignOutMutation, GET_CUSTOMER } from '@deity/falcon-shop-data';
-import { toGridTemplate } from '@deity/falcon-ui-kit';
+import { Box, Text, Link, Button, Details, DetailsContent } from '@deity/falcon-ui';
+import { FormField, ErrorSummary, toGridTemplate } from '@deity/falcon-ui-kit';
 import { I18n, T } from '@deity/falcon-i18n';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 import SectionHeader from './CheckoutSectionHeader';
@@ -17,45 +17,30 @@ const customerEmailFormLayout = {
     // prettier-ignore
     gridTemplate: {
       xs: toGridTemplate([
-        ['1fr'   ],
-        ['input' ],
+        ['1fr'],
+        ['input'],
         ['button']
       ]),
       md: toGridTemplate([
-        ['2fr',   '1fr'   ],
+        ['2fr', '1fr'],
         ['input', 'button']
       ])
     }
   }
 };
 
-const emailRx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 const EmailForm = ({ email = '', setEmail }) => (
-  <Formik
-    onSubmit={values => setEmail(values.email)}
-    initialValues={{ email }}
-    validate={values => {
-      if (!emailRx.test(values.email.toLowerCase())) {
-        return {
-          email: 'Invalid email address'
-        };
-      }
-    }}
-  >
-    {({ values, errors, handleChange }) => (
+  <Formik initialStatus={{}} initialValues={{ email }} onSubmit={values => setEmail(values.email)}>
+    {({ status: { error }, errors }) => (
       <Form>
-        <Text>
-          <T id="customerSelector.guestPrompt" />
-        </Text>
         <Box defaultTheme={customerEmailFormLayout}>
           <Box gridArea="input">
-            <Input type="text" name="email" value={values.email} onChange={handleChange} />
-            <ErrorMessage name="email" render={msg => <Text color="error">{msg}</Text>} />
+            <FormField name="email" required type="email" autoComplete="email" />
           </Box>
           <Button gridArea="button" disabled={errors.email} type="submit">
             <T id="customerSelector.guestContinue" />
           </Button>
+          {error && <ErrorSummary errors={error} />}
         </Box>
       </Form>
     )}
@@ -129,6 +114,9 @@ class EmailSection extends React.Component {
       <OpenSidebarMutation>
         {openSidebar => (
           <Box>
+            <Text>
+              <T id="customerSelector.guestPrompt" />
+            </Text>
             <EmailForm email={this.state.email} setEmail={this.props.setEmail} />
             <Text>
               <T id="customerSelector.or" />
