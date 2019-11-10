@@ -31,6 +31,7 @@ export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormPro
     <Formik
       initialStatus={{}}
       initialValues={address ? checkoutAddressToSetCheckoutAddressFormValues(address) : initialValues}
+      enableReinitialize
       onSubmit={({ street1, street2, country, ...values }, { setSubmitting, setStatus }) => {
         return setShippingAddress({
           variables: {
