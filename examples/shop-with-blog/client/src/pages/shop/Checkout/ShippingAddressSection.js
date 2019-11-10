@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Details, DetailsContent, Button } from '@deity/falcon-ui';
 import { I18n } from '@deity/falcon-i18n';
-import { SetShippingAddressFormProvider, useCheckout } from '@deity/falcon-front-kit';
-import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
+import { SetShippingAddressFormProvider, useCheckout, addressToString } from '@deity/falcon-front-kit';
+import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader, Picker } from '@deity/falcon-ui-kit';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker } from './components/AddressPicker';
 
 const checkoutAddressToSetCheckoutAddressFormValues = address => {
   const { __typename, ...rest } = { __typename: undefined, ...address };
@@ -24,10 +23,19 @@ export const ShippingAddressSection = props => {
     values: { shippingAddress }
   } = useCheckout();
 
-  const [address, setAddress] = useState(shippingAddress || props.defaultSelected || null);
+  const isShippingAddressOther = shippingAddress && !shippingAddress.id;
+  const pickerOptions =
+    availableAddresses.length > 0
+      ? [
+          ...availableAddresses.map(value => ({ label: addressToString(value), value })),
+          isShippingAddressOther ? { label: 'Other', value: shippingAddress } : { label: 'Other', value: undefined }
+        ]
+      : undefined;
+
+  const [address, setAddress] = useState(shippingAddress);
 
   let header;
-  if (!open && address) {
+  if (!open && shippingAddress) {
     header = (
       <I18n>
         {t => (
@@ -36,7 +44,7 @@ export const ShippingAddressSection = props => {
             onActionClick={onEditRequested}
             editLabel={t('edit')}
             complete
-            summary={<AddressDetails {...address} />}
+            summary={<AddressDetails {...shippingAddress} />}
           />
         )}
       </I18n>
@@ -49,31 +57,22 @@ export const ShippingAddressSection = props => {
     <Details open={open}>
       {header}
       <DetailsContent>
-        <SetShippingAddressFormProvider
-          // address={address === 'Other' ? undefined : address}
-          onSuccess={x => {
-            setAddress(x);
-            setShippingAddress(x);
-          }}
-        >
-          {({ isSubmitting, resetForm, setValues, status: { error } }) => (
+        <SetShippingAddressFormProvider onSuccess={setShippingAddress}>
+          {({ isSubmitting, setValues, status: { error } }) => (
             <React.Fragment>
-              {availableAddresses && !!availableAddresses.length && (
-                <AddressPicker
-                  options={availableAddresses}
-                  selected={address}
+              {availableAddresses.length > 0 && (
+                <Picker
+                  options={pickerOptions}
+                  selected={address && address.id ? addressToString(address) : 'Other'}
                   onChange={x => {
                     setAddress(x);
-                    if (address === 'Other') {
-                      resetForm(undefined);
-                    }
-                    setValues(checkoutAddressToSetCheckoutAddressFormValues(x));
+                    setValues(x ? checkoutAddressToSetCheckoutAddressFormValues(x) : {});
                   }}
                 />
               )}
               <Form id="shipping-address" i18nId="addressForm" my="sm">
                 {isSubmitting && <Loader variant="overlay" />}
-                {(!availableAddresses || availableAddresses.length === 0 || address === 'Other') && (
+                {(availableAddresses.length === 0 || !address || isShippingAddressOther) && (
                   <AddressFormFields autoCompleteSection="shipping-address" />
                 )}
                 <Button type="submit">{submitLabel}</Button>
