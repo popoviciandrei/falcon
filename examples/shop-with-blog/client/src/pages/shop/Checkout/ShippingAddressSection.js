@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Details, DetailsContent, Button } from '@deity/falcon-ui';
 import { I18n } from '@deity/falcon-i18n';
@@ -7,71 +7,63 @@ import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@
 import SectionHeader from './CheckoutSectionHeader';
 import { AddressPicker } from './components/AddressPicker';
 
-export class ShippingAddressSection extends React.Component {
-  constructor(props) {
-    super(props);
+export const ShippingAddressSection = props => {
+  const { open, title, onEditRequested, submitLabel, availableAddresses, setAddress } = props;
 
-    const { selectedAddress, defaultSelected } = props;
+  const [selectedAddress, setSelectedAddress] = useState(props.selectedAddress || props.defaultSelected || null);
 
-    this.state = {
-      selectedAddress: selectedAddress || defaultSelected || null
-    };
-  }
-
-  render() {
-    const { open, title, onEditRequested, submitLabel, availableAddresses, setAddress } = this.props;
-    const { selectedAddress } = this.state;
-
-    let header;
-    if (!open && selectedAddress) {
-      header = (
-        <I18n>
-          {t => (
-            <SectionHeader
-              title={title}
-              onActionClick={onEditRequested}
-              editLabel={t('edit')}
-              complete
-              summary={<AddressDetails {...selectedAddress} />}
-            />
-          )}
-        </I18n>
-      );
-    } else {
-      header = <SectionHeader title={title} />;
-    }
-
-    return (
-      <Details open={open}>
-        {header}
-        <DetailsContent>
-          {availableAddresses && !!availableAddresses.length && (
-            <AddressPicker
-              options={availableAddresses}
-              selected={selectedAddress}
-              onChange={value => this.setState({ selectedAddress: value })}
-            />
-          )}
-          <SetShippingAddressFormProvider
-            address={selectedAddress}
-            onSuccess={x => this.setState({ selectedAddress: x }, setAddress(x))}
-          >
-            {({ isSubmitting, status: { error } }) => (
-              <Form id="shipping-address" i18nId="addressForm" my="sm">
-                {isSubmitting && <Loader variant="overlay" />}
-                {(!availableAddresses || availableAddresses.length === 0 || selectedAddress === 'Other') && (
-                  <AddressFormFields autoCompleteSection="shipping-address" />
-                )}
-                <Button type="submit">{submitLabel}</Button>
-                <ErrorSummary errors={error} />
-              </Form>
-            )}
-          </SetShippingAddressFormProvider>
-        </DetailsContent>
-      </Details>
+  let header;
+  if (!open && selectedAddress) {
+    header = (
+      <I18n>
+        {t => (
+          <SectionHeader
+            title={title}
+            onActionClick={onEditRequested}
+            editLabel={t('edit')}
+            complete
+            summary={<AddressDetails {...selectedAddress} />}
+          />
+        )}
+      </I18n>
     );
+  } else {
+    header = <SectionHeader title={title} />;
   }
-}
+
+  return (
+    <Details open={open}>
+      {header}
+      <DetailsContent>
+        {availableAddresses && !!availableAddresses.length && (
+          <AddressPicker
+            options={availableAddresses}
+            selected={selectedAddress}
+            onChange={x => setSelectedAddress(x)}
+          />
+        )}
+        <SetShippingAddressFormProvider
+          address={selectedAddress}
+          onSuccess={x => {
+            setSelectedAddress(x);
+            setAddress(x);
+          }}
+        >
+          {({ isSubmitting, status: { error } }) => (
+            <Form id="shipping-address" i18nId="addressForm" my="sm">
+              {isSubmitting && <Loader variant="overlay" />}
+              {(!availableAddresses || availableAddresses.length === 0 || selectedAddress === 'Other') && (
+                <AddressFormFields autoCompleteSection="shipping-address" />
+              )}
+              <Button type="submit">{submitLabel}</Button>
+              <ErrorSummary errors={error} />
+            </Form>
+          )}
+        </SetShippingAddressFormProvider>
+      </DetailsContent>
+    </Details>
+  );
+};
 ShippingAddressSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
