@@ -52,7 +52,7 @@ export type CheckoutAddressInput = AddressBase & {
   regionId?: ID;
   countryId: ID;
   email?: string;
-  saveInAddressBook?: number; // TODO: create issue on GH to implement this feature?
+  saveInAddressBook?: boolean; // TODO: create issue on GH to implement this feature?
   sameAsBilling?: number; // TODO: check if it is used, if not, please remove!
 };
 

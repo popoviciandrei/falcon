@@ -225,7 +225,7 @@ input CheckoutAddressInput {
   customerAddressId: ID
   postcode: String
   sameAsBilling: Int
-  saveInAddressBook: Int
+  saveInAddressBook: Boolean
   email: String
   company: String
   countryId: ID!

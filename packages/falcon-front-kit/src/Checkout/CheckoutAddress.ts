@@ -4,9 +4,9 @@ import { AddressBase, AddressCountry, Region, CheckoutAddressInput } from '@deit
 export type CheckoutAddress = AddressBase & {
   id?: ID;
   region?: Region;
-  country: Pick<AddressCountry, 'id'>;
+  country: AddressCountry;
   email?: string;
-  saveInAddressBook?: number;
+  saveInAddressBook?: boolean;
 };
 
 export const addressToCheckoutAddressInput = (checkoutAddress: CheckoutAddress): CheckoutAddressInput => {
