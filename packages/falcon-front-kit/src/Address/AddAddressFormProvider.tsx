@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import { AddressCountry } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
-import { useAddAddressMutation } from '@deity/falcon-shop-data';
+import { useAddAddressMutation, AddAddressResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
 export type AddAddressFormValues = {
@@ -19,7 +19,7 @@ export type AddAddressFormValues = {
   defaultShipping?: boolean;
 };
 
-export type AddAddressFormProviderProps = FormProviderProps<AddAddressFormValues>;
+export type AddAddressFormProviderProps = FormProviderProps<AddAddressFormValues, AddAddressResponse>;
 export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = props => {
   const { onSuccess, initialValues, ...formikProps } = props;
   const defaultInitialValues = {
@@ -41,6 +41,7 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={({ street1, street2, country, ...values }, { setSubmitting, setStatus }) =>
         addAddress({
@@ -52,9 +53,10 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
             }
           }
         })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);

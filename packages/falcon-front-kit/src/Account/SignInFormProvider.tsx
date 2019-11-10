@@ -1,14 +1,14 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { useGetUserError } from '@deity/falcon-data';
-import { useSignMutation } from '@deity/falcon-shop-data';
+import { useSignInMutation, SignInResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
 export type SignInFormValues = {
   email: string;
   password: string;
 };
-export type SignInFormProvider = FormProviderProps<SignInFormValues>;
+export type SignInFormProvider = FormProviderProps<SignInFormValues, SignInResponse>;
 export const SignInFormProvider: React.SFC<SignInFormProvider> = props => {
   const { onSuccess, initialValues, ...formikProps } = props;
   const defaultInitialValues = {
@@ -16,17 +16,19 @@ export const SignInFormProvider: React.SFC<SignInFormProvider> = props => {
     password: ''
   };
 
-  const [signIn] = useSignMutation();
+  const [signIn] = useSignInMutation();
   const [getUserError] = useGetUserError();
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
         signIn({ variables: { input: values } })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);
