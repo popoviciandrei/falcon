@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Formik } from 'formik';
 import { Details, DetailsContent, Button } from '@deity/falcon-ui';
-import { T, I18n } from '@deity/falcon-i18n';
-import { AddressDetails, Form, AddressFormFields, ErrorSummary } from '@deity/falcon-ui-kit';
+import { I18n } from '@deity/falcon-i18n';
+import { SetShippingAddressFormProvider } from '@deity/falcon-front-kit';
+import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import SectionHeader from './CheckoutSectionHeader';
 import { AddressPicker } from './components/AddressPicker';
 
@@ -18,41 +18,11 @@ export class ShippingAddressSection extends React.Component {
     };
   }
 
-  submitAddress = ({ street1, street2, ...restValues }) => {
-    this.props.setAddress({ ...restValues, street: [street1, street2] });
-  };
-
-  submitSelectedAddress = () => {
-    const { selectedAddress } = this.state;
-    const { __typename, region, ...rest } = selectedAddress; // make sure we don't send __typename field
-    const addressInput = {
-      ...rest,
-      // include ID fields instead of full country/region objects
-      regionId: region ? region.id : undefined
-    };
-
-    this.props.setAddress(addressInput);
-  };
-
   render() {
-    const { open, title, onEditRequested, submitLabel, errors, availableAddresses, selectedAddress } = this.props;
-
-    const { street = [], ...selectedAddressRest } = selectedAddress || {};
-    const initialAddressValue = {
-      firstname: '',
-      lastname: '',
-      street1: street[0] || '',
-      street2: street.length > 1 ? street[1] : '',
-      postcode: '',
-      city: '',
-      telephone: '',
-      country: undefined,
-      ...selectedAddressRest
-    };
+    const { open, title, onEditRequested, submitLabel, availableAddresses, setAddress } = this.props;
+    const { selectedAddress } = this.state;
 
     let header;
-    let content;
-
     if (!open && selectedAddress) {
       header = (
         <I18n>
@@ -71,51 +41,32 @@ export class ShippingAddressSection extends React.Component {
       header = <SectionHeader title={title} />;
     }
 
-    const { selectedAddress: selectedAddr } = this.state;
-
-    // lets the user manually enter an address
-    const addressForm = (
-      <Formik initialValues={initialAddressValue} onSubmit={this.submitAddress}>
-        <Form id="shipping-address" i18nId="addressForm" my="sm">
-          <AddressFormFields askEmail autoCompleteSection="shipping-address" />
-          <Button type="submit">{submitLabel}</Button>
-        </Form>
-      </Formik>
-    );
-
-    // lets the user pick an existing address or show the address form
-    const addressEditor = (
-      <React.Fragment>
-        {!!availableAddresses.length && (
-          <AddressPicker
-            options={availableAddresses}
-            selected={selectedAddr}
-            onChange={value => this.setState({ selectedAddress: value })}
-          />
-        )}
-        {selectedAddr !== 'Other' && (
-          <Button my="sm" onClick={this.submitSelectedAddress}>
-            <T id="continue" />
-          </Button>
-        )}
-        {(selectedAddr === 'Other' || !availableAddresses.length) && addressForm}
-      </React.Fragment>
-    );
-
-    if (availableAddresses) {
-      // let the user pick an existing address or enter another one
-      content = addressEditor;
-    } else {
-      // no addresses are available, the only option is to enter one manually
-      content = addressForm;
-    }
-
     return (
       <Details open={open}>
         {header}
         <DetailsContent>
-          {content}
-          <ErrorSummary errors={errors} />
+          {availableAddresses && !!availableAddresses.length && (
+            <AddressPicker
+              options={availableAddresses}
+              selected={selectedAddress}
+              onChange={value => this.setState({ selectedAddress: value })}
+            />
+          )}
+          <SetShippingAddressFormProvider
+            address={selectedAddress}
+            onSuccess={x => this.setState({ selectedAddress: x }, setAddress(x))}
+          >
+            {({ isSubmitting, status: { error } }) => (
+              <Form id="shipping-address" i18nId="addressForm" my="sm">
+                {isSubmitting && <Loader variant="overlay" />}
+                {(!availableAddresses || availableAddresses.length === 0 || selectedAddress === 'Other') && (
+                  <AddressFormFields autoCompleteSection="shipping-address" />
+                )}
+                <Button type="submit">{submitLabel}</Button>
+                <ErrorSummary errors={error} />
+              </Form>
+            )}
+          </SetShippingAddressFormProvider>
         </DetailsContent>
       </Details>
     );
