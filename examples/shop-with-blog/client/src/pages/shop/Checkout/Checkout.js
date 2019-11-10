@@ -136,7 +136,6 @@ class CheckoutWizard extends React.Component {
   setCurrentStep = currentStep => this.setState({ currentStep });
 
   render() {
-    const { currentStep } = this.state;
     const {
       values,
       loading,
@@ -180,6 +179,7 @@ class CheckoutWizard extends React.Component {
       return <Redirect to="/" />;
     }
 
+    const { currentStep } = this.state;
     return (
       <I18n>
         {t => (
