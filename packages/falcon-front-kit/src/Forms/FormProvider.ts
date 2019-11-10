@@ -1,4 +1,5 @@
 import { FormikProps, FormikValues } from 'formik';
+import { ErrorModel } from '@deity/falcon-data';
 
 export type FormProviderProps<TValues = FormikValues, TResult = any> = {
   /** Invoked when form is successfully submit */
@@ -11,6 +12,6 @@ export type FormProviderRenderProps<TValues, TResult> = {
   status: {
     [key: string]: any;
     data?: TResult;
-    error?: any;
+    error?: ErrorModel | ErrorModel[];
   };
 } & Omit<FormikProps<TValues>, 'status'>;

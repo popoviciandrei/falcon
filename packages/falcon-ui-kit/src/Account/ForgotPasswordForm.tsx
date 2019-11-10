@@ -10,15 +10,14 @@ export type ForgetPasswordFormProps = Partial<FormProps> & {
 };
 export const ForgotPasswordForm: React.SFC<ForgetPasswordFormProps> = ({ onSuccess, ...formProps }) => (
   <ForgotPasswordFormProvider onSuccess={onSuccess}>
-    {({ isSubmitting, status = {}, values, submitCount, isValid }) => {
-      const { error } = status;
-      const submitSucceed = isValid && !isSubmitting && submitCount > 0 && !error;
+    {({ isSubmitting, status, values, submitCount, isValid }) => {
+      const submitSucceed = isValid && !isSubmitting && submitCount > 0 && !status.error;
 
       return (
         <Form id="forgot-password" i18nId="forgotPassword" {...formProps}>
           <FormField name="email" required type="email" autoComplete="email" />
           <FormSubmit />
-          {status.error && <ErrorSummary errors={error} />}
+          <ErrorSummary errors={status.error} />
 
           {submitSucceed && (
             <Text mt="md" fontSize="md">
