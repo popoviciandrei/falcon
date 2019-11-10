@@ -41,15 +41,15 @@ export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormPro
             }
           }
         })
-          .then(({ data }) => {
-            setSubmitting(false);
-            setStatus({ data });
-
+          .then(() => {
             const successData = {
               ...values,
               street: [street1, street2].filter(Boolean),
               country
             };
+
+            setSubmitting(false);
+            setStatus({ data: successData });
 
             return onSuccess && onSuccess(successData);
           })
