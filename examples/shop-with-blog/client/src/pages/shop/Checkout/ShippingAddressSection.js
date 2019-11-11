@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Details, DetailsContent, Button } from '@deity/falcon-ui';
 import { I18n } from '@deity/falcon-i18n';
-import { SetShippingAddressFormProvider, useCheckout, addressToString } from '@deity/falcon-front-kit';
-import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader, Picker } from '@deity/falcon-ui-kit';
+import { SetShippingAddressFormProvider, useCheckout } from '@deity/falcon-front-kit';
+import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import SectionHeader from './CheckoutSectionHeader';
+import { AddressPicker } from './components/AddressPicker';
 
 const checkoutAddressToSetCheckoutAddressFormValues = address => {
   const { __typename, ...rest } = { __typename: undefined, ...address };
@@ -23,16 +24,8 @@ export const ShippingAddressSection = props => {
     values: { shippingAddress }
   } = useCheckout();
 
-  const isShippingAddressOther = shippingAddress && !shippingAddress.id;
-  const pickerOptions =
-    availableAddresses.length > 0
-      ? [
-          ...availableAddresses.map(value => ({ label: addressToString(value), value })),
-          isShippingAddressOther ? { label: 'Other', value: shippingAddress } : { label: 'Other', value: undefined }
-        ]
-      : undefined;
-
   const [address, setAddress] = useState(shippingAddress);
+  const isAddressOther = address && !address.id;
 
   let header;
   if (!open && shippingAddress) {
@@ -61,9 +54,9 @@ export const ShippingAddressSection = props => {
           {({ isSubmitting, setValues, status: { error } }) => (
             <React.Fragment>
               {availableAddresses.length > 0 && (
-                <Picker
-                  options={pickerOptions}
-                  selected={address && address.id ? addressToString(address) : 'Other'}
+                <AddressPicker
+                  options={availableAddresses}
+                  selected={address}
                   onChange={x => {
                     setAddress(x);
                     setValues(x ? checkoutAddressToSetCheckoutAddressFormValues(x) : {});
@@ -72,7 +65,7 @@ export const ShippingAddressSection = props => {
               )}
               <Form id="shipping-address" i18nId="addressForm" my="sm">
                 {isSubmitting && <Loader variant="overlay" />}
-                {(availableAddresses.length === 0 || !address || isShippingAddressOther) && (
+                {(availableAddresses.length === 0 || !address || isAddressOther) && (
                   <AddressFormFields autoCompleteSection="shipping-address" />
                 )}
                 <Button type="submit">{submitLabel}</Button>
@@ -92,26 +85,13 @@ ShippingAddressSection.propTypes = {
   title: PropTypes.string,
   // currently selected address
   selectedAddress: PropTypes.shape({}),
-  // callback that sets the address
-  setAddress: PropTypes.func,
   // callback that should be called when user requests edit of this particular section
   onEditRequested: PropTypes.func,
   // flag indicates if "use the same address" is selected - if so then address form is hidden
-  useTheSame: PropTypes.bool,
-  // callback that sets value for "use the same address" feature
-  setUseTheSame: PropTypes.func,
-  // label for "use the same address" feature
-  labelUseTheSame: PropTypes.string,
   // label for submit button
   submitLabel: PropTypes.string,
   // list of available addresses to pick from - if not passed then address selection field won't be presented
   availableAddresses: PropTypes.arrayOf(PropTypes.shape({})),
   // default selected address - address that should be selected when address picker is shown
-  defaultSelected: PropTypes.shape({}),
-  // errors passed from outside that should be displayed for this section
-  errors: PropTypes.arrayOf(
-    PropTypes.shape({
-      message: PropTypes.string
-    })
-  )
+  defaultSelected: PropTypes.shape({})
 };
