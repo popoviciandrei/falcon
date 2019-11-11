@@ -668,11 +668,11 @@ type BundleProductOptionLink {
 
 type Region {
   # unique identifier of the region
-  id: ID!
+  id: ID
   # abbreviated form of the region name
   code: String
   # region name
-  name: String
+  name: String!
 }
 
 type Country {

@@ -380,9 +380,9 @@ export type Country = {
 };
 
 export type Region = {
-  id: string;
+  id?: string;
   code?: string;
-  name?: string;
+  name: string;
 };
 
 export type MenuItem = {
