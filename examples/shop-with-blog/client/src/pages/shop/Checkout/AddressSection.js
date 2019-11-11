@@ -5,7 +5,7 @@ import { FlexLayout, Checkbox, Label, Details, DetailsContent, Button } from '@d
 import { T, I18n } from '@deity/falcon-i18n';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary } from '@deity/falcon-ui-kit';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker } from './components/AddressPicker';
+import { AddressPicker } from './components';
 
 class AddressSection extends React.Component {
   constructor(props) {

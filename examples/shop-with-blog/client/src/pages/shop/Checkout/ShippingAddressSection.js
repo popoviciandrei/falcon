@@ -5,7 +5,7 @@ import { I18n } from '@deity/falcon-i18n';
 import { SetShippingAddressFormProvider, useCheckout } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker } from './components/AddressPicker';
+import { AddressPicker } from './components';
 
 const checkoutAddressToSetCheckoutAddressFormValues = address => {
   const { __typename, ...rest } = { __typename: undefined, ...address };
