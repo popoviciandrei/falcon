@@ -13,13 +13,13 @@ export const GET_ADDRESS = gql`
       city
       postcode
       region {
-        id
+        name
       }
       country {
         id
         code
         regions {
-          id
+          name
         }
       }
       company
@@ -43,9 +43,9 @@ export type AddressResponse = {
     | 'defaultBilling'
     | 'defaultShipping'
   > & {
-    region: Pick<Region, 'id'>;
+    region: Pick<Region, 'name'>;
     country: Pick<Country, 'id' | 'code'> & {
-      regions: Pick<Region, 'id'>[];
+      regions: Pick<Region, 'name'>[];
     };
   };
 };

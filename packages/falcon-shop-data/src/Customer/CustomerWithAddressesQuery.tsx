@@ -18,7 +18,7 @@ export const GET_CUSTOMER_WITH_ADDRESSES = gql`
         postcode
         city
         region {
-          id
+          name
         }
         country {
           id
@@ -47,7 +47,7 @@ export type CustomerWithAddressesResponse = {
       | 'defaultBilling'
       | 'defaultShipping'
     > & {
-      region: Pick<Region, 'id'>;
+      region: Pick<Region, 'name'>;
       country: Pick<Country, 'id' | 'code'>;
     })[];
   };
