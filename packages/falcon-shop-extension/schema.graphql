@@ -677,7 +677,7 @@ type Region {
 
 type Country {
   # unique identifier of the country
-  id: ID!
+  id: ID
   # abbreviated form of the country name
   code: String!
   # country name in English

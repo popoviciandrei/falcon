@@ -372,7 +372,7 @@ export type CountryList = {
 };
 
 export type Country = {
-  id: number;
+  id?: number;
   code: string;
   englishName?: string;
   localName?: string;
