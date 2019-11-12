@@ -6,6 +6,19 @@ import { useSetShippingAddressMutation } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 import { CheckoutAddress } from './CheckoutAddress';
 
+const INITIAL_VALUES: SetCheckoutAddressFormValues = {
+  firstname: '',
+  lastname: '',
+  street1: '',
+  street2: '',
+  postcode: '',
+  city: '',
+  country: undefined,
+  company: '',
+  telephone: '',
+  saveInAddressBook: false
+};
+
 export type SetCheckoutAddressFormValues = {
   firstname: string;
   lastname: string;
@@ -67,23 +80,17 @@ export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormPro
   );
 };
 SetShippingAddressFormProvider.defaultProps = {
-  initialValues: {
-    firstname: '',
-    lastname: '',
-    street1: '',
-    street2: '',
-    postcode: '',
-    city: '',
-    country: undefined,
-    company: '',
-    telephone: '',
-    saveInAddressBook: false
-  }
+  initialValues: { ...INITIAL_VALUES }
 };
 
-export const checkoutAddressToSetCheckoutAddressFormValues = (
-  address: CheckoutAddress | Address
-): SetCheckoutAddressFormValues => {
+export type checkoutAddressToSetCheckoutAddressFormValues = (
+  address?: CheckoutAddress | Address
+) => SetCheckoutAddressFormValues;
+export const checkoutAddressToSetCheckoutAddressFormValues: checkoutAddressToSetCheckoutAddressFormValues = address => {
+  if (!address) {
+    return INITIAL_VALUES;
+  }
+
   const { __typename, street, ...rest } = { __typename: undefined, ...address };
 
   return {
