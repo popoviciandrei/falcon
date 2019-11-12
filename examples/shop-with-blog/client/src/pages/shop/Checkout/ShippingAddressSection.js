@@ -2,33 +2,23 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Details, DetailsContent, Button } from '@deity/falcon-ui';
 import { I18n } from '@deity/falcon-i18n';
-import { SetShippingAddressFormProvider, useCheckout } from '@deity/falcon-front-kit';
+import {
+  SetShippingAddressFormProvider,
+  checkoutAddressToSetCheckoutAddressFormValues,
+  useCheckout
+} from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import SectionHeader from './CheckoutSectionHeader';
 import { AddressPicker } from './components';
 
-const checkoutAddressToSetCheckoutAddressFormValues = address => {
-  const { __typename, ...rest } = { __typename: undefined, ...address };
-
-  return {
-    street1: rest.street.length > 0 ? address.street[0] : undefined,
-    street2: rest.street.length > 1 ? address.street[1] : undefined,
-    ...rest
-  };
-};
-
 export const ShippingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel, availableAddresses } = props;
-  const {
-    setShippingAddress,
-    values: { shippingAddress }
-  } = useCheckout();
-
-  const [address, setAddress] = useState(shippingAddress);
+  const { setShippingAddress, values } = useCheckout();
+  const [address, setAddress] = useState(values.shippingAddress);
   const isAddressOther = address && !address.id;
 
   let header;
-  if (!open && shippingAddress) {
+  if (!open && values.shippingAddress) {
     header = (
       <I18n>
         {t => (
@@ -37,7 +27,7 @@ export const ShippingAddressSection = props => {
             onActionClick={onEditRequested}
             editLabel={t('edit')}
             complete
-            summary={<AddressDetails {...shippingAddress} />}
+            summary={<AddressDetails {...values.shippingAddress} />}
           />
         )}
       </I18n>

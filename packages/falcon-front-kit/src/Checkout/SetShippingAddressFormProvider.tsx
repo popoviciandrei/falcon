@@ -81,14 +81,14 @@ SetShippingAddressFormProvider.defaultProps = {
   }
 };
 
-const checkoutAddressToSetCheckoutAddressFormValues = (
+export const checkoutAddressToSetCheckoutAddressFormValues = (
   address: CheckoutAddress | Address
 ): SetCheckoutAddressFormValues => {
-  const { __typename, ...rest } = { __typename: undefined, ...address };
+  const { __typename, street, ...rest } = { __typename: undefined, ...address };
 
   return {
-    street1: rest.street.length > 0 ? address.street[0] : undefined,
-    street2: rest.street.length > 1 ? address.street[1] : undefined,
+    street1: street.length > 0 ? street[0] : undefined,
+    street2: street.length > 1 ? street[1] : undefined,
     ...rest
   };
 };
