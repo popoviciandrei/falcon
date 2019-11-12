@@ -3,8 +3,10 @@ import fetch from 'node-fetch';
 import Logger from '@deity/falcon-logger';
 import { IConfigurableConstructorParams, EndpointEntry, UrlConfig } from '../types';
 import { formatUrl } from '../helpers/url';
+import { Cache } from '..';
 
 export interface EndpointConstructorParams extends IConfigurableConstructorParams<UrlConfig> {
+  cache: Cache;
   entries?: string[];
 }
 

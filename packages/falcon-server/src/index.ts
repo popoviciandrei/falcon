@@ -265,13 +265,13 @@ export class FalconServer {
     await this.extensionContainer.registerExtensions(this.config.extensions);
     await this.eventEmitter.emitAsync(Events.AFTER_EXTENSION_CONTAINER_CREATED, this.extensionContainer);
 
-    this.endpointContainer = new EndpointContainer(this.eventEmitter);
+    this.endpointContainer = new EndpointContainer(this.eventEmitter, this.cache);
     await this.endpointContainer.registerEndpoints(this.config.endpoints);
   }
 
   async initializeComponents() {
     await this.eventEmitter.emitAsync(Events.BEFORE_COMPONENT_CONTAINER_CREATED, this.config.components);
-    this.componentContainer = new ComponentContainer(this.eventEmitter);
+    this.componentContainer = new ComponentContainer(this.eventEmitter, this.cache);
     await this.componentContainer.registerComponents(this.config.components);
     await this.eventEmitter.emitAsync(Events.AFTER_COMPONENT_CONTAINER_CREATED, this.componentContainer);
   }
