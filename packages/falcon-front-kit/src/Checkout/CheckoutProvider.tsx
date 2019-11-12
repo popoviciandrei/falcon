@@ -199,10 +199,10 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     if (state.values.billingSameAsShipping) {
       values.billingAddress = shippingAddress;
     }
-    setPartialState({ values });
-    setShippingAddressMutation({
-      variables: { input: addressToCheckoutAddressInput(shippingAddress) }
-    });
+    setPartialState({ values, errors: {} });
+    // setShippingAddressMutation({
+    //   variables: { input: addressToCheckoutAddressInput(shippingAddress) }
+    // });
   };
 
   const setBillingAddress = (billingAddress?: CheckoutAddress) => {
