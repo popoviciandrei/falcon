@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { I18n } from '@deity/falcon-i18n';
 import { Details, DetailsContent, Button } from '@deity/falcon-ui';
@@ -10,13 +10,11 @@ import {
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker } from './components';
+import { AddressPicker, isAddressCustom } from './components';
 
 export const ShippingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
-  const { setShippingAddress, values } = useCheckout();
-  const [address, setAddress] = useState(values.shippingAddress);
-  const isAddressOther = address && !address.id;
+  const { values } = useCheckout();
 
   let header;
   if (!open && values.shippingAddress) {
@@ -41,37 +39,13 @@ export const ShippingAddressSection = props => {
     <Details open={open}>
       {header}
       <DetailsContent>
-        <CustomerWithAddressesQuery>
-          {({ data: { customer } }) => (
-            <SetShippingAddressFormProvider onSuccess={setShippingAddress}>
-              {({ isSubmitting, setValues, status: { error } }) => (
-                <Form id="shipping-address" i18nId="addressForm" my="sm">
-                  {isSubmitting && <Loader variant="overlay" />}
-                  {customer && customer.addresses.length && (
-                    <AddressPicker
-                      options={customer.addresses}
-                      selected={address}
-                      onChange={x => {
-                        setAddress(x);
-                        setValues(x ? checkoutAddressToSetCheckoutAddressFormValues(x) : {});
-                        // if (x) {
-                        //   setValues(checkoutAddressToSetCheckoutAddressFormValues(x));
-                        // } else {
-                        //   resetForm();
-                        // }
-                      }}
-                    />
-                  )}
-                  {((customer && customer.addresses.length) || !address || isAddressOther) && (
-                    <AddressFormFields autoCompleteSection="shipping-address" />
-                  )}
-                  <Button type="submit">{submitLabel}</Button>
-                  <ErrorSummary errors={error} />
-                </Form>
-              )}
-            </SetShippingAddressFormProvider>
-          )}
-        </CustomerWithAddressesQuery>
+        {open && (
+          <CustomerWithAddressesQuery>
+            {({ data: { customer } }) => (
+              <ShippingAddressEditor addresses={(customer && customer.addresses) || []} submitLabel={submitLabel} />
+            )}
+          </CustomerWithAddressesQuery>
+        )}
       </DetailsContent>
     </Details>
   );
@@ -88,4 +62,44 @@ ShippingAddressSection.propTypes = {
   submitLabel: PropTypes.string,
   // default selected address - address that should be selected when address picker is shown
   defaultSelected: PropTypes.shape({})
+};
+
+export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
+  const defaultShipping = addresses.find(x => x.defaultShipping);
+  const { setShippingAddress, values } = useCheckout();
+  const shouldAutoSubmit = !values.shippingAddress && !!defaultShipping;
+
+  return (
+    <SetShippingAddressFormProvider address={values.shippingAddress || defaultShipping} onSuccess={setShippingAddress}>
+      {({ isSubmitting, setValues, status: { error }, submitCount, submitForm, values: address }) => {
+        if (shouldAutoSubmit) {
+          if (submitCount === 0) {
+            submitForm();
+            return;
+          }
+          if (isSubmitting) {
+            return <Loader variant="overlay" />;
+          }
+        }
+
+        return (
+          <Form id="shipping-address" i18nId="addressForm">
+            {isSubmitting && <Loader variant="overlay" />}
+            {addresses.length > 0 && (
+              <AddressPicker
+                options={addresses}
+                selected={{ ...address, street: [] }}
+                onChange={x => setValues(checkoutAddressToSetCheckoutAddressFormValues(x))}
+              />
+            )}
+            {(addresses.length === 0 || isAddressCustom(address)) && (
+              <AddressFormFields autoCompleteSection="shipping-address" />
+            )}
+            <ErrorSummary errors={error} />
+            <Button type="submit">{submitLabel}</Button>
+          </Form>
+        );
+      }}
+    </SetShippingAddressFormProvider>
+  );
 };
