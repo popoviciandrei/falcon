@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { I18n } from '@deity/falcon-i18n';
 import { Details, DetailsContent, Button } from '@deity/falcon-ui';
@@ -68,10 +68,11 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultShipping = addresses.find(x => x.defaultShipping);
   const { setShippingAddress, values } = useCheckout();
   const shouldAutoSubmit = !values.shippingAddress && !!defaultShipping;
+  const [address, setAddress] = useState(values.shippingAddress || defaultShipping);
 
   return (
-    <SetShippingAddressFormProvider address={values.shippingAddress || defaultShipping} onSuccess={setShippingAddress}>
-      {({ isSubmitting, setValues, status: { error }, submitCount, submitForm, values: address }) => {
+    <SetShippingAddressFormProvider address={address} onSuccess={setShippingAddress}>
+      {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
         if (shouldAutoSubmit) {
           if (submitCount === 0) {
             submitForm();
@@ -88,8 +89,11 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
             {addresses.length > 0 && (
               <AddressPicker
                 options={addresses}
-                selected={{ ...address, street: [] }}
-                onChange={x => setValues(checkoutAddressToSetCheckoutAddressFormValues(x))}
+                selected={address}
+                onChange={x => {
+                  setAddress(x);
+                  setValues(checkoutAddressToSetCheckoutAddressFormValues(x));
+                }}
               />
             )}
             {(addresses.length === 0 || isAddressCustom(address)) && (
