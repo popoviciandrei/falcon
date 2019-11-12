@@ -403,8 +403,8 @@ type Category {
   name: String
   children: [Category]
   description: String
-  breadcrumbs(path: String!): [Breadcrumb]
-  productList(input: ProductListInput): CategoryProductList @cache(ttl: 15, idPath: ["$parent", "items"])
+  breadcrumbs(path: String!): [Breadcrumb!]!
+  productList(input: ProductListInput): CategoryProductList! @cache(ttl: 15, idPath: ["$parent", "items"])
 }
 
 type CategoryProductList {

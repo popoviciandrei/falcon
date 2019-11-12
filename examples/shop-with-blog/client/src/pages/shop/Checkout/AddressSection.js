@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { T } from '@deity/falcon-i18n';
 import { FlexLayout, Checkbox, Label, Details, DetailsContent, Button } from '@deity/falcon-ui';
-import { AddressDetails } from '@deity/falcon-ui-kit';
-import AddressForm from '../components/AddressForm';
+import { T, I18n } from '@deity/falcon-i18n';
+import { AddressDetails, Form, AddressFormFields } from '@deity/falcon-ui-kit';
 import ErrorList from '../components/ErrorList';
 import SectionHeader from './CheckoutSectionHeader';
 import AddressPicker from './AddressPicker';
@@ -48,16 +47,12 @@ class AddressSection extends React.Component {
       onEditRequested,
       submitLabel,
       errors,
-      countries,
       availableAddresses,
       defaultSelected
     } = this.props;
-    let header;
-    let content;
 
     const { street = [], ...selectedAddressRest } = selectedAddress || {};
     const initialAddressValue = {
-      email: '',
       firstname: '',
       lastname: '',
       street1: street[0] || '',
@@ -69,18 +64,25 @@ class AddressSection extends React.Component {
       ...selectedAddressRest
     };
 
+    let header;
+    let content;
+
     if (!open && selectedAddress) {
       // WORKAROUND: because `selectedAddress` actually contain CheckoutAddressInput instead of Address
       const selectedAddressForDetails = this.props.availableAddresses.find(item => item.id === selectedAddress.id);
 
       header = (
-        <SectionHeader
-          title={title}
-          onActionClick={onEditRequested}
-          editLabel="Edit"
-          complete
-          summary={<AddressDetails {...selectedAddressForDetails} />}
-        />
+        <I18n>
+          {t => (
+            <SectionHeader
+              title={title}
+              onActionClick={onEditRequested}
+              editLabel={t('edit')}
+              complete
+              summary={<AddressDetails {...selectedAddressForDetails} />}
+            />
+          )}
+        </I18n>
       );
     } else {
       header = <SectionHeader title={title} />;
@@ -89,19 +91,29 @@ class AddressSection extends React.Component {
     let selectedAvailableAddress;
     // if available addresses are passed then we should display dropdown so the user can pick his saved address
     if (availableAddresses) {
-      // compute address that should be selected in the dropdown
-      if (this.state.selectedAddressId) {
+      // get address ID that should be selected in the dropdown
+      const selectedId =
         // if we have locally selected address id then use it
-        selectedAvailableAddress = availableAddresses.find(item => item.id === this.state.selectedAddressId);
-      } else if (selectedAddress && selectedAddress.id) {
+        this.state.selectedAddressId ||
         // if there's passed selected address then use it
-        selectedAvailableAddress = availableAddresses.find(item => item.id === selectedAddress.id);
-      } else if (defaultSelected) {
+        (selectedAddress && selectedAddress.id) ||
         // if default that should be selected is passed then use it
-        selectedAvailableAddress = availableAddresses.find(item => item.id === defaultSelected.id);
-      }
+        (defaultSelected && defaultSelected.id);
+
+      selectedAvailableAddress = availableAddresses.find(item => item.id === selectedId);
     }
 
+    // lets the user manually enter an address
+    const addressForm = (
+      <Formik initialValues={initialAddressValue} onSubmit={this.submitAddress}>
+        <Form id={id} i18nId="addressForm" my="sm">
+          <AddressFormFields id={id} askEmail submitLabel={submitLabel} autoCompleteSection={id} />
+          <Button type="submit">{submitLabel}</Button>
+        </Form>
+      </Formik>
+    );
+
+    // lets the user pick an existing address or show the address form
     const addressEditor = (
       <React.Fragment>
         {availableAddresses && (
@@ -111,11 +123,7 @@ class AddressSection extends React.Component {
             onChange={addrId => this.setState({ selectedAddressId: addrId })}
           />
         )}
-        {!selectedAvailableAddress && (
-          <Formik initialValues={initialAddressValue} onSubmit={this.submitAddress}>
-            {() => <AddressForm id={id} countries={countries} submitLabel={submitLabel} autoCompleteSection={id} />}
-          </Formik>
-        )}
+        {!selectedAvailableAddress && addressForm}
         {!!selectedAvailableAddress && (
           <Button my="sm" onClick={this.submitSelectedAddress}>
             <T id="continue" />
@@ -125,6 +133,7 @@ class AddressSection extends React.Component {
     );
 
     if (setUseTheSame) {
+      // ask if the same address from a previous step should be used
       content = (
         <React.Fragment>
           <FlexLayout mb="md">
@@ -140,7 +149,7 @@ class AddressSection extends React.Component {
           </FlexLayout>
 
           {this.state.useTheSame ? (
-            <Button onClick={() => this.props.setUseTheSame(true)}>
+            <Button onClick={() => setUseTheSame(true)}>
               <T id="continue" />
             </Button>
           ) : (
@@ -149,13 +158,11 @@ class AddressSection extends React.Component {
         </React.Fragment>
       );
     } else if (availableAddresses) {
+      // let the user pick an existing address or enter another one
       content = addressEditor;
     } else {
-      content = (
-        <Formik initialValues={initialAddressValue} onSubmit={this.submitAddress}>
-          {() => <AddressForm id={id} countries={countries} submitLabel={submitLabel} autoCompleteSection={id} />}
-        </Formik>
-      );
+      // no addresses are available, the only option is to enter one manually
+      content = addressForm;
     }
 
     return (
@@ -195,13 +202,6 @@ AddressSection.propTypes = {
   availableAddresses: PropTypes.arrayOf(PropTypes.shape({})),
   // default selected address - address that should be selected when address picker is shown
   defaultSelected: PropTypes.shape({}),
-  // list of available countries
-  countries: PropTypes.arrayOf(
-    PropTypes.shape({
-      code: PropTypes.string,
-      localName: PropTypes.string
-    })
-  ),
   // errors passed from outside that should be displayed for this section
   errors: PropTypes.arrayOf(
     PropTypes.shape({
