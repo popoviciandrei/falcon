@@ -96,6 +96,8 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed priority for `ApiDataSource.getExtraResolvers` values ([#678](https://github.com/deity-io/falcon/pull/678))
 - `graphqlUtils` methods moved to `falcon-server-env` package ([#686](https://github.com/deity-io/falcon/pull/686))
 - simplified schema stitching call on Falcon-Server ([#701](https://github.com/deity-io/falcon/pull/701))
+- fixed `cache` exposing for `ComponentContainer` and `EndpointContainer` ([#720](https://github.com/deity-io/falcon/pull/720))
+- exposed `dataSource` map for route context via `ctx.dataSources` ([#720](https://github.com/deity-io/falcon/pull/720))
 
 ### Falcon Server Env vNext
 
