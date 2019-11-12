@@ -21,6 +21,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed handling of redirects by serviceworker ([#594](https://github.com/deity-io/falcon/pull/594))
 - fixed the `next` value for sign-in redirects ([#689](https://github.com/deity-io/falcon/pull/689))
 
+### Falcon I18n vNext
+
+- added `useI18n` hook ([#717](https://github.com/deity-io/falcon/pull/717))
+
 ### Falcon UI vNext
 
 - fixed theme merging ([#551](https://github.com/deity-io/falcon/pull/551))
