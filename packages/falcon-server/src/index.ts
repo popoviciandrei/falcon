@@ -108,8 +108,8 @@ export class FalconServer {
     await this.eventEmitter.emitAsync(Events.BEFORE_INITIALIZED, this);
     this.cache = this.getCache();
     await this.initializeComponents();
-    await this.initializeServerApp();
     await this.initializeContainers();
+    await this.initializeServerApp();
     await this.initializeApolloServer();
     await this.registerEndpoints();
     await this.eventEmitter.emitAsync(Events.AFTER_INITIALIZED, this);
