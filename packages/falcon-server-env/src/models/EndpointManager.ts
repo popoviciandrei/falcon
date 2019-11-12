@@ -27,12 +27,15 @@ export abstract class EndpointManager {
 
   protected eventEmitter: EventEmitter2;
 
+  protected cache: Cache;
+
   protected logger: typeof Logger;
 
   constructor(params: EndpointConstructorParams) {
     this.config = params.config || {};
     this.name = params.name || this.constructor.name;
     this.eventEmitter = params.eventEmitter;
+    this.cache = params.cache;
     this.entries = params.entries || [];
     this.baseUrl = formatUrl(this.config);
     this.logger = Logger.getFor(`${this.name}-endpointManager`);
