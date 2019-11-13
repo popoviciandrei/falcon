@@ -6,7 +6,7 @@ export type CheckoutState = {
   email?: string;
   shippingAddress?: CheckoutAddress;
   billingAddress?: CheckoutAddress;
-  billingSameAsShipping?: boolean; // TODO: do we really need this flag here?
+  billingSameAsShipping: boolean; // TODO: do we really need this flag here?
   shippingMethod?: CheckoutDetailsInput;
   paymentMethod?: CheckoutDetailsInput;
 };
@@ -17,7 +17,6 @@ type CheckoutContextError = {
 
 export type CheckoutContextData = {
   errors: CheckoutContextErrors;
-  values: CheckoutState;
   result?: PlaceOrderResult;
   availableShippingMethods: ShippingMethod[];
   availablePaymentMethods: PaymentMethod[];
@@ -34,6 +33,7 @@ type CheckoutContextErrors = {
 };
 
 export type CheckoutProviderRenderProps = {
+  values: CheckoutState;
   loading: boolean;
   setEmail(email: string): void;
   setShippingAddress(address: CheckoutAddress): void;
@@ -43,5 +43,7 @@ export type CheckoutProviderRenderProps = {
   setPaymentMethod(payment: CheckoutDetailsInput): void;
   placeOrder(): void;
 } & CheckoutContextData;
+
+export type CheckoutContextType = {};
 
 export const CheckoutContext = React.createContext<CheckoutProviderRenderProps>({} as any);

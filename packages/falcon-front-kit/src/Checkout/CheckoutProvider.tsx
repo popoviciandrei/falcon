@@ -33,12 +33,12 @@ export type CheckoutProviderProps = {
 
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues } = props;
+  const [state, setState] = useState<CheckoutState>({
+    billingSameAsShipping: false,
+    ...initialValues
+  });
 
   const [contextData, setContextData] = useState<CheckoutContextData>({
-    values: {
-      billingSameAsShipping: false,
-      ...initialValues
-    },
     errors: {},
     availablePaymentMethods: [],
     availableShippingMethods: []
@@ -47,13 +47,16 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     onError: error => {
       setPartialState({
         errors: { shippingAddress: [error] },
-        values: {
-          shippingAddress: null,
-          ...(contextData.values.billingSameAsShipping && {
-            billingAddress: null
-          })
-        },
         availableShippingMethods: []
+      });
+      setState({
+        ...state,
+        ...{
+          shippingAddress: undefined,
+          ...(state.billingSameAsShipping && {
+            billingAddress: undefined
+          })
+        }
       });
     },
     onCompleted: data => {
@@ -66,8 +69,11 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     onError: error => {
       setPartialState({
         errors: { billingAddress: [error] },
-        values: { billingAddress: null },
         availableShippingMethods: []
+      });
+      setState({
+        ...state,
+        billingAddress: undefined
       });
     },
     onCompleted: data => {
@@ -89,16 +95,19 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       });
     },
     onCompleted: data => {
-      const values = {} as CheckoutState;
+      const values: Partial<CheckoutState> = {};
       // if shipping methods has changed then remove already selected shipping method
       if (!isEqual(data.shippingMethodList, contextData.availableShippingMethods)) {
-        values.shippingMethod = null;
+        values.shippingMethod = undefined;
       }
 
       setPartialState({
         errors: {},
-        values,
         availableShippingMethods: data.shippingMethodList
+      });
+      setState({
+        ...state,
+        ...values
       });
     }
   });
@@ -106,8 +115,11 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     onError: error => {
       setPartialState({
         errors: { shippingMethod: [error] },
-        availablePaymentMethods: null,
-        values: { shippingMethod: null }
+        availablePaymentMethods: null
+      });
+      setState({
+        ...state,
+        shippingAddress: undefined
       });
     },
     onCompleted: data => {
@@ -129,23 +141,29 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       });
     },
     onCompleted: data => {
-      const values = {} as CheckoutState;
+      const values: Partial<CheckoutState> = {};
       if (!isEqual(data.paymentMethodList, contextData.availablePaymentMethods)) {
-        values.paymentMethod = null;
+        values.paymentMethod = undefined;
       }
 
       setPartialState({
         errors: {},
-        values,
         availablePaymentMethods: data.paymentMethodList
+      });
+      setState({
+        ...state,
+        ...values
       });
     }
   });
   const [setPaymentMethodMutation, { loading: setPaymentMethodLoading }] = useSetPaymentMethodMutation({
     onError: error => {
       setPartialState({
-        errors: { paymentMethod: [error] },
-        values: { paymentMethod: null }
+        errors: { paymentMethod: [error] }
+      });
+      setState({
+        ...state,
+        paymentMethod: undefined
       });
     },
     onCompleted: () => {
@@ -168,61 +186,58 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     setContextData({
       // "deep replace" - replace old values with new, don't merge these
       ...contextData,
-      ...partial,
-      values: {
-        ...contextData.values,
-        ...(partial.values || {})
-      }
+      ...partial
     });
   };
 
-  const setEmail = (email: string) => setPartialState({ values: { email } });
+  const setEmail = (email: string) =>
+    setState({
+      ...state,
+      email
+    });
 
   /**
    * @param {boolean} same Whether the billing address should be the same as shipping address
    */
   const setBillingSameAsShipping = (same: boolean) => {
-    setPartialState({
-      values: {
-        billingSameAsShipping: same,
-        billingAddress: same ? contextData.values.shippingAddress : null
-      }
+    setState({
+      ...state,
+      billingSameAsShipping: same,
+      billingAddress: same ? state.shippingAddress : null
     });
-    setBillingAddress(contextData.values.shippingAddress);
+    setBillingAddress(state.shippingAddress);
   };
 
   const setShippingAddress = (shippingAddress: CheckoutAddress) => {
-    const values = { shippingAddress } as CheckoutState;
-    // if billing is set to the same as shipping then set it also to received value
-    if (contextData.values.billingSameAsShipping) {
-      values.billingAddress = shippingAddress;
-    }
-    setPartialState({ values });
+    setState({
+      ...state,
+      shippingAddress,
+      billingAddress: state.billingSameAsShipping ? shippingAddress : state.billingAddress
+    });
     setShippingAddressMutation({
       variables: { input: addressToCheckoutAddressInput(shippingAddress) }
     });
   };
 
   const setBillingAddress = (billingAddress?: CheckoutAddress) => {
-    setPartialState({
-      values: {
-        billingAddress: billingAddress || contextData.values.billingAddress
-      }
+    setState({
+      ...state,
+      billingAddress: billingAddress || state.billingAddress
     });
     setBillingAddressMutation({
       variables: {
-        input: addressToCheckoutAddressInput(billingAddress || contextData.values.billingAddress)
+        input: addressToCheckoutAddressInput(billingAddress || state.billingAddress)
       }
     });
   };
 
   const setShippingMethod = (shippingMethod: CheckoutDetailsInput) => {
-    setPartialState({ values: { shippingMethod } });
+    setState({ ...state, shippingMethod });
     setShippingMethodMutation({ variables: { input: shippingMethod } });
   };
 
   const setPaymentMethod = (paymentMethod: CheckoutDetailsInput) => {
-    setPartialState({ values: { paymentMethod } });
+    setState({ ...state, paymentMethod });
     setPaymentMethodMutation({ variables: { input: paymentMethod } });
   };
 
@@ -230,11 +245,11 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     placeOrderMutation({
       variables: {
         input: {
-          email: contextData.values.email,
-          billingAddress: addressToCheckoutAddressInput(contextData.values.billingAddress),
-          shippingAddress: addressToCheckoutAddressInput(contextData.values.shippingAddress),
-          shippingMethod: contextData.values.shippingMethod,
-          paymentMethod: contextData.values.paymentMethod
+          email: state.email,
+          billingAddress: addressToCheckoutAddressInput(state.billingAddress),
+          shippingAddress: addressToCheckoutAddressInput(state.shippingAddress),
+          shippingMethod: state.shippingMethod,
+          paymentMethod: state.paymentMethod
         }
       }
     });
@@ -254,6 +269,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     ].filter(Boolean).length > 0;
 
   const context: CheckoutProviderRenderProps = {
+    values: state,
     ...contextData,
     loading: isLoading,
     setEmail,
