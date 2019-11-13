@@ -272,7 +272,7 @@ export class FalconServer {
 
   async initializeComponents() {
     await this.eventEmitter.emitAsync(Events.BEFORE_COMPONENT_CONTAINER_CREATED, this.config.components);
-    this.componentContainer = new ComponentContainer(this.eventEmitter, this.cache);
+    this.componentContainer = new ComponentContainer(this.eventEmitter);
     await this.componentContainer.registerComponents(this.config.components);
     await this.eventEmitter.emitAsync(Events.AFTER_COMPONENT_CONTAINER_CREATED, this.componentContainer);
   }
