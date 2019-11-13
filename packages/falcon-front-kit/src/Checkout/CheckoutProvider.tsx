@@ -23,21 +23,17 @@ import {
   // Step 7
   usePlaceOrderMutation
 } from '@deity/falcon-shop-data';
-import {
-  CheckoutContext,
-  CheckoutProviderRenderProps,
-  CheckoutContextData,
-  CheckoutContextValues
-} from './CheckoutContext';
+import { CheckoutContext, CheckoutProviderRenderProps, CheckoutContextData, CheckoutState } from './CheckoutContext';
 import { CheckoutAddress, addressToCheckoutAddressInput } from './CheckoutAddress';
 
 export type CheckoutProviderProps = {
-  initialValues?: CheckoutContextValues;
+  initialValues?: CheckoutState;
   children(props: CheckoutProviderRenderProps): React.ReactNode;
 };
 
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues } = props;
+
   const [state, setState] = useState<CheckoutContextData>({
     values: {
       billingSameAsShipping: false,
@@ -93,7 +89,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       });
     },
     onCompleted: data => {
-      const values = {} as CheckoutContextValues;
+      const values = {} as CheckoutState;
       // if shipping methods has changed then remove already selected shipping method
       if (!isEqual(data.shippingMethodList, state.availableShippingMethods)) {
         values.shippingMethod = null;
@@ -133,7 +129,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       });
     },
     onCompleted: data => {
-      const values = {} as CheckoutContextValues;
+      const values = {} as CheckoutState;
       if (!isEqual(data.paymentMethodList, state.availablePaymentMethods)) {
         values.paymentMethod = null;
       }
@@ -196,7 +192,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   };
 
   const setShippingAddress = (shippingAddress: CheckoutAddress) => {
-    const values = { shippingAddress } as CheckoutContextValues;
+    const values = { shippingAddress } as CheckoutState;
     // if billing is set to the same as shipping then set it also to received value
     if (state.values.billingSameAsShipping) {
       values.billingAddress = shippingAddress;

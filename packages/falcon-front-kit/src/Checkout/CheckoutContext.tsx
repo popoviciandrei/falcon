@@ -2,7 +2,7 @@ import React from 'react';
 import { PlaceOrderResult, CheckoutDetailsInput, ShippingMethod, PaymentMethod } from '@deity/falcon-shop-extension';
 import { CheckoutAddress } from './CheckoutAddress';
 
-export type CheckoutContextValues = {
+export type CheckoutState = {
   email?: string;
   shippingAddress?: CheckoutAddress;
   billingAddress?: CheckoutAddress;
@@ -17,7 +17,7 @@ type CheckoutContextError = {
 
 export type CheckoutContextData = {
   errors: CheckoutContextErrors;
-  values: CheckoutContextValues;
+  values: CheckoutState;
   result?: PlaceOrderResult;
   availableShippingMethods: ShippingMethod[];
   availablePaymentMethods: PaymentMethod[];
