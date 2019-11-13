@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
-import { EventEmitter2 } from 'eventemitter2';
 import { ComponentEntryMap } from '../types';
 import { BaseContainer } from './BaseContainer';
 
