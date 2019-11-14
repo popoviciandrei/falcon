@@ -1,11 +1,11 @@
 import React from 'react';
-import { Select, Option, ThemedComponentProps } from '@deity/falcon-ui';
+import { Select, Option, ThemingProps } from '@deity/falcon-ui';
 
 export type SelectInputOption = {
   value: string;
   label: string;
 };
-export type SelectInputProps = ThemedComponentProps &
+export type SelectInputProps = ThemingProps &
   React.InputHTMLAttributes<HTMLSelectElement> & {
     options: SelectInputOption[];
   };

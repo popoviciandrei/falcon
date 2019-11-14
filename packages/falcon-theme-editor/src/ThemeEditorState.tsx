@@ -1,9 +1,9 @@
-import { Theme, mergeThemes, ThemedComponents, RecursivePartial } from '@deity/falcon-ui';
+import { Theme, mergeThemes, ThemeComponents, RecursivePartial } from '@deity/falcon-ui';
 import React from 'react';
 import { TabKeys } from './Tabs';
 
 export type ComponentWithDefaultTheme = {
-  defaultTheme: ThemedComponents;
+  defaultTheme: ThemeComponents;
 };
 
 export type ThemeStateContextType = {
