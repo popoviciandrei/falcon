@@ -26,9 +26,9 @@ type CreditCardState = {
   cvc?: string;
   name?: string;
 };
-export type CreditCardProps = {
+export type CreditCardProps = PropsWithTheme<{
   onCompletion: (creditCardInfo: CreditCardState) => void;
-} & PropsWithTheme;
+}>;
 
 class CreditCardInputInner extends React.Component<CreditCardProps, CreditCardState> {
   constructor(props: CreditCardProps) {
