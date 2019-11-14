@@ -3,7 +3,7 @@ import { ExecutionResult, MutationResult, MutationFunctionOptions } from '@apoll
 export type CheckoutOperationFunctionOptions<TData = any> = Omit<MutationFunctionOptions<TData>, 'variables'>;
 export type CheckoutOperationFunction<TData, TInput> = (
   input: TInput,
-  options: CheckoutOperationFunctionOptions<TData>
+  options?: CheckoutOperationFunctionOptions<TData>
 ) => Promise<ExecutionResult<TData>>;
 
 export type CheckoutOperationHook<TData, TInput> = () => [
