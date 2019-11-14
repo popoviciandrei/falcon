@@ -66,12 +66,12 @@ ShippingAddressSection.propTypes = {
 
 export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultShipping = addresses.find(x => x.defaultShipping);
-  const { setShippingAddress, values } = useCheckout();
-  const shouldAutoSubmit = !values.shippingAddress && !!defaultShipping;
-  const [address, setAddress] = useState(values.shippingAddress || defaultShipping);
+  const checkout = useCheckout();
+  const shouldAutoSubmit = !checkout.values.shippingAddress && !!defaultShipping;
+  const [address, setAddress] = useState(checkout.values.shippingAddress || defaultShipping);
 
   return (
-    <SetShippingAddressFormProvider address={address} onSuccess={setShippingAddress}>
+    <SetShippingAddressFormProvider address={address}>
       {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
         if (shouldAutoSubmit) {
           if (submitCount === 0) {
@@ -96,9 +96,7 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
                 }}
               />
             )}
-            {(addresses.length === 0 || isAddressCustom(address)) && (
-              <AddressFormFields autoCompleteSection="shipping-address" />
-            )}
+            {isAddressCustom(address) && <AddressFormFields autoCompleteSection="shipping-address" />}
             <ErrorSummary errors={error} />
             <Button type="submit">{submitLabel}</Button>
           </Form>
