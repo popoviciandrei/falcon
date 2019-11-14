@@ -32,8 +32,8 @@
     "chalk": "^2.4.2",
     "get-source": "1.0.37",
     "jmespath": "^0.15.0",
-    "pino": "5.12.6",
-    "pino-pretty": "3.2.0",
+    "pino": "5.13.5",
+    "pino-pretty": "3.3.0",
     "pump": "^3.0.0",
     "readable-stream": "^3.4.0",
     "split2": "^3.1.1"

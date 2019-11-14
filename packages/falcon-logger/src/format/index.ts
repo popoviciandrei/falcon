@@ -60,12 +60,12 @@ export const falconPrettyFactory = (options: object) => {
     return minimal({ IDENT, EOL });
   }
 
-  return (inputData: string | object): string => {
+  const formatMessage = (inputData: string | object): string => {
     let log;
     if (!isObject(inputData)) {
       const parsed = jsonParser(inputData as string);
       log = parsed.value;
-      if (parsed.err) {
+      if (parsed.err || !isObject(log)) {
         // pass through
         return inputData + EOL;
       }
@@ -170,5 +170,13 @@ export const falconPrettyFactory = (options: object) => {
     }
 
     return line;
+  };
+
+  return (inputData: string | object): string => {
+    try {
+      return formatMessage(inputData);
+    } catch {
+      return typeof inputData === 'string' ? inputData : JSON.stringify(inputData);
+    }
   };
 };
