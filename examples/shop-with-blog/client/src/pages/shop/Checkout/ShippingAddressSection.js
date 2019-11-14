@@ -5,7 +5,7 @@ import { Details, DetailsContent, Button } from '@deity/falcon-ui';
 import {
   SetShippingAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
-  useCheckout
+  useCheckoutState
 } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
@@ -14,10 +14,10 @@ import { AddressPicker, isAddressCustom } from './components';
 
 export const ShippingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
-  const { values } = useCheckout();
+  const { shippingAddress } = useCheckoutState();
 
   let header;
-  if (!open && values.shippingAddress) {
+  if (!open && shippingAddress) {
     header = (
       <I18n>
         {t => (
@@ -26,7 +26,7 @@ export const ShippingAddressSection = props => {
             onActionClick={onEditRequested}
             editLabel={t('edit')}
             complete
-            summary={<AddressDetails {...values.shippingAddress} />}
+            summary={<AddressDetails {...shippingAddress} />}
           />
         )}
       </I18n>
@@ -59,16 +59,14 @@ ShippingAddressSection.propTypes = {
   onEditRequested: PropTypes.func,
   // flag indicates if "use the same address" is selected - if so then address form is hidden
   // label for submit button
-  submitLabel: PropTypes.string,
-  // default selected address - address that should be selected when address picker is shown
-  defaultSelected: PropTypes.shape({})
+  submitLabel: PropTypes.string
 };
 
 export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultShipping = addresses.find(x => x.defaultShipping);
-  const checkout = useCheckout();
-  const shouldAutoSubmit = !checkout.values.shippingAddress && !!defaultShipping;
-  const [address, setAddress] = useState(checkout.values.shippingAddress || defaultShipping);
+  const values = useCheckoutState();
+  const shouldAutoSubmit = !values.shippingAddress && !!defaultShipping;
+  const [address, setAddress] = useState(values.shippingAddress || defaultShipping);
 
   return (
     <SetShippingAddressFormProvider address={address}>
