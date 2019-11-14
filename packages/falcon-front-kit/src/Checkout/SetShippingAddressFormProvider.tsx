@@ -2,9 +2,9 @@ import React from 'react';
 import { Formik } from 'formik';
 import { AddressCountry, Address } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
-import { useSetShippingAddressMutation } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 import { CheckoutAddress } from './CheckoutAddress';
+import { useSetShippingAddress } from './SetShippingAddress';
 
 const INITIAL_VALUES: SetCheckoutAddressFormValues = {
   firstname: '',
