@@ -1,10 +1,10 @@
 import merge from 'deepmerge';
 import isPlainObject from 'is-plain-object';
 import { keyframes } from '@emotion/core';
-import { mappings } from './responsiveprops';
+import { themablePropsKeys } from './responsiveprops';
 import { Theme, RecursivePartial } from './index';
 
-const themablePropsKeys = [...Object.keys(mappings), 'css'];
+export type RecursivePartial<T> = { [key in keyof T]?: RecursivePartial<T[key]> };
 
 export function extractThemableProps(props: any) {
   const themableProps: any = {};

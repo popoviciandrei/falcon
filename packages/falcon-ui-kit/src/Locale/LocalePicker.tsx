@@ -1,16 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  themed,
-  Dropdown,
-  DropdownLabel,
-  DropdownMenu,
-  DropdownMenuItem,
-  ThemedComponentProps
-} from '@deity/falcon-ui';
+import { themed, Dropdown, DropdownLabel, DropdownMenu, DropdownMenuItem, ThemingProps } from '@deity/falcon-ui';
 import { LocaleItem } from '@deity/falcon-front-kit';
 
-export type LocalePickerProps = ThemedComponentProps & {
+export type LocalePickerProps = ThemingProps & {
   items: LocaleItem[];
   value: LocaleItem;
   onChange?: (x: LocaleItem) => any;

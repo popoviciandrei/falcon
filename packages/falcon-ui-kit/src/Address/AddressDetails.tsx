@@ -1,6 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Text } from '@deity/falcon-ui';
-import { Country } from '@deity/falcon-shop-extension';
 import { AddressDetailsLayout } from './AddressDetailsLayout';
 
 export type AddressDetailsProps = {
@@ -8,9 +8,12 @@ export type AddressDetailsProps = {
   firstname: string;
   lastname: string;
   street: string[];
-  postcode?: string;
+  postcode: string;
   city: string;
-  country: Country;
+  country: {
+    code: string;
+    englishName?: string;
+  };
   telephone?: string;
 };
 
@@ -32,7 +35,21 @@ export const AddressDetails: React.SFC<AddressDetailsProps> = ({
       // eslint-disable-next-line react/no-array-index-key
       <Text key={i}>{x}</Text>
     ))}
-    <Text>{`${postcode} ${city}, ${country.code}`}</Text>
+    <Text>{`${postcode} ${city}, ${country.englishName || country.code}`}</Text>
     {telephone && <Text>{telephone}</Text>}
   </AddressDetailsLayout>
 );
+AddressDetails.propTypes = {
+  company: PropTypes.string,
+  firstname: PropTypes.string.isRequired,
+  lastname: PropTypes.string.isRequired,
+  street: PropTypes.arrayOf(PropTypes.string).isRequired,
+  postcode: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  // @ts-ignore
+  country: PropTypes.shape({
+    code: PropTypes.string.isRequired,
+    englishName: PropTypes.string
+  }).isRequired,
+  telephone: PropTypes.string
+};
