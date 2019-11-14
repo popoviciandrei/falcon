@@ -82,9 +82,9 @@ export const CheckoutStateProvider: React.FC<CheckoutStateProviderProps> = ({ in
 
 export type CheckoutStatRenderProps = CheckoutStateType;
 export const useCheckoutState: () => [CheckoutState, CheckoutSetState] = () => {
-  const { state, ...rest } = useContext(CheckoutStateContext);
+  const { state, ...setState } = useContext(CheckoutStateContext);
 
-  return [state, rest];
+  return [state, setState];
 };
 
 export type CheckoutStateProps = {
