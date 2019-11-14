@@ -5,12 +5,13 @@ import { Details, DetailsContent, Button } from '@deity/falcon-ui';
 import {
   SetShippingAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
-  useCheckoutState
+  useCheckoutState,
+  isCustomAddress
 } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker, isCustomAddress } from './components';
+import { AddressPicker } from './components';
 
 export const ShippingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;

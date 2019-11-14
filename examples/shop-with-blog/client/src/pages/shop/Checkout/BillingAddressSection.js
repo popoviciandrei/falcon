@@ -5,12 +5,13 @@ import { Details, DetailsContent, Button, Checkbox, Label, FlexLayout } from '@d
 import {
   SetBillingAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
-  useCheckoutState
+  useCheckoutState,
+  isCustomAddress
 } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker, isCustomAddress } from './components';
+import { AddressPicker } from './components';
 
 export const BillingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
