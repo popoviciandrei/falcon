@@ -10,7 +10,7 @@ import {
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
 import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker, isAddressCustom } from './components';
+import { AddressPicker, isCustomAddress } from './components';
 
 export const BillingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
@@ -105,7 +105,7 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
                 }}
               />
             )}
-            {isAddressCustom(address) && <AddressFormFields autoCompleteSection="billing-address" />}
+            {isCustomAddress(address) && <AddressFormFields autoCompleteSection="billing-address" />}
             <ErrorSummary errors={error} />
             <Button type="submit">{submitLabel}</Button>
           </Form>
