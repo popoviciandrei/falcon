@@ -2,13 +2,15 @@
 import { ComponentEntryMap } from '../types';
 import { BaseContainer } from './BaseContainer';
 
+export type ComponentMap = Record<string, any>;
+
 export interface IComponent<TComponentInstance = any, TConfig = any> {
   new (config: TConfig): TComponentInstance;
   (config: TConfig): Promise<TComponentInstance>;
 }
 
 export class ComponentContainer extends BaseContainer {
-  public components: Record<string, any> = {};
+  public components: ComponentMap = {};
 
   /**
    * Registers components based on the provided configuration
