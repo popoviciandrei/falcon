@@ -20,9 +20,9 @@ export const useSetShippingAddress: CheckoutOperationHook<SetShippingAddressResp
   ];
 };
 
-export type SetSetShippingAddressProps = {
+export type SetShippingAddressProps = {
   children: CheckoutOperation<SetShippingAddressResponse, CheckoutAddress>;
 };
-export const SetShippingAddress: React.FC<SetSetShippingAddressProps> = ({ children }) => {
+export const SetShippingAddress: React.FC<SetShippingAddressProps> = ({ children }) => {
   return children(...useSetShippingAddress());
 };
