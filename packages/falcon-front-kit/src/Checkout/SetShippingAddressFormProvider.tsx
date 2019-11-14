@@ -7,6 +7,7 @@ import { CheckoutAddress } from './CheckoutAddress';
 import { useSetShippingAddress } from './SetShippingAddress';
 
 const INITIAL_VALUES: SetCheckoutAddressFormValues = {
+  email: '',
   firstname: '',
   lastname: '',
   street1: '',
@@ -20,6 +21,7 @@ const INITIAL_VALUES: SetCheckoutAddressFormValues = {
 };
 
 export type SetCheckoutAddressFormValues = {
+  email?: string;
   firstname: string;
   lastname: string;
   street1?: string;
@@ -38,7 +40,7 @@ export type SetShippingAddressFormProviderProps = FormProviderProps<SetCheckoutA
 export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormProviderProps> = props => {
   const { initialValues, address, onSuccess, ...formikProps } = props;
   const isMounted = React.useRef(true);
-  const [setShippingAddress] = useSetShippingAddress();
+  const [setAddress] = useSetShippingAddress();
   const [getUserError] = useGetUserError();
 
   React.useEffect(() => {
@@ -54,7 +56,7 @@ export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormPro
       initialValues={address ? checkoutAddressToSetCheckoutAddressFormValues(address) : initialValues}
       enableReinitialize
       onSubmit={({ street1, street2, ...values }, { setSubmitting, setStatus }) =>
-        setShippingAddress({
+        setAddress({
           ...values,
           street: [street1, street2].filter(Boolean)
         })
