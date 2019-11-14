@@ -8,7 +8,8 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-common';
 import { PlaceOrderSuccessfulResult } from '@deity/falcon-shop-extension';
-import { CheckoutProviderRenderProps, CheckoutContextValues } from './CheckoutContext';
+import { CheckoutProviderRenderProps } from './CheckoutContext';
+import { CheckoutState } from './CheckoutState';
 import { CheckoutProvider } from './CheckoutProvider';
 import { Checkout } from './CheckoutConsumer';
 import { CheckoutAddress } from './CheckoutAddress';
@@ -136,7 +137,7 @@ const createApolloClient = (resolvers: any) => {
 };
 
 type IRenderCheckout = (props?: {
-  initialValues?: CheckoutContextValues;
+  initialValues?: CheckoutState;
   onStateUpdated?: (data: CheckoutProviderRenderProps) => void;
 }) => {
   getProps: () => CheckoutProviderRenderProps;

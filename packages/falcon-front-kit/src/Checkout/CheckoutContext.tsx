@@ -1,15 +1,7 @@
 import React from 'react';
 import { PlaceOrderResult, CheckoutDetailsInput, ShippingMethod, PaymentMethod } from '@deity/falcon-shop-extension';
 import { CheckoutAddress } from './CheckoutAddress';
-
-export type CheckoutContextValues = {
-  email?: string;
-  shippingAddress?: CheckoutAddress;
-  billingAddress?: CheckoutAddress;
-  billingSameAsShipping?: boolean; // TODO: do we really need this flag here?
-  shippingMethod?: CheckoutDetailsInput;
-  paymentMethod?: CheckoutDetailsInput;
-};
+import { CheckoutState } from './CheckoutState';
 
 type CheckoutContextError = {
   message: string;
@@ -17,7 +9,6 @@ type CheckoutContextError = {
 
 export type CheckoutContextData = {
   errors: CheckoutContextErrors;
-  values: CheckoutContextValues;
   result?: PlaceOrderResult;
   availableShippingMethods: ShippingMethod[];
   availablePaymentMethods: PaymentMethod[];
@@ -34,6 +25,7 @@ type CheckoutContextErrors = {
 };
 
 export type CheckoutProviderRenderProps = {
+  values: CheckoutState;
   loading: boolean;
   setEmail(email: string): void;
   setShippingAddress(address: CheckoutAddress): void;
@@ -43,5 +35,7 @@ export type CheckoutProviderRenderProps = {
   setPaymentMethod(payment: CheckoutDetailsInput): void;
   placeOrder(): void;
 } & CheckoutContextData;
+
+export type CheckoutContextType = {};
 
 export const CheckoutContext = React.createContext<CheckoutProviderRenderProps>({} as any);
