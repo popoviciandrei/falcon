@@ -7,3 +7,5 @@ export * from './CheckoutOperation';
 export * from './SetShippingAddress';
 export * from './SetShippingAddressFormProvider';
 export * from './SetBillingAddress';
+export * from './SetShippingMethod';
+export * from './SetPaymentMethod';
