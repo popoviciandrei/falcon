@@ -113,6 +113,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added basic filtration into `productList` query resolver ([#575](https://github.com/deity-io/falcon/pull/575))
 - fixed `lastOrder` resolver ([#616](https://github.com/deity-io/falcon/pull/616))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+- changed return type of `PlaceOrder` mutation to `Order | PlaceOrder3dSecureResult` type ([#709](https://github.com/deity-io/falcon/pull/709))
 - configured TypeScript ([#468](https://github.com/deity-io/falcon/pull/468))
 
 ### Falcon Scripts vNext

@@ -9,7 +9,7 @@ import forEach from 'lodash/forEach';
 import snakeCase from 'lodash/snakeCase';
 import { OperationInput } from '@deity/falcon-data';
 import { ProductListInput } from '@deity/falcon-shop-extension';
-import { ApiUrlPriority, stripHtml } from '@deity/falcon-server-env';
+import { ApiUrlPriority, stripHtml, graphqlFragmentFields } from '@deity/falcon-server-env';
 import { Magento2ApiBase } from './Magento2ApiBase';
 import { tryParseNumber } from './utils/number';
 import { typeResolverPathToString } from './utils/apollo';
@@ -1097,8 +1097,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   /**
    * Fetch info about customer order based on order id
    * @param {object} obj Parent object
-   * @param {object} params request params
-   * @param {number} params.id order id
+   * @param {{id: number}} params request params
    * @returns {Promise<Order>} - order info
    */
   async order(obj, params) {
@@ -1590,10 +1589,11 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * Place order
    * @param {object} obj Parent object
    * @param {PlaceOrderInput} input form data
+   * @param {object} context context
+   * @param {object} info info
    * @returns {Promise<PlaceOrderResult>} order data
    */
-  async placeOrder(obj, { input }) {
-    let placeOrderResult;
+  async placeOrder(obj, { input }, context, info) {
     const { paymentMethod: paymentData } = input;
     const { method: paymentMethod, data: additionalData } = paymentData;
 
@@ -1601,37 +1601,37 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       return this.handlePayPalToken(input);
     }
 
-    try {
-      placeOrderResult = await this.performCartAction('/place-order', 'put', {
-        ...input,
-        paymentMethod: {
-          method: paymentMethod,
-          additionalData
-        }
-      });
-    } catch (e) {
-      // todo: use new version of error handler
-      if (e.statusCode === 400) {
-        e.userMessage = true;
-        e.noLogging = true;
+    const { orderId, orderRealId, extensionAttributes } = await this.performCartAction('/place-order', 'put', {
+      ...input,
+      paymentMethod: {
+        method: paymentMethod,
+        additionalData
       }
-      throw e;
-    }
+    });
 
-    this.session.orderId = placeOrderResult.orderId;
-
-    if (!this.session.orderId) {
+    if (!orderId) {
       throw new Error('no order id from magento.');
     }
 
+    this.session.orderId = orderId;
     this.session.orderQuoteId = this.session.cart.quoteId;
 
-    if (placeOrderResult.extensionAttributes && placeOrderResult.extensionAttributes.adyenCc) {
-      return this.handleAdyen3dSecure(placeOrderResult.extensionAttributes.adyenCc);
+    if (extensionAttributes && extensionAttributes.adyenCc) {
+      return this.handleAdyen3dSecure(extensionAttributes.adyenCc);
     }
     this.removeCartData();
 
-    return placeOrderResult;
+    const order = {
+      id: orderId,
+      referenceNo: orderRealId
+    };
+
+    const orderFields = graphqlFragmentFields(info, 'Order');
+    if (Object.keys(orderFields).length <= 2 && orderFields.id && orderFields.referenceNo) {
+      return order;
+    }
+
+    return this.order(order, { id: order.id });
   }
 
   /**
