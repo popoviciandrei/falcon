@@ -36,45 +36,49 @@ export type SetShippingAddressFormProviderProps = FormProviderProps<SetCheckoutA
   address?: CheckoutAddress | Address;
 };
 export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormProviderProps> = props => {
-  const { onSuccess, initialValues, address, ...formikProps } = props;
-  const [setShippingAddress] = useSetShippingAddressMutation();
+  const { initialValues, address, onSuccess, ...formikProps } = props;
+  const isMounted = React.useRef(true);
+  const [setShippingAddress] = useSetShippingAddress();
   const [getUserError] = useGetUserError();
+
+  React.useEffect(() => {
+    // https://stackoverflow.com/a/56443045/412319
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return (
     <Formik
       initialStatus={{}}
       initialValues={address ? checkoutAddressToSetCheckoutAddressFormValues(address) : initialValues}
       enableReinitialize
-      onSubmit={({ street1, street2, country, ...values }, { setSubmitting, setStatus }) => {
-        return setShippingAddress({
-          variables: {
-            input: {
-              ...values,
-              street: [street1, street2].filter(Boolean),
-              countryId: country.id
-            }
-          }
+      onSubmit={({ street1, street2, ...values }, { setSubmitting, setStatus }) =>
+        setShippingAddress({
+          ...values,
+          street: [street1, street2].filter(Boolean)
         })
           .then(() => {
             const successData = {
               ...values,
-              street: [street1, street2].filter(Boolean),
-              country
+              street: [street1, street2].filter(Boolean)
             };
 
-            setSubmitting(false);
-            setStatus({ data: successData });
+            if (isMounted.current) {
+              setStatus({ data: successData });
+              setSubmitting(false);
+            }
 
             return onSuccess && onSuccess(successData);
           })
           .catch(e => {
             const error = getUserError(e);
-            if (error.length) {
+            if (error.length && isMounted.current) {
               setStatus({ error });
               setSubmitting(false);
             }
-          });
-      }}
+          })
+      }
       {...formikProps}
     />
   );
