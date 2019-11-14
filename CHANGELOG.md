@@ -31,6 +31,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed duplicated conditions when extracting themed css ([#611](https://github.com/deity-io/falcon/pull/611))
 - fixed incompatible `css` prop typings ([#645](https://github.com/deity-io/falcon/pull/645))
 - added `console.error` when an icon is not defined in the theme during development ([#682](https://github.com/deity-io/falcon/pull/682))
+- improved typings ([#669](https://github.com/deity-io/falcon/pull/669))
+  * renamed `ThemedComponentPropsWithVariants` to `ComponentTheme`
+  * renamed `ThemedComponentProps` to `ThemingProps`
+  * renamed `BaseThemedComponentProps` to `BaseThemingProps`
 
 ### Falcon E-commerce UI Kit discontinued
 

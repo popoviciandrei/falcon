@@ -7,7 +7,7 @@ export type ResponsiveProps = {
   height?: keyof ThemeBreakpoints | number;
   children: React.ReactNode;
 };
-const ResponsiveInner: React.SFC<ResponsiveProps & PropsWithTheme> = props => {
+const ResponsiveInner: React.SFC<PropsWithTheme<ResponsiveProps>> = props => {
   const { theme, width, height, ...rest } = props;
 
   let responsiveProps = {};
@@ -15,14 +15,14 @@ const ResponsiveInner: React.SFC<ResponsiveProps & PropsWithTheme> = props => {
   if (width !== undefined) {
     responsiveProps = {
       ...responsiveProps,
-      minWidth: (theme.breakpoints as any)[width] || width
+      minWidth: theme.breakpoints[width] || width
     };
   }
 
   if (height !== undefined) {
     responsiveProps = {
       ...responsiveProps,
-      minHeight: (theme.breakpoints as any)[height] || height
+      minHeight: theme.breakpoints[height] || height
     };
   }
 
