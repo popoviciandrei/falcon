@@ -107,8 +107,8 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
               />
             )}
             {isCustomAddress(address) && <AddressFormFields autoCompleteSection="billing-address" />}
-            <ErrorSummary errors={error} />
             <Button type="submit">{submitLabel}</Button>
+            <ErrorSummary errors={error} />
           </Form>
         );
       }}

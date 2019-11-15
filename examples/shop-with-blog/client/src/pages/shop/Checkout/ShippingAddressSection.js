@@ -96,8 +96,8 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
               />
             )}
             {isCustomAddress(address) && <AddressFormFields autoCompleteSection="shipping-address" />}
-            <ErrorSummary errors={error} />
             <Button type="submit">{submitLabel}</Button>
+            <ErrorSummary errors={error} />
           </Form>
         );
       }}
