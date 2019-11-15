@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { I18n, T } from '@deity/falcon-i18n';
+import { PaymentMethodListQuery } from '@deity/falcon-shop-data';
 import { TwoStepWizard } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '@deity/falcon-ui-kit';
 import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
@@ -34,7 +35,7 @@ class PaymentSection extends React.Component {
   };
 
   render() {
-    const { open, selectedPayment, onEditRequested, availablePaymentMethods, errors } = this.props;
+    const { open, selectedPayment, onEditRequested, errors } = this.props;
     let header;
     if (!open && selectedPayment) {
       header = (
@@ -57,36 +58,46 @@ class PaymentSection extends React.Component {
     return (
       <Details open={open}>
         {header}
-        <DetailsContent>
-          {availablePaymentMethods.length === 0 ? (
-            <Text color="error" mb="sm">
-              <T id="checkout.noPaymentMethodsAvailable" />
-            </Text>
-          ) : (
-            <TwoStepWizard>
-              {({ selectedOption, selectOption }) =>
-                availablePaymentMethods.map(payment => (
-                  <PaymentMethodItem
-                    key={payment.code}
-                    {...payment}
-                    selectOption={code => {
-                      this.resetSelected();
-                      selectOption(code);
-                    }}
-                    selectedOption={selectedOption}
-                    onPaymentDetailsReady={data => this.onPaymentSelected(payment, data)}
-                  />
-                ))
-              }
-            </TwoStepWizard>
-          )}
-          <ErrorSummary errors={errors} />
-          {availablePaymentMethods.length > 0 && (
-            <Button disabled={!this.state.selectedPayment} onClick={this.submitPayment}>
-              <T id="continue" />
-            </Button>
-          )}
-        </DetailsContent>
+        {open && (
+          <DetailsContent>
+            <PaymentMethodListQuery>
+              {({ data: { paymentMethodList } }) => {
+                if (paymentMethodList.length === 0) {
+                  return (
+                    <Text color="error" mb="sm">
+                      <T id="checkout.noPaymentMethodsAvailable" />
+                    </Text>
+                  );
+                }
+
+                return (
+                  <React.Fragment>
+                    <TwoStepWizard>
+                      {({ selectedOption, selectOption }) =>
+                        paymentMethodList.map(payment => (
+                          <PaymentMethodItem
+                            key={payment.code}
+                            {...payment}
+                            selectOption={code => {
+                              this.resetSelected();
+                              selectOption(code);
+                            }}
+                            selectedOption={selectedOption}
+                            onPaymentDetailsReady={data => this.onPaymentSelected(payment, data)}
+                          />
+                        ))
+                      }
+                    </TwoStepWizard>
+                    <Button disabled={!this.state.selectedPayment} onClick={this.submitPayment}>
+                      <T id="continue" />
+                    </Button>
+                    <ErrorSummary errors={errors} />
+                  </React.Fragment>
+                );
+              }}
+            </PaymentMethodListQuery>
+          </DetailsContent>
+        )}
       </Details>
     );
   }
