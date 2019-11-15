@@ -43,7 +43,7 @@ class ShippingSection extends React.Component {
   onShippingSelected = selectedShipping => this.setState({ selectedShipping });
 
   render() {
-    const { open, onEditRequested, selectedShipping, errors } = this.props;
+    const { open, onEditRequested, selectedShipping } = this.props;
     let header;
 
     if (!open && selectedShipping) {
@@ -81,7 +81,7 @@ class ShippingSection extends React.Component {
 
                 return (
                   <SetShippingMethod>
-                    {setShipping => (
+                    {(setShipping, { error }) => (
                       <React.Fragment>
                         <ShippingSelector
                           availableShippingOptions={shippingMethodList}
@@ -96,7 +96,7 @@ class ShippingSection extends React.Component {
                         >
                           <T id="continue" />
                         </Button>
-                        <ErrorSummary errors={errors} />
+                        <ErrorSummary errors={error} />
                       </React.Fragment>
                     )}
                   </SetShippingMethod>
