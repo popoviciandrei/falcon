@@ -28,6 +28,8 @@ export type CheckoutProviderProps = {
 
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues } = props;
+
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [state, setState] = useState<CheckoutState>({
     billingSameAsShipping: false,
     ...initialValues
@@ -185,56 +187,55 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     });
   };
 
-  const setEmail = (email: string) =>
-    setState({
-      ...state,
-      email
-    });
+  const setEmail = email => setState(x => (x.email === email ? x : { ...x, email }));
 
-  /**
-   * @param {boolean} same Whether the billing address should be the same as shipping address
-   */
+  /** @param {boolean} same Whether the billing address should be the same as shipping address */
   const setBillingSameAsShipping = (same: boolean) => {
-    setState({
-      ...state,
-      billingSameAsShipping: same,
-      billingAddress: same ? state.shippingAddress : null
-    });
-    setBillingAddress(state.shippingAddress);
-  };
-
-  const setShippingAddress = (shippingAddress: CheckoutAddress) => {
-    setState({
-      ...state,
-      shippingAddress,
-      billingAddress: state.billingSameAsShipping ? shippingAddress : state.billingAddress
-    });
-    // setShippingAddressMutation({
-    //   variables: { input: addressToCheckoutAddressInput(shippingAddress) }
+    // setState({
+    //   ...state,
+    //   billingSameAsShipping: same,
+    //   billingAddress: same ? state.shippingAddress : null
     // });
+    // setBillingAddress(state.shippingAddress);
   };
 
-  const setBillingAddress = (billingAddress?: CheckoutAddress) => {
-    setState({
-      ...state,
-      billingAddress: billingAddress || state.billingAddress
-    });
-    // setBillingAddressMutation({
-    //   variables: {
-    //     input: addressToCheckoutAddressInput(billingAddress || state.billingAddress)
-    //   }
-    // });
-  };
+  const setShippingAddress = shippingAddress =>
+    setState(x =>
+      isEqual(x.shippingAddress, shippingAddress)
+        ? x
+        : {
+            ...x,
+            shippingAddress,
+            // billingAddress: state.billingSameAsShipping ? shippingAddress : state.billingAddress
+            shippingMethod: undefined,
+            paymentMethod: undefined
+          }
+    );
 
-  const setShippingMethod = (shippingMethod: CheckoutDetailsInput) => {
-    setState({ ...state, shippingMethod });
-    setShippingMethodMutation({ variables: { input: shippingMethod } });
-  };
+  const setBillingAddress = billingAddress =>
+    setState(x =>
+      isEqual(x.billingAddress, billingAddress)
+        ? x
+        : {
+            ...x,
+            billingAddress,
+            paymentMethod: undefined
+          }
+    );
 
-  const setPaymentMethod = (paymentMethod: CheckoutDetailsInput) => {
-    setState({ ...state, paymentMethod });
-    setPaymentMethodMutation({ variables: { input: paymentMethod } });
-  };
+  const setShippingMethod = shippingMethod =>
+    setState(x =>
+      isEqual(x.shippingMethod, shippingMethod)
+        ? x
+        : {
+            ...x,
+            shippingMethod,
+            paymentMethod: undefined
+          }
+    );
+
+  const setPaymentMethod = paymentMethod =>
+    setState(x => (isEqual(x.paymentMethod, paymentMethod) ? x : { ...x, paymentMethod }));
 
   const placeOrder = (/** TODO: I would like to pass all necessary date here to do 1 click checkout */) => {
     placeOrderMutation({
@@ -250,23 +251,10 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     });
   };
 
-  // Avoiding manual "loading" state key manipulation,
-  // so using Query's/Mutation's "loading" flags instead
-  const isLoading =
-    [
-      setShippingAddressLoading,
-      setBillingAddressLoading,
-      shippingMethodListProps.loading,
-      setShippingMethodLoading,
-      paymentMethodListProps.loading,
-      setPaymentMethodLoading,
-      placeOrderLoading
-    ].filter(Boolean).length > 0;
-
   const context: CheckoutProviderRenderProps = {
     values: state,
-    ...contextData,
-    loading: isLoading,
+    isLoading,
+    setLoading,
     setEmail,
     setBillingSameAsShipping,
     setShippingAddress,

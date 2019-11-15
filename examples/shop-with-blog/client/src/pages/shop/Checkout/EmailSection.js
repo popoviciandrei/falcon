@@ -34,8 +34,8 @@ export const EmailSection = props => {
   const { t } = useI18n();
   const [signOut] = useSignOutMutation();
   const {
-    setEmail,
-    values: { email }
+    values: { email },
+    setEmail
   } = useCheckout();
 
   return (

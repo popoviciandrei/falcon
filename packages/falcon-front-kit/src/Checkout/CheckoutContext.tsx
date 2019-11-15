@@ -26,7 +26,8 @@ type CheckoutContextErrors = {
 
 export type CheckoutProviderRenderProps = {
   values: CheckoutState;
-  loading: boolean;
+  isLoading: boolean;
+  setLoading(isLoading: boolean);
   setEmail(email: string): void;
   setShippingAddress(address: CheckoutAddress): void;
   setBillingSameAsShipping(same: boolean): void;

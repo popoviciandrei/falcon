@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { CheckoutDetailsInput } from '@deity/falcon-shop-extension';
 import { useSetPaymentMethodMutation, SetPaymentMethodResponse } from '@deity/falcon-shop-data';
-import { useCheckoutState } from './CheckoutState';
+import { useCheckout } from './CheckoutConsumer';
 import { CheckoutOperation, CheckoutOperationHook } from './CheckoutOperation';
 
 export const useSetPaymentMethod: CheckoutOperationHook<SetPaymentMethodResponse, CheckoutDetailsInput> = () => {
   const [method, setMethod] = useState<CheckoutDetailsInput>();
-  const { setLoading, setPaymentMethod } = useCheckoutState();
+  const { setLoading, setPaymentMethod } = useCheckout();
   const [mutation, mutationResult] = useSetPaymentMethodMutation({
     onCompleted: () => {
       setPaymentMethod(method);

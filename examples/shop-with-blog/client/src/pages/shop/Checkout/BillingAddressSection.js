@@ -5,7 +5,7 @@ import { Details, DetailsContent, Button, Checkbox, Label, FlexLayout } from '@d
 import {
   SetBillingAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
-  useCheckoutState,
+  useCheckout,
   isCustomAddress
 } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
@@ -15,10 +15,10 @@ import { AddressPicker } from './components';
 
 export const BillingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
-  const { billingAddress } = useCheckoutState();
+  const { values } = useCheckout();
 
   let header;
-  if (!open && billingAddress) {
+  if (!open && values.billingAddress) {
     header = (
       <I18n>
         {t => (
@@ -27,7 +27,7 @@ export const BillingAddressSection = props => {
             onActionClick={onEditRequested}
             editLabel={t('edit')}
             complete
-            summary={<AddressDetails {...billingAddress} />}
+            summary={<AddressDetails {...values.billingAddress} />}
           />
         )}
       </I18n>
@@ -65,7 +65,7 @@ BillingAddressSection.propTypes = {
 
 export const BillingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultBilling = addresses.find(x => x.defaultBilling);
-  const values = useCheckoutState();
+  const { values } = useCheckout();
   const shouldAutoSubmit = !values.billingAddress && !!defaultBilling;
   const [address, setAddress] = useState(values.billingAddress || defaultBilling);
 

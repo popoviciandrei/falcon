@@ -5,7 +5,7 @@ import { Details, DetailsContent, Button } from '@deity/falcon-ui';
 import {
   SetShippingAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
-  useCheckoutState,
+  useCheckout,
   isCustomAddress
 } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
@@ -15,10 +15,10 @@ import { AddressPicker } from './components';
 
 export const ShippingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
-  const { shippingAddress } = useCheckoutState();
+  const { values } = useCheckout();
 
   let header;
-  if (!open && shippingAddress) {
+  if (!open && values.shippingAddress) {
     header = (
       <I18n>
         {t => (
@@ -27,7 +27,7 @@ export const ShippingAddressSection = props => {
             onActionClick={onEditRequested}
             editLabel={t('edit')}
             complete
-            summary={<AddressDetails {...shippingAddress} />}
+            summary={<AddressDetails {...values.shippingAddress} />}
           />
         )}
       </I18n>
@@ -65,7 +65,7 @@ ShippingAddressSection.propTypes = {
 
 export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultShipping = addresses.find(x => x.defaultShipping);
-  const values = useCheckoutState();
+  const { values } = useCheckout();
   const shouldAutoSubmit = !values.shippingAddress && !!defaultShipping;
   const [address, setAddress] = useState(values.shippingAddress || defaultShipping);
 
