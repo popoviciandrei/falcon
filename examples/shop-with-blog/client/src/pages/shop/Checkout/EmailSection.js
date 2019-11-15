@@ -66,7 +66,7 @@ export const EmailSection = props => {
               <Text>
                 <T id="customerSelector.guestPrompt" />
               </Text>
-              <Formik initialStatus={{}} initialValues={{ email }} onSubmit={x => setEmail(x.email)}>
+              <Formik initialStatus={{}} initialValues={{ email: email || '' }} onSubmit={x => setEmail(x.email)}>
                 {({ status: { error } }) => (
                   <Form id="checkout-customer-email" i18nId="customerSelector" defaultTheme={customerEmailFormLayout}>
                     <FormField name="email" required type="email" autoComplete="email" gridArea="input" />
