@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { I18n, T } from '@deity/falcon-i18n';
 import { PaymentMethodListQuery } from '@deity/falcon-shop-data';
-import { TwoStepWizard } from '@deity/falcon-front-kit';
+import { TwoStepWizard, SetPaymentMethod } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '@deity/falcon-ui-kit';
 import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
@@ -17,25 +17,17 @@ const PaymentMethodItem = loadable(() =>
 class PaymentSection extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      selectedPayment: null,
+      payment: null,
       data: null
     };
   }
 
-  onPaymentSelected = (selectedPayment, data) => this.setState({ selectedPayment, data });
-
-  resetSelected = () => this.setState({ selectedPayment: null, data: null });
-
-  submitPayment = () => {
-    this.props.setPayment({
-      method: this.state.selectedPayment.code,
-      data: this.state.data
-    });
-  };
+  resetSelected = () => this.setState({ payment: null, data: null });
 
   render() {
-    const { open, selectedPayment, onEditRequested, errors } = this.props;
+    const { open, selectedPayment, onEditRequested } = this.props;
     let header;
     if (!open && selectedPayment) {
       header = (
@@ -71,28 +63,40 @@ class PaymentSection extends React.Component {
                 }
 
                 return (
-                  <React.Fragment>
-                    <TwoStepWizard>
-                      {({ selectedOption, selectOption }) =>
-                        paymentMethodList.map(payment => (
-                          <PaymentMethodItem
-                            key={payment.code}
-                            {...payment}
-                            selectOption={code => {
-                              this.resetSelected();
-                              selectOption(code);
-                            }}
-                            selectedOption={selectedOption}
-                            onPaymentDetailsReady={data => this.onPaymentSelected(payment, data)}
-                          />
-                        ))
-                      }
-                    </TwoStepWizard>
-                    <Button disabled={!this.state.selectedPayment} onClick={this.submitPayment}>
-                      <T id="continue" />
-                    </Button>
-                    <ErrorSummary errors={errors} />
-                  </React.Fragment>
+                  <SetPaymentMethod>
+                    {(setPayment, { error }) => (
+                      <React.Fragment>
+                        <TwoStepWizard>
+                          {({ selectedOption, selectOption }) =>
+                            paymentMethodList.map(method => (
+                              <PaymentMethodItem
+                                key={method.code}
+                                {...method}
+                                selectOption={code => {
+                                  this.resetSelected();
+                                  selectOption(code);
+                                }}
+                                selectedOption={selectedOption}
+                                onPaymentDetailsReady={data => {
+                                  this.setState({ payment: method, data });
+                                }}
+                              />
+                            ))
+                          }
+                        </TwoStepWizard>
+                        <Button
+                          disabled={!this.state.payment}
+                          onClick={() => {
+                            const { data, payment } = this.state;
+                            setPayment({ method: payment.code, data });
+                          }}
+                        >
+                          <T id="continue" />
+                        </Button>
+                        <ErrorSummary errors={error} />
+                      </React.Fragment>
+                    )}
+                  </SetPaymentMethod>
                 );
               }}
             </PaymentMethodListQuery>
@@ -106,20 +110,11 @@ class PaymentSection extends React.Component {
 PaymentSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
-  // all available payment methods
-  availablePaymentMethods: PropTypes.arrayOf(PropTypes.shape({})),
   // currently selected payment method
   selectedPayment: PropTypes.shape({}),
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func,
+  onEditRequested: PropTypes.func
   // callback that sets selected payment method
-  setPayment: PropTypes.func,
-  // errors passed from outside that should be displayed for this section
-  errors: PropTypes.arrayOf(
-    PropTypes.shape({
-      message: PropTypes.string
-    })
-  )
 };
 
 export default PaymentSection;
