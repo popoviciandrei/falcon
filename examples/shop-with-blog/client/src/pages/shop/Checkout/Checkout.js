@@ -9,9 +9,9 @@ import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import CheckoutCartSummary from './CheckoutCartSummary';
 import { EmailSection } from './EmailSection';
 import { ShippingAddressSection } from './ShippingAddressSection';
+import { BillingAddressSection } from './BillingAddressSection';
 import ShippingMethodSection from './ShippingMethodSection';
 import PaymentMethodSection from './PaymentMethodSection';
-import AddressSection from './AddressSection';
 
 const CheckoutArea = {
   checkout: 'checkout',
@@ -141,21 +141,11 @@ class CheckoutWizard extends React.Component {
       loading,
       errors,
       result,
-      availableShippingMethods,
-      availablePaymentMethods,
-      setShippingAddress,
-      setBillingAddress,
-      setBillingSameAsShipping,
-      setShippingMethod,
+
       setPaymentMethod,
       placeOrder
     } = this.props.checkoutData;
-
-    const { customerData, cart } = this.props;
-
-    const addresses = customerData && customerData.addresses ? customerData.addresses : [];
-    const defaultShippingAddress = addresses.find(item => item.defaultShipping);
-    const defaultBillingAddress = addresses.find(item => item.defaultBilling);
+    const { cart } = this.props;
 
     let orderResult = null;
     if (!loading && result) {
@@ -198,28 +188,15 @@ class CheckoutWizard extends React.Component {
               onEditRequested={() => this.setCurrentStep(CheckoutStep.ShippingAddress)}
               title={t('checkout.shippingAddress')}
               submitLabel={t('checkout.nextStep')}
-              selectedAddress={values.shippingAddress}
-              setAddress={setShippingAddress}
-              errors={errors.shippingAddress}
-              availableAddresses={addresses}
-              defaultSelected={defaultShippingAddress}
             />
 
             <Divider my="md" />
 
-            <AddressSection
-              id="billing-address"
+            <BillingAddressSection
               open={currentStep === CheckoutStep.BillingAddress}
               onEditRequested={() => this.setCurrentStep(CheckoutStep.BillingAddress)}
               title={t('checkout.billingAddress')}
               submitLabel={t('checkout.nextStep')}
-              selectedAddress={values.billingAddress}
-              setAddress={setBillingAddress}
-              setUseTheSame={setBillingSameAsShipping}
-              useTheSame={values.billingSameAsShipping}
-              labelUseTheSame={t('checkout.useTheSameAddress')}
-              availableAddresses={addresses}
-              defaultSelected={defaultBillingAddress}
             />
 
             <Divider my="md" />
@@ -229,9 +206,6 @@ class CheckoutWizard extends React.Component {
               onEditRequested={() => this.setCurrentStep(CheckoutStep.Shipping)}
               shippingAddress={values.shippingAddress}
               selectedShipping={values.shippingMethod}
-              setShippingAddress={setShippingAddress}
-              availableShippingMethods={availableShippingMethods}
-              setShipping={setShippingMethod}
               errors={errors.shippingMethod}
             />
 
@@ -241,7 +215,6 @@ class CheckoutWizard extends React.Component {
               open={currentStep === CheckoutStep.Payment}
               onEditRequested={() => this.setCurrentStep(CheckoutStep.Payment)}
               selectedPayment={values.paymentMethod}
-              availablePaymentMethods={availablePaymentMethods}
               setPayment={setPaymentMethod}
               errors={errors.paymentMethod}
             />
