@@ -3,7 +3,7 @@ import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
 import { Mutation, OperationInput } from '@deity/falcon-data';
 import { ChangePasswordInput } from '@deity/falcon-shop-extension';
 
-export const CHANGE_PASSWORD_MUTATION = gql`
+export const CHANGE_PASSWORD = gql`
   mutation changePassword($input: ChangePasswordInput!) {
     changePassword(input: $input)
   }
@@ -15,10 +15,10 @@ export type ChangePasswordResponse = {
 
 export class ChangePasswordMutation extends Mutation<ChangePasswordResponse, OperationInput<ChangePasswordInput>> {
   static defaultProps = {
-    mutation: CHANGE_PASSWORD_MUTATION
+    mutation: CHANGE_PASSWORD
   };
 }
 
 export const useChangePasswordMutation = (
   options: MutationHookOptions<ChangePasswordResponse, OperationInput<ChangePasswordInput>> = {}
-) => useMutation(CHANGE_PASSWORD_MUTATION, options);
+) => useMutation(CHANGE_PASSWORD, options);

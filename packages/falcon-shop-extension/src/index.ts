@@ -6,8 +6,7 @@ import { PlaceOrderResult } from './types';
 const ShopExtension = () => ({
   resolvers: {
     PlaceOrderResult: {
-      __resolveType: (data: PlaceOrderResult) =>
-        'url' in data ? 'PlaceOrder3dSecureResult' : 'PlaceOrderSuccessfulResult'
+      __resolveType: (data: PlaceOrderResult) => ('url' in data ? 'PlaceOrder3dSecureResult' : 'Order')
     },
     BackendConfig: {
       // Returning an empty object to make ShopConfig resolvers work

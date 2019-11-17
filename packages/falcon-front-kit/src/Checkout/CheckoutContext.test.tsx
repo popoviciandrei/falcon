@@ -7,7 +7,7 @@ import { SchemaLink } from 'apollo-link-schema';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-common';
-import { PlaceOrderSuccessfulResult } from '@deity/falcon-shop-extension';
+import { Order } from '@deity/falcon-shop-extension';
 import { CheckoutConsumer, CheckoutProvider, CheckoutProviderRenderProps } from './CheckoutContext';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
@@ -21,7 +21,7 @@ const fragmentTypes = {
         name: 'PlaceOrderResult',
         possibleTypes: [
           {
-            name: 'PlaceOrderSuccessfulResult'
+            name: 'Order'
           },
           {
             name: 'PlaceOrder3dSecureResult'
@@ -75,8 +75,8 @@ const resolversWithoutErrors = {
     setPaymentMethod: () => true,
     setShippingMethod: () => true,
     placeOrder: () => ({
-      orderId: '10',
-      orderRealId: '010'
+      id: '10',
+      referenceNo: '010'
     })
   }
 };
@@ -111,7 +111,7 @@ const resolversWithErrors = {
 
 const createApolloClient = (resolvers: any) => {
   resolvers.PlaceOrderResult = {
-    __resolveType: (obj: any) => (obj.orderId ? 'PlaceOrderSuccessfulResult' : 'PlaceOrder3dSecureResult')
+    __resolveType: (obj: any) => (obj.id ? 'Order' : 'PlaceOrder3dSecureResult')
   };
 
   const schema = makeExecutableSchema({ typeDefs: [BaseSchema, Schema], resolvers });
@@ -247,7 +247,7 @@ describe('<CheckoutContext/>', () => {
       expect(getProps().availablePaymentMethods[0]).toEqual(samplePaymentMethod);
     });
 
-    it('should properly return orderId when order was placed', async () => {
+    it('should properly return order.id when order was placed', async () => {
       const { getProps } = renderCheckoutLogic();
       await act(async () => {
         getProps().setEmail('foo@bar.com');
@@ -273,7 +273,7 @@ describe('<CheckoutContext/>', () => {
       await act(async () => {
         getProps().placeOrder();
       });
-      expect((getProps().result! as PlaceOrderSuccessfulResult).orderId).toBe('10');
+      expect((getProps().result! as Order).id).toBe('10');
     });
   });
 

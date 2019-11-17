@@ -1,6 +1,16 @@
 import CSS from 'csstype';
 import { Theme, CSSObject } from '.';
 
+export type ResponsivePropMapping = {
+  cssProp?: keyof CSS.Properties;
+  themeProp?: keyof Theme;
+  transformToCss?: (value: number | string) => CSSObject;
+};
+
+type PropsMapping = {
+  [name: string]: ResponsivePropMapping;
+};
+
 function propsMapping<T extends PropsMapping>(param: T) {
   return param;
 }
@@ -218,14 +228,6 @@ export const mappings = propsMapping({
   gridTemplate: {}
 });
 
+export const themablePropsKeys = [...Object.keys(mappings), 'css'];
+
 export type PropsMappings = typeof mappings;
-
-export type ResponsivePropMapping = {
-  cssProp?: keyof CSS.Properties;
-  themeProp?: keyof Theme;
-  transformToCss?: (value: number | string) => CSSObject;
-};
-
-type PropsMapping = {
-  [name: string]: ResponsivePropMapping;
-};

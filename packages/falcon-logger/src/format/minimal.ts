@@ -6,13 +6,13 @@ const colorizer = colors(true);
 const messageKey = CONSTANTS.MESSAGE_KEY;
 const errorLikeObjectKeys = CONSTANTS.ERROR_LIKE_KEYS;
 
-export default ({ IDENT, EOL }) => inputData => {
+const formatMessage = ({ IDENT, EOL }, inputData) => {
   let log;
   let line = '';
   if (!isObject(inputData)) {
     const parsed = jsonParser(inputData);
     log = parsed.value;
-    if (parsed.err) {
+    if (parsed.err || !isObject(log)) {
       // pass through
       return inputData + EOL;
     }
@@ -64,4 +64,12 @@ export default ({ IDENT, EOL }) => inputData => {
   }
 
   return line;
+};
+
+export default ({ IDENT, EOL }) => inputData => {
+  try {
+    return formatMessage({ IDENT, EOL }, inputData);
+  } catch {
+    return typeof inputData === 'string' ? inputData : JSON.stringify(inputData);
+  }
 };

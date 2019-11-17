@@ -1,9 +1,9 @@
 import React from 'react';
 import { I18n } from '@deity/falcon-i18n';
-import { Input, Icon, Box, ThemedComponentProps } from '@deity/falcon-ui';
+import { Input, Icon, Box, ThemingProps } from '@deity/falcon-ui';
 
 export class PasswordRevealInput extends React.Component<
-  ThemedComponentProps & React.InputHTMLAttributes<HTMLInputElement>,
+  ThemingProps & React.InputHTMLAttributes<HTMLInputElement>,
   { isRevealed: boolean }
 > {
   state = {

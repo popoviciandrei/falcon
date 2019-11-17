@@ -108,8 +108,8 @@ export class FalconServer {
     await this.eventEmitter.emitAsync(Events.BEFORE_INITIALIZED, this);
     this.cache = this.getCache();
     await this.initializeComponents();
-    await this.initializeServerApp();
     await this.initializeContainers();
+    await this.initializeServerApp();
     await this.initializeApolloServer();
     await this.registerEndpoints();
     await this.eventEmitter.emitAsync(Events.AFTER_INITIALIZED, this);
@@ -236,6 +236,7 @@ export class FalconServer {
     this.router = new Router();
 
     this.app.context.components = this.componentContainer.components;
+    this.app.context.dataSources = this.apiContainer.dataSources;
     this.app.use(body());
     this.app.use(compress());
     this.app.use(
@@ -265,7 +266,7 @@ export class FalconServer {
     await this.extensionContainer.registerExtensions(this.config.extensions);
     await this.eventEmitter.emitAsync(Events.AFTER_EXTENSION_CONTAINER_CREATED, this.extensionContainer);
 
-    this.endpointContainer = new EndpointContainer(this.eventEmitter);
+    this.endpointContainer = new EndpointContainer(this.eventEmitter, this.cache);
     await this.endpointContainer.registerEndpoints(this.config.endpoints);
   }
 

@@ -4,14 +4,7 @@ import isPropValid from '@emotion/is-prop-valid';
 import { extractThemableProps } from './utils';
 import { defaultBaseTheme } from './theme';
 import { mappings, PropsMappings, ResponsivePropMapping } from './responsiveprops';
-import {
-  Theme,
-  CSSObject,
-  PropsWithTheme,
-  ThemedComponentProps,
-  ThemedComponentPropsWithVariants,
-  InlineCss
-} from './index';
+import { Theme, CSSObject, PropsWithTheme, ThemingProps, ComponentTheme, InlineCss } from './index';
 
 const NESTED_CSS_OBJECT_SELECTORS = [':', '&', '*', '>', '@'];
 const propsMappingKeys = Object.keys(mappings) as (keyof PropsMappings)[];
@@ -38,21 +31,18 @@ const convertPropToCss = (
   };
 };
 
-type PropsWithVariant = {
-  variant?: string;
+type PropsWithDefaultTheme<TProps> = {
+  defaultTheme?: ComponentTheme<TProps> | { [name: string]: ComponentTheme<TProps> };
 };
 
-type PropsWithDefaultTheme = {
-  defaultTheme?: ThemedComponentPropsWithVariants | { [name: string]: ThemedComponentPropsWithVariants };
-};
+type ThemedProps = PropsWithTheme<ThemingProps & PropsWithDefaultTheme<{}>>;
 
-type ThemedProps = ThemedComponentProps & PropsWithTheme & PropsWithVariant & PropsWithDefaultTheme;
-
-const convertThemedPropsToCss = (props: ThemedComponentProps, theme: Theme): CSSObject => {
+const convertThemedPropsToCss = (props: ThemingProps, theme: Theme): CSSObject => {
   //  if theme is not provided via theme provider do not map anything
   if (!theme) {
     return {};
   }
+
   // TODO: typescript: can typings be improved for that object?
   const targetCss = {} as any;
 
@@ -187,7 +177,7 @@ function getThemedCss(props: ThemedProps) {
   const themedPropsToMerge: any[] = [];
   const cssPropsToMerge: any[] = [];
 
-  const addPropsToMerge = (propsToMerge: ThemedComponentProps) => {
+  const addPropsToMerge = (propsToMerge: ThemingProps) => {
     const { css, ...rest } = propsToMerge;
     if (css) {
       cssPropsToMerge.push(getCss(css, props));
@@ -291,11 +281,11 @@ type TagProps<TTag extends Tag> = (TTag extends keyof JSX.IntrinsicElements ? JS
 
 type ThemedOptions<TTag extends Tag, TProps> = {
   tag: TTag;
-  defaultTheme?: { [name: string]: ThemedComponentPropsWithVariants<TProps> };
+  defaultTheme?: { [name: string]: ComponentTheme<TProps> };
   defaultProps?: TagProps<TTag> & TProps;
 };
 
-export type DefaultThemeProps = { [name: string]: ThemedComponentPropsWithVariants };
+export type DefaultThemeProps = { [name: string]: ComponentTheme<{}> };
 
 export function themed<TProps, TTag extends Tag = Tag>(options: ThemedOptions<TTag, TProps>) {
   let label = '';
@@ -333,10 +323,9 @@ export function themed<TProps, TTag extends Tag = Tag>(options: ThemedOptions<TT
       {
         as?: TAsTag;
         defaultTheme?: DefaultThemeProps;
-        variant?: string;
       } & Partial<typeof options['defaultProps']> &
-        TagProps<TAsTag> &
-        ThemedComponentProps
+        ThemingProps<TProps> &
+        TagProps<TAsTag>
     >
   ) => JSX.Element;
 }

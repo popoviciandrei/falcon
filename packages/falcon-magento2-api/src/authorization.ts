@@ -1,10 +1,11 @@
-const deepMerge = require('deepmerge');
-const OAuth = require('oauth');
+import deepMerge from 'deepmerge';
+import { OAuth } from 'oauth';
+import { ContextRequestInit } from '@deity/falcon-server-env';
 
 /**
  * Request authorization scope
  */
-const AuthScope = {
+export const AuthScope = {
   /** Authorize request using Integration credentials (integration-token or admin-token) */
   Integration: 'integration',
 
@@ -15,7 +16,7 @@ const AuthScope = {
 /**
  * Integration request authorization type
  */
-const IntegrationAuthType = {
+export const IntegrationAuthType = {
   /** Integration Token (oAuth) */
   integrationToken: 'integration-token',
 
@@ -23,12 +24,18 @@ const IntegrationAuthType = {
   adminToken: 'admin-token'
 };
 
-/** Sets authorization info onto the request
- * @param {{ context: any }} requestOptions request options
- * @param {string|boolean} param desired authorization scope or if true then `customer` scope otherwise `integration`
- * @returns {string} authorization scope
+/* eslint-disable import/export */
+/** Sets default authorization info onto the request
+ * @param {ContextRequestInit} requestOptions request options
+ * @param {boolean} isCustomerLoggedIn if true then `customer` scope otherwise `integration`
  */
-function setAuthScope(requestOptions, param) {
+export function setAuthScope(requestOptions: ContextRequestInit, isCustomerLoggedIn: boolean);
+/** Sets authorization info onto the request
+ * @param {object} requestOptions request options
+ * @param {string} scope desired authorization scope
+ */
+export function setAuthScope(requestOptions: ContextRequestInit, scope: string);
+export function setAuthScope(requestOptions: ContextRequestInit, param: string | boolean) {
   const authContext =
     typeof param === 'string'
       ? { isAuthRequired: true, auth: param }
@@ -36,11 +43,18 @@ function setAuthScope(requestOptions, param) {
 
   return deepMerge(requestOptions, { context: authContext });
 }
+/* eslint-enable import/export */
 
 /**
  * oAuth 1 based request authorization
  */
-class OAuth1Auth {
+export class OAuth1Auth {
+  config: any;
+
+  options: any;
+
+  oAuthClient: any;
+
   /**
    * @param {object} config configuration
    * @param {string} config.consumerKey consumer key
@@ -58,7 +72,7 @@ class OAuth1Auth {
   }
 
   initialize() {
-    this.oAuthClient = new OAuth.OAuth(
+    this.oAuthClient = new OAuth(
       this.config.requestTokenUrl,
       this.config.accessTokenUrl,
       this.config.consumerKey,
@@ -86,10 +100,3 @@ class OAuth1Auth {
     return request;
   }
 }
-
-module.exports = {
-  AuthScope,
-  IntegrationAuthType,
-  setAuthScope,
-  OAuth1Auth
-};

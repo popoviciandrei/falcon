@@ -1,21 +1,45 @@
-const util = require('util');
-const { ApiDataSource, BearerAuth } = require('@deity/falcon-server-env');
-const _ = require('lodash');
-const addSeconds = require('date-fns/add_seconds');
-const { FalconError, AuthenticationError, codes } = require('@deity/falcon-errors');
-const { AuthScope, IntegrationAuthType, setAuthScope, OAuth1Auth } = require('./authorization');
+import util from 'util';
+import _ from 'lodash';
+import addSeconds from 'date-fns/add_seconds';
+import { URLSearchParamsInit } from 'apollo-server-env';
+import { ApiDataSource, BearerAuth, ContextRequestInit } from '@deity/falcon-server-env';
+import { FalconError, AuthenticationError, codes } from '@deity/falcon-errors';
+import { AuthScope, IntegrationAuthType, setAuthScope, OAuth1Auth } from './authorization';
 
-/**
- * @typedef {object} CustomerToken
- * @property {string} token authorization bearer
- * @property {Date} expirationTime expiration date
- */
+export type CustomerToken = {
+  /** authorization bearer */
+  token: string;
+  /** expiration date */
+  expirationTime: Date;
+};
 
 /**
  * Base API features (configuration fetching, response parsing, token management etc.) required for communication
  * with Magento2. Extracted to separate class to keep final class clean (only resolvers-related logic should be there).
  */
-class Magento2ApiBase extends ApiDataSource {
+export class Magento2ApiBase extends ApiDataSource {
+  storeCode: string;
+
+  storePrefix: string;
+
+  cookie: any;
+
+  magentoConfig: any;
+
+  storeList: any[];
+
+  storeConfigMap: any;
+
+  itemUrlSuffix: string;
+
+  oAuth: any;
+
+  __adminToken: any;
+
+  integrationScopeAuth: any;
+
+  customerScopeAuth: any;
+
   /**
    * Create Magento api wrapper instance
    * @param {object} params configuration params
@@ -33,11 +57,11 @@ class Magento2ApiBase extends ApiDataSource {
   /**
    * Create authorized GET request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {object} params object representation of query string
+   * @param {URLSearchParamsInit} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async getAuth(path, params = undefined, init = {}) {
+  async getAuth(path: string, params: URLSearchParamsInit = undefined, init: ContextRequestInit = {}) {
     return super.get(path, params, setAuthScope(init, !!this.session.customerToken));
   }
 
@@ -48,7 +72,7 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async postAuth(path, body = undefined, init = {}) {
+  async postAuth(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.post(path, body, setAuthScope(init, !!this.session.customerToken));
   }
 
@@ -59,7 +83,7 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async patchAuth(path, body = undefined, init = {}) {
+  async patchAuth(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.patch(path, body, setAuthScope(init, !!this.session.customerToken));
   }
 
@@ -70,29 +94,29 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async putAuth(path, body = undefined, init = {}) {
+  async putAuth(path: string, body: any = undefined, init: any = {}) {
     return super.put(path, body, setAuthScope(init, !!this.session.customerToken));
   }
 
   /**
    * Create authorized DELETE request, for `customer` scope if customer logged in or `integration` otherwise
    * @param {string} path path
-   * @param {object} params object representation of query string
+   * @param {URLSearchParamsInit} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async deleteAuth(path, params = undefined, init = {}) {
+  async deleteAuth(path: string, params: URLSearchParamsInit = undefined, init: ContextRequestInit = {}) {
     return super.delete(path, params, setAuthScope(init, !!this.session.customerToken));
   }
 
   /**
    * Create authorized GET request, for `integration` scope
    * @param {string} path path
-   * @param {object} params object representation of query string
+   * @param {URLSearchParamsInit} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async getForIntegration(path, params = undefined, init = {}) {
+  async getForIntegration(path: string, params: URLSearchParamsInit = undefined, init: ContextRequestInit = {}) {
     return super.get(path, params, setAuthScope(init, AuthScope.Integration));
   }
 
@@ -103,7 +127,7 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async postForIntegration(path, body = undefined, init = {}) {
+  async postForIntegration(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.post(path, body, setAuthScope(init, AuthScope.Integration));
   }
 
@@ -114,7 +138,7 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async patchForIntegration(path, body = undefined, init = {}) {
+  async patchForIntegration(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.patch(path, body, setAuthScope(init, AuthScope.Integration));
   }
 
@@ -125,29 +149,29 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async putForIntegration(path, body = undefined, init = {}) {
+  async putForIntegration(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.put(path, body, setAuthScope(init, AuthScope.Integration));
   }
 
   /**
    * Create authorized DELETE request, for `integration` scope
    * @param {string} path path
-   * @param {object} params object representation of query string
+   * @param {URLSearchParamsInit} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async deleteForIntegration(path, params = undefined, init = {}) {
+  async deleteForIntegration(path: string, params: URLSearchParamsInit = undefined, init: ContextRequestInit = {}) {
     return super.delete(path, params, setAuthScope(init, AuthScope.Integration));
   }
 
   /**
    * Create authorized GET request, for `customer` scope
    * @param {string} path path
-   * @param {object} params object representation of query string
+   * @param {URLSearchParamsInit} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async getForCustomer(path, params = undefined, init = {}) {
+  async getForCustomer(path: string, params: URLSearchParamsInit = undefined, init: ContextRequestInit = {}) {
     return super.get(path, params, setAuthScope(init, AuthScope.Customer));
   }
 
@@ -158,7 +182,7 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async postForCustomer(path, body = undefined, init = {}) {
+  async postForCustomer(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.post(path, body, setAuthScope(init, AuthScope.Customer));
   }
 
@@ -169,7 +193,7 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async patchForCustomer(path, body = undefined, init = {}) {
+  async patchForCustomer(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.patch(path, body, setAuthScope(init, AuthScope.Customer));
   }
 
@@ -180,18 +204,18 @@ class Magento2ApiBase extends ApiDataSource {
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async putForCustomer(path, body = undefined, init = {}) {
+  async putForCustomer(path: string, body: any = undefined, init: ContextRequestInit = {}) {
     return super.put(path, body, setAuthScope(init, AuthScope.Customer));
   }
 
   /**
    * Create authorized DELETE request, for `customer` scope
    * @param {string} path path
-   * @param {object} params object representation of query string
+   * @param {URLSearchParamsInit} params object representation of query string
    * @param {ContextRequestInit} init options
    * @returns {Promise} response
    */
-  async deleteForCustomer(path, params = undefined, init = {}) {
+  async deleteForCustomer(path: string, params: URLSearchParamsInit = undefined, init: ContextRequestInit = {}) {
     return super.delete(path, params, setAuthScope(init, AuthScope.Customer));
   }
 
@@ -331,7 +355,7 @@ class Magento2ApiBase extends ApiDataSource {
    * @returns {IAuthorizeRequest} authorization handler
    */
   setupIntegrationScopeAuth(authConfig) {
-    const { type, ...restAuthConfig } = authConfig || {};
+    const { type, ...restAuthConfig } = authConfig || { type: undefined };
 
     if (type === IntegrationAuthType.adminToken) {
       return new BearerAuth(async () => this.getAdminToken());
@@ -513,7 +537,6 @@ class Magento2ApiBase extends ApiDataSource {
         codes.CUSTOMER_TOKEN_NOT_FOUND
       );
       noTokenError.statusCode = 501;
-
       throw noTokenError;
     }
 
@@ -626,7 +649,3 @@ class Magento2ApiBase extends ApiDataSource {
     await this.setShopStore({}, { storeCode: this.storeCode });
   }
 }
-
-module.exports = {
-  Magento2ApiBase
-};

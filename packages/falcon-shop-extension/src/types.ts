@@ -56,8 +56,8 @@ export type CheckoutAddressInput = AddressBase & {
 };
 
 export type AddAddressInput = AddressBase & {
-  regionId?: number;
-  countryId: number;
+  regionId?: string;
+  countryId: string;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
@@ -449,12 +449,7 @@ export type CheckoutDetailsInput = {
   data?: object;
 };
 
-export type PlaceOrderResult = PlaceOrderSuccessfulResult | PlaceOrder3dSecureResult;
-
-export type PlaceOrderSuccessfulResult = {
-  orderId: string;
-  orderRealId: string;
-};
+export type PlaceOrderResult = Order | PlaceOrder3dSecureResult;
 
 export type PlaceOrder3dSecureResult = {
   url: string;

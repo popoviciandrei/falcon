@@ -7,9 +7,9 @@ export const PLACE_ORDER = gql`
   mutation PlaceOrder($input: PlaceOrderInput) {
     placeOrder(input: $input) {
       __typename
-      ... on PlaceOrderSuccessfulResult {
-        orderId
-        orderRealId
+      ... on Order {
+        id
+        referenceNo
       }
       ... on PlaceOrder3dSecureResult {
         url
