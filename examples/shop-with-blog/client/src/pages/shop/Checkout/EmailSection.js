@@ -33,15 +33,12 @@ export const EmailSection = props => {
   const { open, onEditRequested } = props;
   const { t } = useI18n();
   const [signOut] = useSignOutMutation();
-  const {
-    values: { email },
-    setEmail
-  } = useCheckout();
+  const { values, setEmail } = useCheckout();
 
   return (
     <CustomerQuery>
       {({ data: { customer } }) => {
-        if (customer) {
+        if (customer && customer.email !== values.email) {
           setEmail(customer.email);
         }
 
@@ -53,7 +50,7 @@ export const EmailSection = props => {
                 editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
                 onActionClick={customer ? signOut : onEditRequested}
                 complete
-                summary={<Text>{(customer && customer.email) || email}</Text>}
+                summary={<Text>{(customer && customer.email) || values.email}</Text>}
               />
             </Details>
           );
@@ -66,12 +63,12 @@ export const EmailSection = props => {
               <Text>
                 <T id="customerSelector.guestPrompt" />
               </Text>
-              <Formik initialStatus={{}} initialValues={{ email: email || '' }} onSubmit={x => setEmail(x.email)}>
-                {({ status: { error } }) => (
+              <Formik initialValues={{ email: values.email || '' }} onSubmit={x => setEmail(x.email)}>
+                {({ status }) => (
                   <Form id="checkout-customer-email" i18nId="customerSelector" defaultTheme={customerEmailFormLayout}>
                     <FormField name="email" required type="email" autoComplete="email" gridArea="input" />
                     <FormSubmit my="xs" gridArea="button" />
-                    {error && <ErrorSummary errors={error} />}
+                    {status && status.error && <ErrorSummary errors={status.error} />}
                   </Form>
                 )}
               </Formik>
