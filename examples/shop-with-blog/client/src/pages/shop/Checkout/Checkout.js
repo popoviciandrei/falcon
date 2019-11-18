@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
-import { Checkout, CheckoutProvider } from '@deity/falcon-front-kit';
+import { Checkout, CheckoutProvider, PlaceOrder } from '@deity/falcon-front-kit';
 import { toGridTemplate, Loader, PageLayout, ErrorSummary } from '@deity/falcon-ui-kit';
-import { CartQuery, CustomerQuery, GET_CUSTOMER_WITH_ADDRESSES } from '@deity/falcon-shop-data';
+import { CartQuery } from '@deity/falcon-shop-data';
 import { I18n, T } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import CheckoutCartSummary from './CheckoutCartSummary';
@@ -72,24 +72,24 @@ const CheckoutStep = {
 };
 
 // helper that computes step that should be open based on values from CheckoutLogic
-const computeStepFromValues = (values, errors) => {
-  if (!values.email || errors.email) {
+const computeStepFromValues = values => {
+  if (!values.email) {
     return CheckoutStep.Email;
   }
 
-  if (!values.shippingAddress || errors.shippingAddress) {
+  if (!values.shippingAddress) {
     return CheckoutStep.ShippingAddress;
   }
 
-  if (!values.billingAddress || errors.billingAddress) {
+  if (!values.billingAddress) {
     return CheckoutStep.BillingAddress;
   }
 
-  if (!values.shippingMethod || errors.shippingMethod) {
+  if (!values.shippingMethod) {
     return CheckoutStep.Shipping;
   }
 
-  if (!values.paymentMethod || errors.paymentMethod) {
+  if (!values.paymentMethod) {
     return CheckoutStep.Payment;
   }
 
@@ -121,9 +121,9 @@ class CheckoutWizard extends React.Component {
     // if loading has finished (changed from true to false) and there's no error then enforce current step
     // to value computed from the next props - this ensures that if user requested edit of particular step
     // then and it has been processed then we want to display step based on actual values from CheckoutLogic
-    if (currentPropsData.loading && !nextProps.checkoutData.loading && !nextProps.checkoutData.error) {
-      return changedStep;
-    }
+    // if (currentPropsData.loading && !nextProps.checkoutData.loading && !nextProps.checkoutData.error) {
+    //   return changedStep;
+    // }
 
     // if step computed from props has changed then use it as new step
     if (nextStepFromProps !== currentStepFromProps) {
@@ -136,45 +136,14 @@ class CheckoutWizard extends React.Component {
   setCurrentStep = currentStep => this.setState({ currentStep });
 
   render() {
-    const {
-      values,
-      loading,
-      errors,
-      result,
-
-      setPaymentMethod,
-      placeOrder
-    } = this.props.checkoutData;
-    const { cart } = this.props;
-
-    let orderResult = null;
-    if (!loading && result) {
-      if (result.url) {
-        orderResult = (
-          <Box className="redirect">
-            <H4 fontSize="md" mb="md">
-              <T id="checkout.externalPaymentRedirect" />
-            </H4>
-            <Test3dSecure {...result} />
-          </Box>
-        );
-      } else if (result.orderId) {
-        // order has been placed successfully so we show confirmation
-        orderResult = <Redirect to="/checkout/confirmation" />;
-      }
-    }
-
-    // TODO: observe here if placeOrder were invoked instead!
-    if (!loading && !orderResult && cart.itemsQty === 0) {
-      return <Redirect to="/" />;
-    }
+    const { values, isLoading, result } = this.props.checkoutData;
 
     const { currentStep } = this.state;
     return (
       <I18n>
         {t => (
           <Box position="relative">
-            {(loading || result) && <Loader variant="overlay" />}
+            {isLoading && <Loader variant="overlay" />}
 
             <EmailSection
               open={currentStep === CheckoutStep.Email}
@@ -206,7 +175,6 @@ class CheckoutWizard extends React.Component {
               onEditRequested={() => this.setCurrentStep(CheckoutStep.Shipping)}
               shippingAddress={values.shippingAddress}
               selectedShipping={values.shippingMethod}
-              errors={errors.shippingMethod}
             />
 
             <Divider my="md" />
@@ -215,21 +183,38 @@ class CheckoutWizard extends React.Component {
               open={currentStep === CheckoutStep.Payment}
               onEditRequested={() => this.setCurrentStep(CheckoutStep.Payment)}
               selectedPayment={values.paymentMethod}
-              setPayment={setPaymentMethod}
-              errors={errors.paymentMethod}
             />
 
             <Divider my="md" />
 
-            <ErrorSummary errors={errors.order} />
-
             {currentStep === CheckoutStep.Confirmation && (
-              <Button onClick={placeOrder}>
-                <T id="checkout.placeOrder" />
-              </Button>
+              <PlaceOrder>
+                {(placeOrder, { error, loading, data }) => {
+                  if (!data) {
+                    return (
+                      <Box>
+                        <Button onClick={() => placeOrder(values)} variant={loading && 'loader'}>
+                          <T id="checkout.placeOrder" />
+                        </Button>
+                        <ErrorSummary errors={error} />
+                      </Box>
+                    );
+                  }
+
+                  return null;
+                }}
+              </PlaceOrder>
             )}
 
-            {orderResult}
+            {result && !isLoading && result.url && (
+              <Box className="redirect">
+                <H4 fontSize="md" mb="md">
+                  <T id="checkout.externalPaymentRedirect" />
+                </H4>
+                <Test3dSecure {...result} />
+              </Box>
+            )}
+            {result && !isLoading && result.orderId && <Redirect to="/checkout/confirmation" />}
           </Box>
         )}
       </I18n>
@@ -259,15 +244,7 @@ const CheckoutPage = () => (
             <Divider gridArea={CheckoutArea.divider} />
             <Box gridArea={CheckoutArea.checkout}>
               <CheckoutProvider>
-                <Checkout>
-                  {checkoutData => (
-                    <CustomerQuery query={GET_CUSTOMER_WITH_ADDRESSES}>
-                      {({ data: { customer } }) => (
-                        <CheckoutWizard checkoutData={checkoutData} customerData={customer} cart={cart} />
-                      )}
-                    </CustomerQuery>
-                  )}
-                </Checkout>
+                <Checkout>{checkoutData => <CheckoutWizard checkoutData={{ ...checkoutData }} cart={cart} />}</Checkout>
               </CheckoutProvider>
             </Box>
           </Box>
