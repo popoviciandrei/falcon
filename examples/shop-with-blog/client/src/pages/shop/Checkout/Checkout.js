@@ -42,7 +42,7 @@ const checkoutLayout = {
     },
     css: ({ theme }) => ({
       // remove default -/+ icons in summary element
-      'details summary:after, details summary:active, details summary:focus': { display: 'none' },
+      'details summary:after': { display: 'none' },
       'details article': {
         paddingLeft: theme.spacing.xxl,
         paddingRight: theme.spacing.xxl
