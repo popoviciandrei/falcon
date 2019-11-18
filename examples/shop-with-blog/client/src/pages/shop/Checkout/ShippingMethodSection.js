@@ -4,7 +4,7 @@ import { I18n, T } from '@deity/falcon-i18n';
 import { ShippingMethodListQuery } from '@deity/falcon-shop-data';
 import { SetShippingMethod } from '@deity/falcon-front-kit';
 import { Label, FlexLayout, Text, Radio, Box, Button } from '@deity/falcon-ui';
-import { ShippingMethodDetails, Price, ErrorSummary } from '@deity/falcon-ui-kit';
+import { ShippingMethodDetails, ErrorSummary } from '@deity/falcon-ui-kit';
 import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
 
 const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected }) => (
@@ -18,10 +18,9 @@ const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected })
           name="shipping"
           onChange={() => onShippingSelected(option)}
         />
-        <Label mx="sm" flex="1" htmlFor={`opt-${option.carrierCode}`}>
-          {`${option.carrierTitle} (${option.methodTitle}):`}
+        <Label fontSize="sm" mx="sm" flex="1" htmlFor={`opt-${option.carrierCode}`}>
+          <ShippingMethodDetails {...option} />
         </Label>
-        <Price value={option.amount} />
       </FlexLayout>
     ))}
   </Box>
