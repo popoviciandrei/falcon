@@ -17,7 +17,7 @@ export const CheckoutSectionHeader = ({ complete, open, title, summary, editLabe
       {title}
     </H2>
     {summary && (
-      <Box ml="lg" pt="xs" gridArea={CheckoutSectionHeaderLayoutArea.summary}>
+      <Box pt="xs" gridArea={CheckoutSectionHeaderLayoutArea.summary}>
         {summary}
       </Box>
     )}

@@ -5,13 +5,10 @@ export const CheckoutSection = themed({
   defaultTheme: {
     checkoutSection: {
       pr: 'xxl',
-      css: ({ theme }) => ({
+      css: {
         // remove default -/+ icons in summary element
-        'details summary:after': { display: 'none' },
-        'details article': {
-          paddingLeft: theme.spacing.xxl
-        }
-      })
+        '> summary:after': { display: 'none' }
+      }
     }
   }
 });

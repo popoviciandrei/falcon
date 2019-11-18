@@ -4,9 +4,9 @@ import { I18n, T } from '@deity/falcon-i18n';
 import { PaymentMethodListQuery } from '@deity/falcon-shop-data';
 import { TwoStepWizard, SetPaymentMethod } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '@deity/falcon-ui-kit';
-import { DetailsContent, Text, Button } from '@deity/falcon-ui';
+import { Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
-import { CheckoutSection, CheckoutSectionHeader } from './components';
+import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
 
 // Loading "PaymentMethodItem" component via loadable package
 // to avoid premature import of Payment frontend-plugins and their dependencies on SSR
@@ -51,7 +51,7 @@ class PaymentSection extends React.Component {
       <CheckoutSection open={open}>
         {header}
         {open && (
-          <DetailsContent>
+          <CheckoutSectionContentLayout>
             <PaymentMethodListQuery>
               {({ data: { paymentMethodList } }) => {
                 if (paymentMethodList.length === 0) {
@@ -100,7 +100,7 @@ class PaymentSection extends React.Component {
                 );
               }}
             </PaymentMethodListQuery>
-          </DetailsContent>
+          </CheckoutSectionContentLayout>
         )}
       </CheckoutSection>
     );

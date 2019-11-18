@@ -39,14 +39,7 @@ const checkoutLayout = {
         ['2fr', '1px', '1fr'],
         [CheckoutArea.checkout, CheckoutArea.divider, CheckoutArea.cart]
       ])
-    },
-    css: ({ theme }) => ({
-      // remove default -/+ icons in summary element
-      'details summary:after': { display: 'none' },
-      'details article': {
-        paddingLeft: theme.spacing.xxl
-      }
-    })
+    }
   }
 };
 

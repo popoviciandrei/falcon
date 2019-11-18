@@ -4,10 +4,10 @@ import { Formik } from 'formik';
 import { useI18n, T } from '@deity/falcon-i18n';
 import { CustomerQuery, useSignOutMutation } from '@deity/falcon-shop-data';
 import { useCheckout } from '@deity/falcon-front-kit';
-import { Text, Link, DetailsContent } from '@deity/falcon-ui';
+import { Text, Link } from '@deity/falcon-ui';
 import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
-import { CheckoutSection, CheckoutSectionHeader } from './components';
+import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
 
 const customerEmailFormLayout = {
   customerEmailFormLayout: {
@@ -59,7 +59,7 @@ export const EmailSection = props => {
         return (
           <CheckoutSection open={open}>
             <CheckoutSectionHeader title={t('customerSelector.title')} />
-            <DetailsContent>
+            <CheckoutSectionContentLayout>
               <Text>
                 <T id="customerSelector.guestPrompt" />
               </Text>
@@ -87,7 +87,7 @@ export const EmailSection = props => {
                 </OpenSidebarMutation>
                 <T id="customerSelector.ifAlreadyRegistered" />
               </Text>
-            </DetailsContent>
+            </CheckoutSectionContentLayout>
           </CheckoutSection>
         );
       }}

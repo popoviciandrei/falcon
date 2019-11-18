@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { I18n, T } from '@deity/falcon-i18n';
 import { ShippingMethodListQuery } from '@deity/falcon-shop-data';
 import { SetShippingMethod } from '@deity/falcon-front-kit';
-import { Label, FlexLayout, DetailsContent, Text, Radio, Box, Button } from '@deity/falcon-ui';
+import { Label, FlexLayout, Text, Radio, Box, Button } from '@deity/falcon-ui';
 import { Price, ErrorSummary } from '@deity/falcon-ui-kit';
-import { CheckoutSection, CheckoutSectionHeader } from './components';
+import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
 
 const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected }) => (
   <Box my="md">
@@ -67,7 +67,7 @@ class ShippingSection extends React.Component {
       <CheckoutSection open={open}>
         {header}
         {open && (
-          <DetailsContent>
+          <CheckoutSectionContentLayout>
             <ShippingMethodListQuery>
               {({ data: { shippingMethodList } }) => {
                 if (shippingMethodList.length === 0) {
@@ -102,7 +102,7 @@ class ShippingSection extends React.Component {
                 );
               }}
             </ShippingMethodListQuery>
-          </DetailsContent>
+          </CheckoutSectionContentLayout>
         )}
       </CheckoutSection>
     );

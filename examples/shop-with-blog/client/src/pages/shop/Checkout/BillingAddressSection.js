@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { I18n } from '@deity/falcon-i18n';
-import { DetailsContent, Button, Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
+import { Button, Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
 import {
   SetBillingAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
@@ -10,7 +10,7 @@ import {
 } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
-import { AddressPicker, CheckoutSection, CheckoutSectionHeader } from './components';
+import { AddressPicker, CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
 
 export const BillingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
@@ -38,7 +38,7 @@ export const BillingAddressSection = props => {
   return (
     <CheckoutSection open={open}>
       {header}
-      <DetailsContent>
+      <CheckoutSectionContentLayout>
         {open && (
           <CustomerWithAddressesQuery>
             {({ data: { customer } }) => (
@@ -46,7 +46,7 @@ export const BillingAddressSection = props => {
             )}
           </CustomerWithAddressesQuery>
         )}
-      </DetailsContent>
+      </CheckoutSectionContentLayout>
     </CheckoutSection>
   );
 };
