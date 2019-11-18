@@ -4,6 +4,7 @@ import { addressToCheckoutAddressInput } from './CheckoutAddress';
 import { OrderData } from './CheckoutValues';
 import { useCheckout } from './CheckoutConsumer';
 import { CheckoutOperation, CheckoutOperationHook } from './CheckoutOperation';
+import { shippingMethodToCheckoutDetailsInput } from './shippingMethodToCheckoutDetailsInput';
 
 export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData | undefined> = () => {
   const { setLoading, placeOrder, setResult } = useCheckout();
@@ -26,7 +27,7 @@ export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData 
             email: input.email,
             billingAddress: addressToCheckoutAddressInput(input.billingAddress),
             shippingAddress: addressToCheckoutAddressInput(input.shippingAddress),
-            shippingMethod: input.shippingMethod,
+            shippingMethod: shippingMethodToCheckoutDetailsInput(input.shippingMethod),
             paymentMethod: input.paymentMethod
           }
         }

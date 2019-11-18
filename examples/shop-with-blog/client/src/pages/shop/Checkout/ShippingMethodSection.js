@@ -4,7 +4,7 @@ import { I18n, T } from '@deity/falcon-i18n';
 import { ShippingMethodListQuery } from '@deity/falcon-shop-data';
 import { SetShippingMethod } from '@deity/falcon-front-kit';
 import { Label, FlexLayout, Text, Radio, Box, Button } from '@deity/falcon-ui';
-import { Price, ErrorSummary } from '@deity/falcon-ui-kit';
+import { ShippingMethodDetails, Price, ErrorSummary } from '@deity/falcon-ui-kit';
 import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
 
 const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected }) => (
@@ -54,7 +54,7 @@ class ShippingSection extends React.Component {
               onActionClick={onEditRequested}
               editLabel={t('edit')}
               complete
-              summary={<Text>{selectedShipping.carrierTitle}</Text>}
+              summary={<ShippingMethodDetails {...selectedShipping} />}
             />
           )}
         </I18n>
@@ -88,10 +88,7 @@ class ShippingSection extends React.Component {
                         />
                         <Button
                           disabled={!this.state.selectedShipping}
-                          onClick={() => {
-                            const { methodCode: method, ...data } = this.state.selectedShipping;
-                            setShipping({ method, data });
-                          }}
+                          onClick={() => setShipping(this.state.selectedShipping)}
                         >
                           <T id="continue" />
                         </Button>

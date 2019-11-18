@@ -440,10 +440,10 @@ export type OrderItem = {
 
 export type PlaceOrderInput = {
   email?: string;
-  billingAddress: CheckoutAddressInput;
   shippingAddress: CheckoutAddressInput;
-  paymentMethod: CheckoutDetailsInput;
+  billingAddress: CheckoutAddressInput;
   shippingMethod: CheckoutDetailsInput;
+  paymentMethod: CheckoutDetailsInput;
 };
 
 export type CheckoutDetailsInput = {
