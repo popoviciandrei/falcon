@@ -3,7 +3,6 @@ import { CheckoutDetailsInput, PlaceOrderResult } from '@deity/falcon-shop-exten
 import { CheckoutAddress } from './CheckoutAddress';
 
 export type CheckoutValues = {
-  billingSameAsShipping: boolean; // TODO: do we really need this flag here?
   email?: string;
   shippingAddress?: CheckoutAddress;
   billingAddress?: CheckoutAddress;
@@ -12,12 +11,12 @@ export type CheckoutValues = {
 };
 
 export type SetCheckoutValues = {
-  // setBillingSameAsShipping(same: boolean): void;
   setEmail(email: string): void;
   setShippingAddress(shippingAddress: CheckoutAddress): void;
   setBillingAddress(billingAddress: CheckoutAddress): void;
   setShippingMethod(shippingMethod: CheckoutDetailsInput): void;
   setPaymentMethod(paymentMethod: CheckoutDetailsInput): void;
+  placeOrder(data: OrderData): void;
 };
 
 export type OrderData = {
@@ -28,15 +27,15 @@ export type OrderData = {
   shippingMethod: CheckoutDetailsInput; // TODO: use `ShippingMethod` type?
 };
 
-export type CheckoutProviderRenderProps = {
+export type CheckoutProviderRenderProps = SetCheckoutValues & {
+  values: CheckoutValues;
   isLoading: boolean;
   setLoading(isLoading: boolean);
-  values: CheckoutValues;
+  isBillingSameAsShipping: boolean; // TODO: do we really need this flag here?
   setBillingSameAsShipping(same: boolean): void;
-  placeOrder(result: OrderData): void;
   result?: PlaceOrderResult;
   setResult(result: PlaceOrderResult): void;
-} & SetCheckoutValues;
+};
 
 export type CheckoutContextType = {};
 

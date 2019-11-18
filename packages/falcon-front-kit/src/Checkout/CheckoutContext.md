@@ -51,7 +51,7 @@ The following props are provided by `CheckoutContext`:
   - `email: string` - user's email
   - `shippingAddress: object` - shipping address for the order
   - `billingAddres: object` - shipping address for the order
-  - `billingSameAsShipping: bool` - flag that indicates that billing address is the same as shipping. When it's set to true then setting of `shippingAddress` sets automatically `billingAddress` to the same value
+  - `isBillingSameAsShipping: bool` - flag that indicates that billing address is the same as shipping. When it's set to true then setting of `shippingAddress` sets automatically `billingAddress` to the same value
   - `shippingMethod: object` - selected shipping method (shape of the data is the same as shipping method sent from backend)
   - `paymentMethod: object` - selected payment method (shape of the data is the same as payment method sent from backend)
 - `availableShippingMethods: object[]` - avilable shipping methods retrieved from backend when `shippingMethod` is set correctly
