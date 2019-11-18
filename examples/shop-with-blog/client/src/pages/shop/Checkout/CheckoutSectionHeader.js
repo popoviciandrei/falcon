@@ -1,57 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, H2, Button, Summary, Icon } from '@deity/falcon-ui';
-import { toGridTemplate } from '@deity/falcon-ui-kit';
+import { CheckoutSectionHeaderLayout, CheckoutSectionHeaderLayoutArea } from './CheckoutSectionHeaderLayout';
 
-const ignoreClick = ev => ev.preventDefault();
-
-const CheckoutHeaderArea = {
-  icon: 'icon',
-  title: 'title',
-  summary: 'summary',
-  button: 'button'
-};
-
-const checkoutHeaderLayout = {
-  checkoutHeaderLayout: {
-    lineHeight: 1,
-    display: 'grid',
-    gridGap: 'xs',
-    // prettier-ignore
-    gridTemplate: toGridTemplate([
-      ['40px',                  '1fr',                    '1fr',                      '100px'                  ],
-      [CheckoutHeaderArea.icon, CheckoutHeaderArea.title, CheckoutHeaderArea.summary, CheckoutHeaderArea.button]
-    ])
-  }
-};
-
-const SectionHeader = ({ complete, open, title, summary, editLabel, onActionClick }) => (
-  <Summary onClick={ignoreClick} defaultTheme={checkoutHeaderLayout} css={{ 'summary:after': { display: 'none' } }}>
+export const CheckoutSectionHeader = ({ complete, open, title, summary, editLabel, onActionClick }) => (
+  <Summary onClick={e => e.preventDefault()} defaultTheme={CheckoutSectionHeaderLayout}>
     {(complete || open) && (
       <Icon
         size="lg"
-        gridArea={CheckoutHeaderArea.icon}
+        gridArea={CheckoutSectionHeaderLayoutArea.icon}
         src={complete ? 'check' : 'arrowRight'}
         css={{ cursor: 'default' }}
       />
     )}
-    <H2 fontSize="lg" gridArea={CheckoutHeaderArea.title}>
+    <H2 fontSize="lg" gridArea={CheckoutSectionHeaderLayoutArea.title}>
       {title}
     </H2>
     {summary && (
-      <Box ml="lg" pt="xs" gridArea={CheckoutHeaderArea.summary}>
+      <Box ml="lg" pt="xs" gridArea={CheckoutSectionHeaderLayoutArea.summary}>
         {summary}
       </Box>
     )}
     {complete && (
-      <Button gridArea={CheckoutHeaderArea.button} fontSize="xs" onClick={onActionClick}>
+      <Button
+        gridArea={CheckoutSectionHeaderLayoutArea.button}
+        fontSize="xs"
+        onClick={() => {
+          onActionClick();
+        }}
+      >
         {editLabel}
       </Button>
     )}
   </Summary>
 );
-
-SectionHeader.propTypes = {
+CheckoutSectionHeader.propTypes = {
   complete: PropTypes.bool,
   open: PropTypes.bool,
   title: PropTypes.string,
@@ -59,5 +42,3 @@ SectionHeader.propTypes = {
   editLabel: PropTypes.string,
   onActionClick: PropTypes.func
 };
-
-export default SectionHeader;
