@@ -12,3 +12,4 @@ export * from './SetBillingAddressFormProvider';
 export * from './SetShippingMethod';
 export * from './SetPaymentMethod';
 export * from './PlaceOrder';
+export * from './shippingMethodToCheckoutDetailsInput';
