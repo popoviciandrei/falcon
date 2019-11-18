@@ -1,7 +1,24 @@
 import React from 'react';
 import { CheckoutDetailsInput, PlaceOrderResult } from '@deity/falcon-shop-extension';
 import { CheckoutAddress } from './CheckoutAddress';
-import { CheckoutState } from './CheckoutState';
+
+export type CheckoutState = {
+  billingSameAsShipping: boolean; // TODO: do we really need this flag here?
+  email?: string;
+  shippingAddress?: CheckoutAddress;
+  billingAddress?: CheckoutAddress;
+  shippingMethod?: CheckoutDetailsInput;
+  paymentMethod?: CheckoutDetailsInput;
+};
+
+export type CheckoutSetState = {
+  // setBillingSameAsShipping(same: boolean): void;
+  setEmail(email: string): void;
+  setShippingAddress(shippingAddress: CheckoutAddress): void;
+  setBillingAddress(billingAddress: CheckoutAddress): void;
+  setShippingMethod(shippingMethod: CheckoutDetailsInput): void;
+  setPaymentMethod(paymentMethod: CheckoutDetailsInput): void;
+};
 
 export type OrderData = {
   email?: string;
@@ -15,16 +32,11 @@ export type CheckoutProviderRenderProps = {
   isLoading: boolean;
   setLoading(isLoading: boolean);
   values: CheckoutState;
-  setEmail(email: string): void;
-  setShippingAddress(address: CheckoutAddress): void;
   setBillingSameAsShipping(same: boolean): void;
-  setBillingAddress(address: CheckoutAddress): void;
-  setShippingMethod(shipping: CheckoutDetailsInput): void;
-  setPaymentMethod(payment: CheckoutDetailsInput): void;
   placeOrder(result: OrderData): void;
   result?: PlaceOrderResult;
   setResult(result: PlaceOrderResult): void;
-};
+} & CheckoutSetState;
 
 export type CheckoutContextType = {};
 

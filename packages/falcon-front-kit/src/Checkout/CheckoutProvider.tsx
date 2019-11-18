@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import isEqual from 'lodash.isequal';
 import { PlaceOrderResult } from '@deity/falcon-shop-extension';
-import { CheckoutState } from './CheckoutState';
-import { CheckoutContext, CheckoutProviderRenderProps } from './CheckoutContext';
+import { CheckoutContext, CheckoutState, CheckoutSetState, CheckoutProviderRenderProps } from './CheckoutContext';
 
 export type CheckoutProviderProps = {
   initialValues?: CheckoutState;
@@ -19,8 +18,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   });
   const [result, setResult] = useState<PlaceOrderResult>();
 
-  const setEmail: CheckoutProviderRenderProps['setEmail'] = email =>
-    setState(x => (x.email === email ? x : { ...x, email }));
+  const setEmail: CheckoutSetState['setEmail'] = email => setState(x => (x.email === email ? x : { ...x, email }));
 
   /** @param {boolean} same Whether the billing address should be the same as shipping address */
   const setBillingSameAsShipping = (same: boolean) => {
@@ -32,7 +30,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     // setBillingAddress(state.shippingAddress);
   };
 
-  const setShippingAddress: CheckoutProviderRenderProps['setShippingAddress'] = shippingAddress =>
+  const setShippingAddress: CheckoutSetState['setShippingAddress'] = shippingAddress =>
     setState(x =>
       isEqual(x.shippingAddress, shippingAddress)
         ? x
@@ -45,7 +43,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
           }
     );
 
-  const setBillingAddress: CheckoutProviderRenderProps['setBillingAddress'] = billingAddress =>
+  const setBillingAddress: CheckoutSetState['setBillingAddress'] = billingAddress =>
     setState(x =>
       isEqual(x.billingAddress, billingAddress)
         ? x
@@ -56,7 +54,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
           }
     );
 
-  const setShippingMethod: CheckoutProviderRenderProps['setShippingMethod'] = shippingMethod =>
+  const setShippingMethod: CheckoutSetState['setShippingMethod'] = shippingMethod =>
     setState(x =>
       isEqual(x.shippingMethod, shippingMethod)
         ? x
@@ -67,7 +65,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
           }
     );
 
-  const setPaymentMethod: CheckoutProviderRenderProps['setPaymentMethod'] = paymentMethod =>
+  const setPaymentMethod: CheckoutSetState['setPaymentMethod'] = paymentMethod =>
     setState(x => (isEqual(x.paymentMethod, paymentMethod) ? x : { ...x, paymentMethod }));
 
   const placeOrder: CheckoutProviderRenderProps['placeOrder'] = order => {
