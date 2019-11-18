@@ -30,33 +30,22 @@ const checkoutLayout = {
     // prettier-ignore
     gridTemplate: {
       xs: toGridTemplate([
-        ['1fr'],
+        ['1fr'                ],
         [CheckoutArea.checkout],
-        [CheckoutArea.divider],
-        [CheckoutArea.cart]
+        [CheckoutArea.divider ],
+        [CheckoutArea.cart    ]
       ]),
       md: toGridTemplate([
-        ['2fr', '1px', '1fr'],
+        ['2fr',                 '1px',                '1fr'            ],
         [CheckoutArea.checkout, CheckoutArea.divider, CheckoutArea.cart]
       ])
     },
     css: ({ theme }) => ({
       // remove default -/+ icons in summary element
-      'details summary:after': {
-        display: 'none'
-      },
-      'details summary:active, details summary:focus': {
-        outline: 'none'
-      },
-      'details summary': {
-        paddingRight: theme.spacing.xxl
-      },
+      'details summary:after, details summary:active, details summary:focus': { display: 'none' },
       'details article': {
         paddingLeft: theme.spacing.xxl,
         paddingRight: theme.spacing.xxl
-      },
-      '.redirect h4': {
-        textAlign: 'center'
       }
     })
   }
@@ -208,7 +197,7 @@ class CheckoutWizard extends React.Component {
             )}
 
             {result && !isLoading && result.url && (
-              <Box className="redirect">
+              <Box css={{ textAlign: 'center' }}>
                 <H4 fontSize="md" mb="md">
                   <T id="checkout.externalPaymentRedirect" />
                 </H4>
