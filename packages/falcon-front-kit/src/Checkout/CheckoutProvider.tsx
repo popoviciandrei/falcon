@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import isEqual from 'lodash.isequal';
 import { PlaceOrderResult } from '@deity/falcon-shop-extension';
-import { CheckoutContext, CheckoutValues, SetCheckoutValues, CheckoutProviderRenderProps } from './CheckoutContext';
+import { CheckoutValues, SetCheckoutValues } from './CheckoutValues';
+import { CheckoutStep, getNextStepForValues } from './CheckoutStep';
+import { CheckoutContext, CheckoutProviderRenderProps } from './CheckoutContext';
 
 export type CheckoutProviderProps = {
   initialValues?: CheckoutValues;
@@ -11,6 +12,7 @@ export type CheckoutProviderProps = {
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues } = props;
 
+  const [step, setStep] = useState<keyof typeof CheckoutStep>('Email');
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isBillingSameAsShipping, setBillingSameAsShipping] = useState<boolean>(false);
   const [values, setValues] = useState<CheckoutValues>({
@@ -28,57 +30,70 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   //   // setBillingAddress(state.shippingAddress);
   // };
 
-  const setEmail: SetCheckoutValues['setEmail'] = email => setValues(x => (x.email === email ? x : { ...x, email }));
+  const setEmail: SetCheckoutValues['setEmail'] = email =>
+    setValues(x => {
+      const newValues = { ...x, email };
+      setStep(getNextStepForValues(newValues));
+
+      return newValues;
+    });
 
   const setShippingAddress: SetCheckoutValues['setShippingAddress'] = shippingAddress =>
-    setValues(x =>
-      isEqual(x.shippingAddress, shippingAddress)
-        ? x
-        : {
-            ...x,
-            shippingAddress,
-            // billingAddress: isBillingSameAsShipping ? shippingAddress : state.billingAddress
-            shippingMethod: undefined,
-            paymentMethod: undefined
-          }
-    );
+    setValues(x => {
+      const newValues = {
+        ...x,
+        shippingAddress,
+        // billingAddress: isBillingSameAsShipping ? shippingAddress : state.billingAddress
+        shippingMethod: undefined,
+        paymentMethod: undefined
+      };
+      setStep(getNextStepForValues(newValues));
+
+      return newValues;
+    });
 
   const setBillingAddress: SetCheckoutValues['setBillingAddress'] = billingAddress =>
-    setValues(x =>
-      isEqual(x.billingAddress, billingAddress)
-        ? x
-        : {
-            ...x,
-            billingAddress,
-            paymentMethod: undefined
-          }
-    );
+    setValues(x => {
+      const newValues = {
+        ...x,
+        billingAddress,
+        paymentMethod: undefined
+      };
+      setStep(getNextStepForValues(newValues));
+
+      return newValues;
+    });
 
   const setShippingMethod: SetCheckoutValues['setShippingMethod'] = shippingMethod =>
-    setValues(x =>
-      isEqual(x.shippingMethod, shippingMethod)
-        ? x
-        : {
-            ...x,
-            shippingMethod,
-            paymentMethod: undefined
-          }
-    );
+    setValues(x => {
+      const newValues = {
+        ...x,
+        shippingMethod,
+        paymentMethod: undefined
+      };
+      setStep(getNextStepForValues(newValues));
+
+      return newValues;
+    });
 
   const setPaymentMethod: SetCheckoutValues['setPaymentMethod'] = paymentMethod =>
-    setValues(x => (isEqual(x.paymentMethod, paymentMethod) ? x : { ...x, paymentMethod }));
+    setValues(x => {
+      const newValues = { ...x, paymentMethod };
+      setStep(getNextStepForValues(newValues));
+
+      return newValues;
+    });
 
   const placeOrder: SetCheckoutValues['placeOrder'] = order => {
     if (order) {
-      setEmail(order.email);
-      setBillingAddress(order.billingAddress);
-      setShippingAddress(order.shippingAddress);
-      setShippingMethod(order.shippingMethod);
-      setPaymentMethod(order.paymentMethod);
+      setStep(getNextStepForValues(order));
+      setValues({ ...order });
     }
   };
 
   const context: CheckoutProviderRenderProps = {
+    step,
+    setStep,
     values,
     isLoading,
     setLoading,

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { usePlaceOrderMutation, PlaceOrderResponse } from '@deity/falcon-shop-data';
 import { addressToCheckoutAddressInput } from './CheckoutAddress';
-import { OrderData } from './CheckoutContext';
+import { OrderData } from './CheckoutValues';
 import { useCheckout } from './CheckoutConsumer';
 import { CheckoutOperation, CheckoutOperationHook } from './CheckoutOperation';
 

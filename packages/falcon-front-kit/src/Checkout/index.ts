@@ -1,3 +1,5 @@
+export * from './CheckoutStep';
+export * from './CheckoutValues';
 export * from './CheckoutContext';
 export * from './CheckoutProvider';
 export * from './CheckoutConsumer';
