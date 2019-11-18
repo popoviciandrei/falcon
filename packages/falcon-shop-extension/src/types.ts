@@ -439,7 +439,7 @@ export type OrderItem = {
 };
 
 export type PlaceOrderInput = {
-  email?: String;
+  email?: string;
   billingAddress: CheckoutAddressInput;
   shippingAddress: CheckoutAddressInput;
   paymentMethod: CheckoutDetailsInput;
