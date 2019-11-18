@@ -12,23 +12,23 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues } = props;
 
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [isBillingSameAsShipping, setBillingSameAsShipping] = useState<boolean>(false);
   const [values, setValues] = useState<CheckoutValues>({
-    billingSameAsShipping: false,
     ...initialValues
   });
   const [result, setResult] = useState<PlaceOrderResult>();
 
-  const setEmail: SetCheckoutValues['setEmail'] = email => setValues(x => (x.email === email ? x : { ...x, email }));
+  // /** @param {boolean} same Whether the billing address should be the same as shipping address */
+  // const setBillingSameAsShipping = (same: boolean) => {
+  //   // setState({
+  //   //   ...state,
+  //   //   isBillingSameAsShipping: same,
+  //   //   billingAddress: same ? state.shippingAddress : null
+  //   // });
+  //   // setBillingAddress(state.shippingAddress);
+  // };
 
-  /** @param {boolean} same Whether the billing address should be the same as shipping address */
-  const setBillingSameAsShipping = (same: boolean) => {
-    // setState({
-    //   ...state,
-    //   billingSameAsShipping: same,
-    //   billingAddress: same ? state.shippingAddress : null
-    // });
-    // setBillingAddress(state.shippingAddress);
-  };
+  const setEmail: SetCheckoutValues['setEmail'] = email => setValues(x => (x.email === email ? x : { ...x, email }));
 
   const setShippingAddress: SetCheckoutValues['setShippingAddress'] = shippingAddress =>
     setValues(x =>
@@ -37,7 +37,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
         : {
             ...x,
             shippingAddress,
-            // billingAddress: state.billingSameAsShipping ? shippingAddress : state.billingAddress
+            // billingAddress: isBillingSameAsShipping ? shippingAddress : state.billingAddress
             shippingMethod: undefined,
             paymentMethod: undefined
           }
@@ -68,7 +68,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const setPaymentMethod: SetCheckoutValues['setPaymentMethod'] = paymentMethod =>
     setValues(x => (isEqual(x.paymentMethod, paymentMethod) ? x : { ...x, paymentMethod }));
 
-  const placeOrder: CheckoutProviderRenderProps['placeOrder'] = order => {
+  const placeOrder: SetCheckoutValues['placeOrder'] = order => {
     if (order) {
       setEmail(order.email);
       setBillingAddress(order.billingAddress);
@@ -83,6 +83,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     isLoading,
     setLoading,
     setEmail,
+    isBillingSameAsShipping,
     setBillingSameAsShipping,
     setShippingAddress,
     setBillingAddress,
