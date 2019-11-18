@@ -1450,8 +1450,11 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       data.customer_address_id = data.id;
       delete data.id;
     }
+
     delete data.defaultBilling;
     delete data.defaultShipping;
+    delete data.saveInAddressBook; // TODO: implement this
+
     return data;
   }
 
