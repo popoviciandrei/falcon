@@ -28,4 +28,5 @@ export * from './Responsive';
 export * from './Router';
 export * from './Sidebar';
 export * from './SortOrder';
+export * from './ShippingMethod';
 export * from './helpers';
