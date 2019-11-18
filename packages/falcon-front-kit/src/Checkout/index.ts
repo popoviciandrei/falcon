@@ -10,3 +10,4 @@ export * from './SetBillingAddress';
 export * from './SetBillingAddressFormProvider';
 export * from './SetShippingMethod';
 export * from './SetPaymentMethod';
+export * from './PlaceOrder';
