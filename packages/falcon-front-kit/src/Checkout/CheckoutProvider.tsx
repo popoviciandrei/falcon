@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { PlaceOrderResult } from '@deity/falcon-shop-extension';
 import { CheckoutValues, SetCheckoutValues } from './CheckoutValues';
 import { CheckoutStep, getNextStepForValues } from './CheckoutStep';
-import { CheckoutContext, CheckoutProviderRenderProps } from './CheckoutContext';
+import { CheckoutContext } from './CheckoutContext';
 
 export type CheckoutProviderProps = {
   initialValues?: CheckoutValues;
-  children(props: CheckoutProviderRenderProps): React.ReactNode;
 };
-
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues } = props;
 
