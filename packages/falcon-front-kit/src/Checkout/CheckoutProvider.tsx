@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import isEqual from 'lodash.isequal';
 import { PlaceOrderResult } from '@deity/falcon-shop-extension';
-import { CheckoutContext, CheckoutState, CheckoutSetState, CheckoutProviderRenderProps } from './CheckoutContext';
+import { CheckoutContext, CheckoutValues, SetCheckoutValues, CheckoutProviderRenderProps } from './CheckoutContext';
 
 export type CheckoutProviderProps = {
-  initialValues?: CheckoutState;
+  initialValues?: CheckoutValues;
   children(props: CheckoutProviderRenderProps): React.ReactNode;
 };
 
@@ -12,13 +12,13 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues } = props;
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [state, setState] = useState<CheckoutState>({
+  const [values, setValues] = useState<CheckoutValues>({
     billingSameAsShipping: false,
     ...initialValues
   });
   const [result, setResult] = useState<PlaceOrderResult>();
 
-  const setEmail: CheckoutSetState['setEmail'] = email => setState(x => (x.email === email ? x : { ...x, email }));
+  const setEmail: SetCheckoutValues['setEmail'] = email => setValues(x => (x.email === email ? x : { ...x, email }));
 
   /** @param {boolean} same Whether the billing address should be the same as shipping address */
   const setBillingSameAsShipping = (same: boolean) => {
@@ -30,8 +30,8 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     // setBillingAddress(state.shippingAddress);
   };
 
-  const setShippingAddress: CheckoutSetState['setShippingAddress'] = shippingAddress =>
-    setState(x =>
+  const setShippingAddress: SetCheckoutValues['setShippingAddress'] = shippingAddress =>
+    setValues(x =>
       isEqual(x.shippingAddress, shippingAddress)
         ? x
         : {
@@ -43,8 +43,8 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
           }
     );
 
-  const setBillingAddress: CheckoutSetState['setBillingAddress'] = billingAddress =>
-    setState(x =>
+  const setBillingAddress: SetCheckoutValues['setBillingAddress'] = billingAddress =>
+    setValues(x =>
       isEqual(x.billingAddress, billingAddress)
         ? x
         : {
@@ -54,8 +54,8 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
           }
     );
 
-  const setShippingMethod: CheckoutSetState['setShippingMethod'] = shippingMethod =>
-    setState(x =>
+  const setShippingMethod: SetCheckoutValues['setShippingMethod'] = shippingMethod =>
+    setValues(x =>
       isEqual(x.shippingMethod, shippingMethod)
         ? x
         : {
@@ -65,8 +65,8 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
           }
     );
 
-  const setPaymentMethod: CheckoutSetState['setPaymentMethod'] = paymentMethod =>
-    setState(x => (isEqual(x.paymentMethod, paymentMethod) ? x : { ...x, paymentMethod }));
+  const setPaymentMethod: SetCheckoutValues['setPaymentMethod'] = paymentMethod =>
+    setValues(x => (isEqual(x.paymentMethod, paymentMethod) ? x : { ...x, paymentMethod }));
 
   const placeOrder: CheckoutProviderRenderProps['placeOrder'] = order => {
     if (order) {
@@ -79,7 +79,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   };
 
   const context: CheckoutProviderRenderProps = {
-    values: state,
+    values,
     isLoading,
     setLoading,
     setEmail,

@@ -2,7 +2,7 @@ import React from 'react';
 import { CheckoutDetailsInput, PlaceOrderResult } from '@deity/falcon-shop-extension';
 import { CheckoutAddress } from './CheckoutAddress';
 
-export type CheckoutState = {
+export type CheckoutValues = {
   billingSameAsShipping: boolean; // TODO: do we really need this flag here?
   email?: string;
   shippingAddress?: CheckoutAddress;
@@ -11,7 +11,7 @@ export type CheckoutState = {
   paymentMethod?: CheckoutDetailsInput;
 };
 
-export type CheckoutSetState = {
+export type SetCheckoutValues = {
   // setBillingSameAsShipping(same: boolean): void;
   setEmail(email: string): void;
   setShippingAddress(shippingAddress: CheckoutAddress): void;
@@ -31,12 +31,12 @@ export type OrderData = {
 export type CheckoutProviderRenderProps = {
   isLoading: boolean;
   setLoading(isLoading: boolean);
-  values: CheckoutState;
+  values: CheckoutValues;
   setBillingSameAsShipping(same: boolean): void;
   placeOrder(result: OrderData): void;
   result?: PlaceOrderResult;
   setResult(result: PlaceOrderResult): void;
-} & CheckoutSetState;
+} & SetCheckoutValues;
 
 export type CheckoutContextType = {};
 
