@@ -91,23 +91,27 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     }
   };
 
-  const context: CheckoutProviderRenderProps = {
-    step,
-    setStep,
-    values,
-    isLoading,
-    setLoading,
-    setEmail,
-    isBillingSameAsShipping,
-    setBillingSameAsShipping,
-    setShippingAddress,
-    setBillingAddress,
-    setShippingMethod,
-    setPaymentMethod,
-    placeOrder,
-    result,
-    setResult
-  };
-
-  return <CheckoutContext.Provider value={context}>{children}</CheckoutContext.Provider>;
+  return (
+    <CheckoutContext.Provider
+      value={{
+        step,
+        setStep,
+        isLoading,
+        setLoading,
+        isBillingSameAsShipping,
+        setBillingSameAsShipping,
+        values,
+        setEmail,
+        setShippingAddress,
+        setBillingAddress,
+        setShippingMethod,
+        setPaymentMethod,
+        placeOrder,
+        result,
+        setResult
+      }}
+    >
+      {children}
+    </CheckoutContext.Provider>
+  );
 };
