@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { I18n } from '@deity/falcon-i18n';
-import { Details, DetailsContent, Button, Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
+import { DetailsContent, Button, Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
 import {
   SetBillingAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
@@ -10,8 +10,7 @@ import {
 } from '@deity/falcon-front-kit';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
-import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker } from './components';
+import { AddressPicker, CheckoutSection, CheckoutSectionHeader } from './components';
 
 export const BillingAddressSection = props => {
   const { open, title, onEditRequested, submitLabel } = props;
@@ -22,7 +21,7 @@ export const BillingAddressSection = props => {
     header = (
       <I18n>
         {t => (
-          <SectionHeader
+          <CheckoutSectionHeader
             title={title}
             onActionClick={onEditRequested}
             editLabel={t('edit')}
@@ -33,11 +32,11 @@ export const BillingAddressSection = props => {
       </I18n>
     );
   } else {
-    header = <SectionHeader title={title} />;
+    header = <CheckoutSectionHeader title={title} />;
   }
 
   return (
-    <Details open={open}>
+    <CheckoutSection open={open}>
       {header}
       <DetailsContent>
         {open && (
@@ -48,7 +47,7 @@ export const BillingAddressSection = props => {
           </CustomerWithAddressesQuery>
         )}
       </DetailsContent>
-    </Details>
+    </CheckoutSection>
   );
 };
 BillingAddressSection.propTypes = {

@@ -4,9 +4,9 @@ import { I18n, T } from '@deity/falcon-i18n';
 import { PaymentMethodListQuery } from '@deity/falcon-shop-data';
 import { TwoStepWizard, SetPaymentMethod } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '@deity/falcon-ui-kit';
-import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
+import { DetailsContent, Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
-import SectionHeader from './CheckoutSectionHeader';
+import { CheckoutSection, CheckoutSectionHeader } from './components';
 
 // Loading "PaymentMethodItem" component via loadable package
 // to avoid premature import of Payment frontend-plugins and their dependencies on SSR
@@ -33,7 +33,7 @@ class PaymentSection extends React.Component {
       header = (
         <I18n>
           {t => (
-            <SectionHeader
+            <CheckoutSectionHeader
               title={t('checkout.payment')}
               onActionClick={onEditRequested}
               editLabel={t('edit')}
@@ -44,11 +44,11 @@ class PaymentSection extends React.Component {
         </I18n>
       );
     } else {
-      header = <I18n>{t => <SectionHeader title={t('checkout.payment')} />}</I18n>;
+      header = <I18n>{t => <CheckoutSectionHeader title={t('checkout.payment')} />}</I18n>;
     }
 
     return (
-      <Details open={open}>
+      <CheckoutSection open={open}>
         {header}
         {open && (
           <DetailsContent>
@@ -102,7 +102,7 @@ class PaymentSection extends React.Component {
             </PaymentMethodListQuery>
           </DetailsContent>
         )}
-      </Details>
+      </CheckoutSection>
     );
   }
 }

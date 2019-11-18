@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { FlexLayout, Checkbox, Label, Details, DetailsContent, Button } from '@deity/falcon-ui';
+import { FlexLayout, Checkbox, Label, DetailsContent, Button } from '@deity/falcon-ui';
 import { T, I18n } from '@deity/falcon-i18n';
 import { AddressDetails, Form, AddressFormFields, ErrorSummary } from '@deity/falcon-ui-kit';
-import SectionHeader from './CheckoutSectionHeader';
-import { AddressPicker } from './components';
+import { AddressPicker, CheckoutSection, CheckoutSectionHeader } from './components';
 
 class AddressSection extends React.Component {
   constructor(props) {
@@ -69,7 +68,7 @@ class AddressSection extends React.Component {
       header = (
         <I18n>
           {t => (
-            <SectionHeader
+            <CheckoutSectionHeader
               title={title}
               onActionClick={onEditRequested}
               editLabel={t('edit')}
@@ -80,7 +79,7 @@ class AddressSection extends React.Component {
         </I18n>
       );
     } else {
-      header = <SectionHeader title={title} />;
+      header = <CheckoutSectionHeader title={title} />;
     }
 
     const { selectedAddress: selectedAddr } = this.state;
@@ -148,13 +147,13 @@ class AddressSection extends React.Component {
     }
 
     return (
-      <Details open={open}>
+      <CheckoutSection open={open}>
         {header}
         <DetailsContent>
           {content}
           <ErrorSummary errors={errors} />
         </DetailsContent>
-      </Details>
+      </CheckoutSection>
     );
   }
 }

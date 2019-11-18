@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { I18n, T } from '@deity/falcon-i18n';
 import { ShippingMethodListQuery } from '@deity/falcon-shop-data';
 import { SetShippingMethod } from '@deity/falcon-front-kit';
-import { Label, FlexLayout, Details, DetailsContent, Text, Radio, Box, Button } from '@deity/falcon-ui';
+import { Label, FlexLayout, DetailsContent, Text, Radio, Box, Button } from '@deity/falcon-ui';
 import { Price, ErrorSummary } from '@deity/falcon-ui-kit';
-import SectionHeader from './CheckoutSectionHeader';
+import { CheckoutSection, CheckoutSectionHeader } from './components';
 
 const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected }) => (
   <Box my="md">
@@ -26,7 +26,6 @@ const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected })
     ))}
   </Box>
 );
-
 ShippingSelector.propTypes = {
   availableShippingOptions: PropTypes.arrayOf(PropTypes.shape({})),
   onShippingSelected: PropTypes.func
@@ -50,7 +49,7 @@ class ShippingSection extends React.Component {
       header = (
         <I18n>
           {t => (
-            <SectionHeader
+            <CheckoutSectionHeader
               title={t('checkout.shipping')}
               onActionClick={onEditRequested}
               editLabel={t('edit')}
@@ -61,11 +60,11 @@ class ShippingSection extends React.Component {
         </I18n>
       );
     } else {
-      header = <I18n>{t => <SectionHeader title={t('checkout.shipping')} />}</I18n>;
+      header = <I18n>{t => <CheckoutSectionHeader title={t('checkout.shipping')} />}</I18n>;
     }
 
     return (
-      <Details open={open}>
+      <CheckoutSection open={open}>
         {header}
         {open && (
           <DetailsContent>
@@ -105,11 +104,10 @@ class ShippingSection extends React.Component {
             </ShippingMethodListQuery>
           </DetailsContent>
         )}
-      </Details>
+      </CheckoutSection>
     );
   }
 }
-
 ShippingSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,

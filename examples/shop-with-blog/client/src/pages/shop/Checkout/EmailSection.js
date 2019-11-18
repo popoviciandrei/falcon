@@ -4,10 +4,10 @@ import { Formik } from 'formik';
 import { useI18n, T } from '@deity/falcon-i18n';
 import { CustomerQuery, useSignOutMutation } from '@deity/falcon-shop-data';
 import { useCheckout } from '@deity/falcon-front-kit';
-import { Text, Link, Details, DetailsContent } from '@deity/falcon-ui';
+import { Text, Link, DetailsContent } from '@deity/falcon-ui';
 import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
-import SectionHeader from './CheckoutSectionHeader';
+import { CheckoutSection, CheckoutSectionHeader } from './components';
 
 const customerEmailFormLayout = {
   customerEmailFormLayout: {
@@ -44,21 +44,21 @@ export const EmailSection = props => {
 
         if (customer || !open) {
           return (
-            <Details>
-              <SectionHeader
+            <CheckoutSection>
+              <CheckoutSectionHeader
                 title={t('customerSelector.title')}
                 editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
                 onActionClick={customer ? signOut : onEditRequested}
                 complete
                 summary={<Text>{(customer && customer.email) || values.email}</Text>}
               />
-            </Details>
+            </CheckoutSection>
           );
         }
 
         return (
-          <Details open={open}>
-            <SectionHeader title={t('customerSelector.title')} />
+          <CheckoutSection open={open}>
+            <CheckoutSectionHeader title={t('customerSelector.title')} />
             <DetailsContent>
               <Text>
                 <T id="customerSelector.guestPrompt" />
@@ -88,7 +88,7 @@ export const EmailSection = props => {
                 <T id="customerSelector.ifAlreadyRegistered" />
               </Text>
             </DetailsContent>
-          </Details>
+          </CheckoutSection>
         );
       }}
     </CustomerQuery>
