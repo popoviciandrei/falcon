@@ -136,13 +136,14 @@ class CheckoutWizard extends React.Component {
   setCurrentStep = currentStep => this.setState({ currentStep });
 
   render() {
-    const { values, isLoading, result } = this.props.checkoutData;
+    const { gridArea, checkoutData } = this.props;
+    const { values, isLoading, result } = checkoutData;
 
     const { currentStep } = this.state;
     return (
       <I18n>
         {t => (
-          <Box position="relative">
+          <Box position="relative" gridArea={gridArea}>
             {isLoading && <Loader variant="overlay" />}
 
             <EmailSection
@@ -244,7 +245,11 @@ const CheckoutPage = () => (
             <Divider gridArea={CheckoutArea.divider} />
             <Box gridArea={CheckoutArea.checkout}>
               <CheckoutProvider>
-                <Checkout>{checkoutData => <CheckoutWizard checkoutData={{ ...checkoutData }} cart={cart} />}</Checkout>
+                <Checkout>
+                  {checkoutData => (
+                    <CheckoutWizard checkoutData={{ ...checkoutData }} gridArea={CheckoutArea.checkout} />
+                  )}
+                </Checkout>
               </CheckoutProvider>
             </Box>
           </Box>
