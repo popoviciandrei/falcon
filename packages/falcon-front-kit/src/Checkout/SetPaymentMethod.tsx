@@ -1,32 +1,32 @@
 import React, { useState, useCallback } from 'react';
-import { CheckoutDetailsInput } from '@deity/falcon-shop-extension';
 import { useSetPaymentMethodMutation, SetPaymentMethodResponse } from '@deity/falcon-shop-data';
 import { useCheckout } from './CheckoutConsumer';
 import { CheckoutOperation, CheckoutOperationHook } from './CheckoutOperation';
+import { PaymentMethodData, paymentMethodToCheckoutDetailsInput } from './PaymentMethodData';
 
-export const useSetPaymentMethod: CheckoutOperationHook<SetPaymentMethodResponse, CheckoutDetailsInput> = () => {
-  const [method, setMethod] = useState<CheckoutDetailsInput>();
+export const useSetPaymentMethod: CheckoutOperationHook<SetPaymentMethodResponse, PaymentMethodData> = () => {
+  const [state, setState] = useState<PaymentMethodData>();
   const { setLoading, setPaymentMethod } = useCheckout();
   const [mutation, mutationResult] = useSetPaymentMethodMutation({
     onCompleted: () => {
-      setPaymentMethod(method);
+      setPaymentMethod(state);
       setLoading(false);
     }
   });
 
   return [
-    useCallback(async (input: CheckoutDetailsInput, options) => {
+    useCallback(async (input: PaymentMethodData, options) => {
       setLoading(true);
-      setMethod(input);
+      setState(input);
 
-      return mutation({ ...options, variables: { input } });
+      return mutation({ ...options, variables: { input: paymentMethodToCheckoutDetailsInput(input) } });
     }, []),
     mutationResult
   ];
 };
 
 export type SetPaymentMethodProps = {
-  children: CheckoutOperation<SetPaymentMethodResponse, CheckoutDetailsInput>;
+  children: CheckoutOperation<SetPaymentMethodResponse, PaymentMethodData>;
 };
 export const SetPaymentMethod: React.FC<SetPaymentMethodProps> = ({ children }) => {
   return children(...useSetPaymentMethod());

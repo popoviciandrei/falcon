@@ -11,7 +11,7 @@ export type ShippingMethodDetailsProps = {
 export const ShippingMethodDetails: React.SFC<ShippingMethodDetailsProps> = ({ carrierTitle, methodTitle, amount }) => (
   <FlexLayout justifyContent="space-between">
     <FlexLayout>
-      <Text fontWeight="bold" color="secondaryText">{`${carrierTitle}`}</Text>
+      <Text fontWeight="bold">{`${carrierTitle}`}</Text>
       {methodTitle && <Text pl="xs" color="secondaryText">{`(${methodTitle})`}</Text>}
     </FlexLayout>
     <Price value={amount} />

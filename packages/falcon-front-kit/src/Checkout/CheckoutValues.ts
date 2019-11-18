@@ -1,12 +1,13 @@
-import { CheckoutDetailsInput, ShippingMethod } from '@deity/falcon-shop-extension';
+import { ShippingMethod } from '@deity/falcon-shop-extension';
 import { CheckoutAddress } from './CheckoutAddress';
+import { PaymentMethodData } from './PaymentMethodData';
 
 export type OrderData = {
   email?: string;
   shippingAddress: CheckoutAddress;
   billingAddress: CheckoutAddress;
   shippingMethod: ShippingMethod;
-  paymentMethod: CheckoutDetailsInput; // TODO: use `PaymentMethod` type?
+  paymentMethod: PaymentMethodData;
 };
 
 export type CheckoutValues = {
@@ -14,7 +15,7 @@ export type CheckoutValues = {
   shippingAddress?: CheckoutAddress;
   billingAddress?: CheckoutAddress;
   shippingMethod?: ShippingMethod;
-  paymentMethod?: CheckoutDetailsInput;
+  paymentMethod?: PaymentMethodData;
 };
 
 export type SetCheckoutValues = {
@@ -22,6 +23,6 @@ export type SetCheckoutValues = {
   setShippingAddress(shippingAddress: CheckoutAddress): void;
   setBillingAddress(billingAddress: CheckoutAddress): void;
   setShippingMethod(shippingMethod: ShippingMethod): void;
-  setPaymentMethod(paymentMethod: CheckoutDetailsInput): void;
+  setPaymentMethod(paymentMethod: PaymentMethodData): void;
   placeOrder(data: OrderData): void;
 };

@@ -50,7 +50,7 @@ export const EmailSection = props => {
                 editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
                 onActionClick={customer ? signOut : onEditRequested}
                 complete
-                summary={<Text>{(customer && customer.email) || values.email}</Text>}
+                summary={<Text fontWeight="bold">{(customer && customer.email) || values.email}</Text>}
               />
             </CheckoutSection>
           );

@@ -18,13 +18,8 @@ class PaymentSection extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      payment: null,
-      data: null
-    };
+    this.state = {};
   }
-
-  resetSelected = () => this.setState({ payment: null, data: null });
 
   render() {
     const { open, selectedPayment, onEditRequested } = this.props;
@@ -38,7 +33,7 @@ class PaymentSection extends React.Component {
               onActionClick={onEditRequested}
               editLabel={t('edit')}
               complete
-              summary={<Text>{selectedPayment.title}</Text>}
+              summary={<Text fontWeight="bold">{selectedPayment.title}</Text>}
             />
           )}
         </I18n>
@@ -73,24 +68,16 @@ class PaymentSection extends React.Component {
                                 key={method.code}
                                 {...method}
                                 selectOption={code => {
-                                  this.resetSelected();
+                                  this.setState({});
                                   selectOption(code);
                                 }}
                                 selectedOption={selectedOption}
-                                onPaymentDetailsReady={data => {
-                                  this.setState({ payment: method, data });
-                                }}
+                                onPaymentDetailsReady={data => this.setState({ ...method, data })}
                               />
                             ))
                           }
                         </TwoStepWizard>
-                        <Button
-                          disabled={!this.state.payment}
-                          onClick={() => {
-                            const { data, payment } = this.state;
-                            setPayment({ method: payment.code, data });
-                          }}
-                        >
+                        <Button disabled={!this.state.code} onClick={() => setPayment(this.state)}>
                           <T id="continue" />
                         </Button>
                         <ErrorSummary errors={error} />

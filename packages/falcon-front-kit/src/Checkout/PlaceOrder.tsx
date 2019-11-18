@@ -5,6 +5,7 @@ import { OrderData } from './CheckoutValues';
 import { useCheckout } from './CheckoutConsumer';
 import { CheckoutOperation, CheckoutOperationHook } from './CheckoutOperation';
 import { shippingMethodToCheckoutDetailsInput } from './shippingMethodToCheckoutDetailsInput';
+import { paymentMethodToCheckoutDetailsInput } from './PaymentMethodData';
 
 export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData | undefined> = () => {
   const { setLoading, placeOrder, setResult } = useCheckout();
@@ -28,7 +29,7 @@ export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData 
             billingAddress: addressToCheckoutAddressInput(input.billingAddress),
             shippingAddress: addressToCheckoutAddressInput(input.shippingAddress),
             shippingMethod: shippingMethodToCheckoutDetailsInput(input.shippingMethod),
-            paymentMethod: input.paymentMethod
+            paymentMethod: paymentMethodToCheckoutDetailsInput(input.paymentMethod)
           }
         }
       });
