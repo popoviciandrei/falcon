@@ -438,15 +438,13 @@ export type OrderItem = {
   parentItem?: OrderItem;
 };
 
-export type PlaceOrderInput = Partial<
-  OperationInput<{
-    email?: String;
-    billingAddress: CheckoutAddressInput;
-    shippingAddress: CheckoutAddressInput;
-    paymentMethod: CheckoutDetailsInput;
-    shippingMethod: CheckoutDetailsInput;
-  }>
->;
+export type PlaceOrderInput = {
+  email?: String;
+  billingAddress: CheckoutAddressInput;
+  shippingAddress: CheckoutAddressInput;
+  paymentMethod: CheckoutDetailsInput;
+  shippingMethod: CheckoutDetailsInput;
+};
 
 export type CheckoutDetailsInput = {
   /** Payment or shipping method name, defined by the backend */
