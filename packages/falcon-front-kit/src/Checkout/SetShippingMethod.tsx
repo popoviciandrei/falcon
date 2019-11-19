@@ -7,13 +7,19 @@ import { shippingMethodToCheckoutDetailsInput } from './shippingMethodToCheckout
 
 export const useSetShippingMethod: CheckoutOperationHook<SetShippingMethodResponse, ShippingMethod> = () => {
   const [state, setState] = useState<ShippingMethod>();
-  const { setLoading, setShippingMethod } = useCheckout();
-  const [mutation, mutationResult] = useSetShippingMethodMutation({
-    onCompleted: () => {
-      setShippingMethod(state);
-      setLoading(false);
+  const { isLoading, setLoading, setShippingMethod } = useCheckout();
+  const [mutation, result] = useSetShippingMethodMutation({
+    onCompleted: data => {
+      if (data) {
+        setShippingMethod(state);
+        setLoading(false);
+      }
     }
   });
+
+  if (result.loading !== isLoading) {
+    setLoading(result.loading);
+  }
 
   return [
     useCallback(async (input: ShippingMethod, options) => {
@@ -22,7 +28,7 @@ export const useSetShippingMethod: CheckoutOperationHook<SetShippingMethodRespon
 
       return mutation({ ...options, variables: { input: shippingMethodToCheckoutDetailsInput(input) } });
     }, []),
-    mutationResult
+    result
   ];
 };
 

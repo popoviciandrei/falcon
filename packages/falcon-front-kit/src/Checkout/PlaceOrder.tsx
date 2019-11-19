@@ -8,13 +8,19 @@ import { shippingMethodToCheckoutDetailsInput } from './shippingMethodToCheckout
 import { paymentMethodToCheckoutDetailsInput } from './PaymentMethodData';
 
 export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData | undefined> = () => {
-  const { setLoading, setOrderData, setResult } = useCheckout();
-  const [mutation, mutationResult] = usePlaceOrderMutation({
+  const { isLoading, setLoading, setOrderData, setResult } = useCheckout();
+  const [mutation, result] = usePlaceOrderMutation({
     onCompleted: data => {
-      setResult(data.placeOrder);
-      setLoading(false);
+      if (data) {
+        setResult(data.placeOrder);
+        setLoading(false);
+      }
     }
   });
+
+  if (result.loading !== isLoading) {
+    setLoading(result.loading);
+  }
 
   return [
     useCallback(async (input: OrderData, options) => {
@@ -34,7 +40,7 @@ export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData 
         }
       });
     }, []),
-    mutationResult
+    result
   ];
 };
 

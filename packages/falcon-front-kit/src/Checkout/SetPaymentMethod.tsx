@@ -6,13 +6,19 @@ import { PaymentMethodData, paymentMethodToCheckoutDetailsInput } from './Paymen
 
 export const useSetPaymentMethod: CheckoutOperationHook<SetPaymentMethodResponse, PaymentMethodData> = () => {
   const [state, setState] = useState<PaymentMethodData>();
-  const { setLoading, setPaymentMethod } = useCheckout();
-  const [mutation, mutationResult] = useSetPaymentMethodMutation({
-    onCompleted: () => {
-      setPaymentMethod(state);
-      setLoading(false);
+  const { isLoading, setLoading, setPaymentMethod } = useCheckout();
+  const [mutation, result] = useSetPaymentMethodMutation({
+    onCompleted: data => {
+      if (data) {
+        setPaymentMethod(state);
+        setLoading(false);
+      }
     }
   });
+
+  if (result.loading !== isLoading) {
+    setLoading(result.loading);
+  }
 
   return [
     useCallback(async (input: PaymentMethodData, options) => {
@@ -21,7 +27,7 @@ export const useSetPaymentMethod: CheckoutOperationHook<SetPaymentMethodResponse
 
       return mutation({ ...options, variables: { input: paymentMethodToCheckoutDetailsInput(input) } });
     }, []),
-    mutationResult
+    result
   ];
 };
 
