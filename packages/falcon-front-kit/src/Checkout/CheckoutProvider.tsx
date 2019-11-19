@@ -18,16 +18,6 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   });
   const [result, setResult] = useState<PlaceOrderResult>();
 
-  // /** @param {boolean} same Whether the billing address should be the same as shipping address */
-  // const setBillingSameAsShipping = (same: boolean) => {
-  //   // setState({
-  //   //   ...state,
-  //   //   isBillingSameAsShipping: same,
-  //   //   billingAddress: same ? state.shippingAddress : null
-  //   // });
-  //   // setBillingAddress(state.shippingAddress);
-  // };
-
   const setEmail: SetCheckoutValues['setEmail'] = email =>
     setValues(x => {
       const newValues = { ...x, email };
@@ -41,7 +31,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       const newValues = {
         ...x,
         shippingAddress,
-        // billingAddress: isBillingSameAsShipping ? shippingAddress : state.billingAddress
+        billingAddress: isBillingSameAsShipping ? shippingAddress : x.billingAddress,
         shippingMethod: undefined,
         paymentMethod: undefined
       };
@@ -82,7 +72,11 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       return newValues;
     });
 
-  const placeOrder: SetCheckoutValues['placeOrder'] = order => {
+  /**
+   * Allows to override OrderData values, useful when order was placed with some overrides and state needs to be synchronized
+   * @param order
+   */
+  const setOrderData: SetCheckoutValues['setOrderData'] = order => {
     if (order) {
       setStep(getNextStepForValues(order));
       setValues({ ...order });
@@ -104,7 +98,7 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
         setBillingAddress,
         setShippingMethod,
         setPaymentMethod,
-        placeOrder,
+        setOrderData,
         result,
         setResult
       }}

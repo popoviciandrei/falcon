@@ -8,7 +8,7 @@ import { shippingMethodToCheckoutDetailsInput } from './shippingMethodToCheckout
 import { paymentMethodToCheckoutDetailsInput } from './PaymentMethodData';
 
 export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData | undefined> = () => {
-  const { setLoading, placeOrder, setResult } = useCheckout();
+  const { setLoading, setOrderData, setResult } = useCheckout();
   const [mutation, mutationResult] = usePlaceOrderMutation({
     onCompleted: data => {
       setResult(data.placeOrder);
@@ -19,7 +19,7 @@ export const usePlaceOrder: CheckoutOperationHook<PlaceOrderResponse, OrderData 
   return [
     useCallback(async (input: OrderData, options) => {
       setLoading(true);
-      placeOrder(input);
+      setOrderData(input);
 
       return mutation({
         ...(options || {}),

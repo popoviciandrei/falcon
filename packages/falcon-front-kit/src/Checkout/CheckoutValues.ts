@@ -24,5 +24,9 @@ export type SetCheckoutValues = {
   setBillingAddress(billingAddress: CheckoutAddress): void;
   setShippingMethod(shippingMethod: ShippingMethod): void;
   setPaymentMethod(paymentMethod: PaymentMethodData): void;
-  placeOrder(data: OrderData): void;
+  /**
+   * Allows to override OrderData values, useful when order was placed with some overrides and state needs to be synchronized
+   * @param order
+   */
+  setOrderData(data?: OrderData): void;
 };
