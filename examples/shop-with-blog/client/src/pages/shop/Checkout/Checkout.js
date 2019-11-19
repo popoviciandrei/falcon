@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
-import { Checkout, CheckoutProvider, PlaceOrder, CheckoutStep } from '@deity/falcon-front-kit';
+import { CheckoutProvider, useCheckout, PlaceOrder, CheckoutStep } from '@deity/falcon-front-kit';
 import { toGridTemplate, Loader, PageLayout, ErrorSummary } from '@deity/falcon-ui-kit';
 import { CartQuery } from '@deity/falcon-shop-data';
-import { I18n, T } from '@deity/falcon-i18n';
+import { T, useI18n } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import CheckoutCartSummary from './CheckoutCartSummary';
 import { EmailSection } from './EmailSection';
@@ -43,90 +43,83 @@ const checkoutLayout = {
   }
 };
 
-// eslint-disable-next-line react/prefer-stateless-function
-class CheckoutWizard extends React.Component {
-  render() {
-    const { gridArea, checkoutData } = this.props;
-    const { values, isLoading, result, step, setStep } = checkoutData;
+const CheckoutWizard = () => {
+  const { t } = useI18n();
+  const { values, isLoading, result, step, setStep } = useCheckout();
 
-    return (
-      <I18n>
-        {t => (
-          <Box position="relative" gridArea={gridArea}>
-            {isLoading && <Loader variant="overlay" />}
+  return (
+    <Box position="relative">
+      {isLoading && <Loader variant="overlay" />}
 
-            <EmailSection open={step === CheckoutStep.Email} onEditRequested={() => setStep(CheckoutStep.Email)} />
+      <EmailSection open={step === CheckoutStep.Email} onEditRequested={() => setStep(CheckoutStep.Email)} />
 
-            <Divider my="md" />
-            <ShippingAddressSection
-              open={step === CheckoutStep.ShippingAddress}
-              onEditRequested={() => setStep(CheckoutStep.ShippingAddress)}
-              title={t('checkout.shippingAddress')}
-              submitLabel={t('checkout.nextStep')}
-            />
+      <Divider my="md" />
+      <ShippingAddressSection
+        open={step === CheckoutStep.ShippingAddress}
+        onEditRequested={() => setStep(CheckoutStep.ShippingAddress)}
+        title={t('checkout.shippingAddress')}
+        submitLabel={t('checkout.nextStep')}
+      />
 
-            <Divider my="md" />
+      <Divider my="md" />
 
-            <BillingAddressSection
-              open={step === CheckoutStep.BillingAddress}
-              onEditRequested={() => setStep(CheckoutStep.BillingAddress)}
-              title={t('checkout.billingAddress')}
-              submitLabel={t('checkout.nextStep')}
-            />
+      <BillingAddressSection
+        open={step === CheckoutStep.BillingAddress}
+        onEditRequested={() => setStep(CheckoutStep.BillingAddress)}
+        title={t('checkout.billingAddress')}
+        submitLabel={t('checkout.nextStep')}
+      />
 
-            <Divider my="md" />
+      <Divider my="md" />
 
-            <ShippingMethodSection
-              open={step === CheckoutStep.Shipping}
-              onEditRequested={() => setStep(CheckoutStep.Shipping)}
-              shippingAddress={values.shippingAddress}
-              selectedShipping={values.shippingMethod}
-            />
+      <ShippingMethodSection
+        open={step === CheckoutStep.Shipping}
+        onEditRequested={() => setStep(CheckoutStep.Shipping)}
+        shippingAddress={values.shippingAddress}
+        selectedShipping={values.shippingMethod}
+      />
 
-            <Divider my="md" />
+      <Divider my="md" />
 
-            <PaymentMethodSection
-              open={step === CheckoutStep.Payment}
-              onEditRequested={() => setStep(CheckoutStep.Payment)}
-              selectedPayment={values.paymentMethod}
-            />
+      <PaymentMethodSection
+        open={step === CheckoutStep.Payment}
+        onEditRequested={() => setStep(CheckoutStep.Payment)}
+        selectedPayment={values.paymentMethod}
+      />
 
-            <Divider my="md" />
+      <Divider my="md" />
 
-            {step === CheckoutStep.Confirmation && (
-              <PlaceOrder>
-                {(placeOrder, { error, loading, data }) => {
-                  if (!data) {
-                    return (
-                      <Box>
-                        <Button onClick={() => placeOrder(values)} variant={loading && 'loader'}>
-                          <T id="checkout.placeOrder" />
-                        </Button>
-                        <ErrorSummary errors={error} />
-                      </Box>
-                    );
-                  }
+      {step === CheckoutStep.Confirmation && (
+        <PlaceOrder>
+          {(placeOrder, { error, loading, data }) => {
+            if (!data) {
+              return (
+                <Box>
+                  <Button onClick={() => placeOrder(values)} variant={loading && 'loader'}>
+                    <T id="checkout.placeOrder" />
+                  </Button>
+                  <ErrorSummary errors={error} />
+                </Box>
+              );
+            }
 
-                  return null;
-                }}
-              </PlaceOrder>
-            )}
+            return null;
+          }}
+        </PlaceOrder>
+      )}
 
-            {result && !isLoading && result.url && (
-              <Box css={{ textAlign: 'center' }}>
-                <H4 fontSize="md" mb="md">
-                  <T id="checkout.externalPaymentRedirect" />
-                </H4>
-                <Test3dSecure {...result} />
-              </Box>
-            )}
-            {result && !isLoading && result.orderId && <Redirect to="/checkout/confirmation" />}
-          </Box>
-        )}
-      </I18n>
-    );
-  }
-}
+      {result && !isLoading && result.url && (
+        <Box css={{ textAlign: 'center' }}>
+          <H4 fontSize="md" mb="md">
+            <T id="checkout.externalPaymentRedirect" />
+          </H4>
+          <Test3dSecure {...result} />
+        </Box>
+      )}
+      {result && !isLoading && result.orderId && <Redirect to="/checkout/confirmation" />}
+    </Box>
+  );
+};
 
 const CheckoutPage = () => (
   <PageLayout>
@@ -150,11 +143,7 @@ const CheckoutPage = () => (
             <Divider gridArea={CheckoutArea.divider} />
             <Box gridArea={CheckoutArea.checkout}>
               <CheckoutProvider>
-                <Checkout>
-                  {checkoutData => (
-                    <CheckoutWizard checkoutData={{ ...checkoutData }} gridArea={CheckoutArea.checkout} />
-                  )}
-                </Checkout>
+                <CheckoutWizard />
               </CheckoutProvider>
             </Box>
           </Box>
@@ -163,5 +152,4 @@ const CheckoutPage = () => (
     </CartQuery>
   </PageLayout>
 );
-
 export default CheckoutPage;
