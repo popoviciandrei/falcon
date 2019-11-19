@@ -1,24 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { AddressCountry, Address } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
+import { SetShippingAddressResponse, SetBillingAddressResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 import { CheckoutAddress } from './CheckoutAddress';
-import { useSetShippingAddress } from './SetShippingAddress';
-
-const INITIAL_VALUES: SetCheckoutAddressFormValues = {
-  email: '',
-  firstname: '',
-  lastname: '',
-  street1: '',
-  street2: '',
-  postcode: '',
-  city: '',
-  country: undefined,
-  company: '',
-  telephone: '',
-  saveInAddressBook: false
-};
+import { CheckoutOperationFunction } from './CheckoutOperation';
 
 export type SetCheckoutAddressFormValues = {
   email?: string;
@@ -34,13 +22,27 @@ export type SetCheckoutAddressFormValues = {
   saveInAddressBook?: boolean;
 };
 
-export type SetShippingAddressFormProviderProps = FormProviderProps<SetCheckoutAddressFormValues, CheckoutAddress> & {
+const INITIAL_VALUES: SetCheckoutAddressFormValues = {
+  email: '',
+  firstname: '',
+  lastname: '',
+  street1: '',
+  street2: '',
+  postcode: '',
+  city: '',
+  country: undefined,
+  company: '',
+  telephone: '',
+  saveInAddressBook: false
+};
+
+export type SetCheckoutAddressFormProviderProps = FormProviderProps<SetCheckoutAddressFormValues, CheckoutAddress> & {
+  setAddress: CheckoutOperationFunction<SetShippingAddressResponse | SetBillingAddressResponse, CheckoutAddress>;
   address?: CheckoutAddress | Address;
 };
-export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormProviderProps> = props => {
-  const { initialValues, address, onSuccess, ...formikProps } = props;
+export const SetCheckoutAddressFormProvider: React.SFC<SetCheckoutAddressFormProviderProps> = props => {
+  const { initialValues, setAddress, address, onSuccess, ...formikProps } = props;
   const isMounted = React.useRef(true);
-  const [setAddress] = useSetShippingAddress();
   const [getUserError] = useGetUserError();
 
   React.useEffect(() => {
@@ -85,8 +87,12 @@ export const SetShippingAddressFormProvider: React.SFC<SetShippingAddressFormPro
     />
   );
 };
-SetShippingAddressFormProvider.defaultProps = {
+SetCheckoutAddressFormProvider.defaultProps = {
+  // eslint-disable-next-line react/default-props-match-prop-types
   initialValues: { ...INITIAL_VALUES }
+};
+SetCheckoutAddressFormProvider.propTypes = {
+  setAddress: PropTypes.func.isRequired
 };
 
 export type checkoutAddressToSetCheckoutAddressFormValues = (

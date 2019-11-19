@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { I18n } from '@deity/falcon-i18n';
 import { Button } from '@deity/falcon-ui';
 import {
-  SetShippingAddressFormProvider,
+  useSetShippingAddress,
+  SetCheckoutAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
   useCheckout,
   isCustomAddress
@@ -64,12 +65,13 @@ ShippingAddressSection.propTypes = {
 
 export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultShipping = addresses.find(x => x.defaultShipping);
+  const [setShippingAddress] = useSetShippingAddress();
   const { values } = useCheckout();
   const shouldAutoSubmit = !values.shippingAddress && !!defaultShipping;
   const [address, setAddress] = useState(values.shippingAddress || defaultShipping);
 
   return (
-    <SetShippingAddressFormProvider address={address}>
+    <SetCheckoutAddressFormProvider setAddress={setShippingAddress} address={address}>
       {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
         if (shouldAutoSubmit) {
           if (submitCount === 0) {
@@ -100,6 +102,6 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
           </Form>
         );
       }}
-    </SetShippingAddressFormProvider>
+    </SetCheckoutAddressFormProvider>
   );
 };

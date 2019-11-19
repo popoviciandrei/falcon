@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { I18n } from '@deity/falcon-i18n';
 import { Button, Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
 import {
-  SetBillingAddressFormProvider,
+  useSetBillingAddress,
+  SetCheckoutAddressFormProvider,
   checkoutAddressToSetCheckoutAddressFormValues,
   useCheckout,
   isCustomAddress
@@ -64,12 +65,13 @@ BillingAddressSection.propTypes = {
 
 export const BillingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultBilling = addresses.find(x => x.defaultBilling);
+  const [setBillingAddress] = useSetBillingAddress();
   const { values } = useCheckout();
   const shouldAutoSubmit = !values.billingAddress && !!defaultBilling;
   const [address, setAddress] = useState(values.billingAddress || defaultBilling);
 
   return (
-    <SetBillingAddressFormProvider address={address}>
+    <SetCheckoutAddressFormProvider setAddress={setBillingAddress} address={address}>
       {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
         if (shouldAutoSubmit) {
           if (submitCount === 0) {
@@ -111,6 +113,6 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
           </Form>
         );
       }}
-    </SetBillingAddressFormProvider>
+    </SetCheckoutAddressFormProvider>
   );
 };
