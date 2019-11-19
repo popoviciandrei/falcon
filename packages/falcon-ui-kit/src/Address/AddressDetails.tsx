@@ -8,9 +8,12 @@ export type AddressDetailsProps = {
   firstname: string;
   lastname: string;
   street: string[];
-  postcode?: string;
+  postcode: string;
   city: string;
-  country: { code: string; localName?: string };
+  country: {
+    code: string;
+    localName?: string;
+  };
   telephone?: string;
 };
 
@@ -44,6 +47,9 @@ AddressDetails.propTypes = {
   postcode: PropTypes.string,
   city: PropTypes.string.isRequired,
   // @ts-ignore
-  country: PropTypes.shape({ code: PropTypes.string.isRequired, localName: PropTypes.string }).isRequired,
+  country: PropTypes.shape({
+    code: PropTypes.string.isRequired,
+    localName: PropTypes.string
+  }).isRequired,
   telephone: PropTypes.string
 };

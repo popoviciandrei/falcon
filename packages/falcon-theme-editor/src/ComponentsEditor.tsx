@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Theme,
   mappings,
-  ThemedComponentPropsWithVariants,
+  ComponentTheme,
   mergeThemes,
   Box,
   Dropdown,
@@ -24,8 +24,8 @@ function keys<O>(object: O) {
 
 type ComponentEditorProps = {
   theme: Theme;
-  defaultThemeProps: ThemedComponentPropsWithVariants;
-  themeProps?: ThemedComponentPropsWithVariants;
+  defaultThemeProps: ComponentTheme<{}>;
+  themeProps?: ComponentTheme<{}>;
   onChange: (key: string, value: string | object) => void;
 };
 
@@ -114,10 +114,7 @@ class ComponentEditor extends React.Component<ComponentEditorProps> {
   render() {
     const { theme, themeProps, defaultThemeProps, onChange } = this.props;
 
-    const mergedProps = mergeThemes(
-      defaultThemeProps as any,
-      (themeProps || {}) as any
-    ) as ThemedComponentPropsWithVariants;
+    const mergedProps = mergeThemes(defaultThemeProps as any, (themeProps || {}) as any) as ComponentTheme<{}>;
 
     return (
       <Box>

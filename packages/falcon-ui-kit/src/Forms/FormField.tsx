@@ -1,7 +1,7 @@
 import React from 'react';
 import { FieldProps as FormikFieldProps } from 'formik';
 import { Field, IValidator, getDefaultInputValidators } from '@deity/falcon-front-kit';
-import { Input, extractThemableProps, ThemedComponentProps } from '@deity/falcon-ui';
+import { Input, extractThemableProps, ThemingProps } from '@deity/falcon-ui';
 import { FormFieldLabel } from './FormFieldLabel';
 import { FormFieldError } from './FormFieldError';
 import { FormFieldArea, FormFieldLayout } from './FormFieldLayout';
@@ -13,7 +13,7 @@ export type FormFieldRenderProps<TValue = any> = {
   field: FormikFieldProps<TValue>['field'] &
     React.InputHTMLAttributes<HTMLInputElement> &
     React.SelectHTMLAttributes<HTMLSelectElement> &
-    ThemedComponentProps & {
+    ThemingProps & {
       id?: string;
       placeholder?: string;
       invalid: boolean;
@@ -37,7 +37,7 @@ export type FormFieldProps<TValue = any> = {
   children?: (props: FormFieldRenderProps<TValue>) => React.ReactNode;
 } & React.InputHTMLAttributes<HTMLInputElement> &
   React.SelectHTMLAttributes<HTMLSelectElement> &
-  ThemedComponentProps;
+  ThemingProps;
 
 export const FormField: React.SFC<FormFieldProps> = props => {
   const { name, validate, required, children, ...restProps } = props;

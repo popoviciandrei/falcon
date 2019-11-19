@@ -108,8 +108,8 @@ export class FalconServer {
     await this.eventEmitter.emitAsync(Events.BEFORE_INITIALIZED, this);
     this.cache = this.getCache();
     await this.initializeComponents();
-    await this.initializeServerApp();
     await this.initializeContainers();
+    await this.initializeServerApp();
     await this.initializeApolloServer();
     await this.registerEndpoints();
     await this.eventEmitter.emitAsync(Events.AFTER_INITIALIZED, this);
@@ -227,7 +227,7 @@ export class FalconServer {
     };
   }
 
-  private async initializeServerApp() {
+  protected async initializeServerApp() {
     await this.eventEmitter.emitAsync(Events.BEFORE_WEB_SERVER_CREATED, this.config);
     this.app = new Koa();
     // Set signed cookie keys (https://koajs.com/#app-keys-)
@@ -236,6 +236,7 @@ export class FalconServer {
     this.router = new Router();
 
     this.app.context.components = this.componentContainer.components;
+    this.app.context.dataSources = this.apiContainer.dataSources;
     this.app.use(body());
     this.app.use(compress());
     this.app.use(
@@ -254,7 +255,7 @@ export class FalconServer {
     await this.eventEmitter.emitAsync(Events.AFTER_WEB_SERVER_CREATED, this.app);
   }
 
-  private async initializeContainers() {
+  protected async initializeContainers() {
     await this.eventEmitter.emitAsync(Events.BEFORE_API_CONTAINER_CREATED, this.config.apis);
     this.apiContainer = new ApiContainer(this.eventEmitter);
     await this.apiContainer.registerApis(this.config.apis);
@@ -265,7 +266,7 @@ export class FalconServer {
     await this.extensionContainer.registerExtensions(this.config.extensions);
     await this.eventEmitter.emitAsync(Events.AFTER_EXTENSION_CONTAINER_CREATED, this.extensionContainer);
 
-    this.endpointContainer = new EndpointContainer(this.eventEmitter);
+    this.endpointContainer = new EndpointContainer(this.eventEmitter, this.cache);
     await this.endpointContainer.registerEndpoints(this.config.endpoints);
   }
 
@@ -276,7 +277,7 @@ export class FalconServer {
     await this.eventEmitter.emitAsync(Events.AFTER_COMPONENT_CONTAINER_CREATED, this.componentContainer);
   }
 
-  private async initializeApolloServer() {
+  protected async initializeApolloServer() {
     const apolloServerConfig = await this.getApolloServerConfig();
 
     await this.eventEmitter.emitAsync(Events.BEFORE_APOLLO_SERVER_CREATED, apolloServerConfig);

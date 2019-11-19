@@ -31,6 +31,10 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed duplicated conditions when extracting themed css ([#611](https://github.com/deity-io/falcon/pull/611))
 - fixed incompatible `css` prop typings ([#645](https://github.com/deity-io/falcon/pull/645))
 - added `console.error` when an icon is not defined in the theme during development ([#682](https://github.com/deity-io/falcon/pull/682))
+- improved typings ([#669](https://github.com/deity-io/falcon/pull/669))
+  * renamed `ThemedComponentPropsWithVariants` to `ComponentTheme`
+  * renamed `ThemedComponentProps` to `ThemingProps`
+  * renamed `BaseThemedComponentProps` to `BaseThemingProps`
 
 ### Falcon E-commerce UI Kit discontinued
 
@@ -96,6 +100,8 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed priority for `ApiDataSource.getExtraResolvers` values ([#678](https://github.com/deity-io/falcon/pull/678))
 - `graphqlUtils` methods moved to `falcon-server-env` package ([#686](https://github.com/deity-io/falcon/pull/686))
 - simplified schema stitching call on Falcon-Server ([#701](https://github.com/deity-io/falcon/pull/701))
+- fixed `cache` exposing `EndpointContainer` ([#720](https://github.com/deity-io/falcon/pull/720))
+- exposed `dataSource` map for route context via `ctx.dataSources` ([#720](https://github.com/deity-io/falcon/pull/720))
 
 ### Falcon Server Env vNext
 
@@ -104,11 +110,16 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added optional `ApiDataSource.getExtraResolvers` static method to define extra resolvers ([#557](https://github.com/deity-io/falcon/pull/557))
 - added re-export of all internally used components and helper utils ([#686](https://github.com/deity-io/falcon/pull/686))
 
+### Falcon Logger vNext
+
+- improved error handling for `logger-pretty` when working with incompatible log messages ([#716](https://github.com/deity-io/falcon/pull/716))
+
 ### Falcon Magento2 API vNext
 
 - added basic filtration into `productList` query resolver ([#575](https://github.com/deity-io/falcon/pull/575))
 - fixed `lastOrder` resolver ([#616](https://github.com/deity-io/falcon/pull/616))
 - improved dynamic url resolution ([#618](https://github.com/deity-io/falcon/pull/618))
+- changed return type of `PlaceOrder` mutation to `Order | PlaceOrder3dSecureResult` type ([#709](https://github.com/deity-io/falcon/pull/709))
 - configured TypeScript ([#468](https://github.com/deity-io/falcon/pull/468))
 
 ### Falcon Scripts vNext

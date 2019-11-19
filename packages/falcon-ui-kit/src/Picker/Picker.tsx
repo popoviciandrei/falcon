@@ -1,19 +1,12 @@
 import React from 'react';
-import {
-  themed,
-  Dropdown,
-  DropdownLabel,
-  DropdownMenu,
-  DropdownMenuItem,
-  ThemedComponentProps
-} from '@deity/falcon-ui';
+import { themed, Dropdown, DropdownLabel, DropdownMenu, DropdownMenuItem, ThemingProps } from '@deity/falcon-ui';
 
 export type PickerItem<TValue = any> = {
   label: string;
   value?: TValue;
 };
 
-export type PickerProps<TItem extends PickerItem = PickerItem> = ThemedComponentProps & {
+export type PickerProps<TItem extends PickerItem = PickerItem> = ThemingProps & {
   options: TItem[];
   selected: string | TItem;
   onChange?: (x: TItem['value']) => any;

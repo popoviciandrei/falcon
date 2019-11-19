@@ -23,7 +23,7 @@ const fragmentTypes = {
         name: 'PlaceOrderResult',
         possibleTypes: [
           {
-            name: 'PlaceOrderSuccessfulResult'
+            name: 'Order'
           },
           {
             name: 'PlaceOrder3dSecureResult'
@@ -77,15 +77,15 @@ const resolversWithoutErrors = {
     setPaymentMethod: () => true,
     setShippingMethod: () => true,
     placeOrder: () => ({
-      orderId: '10',
-      orderRealId: '010'
+      id: '10',
+      referenceNo: '010'
     })
   }
 };
 
 const createApolloClient = (resolvers: any) => {
   resolvers.PlaceOrderResult = {
-    __resolveType: (obj: any) => (obj.orderId ? 'PlaceOrderSuccessfulResult' : 'PlaceOrder3dSecureResult')
+    __resolveType: (obj: any) => (obj.id ? 'Order' : 'PlaceOrder3dSecureResult')
   };
 
   const schema = makeExecutableSchema({ typeDefs: [BaseSchema, Schema], resolvers });
