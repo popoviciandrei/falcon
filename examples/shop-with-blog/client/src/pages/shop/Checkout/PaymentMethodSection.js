@@ -39,7 +39,7 @@ class PaymentSection extends React.Component {
         </I18n>
       );
     } else {
-      header = <I18n>{t => <CheckoutSectionHeader title={t('checkout.payment')} />}</I18n>;
+      header = <I18n>{t => <CheckoutSectionHeader title={t('checkout.payment')} open={open} />}</I18n>;
     }
 
     return (

@@ -58,7 +58,7 @@ export const EmailSection = props => {
 
         return (
           <CheckoutSection open={open}>
-            <CheckoutSectionHeader title={t('customerSelector.title')} />
+            <CheckoutSectionHeader title={t('customerSelector.title')} open={open} />
             <CheckoutSectionContentLayout>
               <Text>
                 <T id="customerSelector.guestPrompt" />

@@ -59,7 +59,7 @@ class ShippingSection extends React.Component {
         </I18n>
       );
     } else {
-      header = <I18n>{t => <CheckoutSectionHeader title={t('checkout.shipping')} />}</I18n>;
+      header = <I18n>{t => <CheckoutSectionHeader title={t('checkout.shipping')} open={open} />}</I18n>;
     }
 
     return (

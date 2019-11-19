@@ -33,7 +33,7 @@ export const BillingAddressSection = props => {
       </I18n>
     );
   } else {
-    header = <CheckoutSectionHeader title={title} />;
+    header = <CheckoutSectionHeader title={title} open={open} />;
   }
 
   return (
