@@ -8,7 +8,7 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider, MutationResult } from '@apollo/react-common';
 import { PlaceOrderResponse } from '@deity/falcon-shop-data';
-import { PlaceOrderSuccessfulResult } from '@deity/falcon-shop-extension';
+import { Order } from '@deity/falcon-shop-extension';
 import {
   Checkout,
   CheckoutRenderProps,
@@ -30,7 +30,7 @@ const fragmentTypes = {
         name: 'PlaceOrderResult',
         possibleTypes: [
           {
-            name: 'PlaceOrderSuccessfulResult'
+            name: 'Order'
           },
           {
             name: 'PlaceOrder3dSecureResult'
@@ -75,7 +75,7 @@ const samplePaymentMethod = {
 
 const createApolloClient = (resolvers: any) => {
   resolvers.PlaceOrderResult = {
-    __resolveType: (obj: any) => (obj.orderId ? 'PlaceOrderSuccessfulResult' : 'PlaceOrder3dSecureResult')
+    __resolveType: (obj: any) => (obj.id ? 'Order' : 'PlaceOrder3dSecureResult')
   };
 
   const schema = makeExecutableSchema({ typeDefs: [BaseSchema, Schema], resolvers });
@@ -105,8 +105,8 @@ describe('PlaceOrder', () => {
       client = createApolloClient({
         Mutation: {
           placeOrder: () => ({
-            orderId: '10',
-            orderRealId: '010'
+            id: 10,
+            referenceNo: '010'
           })
         }
       });
@@ -176,8 +176,8 @@ describe('PlaceOrder', () => {
       expect(props.values.paymentMethod).toEqual(samplePaymentMethod);
       expect(props.isLoading).toBeFalsy();
       expect(props.result).toBeDefined();
-      expect((props.result as PlaceOrderSuccessfulResult).orderId).toEqual('10');
-      expect((props.result as PlaceOrderSuccessfulResult).orderRealId).toEqual('010');
+      expect((props.result as Order).id).toEqual('10');
+      expect((props.result as Order).referenceNo).toEqual('010');
     });
   });
 
