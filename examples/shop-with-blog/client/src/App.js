@@ -48,10 +48,12 @@ const HeadMetaTags = () => (
 const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/home/Home'));
 const Account = loadable(() => import(/* webpackChunkName: "account/account" */ './pages/shop/Account/Account'));
 const SignIn = loadable(() => import(/* webpackChunkName: "account/sign-in" */ './pages/account/SignIn'));
-const ResetPassword = loadable(() => import(/* webpackChunkName: "shop/resetpassword" */ './pages/shop/ResetPassword'));
+const ResetPassword = loadable(() =>
+  import(/* webpackChunkName: "shop/reset-password" */ './pages/shop/ResetPassword')
+);
 const Blog = loadable(() => import(/* webpackChunkName: "blog/blog" */ './pages/blog/Blog'));
 const Cart = loadable(() => import(/* webpackChunkName: "shop/cart" */ './pages/shop/Cart'));
-const Checkout = loadable(() => import(/* webpackChunkName: "shop/checkout" */ './pages/shop/Checkout'));
+const Checkout = loadable(() => import(/* webpackChunkName: "shop/checkout" */ './pages/shop/checkout/Checkout'));
 const CheckoutConfirmation = loadable(() =>
   import(/* webpackChunkName: "shop/checkout" */ './pages/shop/CheckoutConfirmation')
 );
