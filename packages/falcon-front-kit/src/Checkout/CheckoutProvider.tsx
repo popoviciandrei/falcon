@@ -6,13 +6,14 @@ import { CheckoutContext } from './CheckoutContext';
 
 export type CheckoutProviderProps = {
   initialValues?: CheckoutValues;
+  billingSameAsShipping?: boolean;
 };
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
-  const { children, initialValues } = props;
+  const { children, initialValues, billingSameAsShipping } = props;
 
   const [step, setStep] = useState<keyof typeof CheckoutStep>('Email');
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [isBillingSameAsShipping, setBillingSameAsShipping] = useState<boolean>(false);
+  const [isBillingSameAsShipping, setBillingSameAsShipping] = useState<boolean>(billingSameAsShipping || false);
   const [values, setValues] = useState<CheckoutValues>({
     ...initialValues
   });
