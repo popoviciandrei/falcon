@@ -39,7 +39,7 @@ export type AddressBase = {
 };
 
 export type Address = AddressBase & {
-  id: number;
+  id: ID;
   region?: Region;
   country: AddressCountry;
   fax?: string;
@@ -47,27 +47,25 @@ export type Address = AddressBase & {
   defaultShipping: boolean;
 } & GraphQLBase;
 
-export type CheckoutAddressInput = AddressBase & {
-  id?: ID;
+export type AddressInputBase = AddressBase & {
   regionId?: ID;
   countryId: ID;
+};
+
+export type CheckoutAddressInput = AddressInputBase & {
+  id?: ID;
   email?: string;
   saveInAddressBook?: boolean; // TODO: create issue on GH to implement this feature?
   sameAsBilling?: number; // TODO: check if it is used, if not, please remove!
 };
 
-export type AddAddressInput = AddressBase & {
-  regionId?: string;
-  countryId: string;
+export type AddAddressInput = AddressInputBase & {
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
 
-export type EditAddressInput = AddressBase & {
+export type EditAddressInput = AddressInputBase & {
   id: ID;
-  telephone?: string;
-  regionId?: ID;
-  countryId: ID;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
