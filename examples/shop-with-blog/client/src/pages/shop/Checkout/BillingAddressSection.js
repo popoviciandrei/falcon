@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { I18n } from '@deity/falcon-i18n';
+import { I18n, T } from '@deity/falcon-i18n';
 import { Button, Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
 import {
   useSetBillingAddress,
@@ -73,14 +73,9 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
   return (
     <SetCheckoutAddressFormProvider setAddress={setBillingAddress} address={address}>
       {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
-        if (shouldAutoSubmit) {
-          if (submitCount === 0) {
-            submitForm();
-            return;
-          }
-          if (isSubmitting) {
-            return <Loader variant="overlay" />;
-          }
+        if (shouldAutoSubmit && submitCount === 0) {
+          submitForm();
+          return;
         }
 
         return (
@@ -97,7 +92,7 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
                 }}
               />
               <Label ml="xs" htmlFor="use-the-same-as-shipping">
-                use the same as shipping
+                <T id="checkout.useTheSameAddress" />
               </Label>
             </FlexLayout>
             {!isBillingSameAsShipping && addresses.length > 0 && (

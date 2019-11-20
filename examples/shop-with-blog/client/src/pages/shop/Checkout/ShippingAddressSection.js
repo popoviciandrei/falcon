@@ -73,14 +73,9 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
   return (
     <SetCheckoutAddressFormProvider setAddress={setShippingAddress} address={address}>
       {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
-        if (shouldAutoSubmit) {
-          if (submitCount === 0) {
-            submitForm();
-            return;
-          }
-          if (isSubmitting) {
-            return <Loader variant="overlay" />;
-          }
+        if (shouldAutoSubmit && submitCount === 0) {
+          submitForm();
+          return;
         }
 
         return (
