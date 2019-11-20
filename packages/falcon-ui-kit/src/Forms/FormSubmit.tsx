@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect, FormikProps } from 'formik';
+import { FormikProps, useFormik, useFormikContext } from 'formik';
 import { Button, BoxProps, extractThemableProps, Box } from '@deity/falcon-ui';
 import { Submit } from '@deity/falcon-front-kit';
 
@@ -15,18 +15,14 @@ export type FormSubmitRenderProps<TValue = any> = {
 export type FormSubmitProps<TValue = any> = {
   value?: string;
   children?: (props: FormSubmitRenderProps<TValue>) => React.ReactNode;
-} & InjectedProps<TValue> &
-  React.ButtonHTMLAttributes<HTMLButtonElement> &
+} & React.ButtonHTMLAttributes<HTMLButtonElement> &
   BoxProps;
 
-type InjectedProps<TValue = any> = {
-  formik?: FormikProps<TValue>;
-};
-
-const FormSubmitInner: React.SFC<FormSubmitProps> = ({ value, formik, children, ...restProps }) => {
+export const FormSubmit: React.SFC<FormSubmitProps> = ({ value, children, ...restProps }) => {
   const { themableProps, rest } = extractThemableProps(restProps);
+
   return (
-    <Submit form={formik} value={value} {...rest}>
+    <Submit {...rest}>
       {({ form, submit }) =>
         children ? (
           children({ form, submit })
@@ -38,7 +34,7 @@ const FormSubmitInner: React.SFC<FormSubmitProps> = ({ value, formik, children, 
               variant={form.isSubmitting ? 'loader' : undefined}
               {...submit}
             >
-              {submit.value}
+              {value || submit.value}
             </Button>
           </Box>
         )
@@ -46,5 +42,3 @@ const FormSubmitInner: React.SFC<FormSubmitProps> = ({ value, formik, children, 
     </Submit>
   );
 };
-
-export const FormSubmit = connect(FormSubmitInner);
