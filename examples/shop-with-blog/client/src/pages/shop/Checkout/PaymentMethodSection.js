@@ -14,7 +14,7 @@ const PaymentMethodItem = loadable(() =>
   import(/* webpackChunkName: "checkout/payment-item" */ './components/PaymentMethodItem')
 );
 
-class PaymentSection extends React.Component {
+export class PaymentMethodSection extends React.Component {
   constructor(props) {
     super(props);
 
@@ -93,8 +93,7 @@ class PaymentSection extends React.Component {
     );
   }
 }
-
-PaymentSection.propTypes = {
+PaymentMethodSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
   // currently selected payment method
@@ -103,5 +102,3 @@ PaymentSection.propTypes = {
   onEditRequested: PropTypes.func
   // callback that sets selected payment method
 };
-
-export default PaymentSection;

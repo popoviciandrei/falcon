@@ -62,7 +62,7 @@ PropertyRow.propTypes = {
   })
 };
 
-const CheckoutCartSummary = ({ cart }) => (
+export const CheckoutCartSummary = ({ cart }) => (
   <Box>
     {cart.items.map(item => (
       <React.Fragment key={item.sku}>
@@ -89,12 +89,9 @@ const CheckoutCartSummary = ({ cart }) => (
     />
   </Box>
 );
-
 CheckoutCartSummary.propTypes = {
   cart: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape({})),
     totals: PropTypes.arrayOf(PropTypes.shape({}))
   })
 };
-
-export default CheckoutCartSummary;

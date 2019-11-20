@@ -30,7 +30,7 @@ ShippingSelector.propTypes = {
   onShippingSelected: PropTypes.func
 };
 
-class ShippingSection extends React.Component {
+export class ShippingMethodSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -104,7 +104,7 @@ class ShippingSection extends React.Component {
     );
   }
 }
-ShippingSection.propTypes = {
+ShippingMethodSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
   // callback that should be called when user requests edit of this particular section
@@ -112,5 +112,3 @@ ShippingSection.propTypes = {
   // currently selected shipping method
   selectedShipping: PropTypes.shape({})
 };
-
-export default ShippingSection;

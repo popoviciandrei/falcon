@@ -6,12 +6,12 @@ import { toGridTemplate, Loader, PageLayout, ErrorSummary } from '@deity/falcon-
 import { CartQuery } from '@deity/falcon-shop-data';
 import { T, useI18n } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
-import CheckoutCartSummary from './CheckoutCartSummary';
+import { CheckoutCartSummary } from './CheckoutCartSummary';
 import { EmailSection } from './EmailSection';
 import { ShippingAddressSection } from './ShippingAddressSection';
 import { BillingAddressSection } from './BillingAddressSection';
-import ShippingMethodSection from './ShippingMethodSection';
-import PaymentMethodSection from './PaymentMethodSection';
+import { ShippingMethodSection } from './ShippingMethodSection';
+import { PaymentMethodSection } from './PaymentMethodSection';
 
 const CheckoutArea = {
   checkout: 'checkout',
