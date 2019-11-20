@@ -72,47 +72,40 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
 
   return (
     <SetCheckoutAddressFormProvider setAddress={setBillingAddress} address={address}>
-      {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
-        if (shouldAutoSubmit && submitCount === 0) {
-          submitForm();
-          return;
-        }
-
-        return (
-          <Form id="billing-address" i18nId="addressForm">
-            {isSubmitting && <Loader variant="overlay" />}
-            <FlexLayout mb="md">
-              <Checkbox
-                id="use-the-same-as-shipping"
-                size="sm"
-                checked={isBillingSameAsShipping}
-                onChange={e => {
-                  setBillingSameAsShipping(e.target.checked);
-                  setValues(checkoutAddressToSetCheckoutAddressFormValues(e.target.checked && values.shippingAddress));
-                }}
-              />
-              <Label ml="xs" htmlFor="use-the-same-as-shipping">
-                <T id="checkout.useTheSameAddress" />
-              </Label>
-            </FlexLayout>
-            {!isBillingSameAsShipping && addresses.length > 0 && (
-              <AddressPicker
-                options={addresses}
-                selected={address}
-                onChange={x => {
-                  setAddress(x);
-                  setValues(checkoutAddressToSetCheckoutAddressFormValues(x));
-                }}
-              />
-            )}
-            {!isBillingSameAsShipping && isCustomAddress(address) && (
-              <AddressFormFields autoCompleteSection="billing-address" />
-            )}
-            <Button type="submit">{submitLabel}</Button>
-            <ErrorSummary errors={error} />
-          </Form>
-        );
-      }}
+      {({ isSubmitting, setValues, status: { error } }) => (
+        <Form id="billing-address" i18nId="addressForm" autoSubmit={shouldAutoSubmit}>
+          {isSubmitting && <Loader variant="overlay" />}
+          <FlexLayout mb="md">
+            <Checkbox
+              id="use-the-same-as-shipping"
+              size="sm"
+              checked={isBillingSameAsShipping}
+              onChange={e => {
+                setBillingSameAsShipping(e.target.checked);
+                setValues(checkoutAddressToSetCheckoutAddressFormValues(e.target.checked && values.shippingAddress));
+              }}
+            />
+            <Label ml="xs" htmlFor="use-the-same-as-shipping">
+              <T id="checkout.useTheSameAddress" />
+            </Label>
+          </FlexLayout>
+          {!isBillingSameAsShipping && addresses.length > 0 && (
+            <AddressPicker
+              options={addresses}
+              selected={address}
+              onChange={x => {
+                setAddress(x);
+                setValues(checkoutAddressToSetCheckoutAddressFormValues(x));
+              }}
+            />
+          )}
+          {!isBillingSameAsShipping && isCustomAddress(address) && (
+            <AddressFormFields autoCompleteSection="billing-address" />
+          )}
+          <Button type="submit">{submitLabel}</Button>
+          <ErrorSummary errors={error} />
+        </Form>
+      )}
     </SetCheckoutAddressFormProvider>
   );
 };

@@ -72,31 +72,24 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
 
   return (
     <SetCheckoutAddressFormProvider setAddress={setShippingAddress} address={address}>
-      {({ isSubmitting, setValues, status: { error }, submitCount, submitForm }) => {
-        if (shouldAutoSubmit && submitCount === 0) {
-          submitForm();
-          return;
-        }
-
-        return (
-          <Form id="shipping-address" i18nId="addressForm">
-            {isSubmitting && <Loader variant="overlay" />}
-            {addresses.length > 0 && (
-              <AddressPicker
-                options={addresses}
-                selected={address}
-                onChange={x => {
-                  setAddress(x);
-                  setValues(checkoutAddressToSetCheckoutAddressFormValues(x));
-                }}
-              />
-            )}
-            {isCustomAddress(address) && <AddressFormFields autoCompleteSection="shipping-address" />}
-            <Button type="submit">{submitLabel}</Button>
-            <ErrorSummary errors={error} />
-          </Form>
-        );
-      }}
+      {({ isSubmitting, setValues, status: { error } }) => (
+        <Form id="shipping-address" i18nId="addressForm" autoSubmit={shouldAutoSubmit}>
+          {isSubmitting && <Loader variant="overlay" />}
+          {addresses.length > 0 && (
+            <AddressPicker
+              options={addresses}
+              selected={address}
+              onChange={x => {
+                setAddress(x);
+                setValues(checkoutAddressToSetCheckoutAddressFormValues(x));
+              }}
+            />
+          )}
+          {isCustomAddress(address) && <AddressFormFields autoCompleteSection="shipping-address" />}
+          <Button type="submit">{submitLabel}</Button>
+          <ErrorSummary errors={error} />
+        </Form>
+      )}
     </SetCheckoutAddressFormProvider>
   );
 };
