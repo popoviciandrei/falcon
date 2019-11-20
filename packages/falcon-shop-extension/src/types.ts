@@ -56,7 +56,11 @@ export type CheckoutAddressInput = AddressInputBase & {
   id?: ID;
   email?: string;
   saveInAddressBook?: boolean; // TODO: create issue on GH to implement this feature?
-  sameAsBilling?: number; // TODO: check if it is used, if not, please remove!
+};
+
+export type SetCheckoutAddressInput = {
+  address: CheckoutAddressInput;
+  billingSameAsShipping?: boolean;
 };
 
 export type AddAddressInput = AddressInputBase & {
@@ -464,7 +468,6 @@ export type PlaceOrder3dSecureField = {
   value?: string;
 };
 
-export type SetCheckoutAddressInput = OperationInput<CheckoutAddressInput>;
 export type SetCheckoutDetailsInput = OperationInput<CheckoutDetailsInput>;
 
 export type ShippingMethod = {

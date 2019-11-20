@@ -6,7 +6,7 @@ import { CheckoutOperation, CheckoutOperationHook } from './CheckoutOperation';
 
 export const useSetBillingAddress: CheckoutOperationHook<SetBillingAddressResponse, CheckoutAddress> = () => {
   const [address, setAddress] = useState<CheckoutAddress>();
-  const { isLoading, setLoading, setBillingAddress } = useCheckout();
+  const { isLoading, setLoading, setBillingAddress, isBillingSameAsShipping } = useCheckout();
   const [mutation, result] = useSetBillingAddressMutation({
     onCompleted: data => {
       if (data) {
@@ -21,12 +21,23 @@ export const useSetBillingAddress: CheckoutOperationHook<SetBillingAddressRespon
   }
 
   return [
-    useCallback(async (input: CheckoutAddress, options) => {
-      setLoading(true);
-      setAddress(input);
+    useCallback(
+      async (input: CheckoutAddress, options) => {
+        setLoading(true);
+        setAddress(input);
 
-      return mutation({ ...options, variables: { input: addressToCheckoutAddressInput(input) } });
-    }, []),
+        return mutation({
+          ...options,
+          variables: {
+            input: {
+              address: addressToCheckoutAddressInput(input),
+              billingSameAsShipping: isBillingSameAsShipping
+            }
+          }
+        });
+      },
+      [isBillingSameAsShipping]
+    ),
     result
   ];
 };

@@ -1489,15 +1489,25 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     };
   }
 
-  async setShippingAddress(root, { input: address }) {
+  async setShippingAddress(root, { input: { address, billingSameAsShipping } }) {
     this.session.cart.shippingAddress = address;
+    if (billingSameAsShipping) {
+      this.session.cart.billingAddress = address;
+    }
+
     this.context.session.save();
+
     return true;
   }
 
-  async setBillingAddress(root, { input: address }) {
+  async setBillingAddress(root, { input: { address, billingSameAsShipping } }) {
     this.session.cart.billingAddress = address;
+    if (billingSameAsShipping) {
+      this.session.cart.shippingAddress = address;
+    }
+
     this.context.session.save();
+
     return true;
   }
 

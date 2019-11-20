@@ -59,7 +59,7 @@ extend type Mutation {
 
   Followed by `Mutation.setBillingAddress`
   """
-  setShippingAddress(input: CheckoutAddressInput!): Boolean!
+  setShippingAddress(input: SetCheckoutAddressInput!): Boolean!
   """
   **Checkout Step 2/7**
 
@@ -68,7 +68,7 @@ extend type Mutation {
   Preceded by `Mutation.setShippingAddress`
   Followed by `Query.shippingMethodList`
   """
-  setBillingAddress(input: CheckoutAddressInput!): Boolean!
+  setBillingAddress(input: SetCheckoutAddressInput!): Boolean!
   """
   **Checkout Step 4/7**
 
@@ -216,6 +216,11 @@ input EditCustomerInput {
   defaultShipping: Boolean
 }
 
+input SetCheckoutAddressInput {
+  address: CheckoutAddressInput!
+  billingSameAsShipping: Boolean
+}
+
 input CheckoutAddressInput {
   id: ID
   firstname: String!
@@ -224,7 +229,6 @@ input CheckoutAddressInput {
   customerId: Int
   customerAddressId: ID
   postcode: String
-  sameAsBilling: Int
   saveInAddressBook: Boolean
   email: String
   company: String

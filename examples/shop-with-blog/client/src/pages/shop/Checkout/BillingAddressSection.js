@@ -66,7 +66,7 @@ BillingAddressSection.propTypes = {
 export const BillingAddressEditor = ({ addresses, submitLabel }) => {
   const defaultBilling = addresses.find(x => x.defaultBilling);
   const [setBillingAddress] = useSetBillingAddress();
-  const { values } = useCheckout();
+  const { values, isBillingSameAsShipping, setBillingSameAsShipping } = useCheckout();
   const shouldAutoSubmit = !values.billingAddress && !!defaultBilling;
   const [address, setAddress] = useState(values.billingAddress || defaultBilling);
 
@@ -90,14 +90,17 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
               <Checkbox
                 id="use-the-same-as-shipping"
                 size="sm"
-                // checked={this.state.useTheSame}
-                // onChange={e => this.setState({ useTheSame: e.target.checked })}
+                checked={isBillingSameAsShipping}
+                onChange={e => {
+                  setBillingSameAsShipping(e.target.checked);
+                  setValues(checkoutAddressToSetCheckoutAddressFormValues(e.target.checked && values.shippingAddress));
+                }}
               />
               <Label ml="xs" htmlFor="use-the-same-as-shipping">
                 use the same as shipping
               </Label>
             </FlexLayout>
-            {addresses.length > 0 && (
+            {!isBillingSameAsShipping && addresses.length > 0 && (
               <AddressPicker
                 options={addresses}
                 selected={address}
@@ -107,7 +110,9 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
                 }}
               />
             )}
-            {isCustomAddress(address) && <AddressFormFields autoCompleteSection="billing-address" />}
+            {!isBillingSameAsShipping && isCustomAddress(address) && (
+              <AddressFormFields autoCompleteSection="billing-address" />
+            )}
             <Button type="submit">{submitLabel}</Button>
             <ErrorSummary errors={error} />
           </Form>
