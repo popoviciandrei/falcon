@@ -45,7 +45,9 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     setValues(x => {
       const newValues = {
         ...x,
+        shippingAddress: isBillingSameAsShipping ? billingAddress : x.shippingAddress,
         billingAddress,
+        shippingMethod: isBillingSameAsShipping ? undefined : x.shippingMethod,
         paymentMethod: undefined
       };
       setStep(getNextStepForValues(newValues));

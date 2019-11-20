@@ -190,11 +190,26 @@ describe('<Checkout/>', () => {
       expect(getProps().step).toBe(CheckoutStep.ShippingAddress);
     });
 
-    it('should properly set billing address when setShippingAddress() and isBillingSameAsShipping is true', () => {
+    it('should properly set billing and shipping address when isBillingSameAsShipping is true and setShippingAddress()', () => {
       const { getProps } = renderCheckoutLogic();
       getProps().setBillingSameAsShipping(true);
       getProps().setEmail('foo@bar.com');
       getProps().setShippingAddress(sampleAddress);
+
+      expect(getProps().isBillingSameAsShipping).toBeTruthy();
+      expect(getProps().values.email).toBe('foo@bar.com');
+      expect(getProps().values.shippingAddress).toEqual(sampleAddress);
+      expect(getProps().values.billingAddress).toEqual(sampleAddress);
+      expect(getProps().values.shippingMethod).toEqual(undefined);
+      expect(getProps().values.paymentMethod).toEqual(undefined);
+      expect(getProps().step).toBe(CheckoutStep.Shipping);
+    });
+
+    it('should properly set shipping and billing address when isBillingSameAsShipping is true and setBillingAddress()', () => {
+      const { getProps } = renderCheckoutLogic();
+      getProps().setBillingSameAsShipping(true);
+      getProps().setEmail('foo@bar.com');
+      getProps().setBillingAddress(sampleAddress);
 
       expect(getProps().isBillingSameAsShipping).toBeTruthy();
       expect(getProps().values.email).toBe('foo@bar.com');
