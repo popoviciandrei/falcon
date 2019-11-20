@@ -6,11 +6,7 @@ import { SchemaLink } from 'apollo-link-schema';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-common';
-import { CheckoutStep } from './CheckoutStep';
-import { CheckoutValues } from './CheckoutValues';
-import { CheckoutProvider } from './CheckoutProvider';
-import { Checkout, CheckoutRenderProps } from './CheckoutConsumer';
-import { CheckoutAddress } from './CheckoutAddress';
+import { CheckoutValues, CheckoutStep, CheckoutProvider, Checkout, CheckoutRenderProps, CheckoutAddress } from '..';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
 const Schema = readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');

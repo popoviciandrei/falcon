@@ -7,22 +7,23 @@ import { SchemaLink } from 'apollo-link-schema';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider, MutationResult } from '@apollo/react-common';
-import { SetShippingMethodResponse } from '@deity/falcon-shop-data';
-import { ShippingMethod } from '@deity/falcon-shop-extension';
-import { Checkout, CheckoutRenderProps, CheckoutProvider, CheckoutOperationFunction, SetShippingMethod } from '.';
+import { SetPaymentMethodResponse } from '@deity/falcon-shop-data';
+import {
+  Checkout,
+  CheckoutRenderProps,
+  CheckoutProvider,
+  CheckoutOperationFunction,
+  SetPaymentMethod,
+  PaymentMethodData
+} from '..';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
 const Schema = readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');
 
-const sampleShippingMethod = {
-  carrierTitle: 'test carrier',
-  amount: 10,
-  carrierCode: 'test',
-  methodCode: 'test',
-  methodTitle: 'Test Carrier',
-  priceExclTax: 8,
-  priceInclTax: 10,
-  currency: 'EUR'
+const samplePaymentMethod = {
+  code: 'sample-payment',
+  config: null,
+  title: 'Sample Payment'
 };
 
 const createApolloClient = (resolvers: any) => {
@@ -44,15 +45,15 @@ const createApolloClient = (resolvers: any) => {
   });
 };
 
-describe('SetShippingMethod', () => {
-  describe('when setting shipping method', () => {
+describe('SetPaymentMethod', () => {
+  describe('when setting payment method', () => {
     let wrapper: ReactWrapper<any, any> | null;
     let client: ApolloClient<any>;
 
     beforeEach(() => {
       client = createApolloClient({
         Mutation: {
-          setShippingMethod: () => true
+          setPaymentMethod: () => true
         }
       });
     });
@@ -64,9 +65,9 @@ describe('SetShippingMethod', () => {
       }
     });
 
-    it('should properly set shipping method on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetShippingMethodResponse, ShippingMethod>;
-      let checkoutOperationResult: MutationResult<SetShippingMethodResponse>;
+    it('should properly set payment method on Checkout context', async () => {
+      let checkoutOperation: CheckoutOperationFunction<SetPaymentMethodResponse, PaymentMethodData>;
+      let checkoutOperationResult: MutationResult<SetPaymentMethodResponse>;
       let props: CheckoutRenderProps;
       let isLoading: boolean;
       wrapper = mount(
@@ -80,14 +81,14 @@ describe('SetShippingMethod', () => {
                 }
 
                 return (
-                  <SetShippingMethod>
+                  <SetPaymentMethod>
                     {(operation, result) => {
                       checkoutOperation = operation;
                       checkoutOperationResult = result;
 
                       return <div />;
                     }}
-                  </SetShippingMethod>
+                  </SetPaymentMethod>
                 );
               }}
             </Checkout>
@@ -96,14 +97,14 @@ describe('SetShippingMethod', () => {
       );
 
       expect(props.isLoading).toBeFalsy();
-      expect(props.values.shippingMethod).toBeUndefined();
+      expect(props.values.paymentMethod).toBeUndefined();
 
       await act(async () => {
-        return checkoutOperation(sampleShippingMethod);
+        return checkoutOperation(samplePaymentMethod);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.shippingMethod).toEqual(sampleShippingMethod);
+      expect(props.values.paymentMethod).toEqual(samplePaymentMethod);
       expect(props.isLoading).toBeFalsy();
     });
   });
@@ -115,8 +116,8 @@ describe('SetShippingMethod', () => {
     beforeEach(() => {
       client = createApolloClient({
         Mutation: {
-          setShippingMethod: () => {
-            throw new Error('setShipping error');
+          setPaymentMethod: () => {
+            throw new Error('setPaymentMethod error');
           }
         }
       });
@@ -129,9 +130,9 @@ describe('SetShippingMethod', () => {
       }
     });
 
-    it('should not set shipping method on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetShippingMethodResponse, ShippingMethod>;
-      let checkoutOperationResult: MutationResult<SetShippingMethodResponse>;
+    it('should not set payment method on Checkout context', async () => {
+      let checkoutOperation: CheckoutOperationFunction<SetPaymentMethodResponse, PaymentMethodData>;
+      let checkoutOperationResult: MutationResult<SetPaymentMethodResponse>;
       let props: CheckoutRenderProps;
       let isLoading: boolean;
       wrapper = mount(
@@ -145,14 +146,14 @@ describe('SetShippingMethod', () => {
                 }
 
                 return (
-                  <SetShippingMethod>
+                  <SetPaymentMethod>
                     {(operation, result) => {
                       checkoutOperation = operation;
                       checkoutOperationResult = result;
 
                       return <div />;
                     }}
-                  </SetShippingMethod>
+                  </SetPaymentMethod>
                 );
               }}
             </Checkout>
@@ -161,14 +162,14 @@ describe('SetShippingMethod', () => {
       );
 
       expect(props.isLoading).toBeFalsy();
-      expect(props.values.shippingMethod).toBeUndefined();
+      expect(props.values.paymentMethod).toBeUndefined();
 
       await act(async () => {
-        return checkoutOperation(sampleShippingMethod);
+        return checkoutOperation(samplePaymentMethod);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.shippingMethod).toBeUndefined();
+      expect(props.values.paymentMethod).toBeUndefined();
       expect(checkoutOperationResult.error).toBeDefined();
       expect(props.isLoading).toBeFalsy();
     });
