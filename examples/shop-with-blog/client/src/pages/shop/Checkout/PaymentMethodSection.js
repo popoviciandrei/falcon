@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { I18n, T } from '@deity/falcon-i18n';
+import { useI18n, T } from '@deity/falcon-i18n';
 import { PaymentMethodListQuery } from '@deity/falcon-shop-data';
-import { TwoStepWizard, SetPaymentMethod } from '@deity/falcon-front-kit';
+import { TwoStepWizard, SetPaymentMethod, useCheckout } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '@deity/falcon-ui-kit';
 import { Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
@@ -19,92 +19,82 @@ const PaymentMethodItem = loadable(() =>
   import(/* webpackChunkName: "checkout/payment-item" */ './components/PaymentMethodItem')
 );
 
-export class PaymentMethodSection extends React.Component {
-  constructor(props) {
-    super(props);
+export const PaymentMethodSection = props => {
+  const { open, onEditRequested } = props;
+  const { t } = useI18n();
+  const { values } = useCheckout();
+  const [state, setState] = useState(values.paymentMethod || {});
 
-    this.state = {};
-  }
-
-  render() {
-    const { open, selectedPayment, onEditRequested } = this.props;
-    let header;
-    if (!open && selectedPayment) {
-      header = (
-        <I18n>
-          {t => (
-            <CheckoutSectionHeader
-              title={t('checkout.payment')}
-              onActionClick={onEditRequested}
-              editLabel={t('edit')}
-              complete
-              summary={<Text fontWeight="bold">{selectedPayment.title}</Text>}
-            />
-          )}
-        </I18n>
-      );
-    } else {
-      header = <I18n>{t => <CheckoutSectionHeader title={t('checkout.payment')} open={open} />}</I18n>;
-    }
-
-    return (
-      <CheckoutSection open={open}>
-        {header}
-        {open && (
-          <CheckoutSectionContentLayout>
-            <PaymentMethodListQuery>
-              {({ data: { paymentMethodList } }) => {
-                if (paymentMethodList.length === 0) {
-                  return (
-                    <Text color="error" mb="sm">
-                      <T id="checkout.noPaymentMethodsAvailable" />
-                    </Text>
-                  );
-                }
-
-                return (
-                  <SetPaymentMethod>
-                    {(setPayment, { error }) => (
-                      <React.Fragment>
-                        <TwoStepWizard>
-                          {({ selectedOption, selectOption }) =>
-                            paymentMethodList.map(method => (
-                              <PaymentMethodItem
-                                key={method.code}
-                                {...method}
-                                selectOption={code => {
-                                  this.setState({});
-                                  selectOption(code);
-                                }}
-                                selectedOption={selectedOption}
-                                onPaymentDetailsReady={data => this.setState({ ...method, data })}
-                              />
-                            ))
-                          }
-                        </TwoStepWizard>
-                        <CheckoutSectionFooter>
-                          <Button disabled={!this.state.code} onClick={() => setPayment(this.state)}>
-                            <T id="checkout.nextStep" />
-                          </Button>
-                          <ErrorSummary errors={error} />
-                        </CheckoutSectionFooter>
-                      </React.Fragment>
-                    )}
-                  </SetPaymentMethod>
-                );
-              }}
-            </PaymentMethodListQuery>
-          </CheckoutSectionContentLayout>
-        )}
-      </CheckoutSection>
+  let header;
+  if (!open && values.paymentMethod) {
+    header = (
+      <CheckoutSectionHeader
+        title={t('checkout.payment')}
+        onActionClick={onEditRequested}
+        editLabel={t('edit')}
+        complete
+        summary={<Text fontWeight="bold">{values.paymentMethod.title}</Text>}
+      />
     );
+  } else {
+    header = <CheckoutSectionHeader title={t('checkout.payment')} open={open} />;
   }
-}
+
+  return (
+    <CheckoutSection open={open}>
+      {header}
+      {open && (
+        <CheckoutSectionContentLayout>
+          <PaymentMethodListQuery>
+            {({ data: { paymentMethodList } }) => {
+              if (paymentMethodList.length === 0) {
+                return (
+                  <Text color="error" mb="sm">
+                    <T id="checkout.noPaymentMethodsAvailable" />
+                  </Text>
+                );
+              }
+
+              return (
+                <SetPaymentMethod>
+                  {(setPayment, { error }) => (
+                    <React.Fragment>
+                      <TwoStepWizard initialState={state}>
+                        {({ selectedOption, selectOption }) =>
+                          paymentMethodList.map(method => (
+                            <PaymentMethodItem
+                              key={method.code}
+                              {...method}
+                              selectOption={code => {
+                                setState({});
+                                selectOption(code);
+                              }}
+                              selectedOption={selectedOption}
+                              onPaymentDetailsReady={data => setState({ ...method, data })}
+                            />
+                          ))
+                        }
+                      </TwoStepWizard>
+                      <CheckoutSectionFooter>
+                        <Button disabled={!state.code} onClick={() => setPayment(state)}>
+                          <T id="checkout.nextStep" />
+                        </Button>
+                        <ErrorSummary errors={error} />
+                      </CheckoutSectionFooter>
+                    </React.Fragment>
+                  )}
+                </SetPaymentMethod>
+              );
+            }}
+          </PaymentMethodListQuery>
+        </CheckoutSectionContentLayout>
+      )}
+    </CheckoutSection>
+  );
+};
 PaymentMethodSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
-  // currently selected payment method
-  selectedPayment: PropTypes.shape({}),
   // callback that should be called when user requests edit of this particular section
   onEditRequested: PropTypes.func
   // callback that sets selected payment method

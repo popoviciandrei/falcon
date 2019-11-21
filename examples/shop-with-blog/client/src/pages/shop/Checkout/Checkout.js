@@ -74,8 +74,6 @@ const CheckoutWizard = () => {
       <ShippingMethodSection
         open={step === CheckoutStep.Shipping}
         onEditRequested={() => setStep(CheckoutStep.Shipping)}
-        shippingAddress={values.shippingAddress}
-        selectedShipping={values.shippingMethod}
       />
 
       <Divider my="md" />
@@ -83,7 +81,6 @@ const CheckoutWizard = () => {
       <PaymentMethodSection
         open={step === CheckoutStep.Payment}
         onEditRequested={() => setStep(CheckoutStep.Payment)}
-        selectedPayment={values.paymentMethod}
       />
 
       <Divider my="md" />
