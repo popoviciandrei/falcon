@@ -6,6 +6,7 @@ import { toGridTemplate, Loader, PageLayout, ErrorSummary } from '@deity/falcon-
 import { CartQuery } from '@deity/falcon-shop-data';
 import { T, useI18n } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
+import { CheckoutSectionFooter } from './components';
 import { CheckoutCartSummary } from './CheckoutCartSummary';
 import { EmailSection } from './EmailSection';
 import { ShippingAddressSection } from './ShippingAddressSection';
@@ -94,12 +95,12 @@ const CheckoutWizard = () => {
           {(placeOrder, { error, loading, data }) => {
             if (!data) {
               return (
-                <Box>
+                <CheckoutSectionFooter p="xxl">
                   <Button onClick={() => placeOrder(values)} variant={loading && 'loader'}>
                     <T id="checkout.placeOrder" />
                   </Button>
                   <ErrorSummary errors={error} />
-                </Box>
+                </CheckoutSectionFooter>
               );
             }
 
