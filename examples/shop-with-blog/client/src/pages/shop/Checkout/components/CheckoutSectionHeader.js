@@ -17,15 +17,11 @@ export const CheckoutSectionHeader = ({ title, complete, open, summary, editLabe
       </Box>
     )}
     {complete && (
-      <Button
-        gridArea={CheckoutSectionHeaderLayoutArea.button}
-        fontSize="xs"
-        onClick={() => {
-          onActionClick();
-        }}
-      >
-        {editLabel}
-      </Button>
+      <Box gridArea={CheckoutSectionHeaderLayoutArea.action}>
+        <Button fontSize="xs" onClick={() => onActionClick()}>
+          {editLabel}
+        </Button>
+      </Box>
     )}
   </Summary>
 );
