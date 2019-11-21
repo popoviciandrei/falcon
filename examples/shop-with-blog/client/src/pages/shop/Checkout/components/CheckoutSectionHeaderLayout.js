@@ -4,7 +4,7 @@ export const CheckoutSectionHeaderLayoutArea = {
   icon: 'icon',
   title: 'title',
   summary: 'summary',
-  button: 'button'
+  action: 'action'
 };
 
 export const CheckoutSectionHeaderLayout = {
@@ -15,7 +15,7 @@ export const CheckoutSectionHeaderLayout = {
     // prettier-ignore
     gridTemplate: toGridTemplate([
       ['40px', '2fr', '3fr', '100px'],
-      [CheckoutSectionHeaderLayoutArea.icon, CheckoutSectionHeaderLayoutArea.title, CheckoutSectionHeaderLayoutArea.summary, CheckoutSectionHeaderLayoutArea.button]
+      [CheckoutSectionHeaderLayoutArea.icon, CheckoutSectionHeaderLayoutArea.title, CheckoutSectionHeaderLayoutArea.summary, CheckoutSectionHeaderLayoutArea.action]
     ])
   }
 };
