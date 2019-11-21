@@ -12,16 +12,16 @@ import {
   CheckoutSectionContentLayout
 } from './components';
 
-const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected }) => (
+const ShippingSelector = ({ options = [], onSelect }) => (
   <Box my="md">
-    {availableShippingOptions.map(option => (
+    {options.map(option => (
       <FlexLayout key={option.carrierCode}>
         <Radio
           size="sm"
           id={`opt-${option.carrierCode}`}
           value={option.carrierCode}
           name="shipping"
-          onChange={() => onShippingSelected(option)}
+          onChange={() => onSelect(option)}
         />
         <Label fontSize="sm" mx="sm" flex="1" htmlFor={`opt-${option.carrierCode}`}>
           <ShippingMethodDetails {...option} />
@@ -31,8 +31,8 @@ const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected })
   </Box>
 );
 ShippingSelector.propTypes = {
-  availableShippingOptions: PropTypes.arrayOf(PropTypes.shape({})),
-  onShippingSelected: PropTypes.func
+  options: PropTypes.arrayOf(PropTypes.shape({})),
+  onSelect: PropTypes.func
 };
 
 export class ShippingMethodSection extends React.Component {
@@ -42,8 +42,6 @@ export class ShippingMethodSection extends React.Component {
       selectedShipping: null
     };
   }
-
-  onShippingSelected = selectedShipping => this.setState({ selectedShipping });
 
   render() {
     const { open, onEditRequested, selectedShipping } = this.props;
@@ -87,8 +85,8 @@ export class ShippingMethodSection extends React.Component {
                     {(setShipping, { error }) => (
                       <React.Fragment>
                         <ShippingSelector
-                          availableShippingOptions={shippingMethodList}
-                          onShippingSelected={this.onShippingSelected}
+                          options={shippingMethodList}
+                          onSelect={x => this.setState({ selectedShipping: x })}
                         />
                         <CheckoutSectionFooter>
                           <Button
@@ -115,7 +113,5 @@ ShippingMethodSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func,
-  // currently selected shipping method
-  selectedShipping: PropTypes.shape({})
+  onEditRequested: PropTypes.func
 };
