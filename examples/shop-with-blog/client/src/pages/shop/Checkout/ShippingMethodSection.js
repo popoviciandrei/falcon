@@ -5,7 +5,12 @@ import { ShippingMethodListQuery } from '@deity/falcon-shop-data';
 import { SetShippingMethod } from '@deity/falcon-front-kit';
 import { Label, FlexLayout, Text, Radio, Box, Button } from '@deity/falcon-ui';
 import { ShippingMethodDetails, ErrorSummary } from '@deity/falcon-ui-kit';
-import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
+import {
+  CheckoutSection,
+  CheckoutSectionHeader,
+  CheckoutSectionFooter,
+  CheckoutSectionContentLayout
+} from './components';
 
 const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected }) => (
   <Box my="md">
@@ -85,13 +90,15 @@ export class ShippingMethodSection extends React.Component {
                           availableShippingOptions={shippingMethodList}
                           onShippingSelected={this.onShippingSelected}
                         />
-                        <Button
-                          disabled={!this.state.selectedShipping}
-                          onClick={() => setShipping(this.state.selectedShipping)}
-                        >
-                          <T id="continue" />
-                        </Button>
-                        <ErrorSummary errors={error} />
+                        <CheckoutSectionFooter>
+                          <Button
+                            disabled={!this.state.selectedShipping}
+                            onClick={() => setShipping(this.state.selectedShipping)}
+                          >
+                            <T id="checkout.nextStep" />
+                          </Button>
+                          <ErrorSummary errors={error} />
+                        </CheckoutSectionFooter>
                       </React.Fragment>
                     )}
                   </SetShippingMethod>

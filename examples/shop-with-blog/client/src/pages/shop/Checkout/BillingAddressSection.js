@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { I18n, T } from '@deity/falcon-i18n';
-import { Button, Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
+import { Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
 import {
   useSetBillingAddress,
   SetCheckoutAddressFormProvider,
@@ -9,12 +9,18 @@ import {
   useCheckout,
   isCustomAddress
 } from '@deity/falcon-front-kit';
-import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
+import { AddressDetails, Form, FormSubmit, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
-import { AddressPicker, CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
+import {
+  AddressPicker,
+  CheckoutSection,
+  CheckoutSectionHeader,
+  CheckoutSectionFooter,
+  CheckoutSectionContentLayout
+} from './components';
 
 export const BillingAddressSection = props => {
-  const { open, title, onEditRequested, submitLabel } = props;
+  const { open, title, onEditRequested } = props;
   const { values } = useCheckout();
 
   let header;
@@ -39,15 +45,13 @@ export const BillingAddressSection = props => {
   return (
     <CheckoutSection open={open}>
       {header}
-      <CheckoutSectionContentLayout>
-        {open && (
+      {open && (
+        <CheckoutSectionContentLayout>
           <CustomerWithAddressesQuery>
-            {({ data: { customer } }) => (
-              <BillingAddressEditor addresses={(customer && customer.addresses) || []} submitLabel={submitLabel} />
-            )}
+            {({ data: { customer } }) => <BillingAddressEditor addresses={(customer && customer.addresses) || []} />}
           </CustomerWithAddressesQuery>
-        )}
-      </CheckoutSectionContentLayout>
+        </CheckoutSectionContentLayout>
+      )}
     </CheckoutSection>
   );
 };
@@ -57,13 +61,10 @@ BillingAddressSection.propTypes = {
   // title of the section
   title: PropTypes.string,
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func,
-  // flag indicates if "use the same address" is selected - if so then address form is hidden
-  // label for submit button
-  submitLabel: PropTypes.string
+  onEditRequested: PropTypes.func
 };
 
-export const BillingAddressEditor = ({ addresses, submitLabel }) => {
+export const BillingAddressEditor = ({ addresses }) => {
   const defaultBilling = addresses.find(x => x.defaultBilling);
   const [setBillingAddress] = useSetBillingAddress();
   const { values, isBillingSameAsShipping, setBillingSameAsShipping } = useCheckout();
@@ -102,8 +103,12 @@ export const BillingAddressEditor = ({ addresses, submitLabel }) => {
           {!isBillingSameAsShipping && isCustomAddress(address) && (
             <AddressFormFields autoCompleteSection="billing-address" />
           )}
-          <Button type="submit">{submitLabel}</Button>
-          <ErrorSummary errors={error} />
+          <CheckoutSectionFooter>
+            <FormSubmit>
+              <T id="checkout.nextStep" />
+            </FormSubmit>
+            <ErrorSummary errors={error} />
+          </CheckoutSectionFooter>
         </Form>
       )}
     </SetCheckoutAddressFormProvider>

@@ -6,7 +6,12 @@ import { TwoStepWizard, SetPaymentMethod } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '@deity/falcon-ui-kit';
 import { Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
-import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
+import {
+  CheckoutSection,
+  CheckoutSectionHeader,
+  CheckoutSectionFooter,
+  CheckoutSectionContentLayout
+} from './components';
 
 // Loading "PaymentMethodItem" component via loadable package
 // to avoid premature import of Payment frontend-plugins and their dependencies on SSR
@@ -77,10 +82,12 @@ export class PaymentMethodSection extends React.Component {
                             ))
                           }
                         </TwoStepWizard>
-                        <Button disabled={!this.state.code} onClick={() => setPayment(this.state)}>
-                          <T id="continue" />
-                        </Button>
-                        <ErrorSummary errors={error} />
+                        <CheckoutSectionFooter>
+                          <Button disabled={!this.state.code} onClick={() => setPayment(this.state)}>
+                            <T id="checkout.nextStep" />
+                          </Button>
+                          <ErrorSummary errors={error} />
+                        </CheckoutSectionFooter>
                       </React.Fragment>
                     )}
                   </SetPaymentMethod>

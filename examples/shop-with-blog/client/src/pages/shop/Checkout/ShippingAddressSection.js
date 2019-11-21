@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { I18n } from '@deity/falcon-i18n';
-import { Button } from '@deity/falcon-ui';
+import { I18n, T } from '@deity/falcon-i18n';
 import {
   useSetShippingAddress,
   SetCheckoutAddressFormProvider,
@@ -9,12 +8,18 @@ import {
   useCheckout,
   isCustomAddress
 } from '@deity/falcon-front-kit';
-import { AddressDetails, Form, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
+import { AddressDetails, Form, AddressFormFields, ErrorSummary, FormSubmit, Loader } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
-import { AddressPicker, CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
+import {
+  AddressPicker,
+  CheckoutSection,
+  CheckoutSectionHeader,
+  CheckoutSectionFooter,
+  CheckoutSectionContentLayout
+} from './components';
 
 export const ShippingAddressSection = props => {
-  const { open, title, onEditRequested, submitLabel } = props;
+  const { open, title, onEditRequested } = props;
   const { values } = useCheckout();
 
   let header;
@@ -42,9 +47,7 @@ export const ShippingAddressSection = props => {
       <CheckoutSectionContentLayout>
         {open && (
           <CustomerWithAddressesQuery>
-            {({ data: { customer } }) => (
-              <ShippingAddressEditor addresses={(customer && customer.addresses) || []} submitLabel={submitLabel} />
-            )}
+            {({ data: { customer } }) => <ShippingAddressEditor addresses={(customer && customer.addresses) || []} />}
           </CustomerWithAddressesQuery>
         )}
       </CheckoutSectionContentLayout>
@@ -57,13 +60,10 @@ ShippingAddressSection.propTypes = {
   // title of the section
   title: PropTypes.string,
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func,
-  // flag indicates if "use the same address" is selected - if so then address form is hidden
-  // label for submit button
-  submitLabel: PropTypes.string
+  onEditRequested: PropTypes.func
 };
 
-export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
+export const ShippingAddressEditor = ({ addresses }) => {
   const defaultShipping = addresses.find(x => x.defaultShipping);
   const [setShippingAddress] = useSetShippingAddress();
   const { values } = useCheckout();
@@ -86,8 +86,12 @@ export const ShippingAddressEditor = ({ addresses, submitLabel }) => {
             />
           )}
           {isCustomAddress(address) && <AddressFormFields autoCompleteSection="shipping-address" />}
-          <Button type="submit">{submitLabel}</Button>
-          <ErrorSummary errors={error} />
+          <CheckoutSectionFooter>
+            <FormSubmit>
+              <T id="checkout.nextStep" />
+            </FormSubmit>
+            <ErrorSummary errors={error} />
+          </CheckoutSectionFooter>
         </Form>
       )}
     </SetCheckoutAddressFormProvider>
