@@ -59,7 +59,6 @@ const CheckoutWizard = () => {
         open={step === CheckoutStep.ShippingAddress}
         onEditRequested={() => setStep(CheckoutStep.ShippingAddress)}
         title={t('checkout.shippingAddress')}
-        submitLabel={t('checkout.nextStep')}
       />
 
       <Divider my="md" />
@@ -68,7 +67,6 @@ const CheckoutWizard = () => {
         open={step === CheckoutStep.BillingAddress}
         onEditRequested={() => setStep(CheckoutStep.BillingAddress)}
         title={t('checkout.billingAddress')}
-        submitLabel={t('checkout.nextStep')}
       />
 
       <Divider my="md" />
