@@ -257,11 +257,11 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
       const packageResolvedPath: string = require.resolve(packagePath);
       this.logger.getFor(extKey).debug(`Loading Schema from "${packageResolvedPath}"`);
       return readFile(packageResolvedPath);
-    } catch {
+    } catch (_e) {
       try {
         this.logger.getFor(extKey).debug(`Loading Schema from "${subFolderPath}"`);
         return readFile(subFolderPath);
-      } catch {
+      } catch (_ee) {
         return undefined;
       }
     }
