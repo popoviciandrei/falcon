@@ -96,9 +96,6 @@ export const PaymentMethodSection = props => {
   );
 };
 PaymentMethodSection.propTypes = {
-  // flag that indicates if the section is currently open
   open: PropTypes.bool,
-  // callback that should be called when user requests edit of this particular section
   onEdit: PropTypes.func
-  // callback that sets selected payment method
 };

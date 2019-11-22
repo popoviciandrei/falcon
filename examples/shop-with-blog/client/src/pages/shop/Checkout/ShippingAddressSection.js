@@ -20,7 +20,7 @@ import {
 } from './components';
 
 export const ShippingAddressSection = props => {
-  const { open, title, onEdit } = props;
+  const { open, onEdit } = props;
   const { t } = useI18n();
   const { values } = useCheckout();
 
@@ -28,7 +28,7 @@ export const ShippingAddressSection = props => {
   if (!open && values.shippingAddress) {
     header = (
       <CheckoutSectionHeader
-        title={title}
+        title={t('checkout.shippingAddress')}
         complete
         summary={<AddressDetails {...values.shippingAddress} />}
         action={
@@ -39,7 +39,7 @@ export const ShippingAddressSection = props => {
       />
     );
   } else {
-    header = <CheckoutSectionHeader title={title} open={open} />;
+    header = <CheckoutSectionHeader title={t('checkout.shippingAddress')} open={open} />;
   }
 
   return (
@@ -56,11 +56,7 @@ export const ShippingAddressSection = props => {
   );
 };
 ShippingAddressSection.propTypes = {
-  // flag that indicates if the section is currently open
   open: PropTypes.bool,
-  // title of the section
-  title: PropTypes.string,
-  // callback that should be called when user requests edit of this particular section
   onEdit: PropTypes.func
 };
 

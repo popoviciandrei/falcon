@@ -4,7 +4,7 @@ import { Box, H2, H4, Button, Divider } from '@deity/falcon-ui';
 import { CheckoutProvider, useCheckout, PlaceOrder, CheckoutStep } from '@deity/falcon-front-kit';
 import { toGridTemplate, Loader, PageLayout, ErrorSummary } from '@deity/falcon-ui-kit';
 import { CartQuery } from '@deity/falcon-shop-data';
-import { T, useI18n } from '@deity/falcon-i18n';
+import { T } from '@deity/falcon-i18n';
 import { Test3dSecure } from '@deity/falcon-payment-plugin';
 import { CheckoutSectionFooter } from './components';
 import { CheckoutCartSummary } from './CheckoutCartSummary';
@@ -45,7 +45,6 @@ const checkoutLayout = {
 };
 
 const CheckoutWizard = () => {
-  const { t } = useI18n();
   const { values, isLoading, result, step, setStep } = useCheckout();
 
   return (
@@ -58,7 +57,6 @@ const CheckoutWizard = () => {
       <ShippingAddressSection
         open={step === CheckoutStep.ShippingAddress}
         onEdit={() => setStep(CheckoutStep.ShippingAddress)}
-        title={t('checkout.shippingAddress')}
       />
 
       <Divider my="md" />
@@ -66,7 +64,6 @@ const CheckoutWizard = () => {
       <BillingAddressSection
         open={step === CheckoutStep.BillingAddress}
         onEdit={() => setStep(CheckoutStep.BillingAddress)}
-        title={t('checkout.billingAddress')}
       />
 
       <Divider my="md" />
