@@ -1,3 +1,5 @@
+const svgoConfig = require('./svgoConfig');
+
 module.exports = (/* api */) => {
   const preset = {
     presets: [
@@ -24,7 +26,8 @@ module.exports = (/* api */) => {
       require.resolve('@babel/plugin-syntax-dynamic-import'), // Adds syntax support for import()
       // Add support for loadable components SSR
       // https://www.smooth-code.com/open-source/loadable-components/docs/server-side-rendering/
-      require.resolve('@loadable/babel-plugin')
+      require.resolve('@loadable/babel-plugin'),
+      [require.resolve('babel-plugin-inline-react-svg'), { svgo: svgoConfig }]
     ]
   };
 
