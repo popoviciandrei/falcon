@@ -36,7 +36,7 @@ ShippingSelector.propTypes = {
 };
 
 export const ShippingMethodSection = props => {
-  const { open, onEditRequested } = props;
+  const { open, onEdit } = props;
   const { t } = useI18n();
   const { values } = useCheckout();
   const [state, setState] = useState(values.shippingMethod);
@@ -46,10 +46,13 @@ export const ShippingMethodSection = props => {
     header = (
       <CheckoutSectionHeader
         title={t('checkout.shipping')}
-        onActionClick={onEditRequested}
-        editLabel={t('edit')}
         complete
         summary={<ShippingMethodDetails {...values.shippingMethod} />}
+        action={
+          <Button variant="checkout" onClick={onEdit}>
+            {t('edit')}
+          </Button>
+        }
       />
     );
   } else {
@@ -97,5 +100,5 @@ ShippingMethodSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func
+  onEdit: PropTypes.func
 };

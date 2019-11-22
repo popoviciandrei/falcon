@@ -20,7 +20,7 @@ const PaymentMethodItem = loadable(() =>
 );
 
 export const PaymentMethodSection = props => {
-  const { open, onEditRequested } = props;
+  const { open, onEdit } = props;
   const { t } = useI18n();
   const { values } = useCheckout();
   const [state, setState] = useState(values.paymentMethod || {});
@@ -30,10 +30,13 @@ export const PaymentMethodSection = props => {
     header = (
       <CheckoutSectionHeader
         title={t('checkout.payment')}
-        onActionClick={onEditRequested}
-        editLabel={t('edit')}
         complete
         summary={<Text fontWeight="bold">{values.paymentMethod.title}</Text>}
+        action={
+          <Button variant="checkout" onClick={onEdit}>
+            {t('edit')}
+          </Button>
+        }
       />
     );
   } else {
@@ -96,6 +99,6 @@ PaymentMethodSection.propTypes = {
   // flag that indicates if the section is currently open
   open: PropTypes.bool,
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func
+  onEdit: PropTypes.func
   // callback that sets selected payment method
 };

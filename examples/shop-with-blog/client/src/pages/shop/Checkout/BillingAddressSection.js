@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { I18n, T } from '@deity/falcon-i18n';
-import { Checkbox, Label, FlexLayout } from '@deity/falcon-ui';
+import { useI18n, T } from '@deity/falcon-i18n';
+import { Checkbox, Label, FlexLayout, Button } from '@deity/falcon-ui';
 import {
   useSetBillingAddress,
   SetCheckoutAddressFormProvider,
@@ -20,23 +20,23 @@ import {
 } from './components';
 
 export const BillingAddressSection = props => {
-  const { open, title, onEditRequested } = props;
+  const { open, title, onEdit } = props;
+  const { t } = useI18n();
   const { values } = useCheckout();
 
   let header;
   if (!open && values.billingAddress) {
     header = (
-      <I18n>
-        {t => (
-          <CheckoutSectionHeader
-            title={title}
-            onActionClick={onEditRequested}
-            editLabel={t('edit')}
-            complete
-            summary={<AddressDetails {...values.billingAddress} />}
-          />
-        )}
-      </I18n>
+      <CheckoutSectionHeader
+        title={title}
+        complete
+        summary={<AddressDetails {...values.billingAddress} />}
+        action={
+          <Button variant="checkout" onClick={onEdit}>
+            {t('edit')}
+          </Button>
+        }
+      />
     );
   } else {
     header = <CheckoutSectionHeader title={title} open={open} />;
@@ -61,7 +61,7 @@ BillingAddressSection.propTypes = {
   // title of the section
   title: PropTypes.string,
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func
+  onEdit: PropTypes.func
 };
 
 export const BillingAddressEditor = ({ addresses }) => {

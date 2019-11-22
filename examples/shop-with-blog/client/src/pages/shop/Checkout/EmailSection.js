@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { useI18n, T } from '@deity/falcon-i18n';
 import { CustomerQuery, useSignOutMutation } from '@deity/falcon-shop-data';
 import { useCheckout } from '@deity/falcon-front-kit';
-import { Text, Link } from '@deity/falcon-ui';
+import { Text, Link, Button } from '@deity/falcon-ui';
 import { Form, FormField, ErrorSummary, FormSubmit, toGridTemplate } from '@deity/falcon-ui-kit';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 import { CheckoutSection, CheckoutSectionHeader, CheckoutSectionContentLayout } from './components';
@@ -30,7 +30,7 @@ const customerEmailFormLayout = {
 };
 
 export const EmailSection = props => {
-  const { open, onEditRequested } = props;
+  const { open, onEdit } = props;
   const { t } = useI18n();
   const [signOut] = useSignOutMutation();
   const { values, setEmail } = useCheckout();
@@ -47,10 +47,13 @@ export const EmailSection = props => {
             <CheckoutSection>
               <CheckoutSectionHeader
                 title={t('customerSelector.title')}
-                editLabel={t(customer ? 'customerSelector.signOut' : 'customerSelector.edit')}
-                onActionClick={customer ? signOut : onEditRequested}
                 complete
                 summary={<Text fontWeight="bold">{(customer && customer.email) || values.email}</Text>}
+                action={
+                  <Button variant="checkout" onClick={customer ? signOut : onEdit}>
+                    {t(`customerSelector.${customer ? 'signOut' : 'edit'}`)}
+                  </Button>
+                }
               />
             </CheckoutSection>
           );
@@ -96,7 +99,7 @@ export const EmailSection = props => {
 };
 EmailSection.propTypes = {
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func,
+  onEdit: PropTypes.func,
   // flag that indicates if the section is currently open
   open: PropTypes.bool
 };

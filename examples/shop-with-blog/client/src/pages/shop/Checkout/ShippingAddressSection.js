@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { I18n, T } from '@deity/falcon-i18n';
+import { useI18n, T } from '@deity/falcon-i18n';
+import { Button } from '@deity/falcon-ui';
 import {
   useSetShippingAddress,
   SetCheckoutAddressFormProvider,
@@ -19,23 +20,23 @@ import {
 } from './components';
 
 export const ShippingAddressSection = props => {
-  const { open, title, onEditRequested } = props;
+  const { open, title, onEdit } = props;
+  const { t } = useI18n();
   const { values } = useCheckout();
 
   let header;
   if (!open && values.shippingAddress) {
     header = (
-      <I18n>
-        {t => (
-          <CheckoutSectionHeader
-            title={title}
-            onActionClick={onEditRequested}
-            editLabel={t('edit')}
-            complete
-            summary={<AddressDetails {...values.shippingAddress} />}
-          />
-        )}
-      </I18n>
+      <CheckoutSectionHeader
+        title={title}
+        complete
+        summary={<AddressDetails {...values.shippingAddress} />}
+        action={
+          <Button variant="checkout" onClick={onEdit}>
+            {t('edit')}
+          </Button>
+        }
+      />
     );
   } else {
     header = <CheckoutSectionHeader title={title} open={open} />;
@@ -60,7 +61,7 @@ ShippingAddressSection.propTypes = {
   // title of the section
   title: PropTypes.string,
   // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func
+  onEdit: PropTypes.func
 };
 
 export const ShippingAddressEditor = ({ addresses }) => {
