@@ -52,28 +52,20 @@ const CheckoutWizard = () => {
       {isLoading && <Loader variant="overlay" />}
 
       <EmailSection open={step === CheckoutStep.Email} onEdit={() => setStep(CheckoutStep.Email)} />
-
       <Divider my="md" />
       <ShippingAddressSection
         open={step === CheckoutStep.ShippingAddress}
         onEdit={() => setStep(CheckoutStep.ShippingAddress)}
       />
-
       <Divider my="md" />
-
       <BillingAddressSection
         open={step === CheckoutStep.BillingAddress}
         onEdit={() => setStep(CheckoutStep.BillingAddress)}
       />
-
       <Divider my="md" />
-
       <ShippingMethodSection open={step === CheckoutStep.Shipping} onEdit={() => setStep(CheckoutStep.Shipping)} />
-
       <Divider my="md" />
-
       <PaymentMethodSection open={step === CheckoutStep.Payment} onEdit={() => setStep(CheckoutStep.Payment)} />
-
       <Divider my="md" />
 
       {step === CheckoutStep.Confirmation && (
