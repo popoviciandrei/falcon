@@ -53,7 +53,7 @@ const ResetPassword = loadable(() =>
 );
 const Blog = loadable(() => import(/* webpackChunkName: "blog/blog" */ './pages/blog/Blog'));
 const Cart = loadable(() => import(/* webpackChunkName: "shop/cart" */ './pages/shop/Cart'));
-const Checkout = loadable(() => import(/* webpackChunkName: "shop/checkout" */ './pages/shop/checkout/Checkout'));
+const Checkout = loadable(() => import(/* webpackChunkName: "shop/checkout" */ './pages/shop/Checkout/Checkout'));
 const CheckoutConfirmation = loadable(() =>
   import(/* webpackChunkName: "shop/checkout" */ './pages/shop/CheckoutConfirmation')
 );
