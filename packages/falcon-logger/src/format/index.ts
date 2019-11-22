@@ -175,7 +175,7 @@ export const falconPrettyFactory = (options: object) => {
   return (inputData: string | object): string => {
     try {
       return formatMessage(inputData);
-    } catch (_e) {
+    } catch {
       return typeof inputData === 'string' ? inputData : JSON.stringify(inputData);
     }
   };

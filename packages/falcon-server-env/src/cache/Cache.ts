@@ -162,7 +162,7 @@ export class Cache<V = any> implements KeyValueCache<V> {
     let value: GetCacheFetchResult = await this.provider.get(key);
     try {
       value = JSON.parse(value);
-    } catch (_e) {
+    } catch {
       // Keep `value` with the original value
     }
 

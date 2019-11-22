@@ -69,7 +69,7 @@ const formatMessage = ({ IDENT, EOL }, inputData) => {
 export default ({ IDENT, EOL }) => inputData => {
   try {
     return formatMessage({ IDENT, EOL }, inputData);
-  } catch (_e) {
+  } catch {
     return typeof inputData === 'string' ? inputData : JSON.stringify(inputData);
   }
 };
