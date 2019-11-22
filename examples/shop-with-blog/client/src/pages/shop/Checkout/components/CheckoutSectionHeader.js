@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, H2, Button, Summary, Icon } from '@deity/falcon-ui';
+import { Box, H2, Summary, Icon } from '@deity/falcon-ui';
 import { CheckoutSectionHeaderLayout, CheckoutSectionHeaderLayoutArea } from './CheckoutSectionHeaderLayout';
 
-export const CheckoutSectionHeader = ({ title, complete, open, summary, editLabel, onActionClick }) => (
+export const CheckoutSectionHeader = ({ title, complete, open, summary, action }) => (
   <Summary onClick={e => e.preventDefault()} defaultTheme={CheckoutSectionHeaderLayout}>
     {(complete || open) && (
       <Icon size="lg" gridArea={CheckoutSectionHeaderLayoutArea.icon} src={complete ? 'check' : 'arrowRight'} />
@@ -16,13 +16,7 @@ export const CheckoutSectionHeader = ({ title, complete, open, summary, editLabe
         {summary}
       </Box>
     )}
-    {complete && (
-      <Box gridArea={CheckoutSectionHeaderLayoutArea.action}>
-        <Button fontSize="xs" onClick={() => onActionClick()}>
-          {editLabel}
-        </Button>
-      </Box>
-    )}
+    {action && complete && <Box gridArea={CheckoutSectionHeaderLayoutArea.action}>{action}</Box>}
   </Summary>
 );
 CheckoutSectionHeader.propTypes = {
@@ -30,6 +24,5 @@ CheckoutSectionHeader.propTypes = {
   complete: PropTypes.bool,
   open: PropTypes.bool,
   summary: PropTypes.shape({}),
-  editLabel: PropTypes.string,
-  onActionClick: PropTypes.func
+  action: PropTypes.shape({})
 };
