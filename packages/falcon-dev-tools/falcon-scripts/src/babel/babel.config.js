@@ -14,7 +14,7 @@ module.exports = {
       {
         modules: false,
         loose: true,
-        targets: targetNode ? { node: '8' } : 'defaults'
+        targets: targetNode ? { node: 8 } : 'defaults'
       }
     ],
     require.resolve('@babel/preset-typescript'),
