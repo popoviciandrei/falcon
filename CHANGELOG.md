@@ -20,6 +20,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
 - fixed handling of redirects by serviceworker ([#594](https://github.com/deity-io/falcon/pull/594))
 - fixed the `next` value for sign-in redirects ([#689](https://github.com/deity-io/falcon/pull/689))
+- improved a way of processing the `svg` files ([#726](https://github.com/deity-io/falcon/pull/726))
 
 ### Falcon I18n vNext
 
