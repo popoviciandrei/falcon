@@ -17,7 +17,7 @@ import {
   PlaceOrder,
   CheckoutAddress,
   OrderData
-} from '.';
+} from '..';
 
 const BaseSchema = readFileSync(require.resolve('@deity/falcon-server/schema.graphql'), 'utf8');
 const Schema = readFileSync(require.resolve('@deity/falcon-shop-extension/schema.graphql'), 'utf8');
