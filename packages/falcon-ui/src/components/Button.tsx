@@ -40,7 +40,7 @@ export const Button = themed({
         },
         ':disabled': {
           opacity: 0.6,
-          cursor: 'arrow'
+          cursor: 'default'
         }
       }),
 
