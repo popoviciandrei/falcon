@@ -6,4 +6,3 @@ export * from './getDefaultInputValidators';
 export * from './IValidator';
 export * from './validators';
 export * from './Submit';
-export * from './AutoSubmit';
