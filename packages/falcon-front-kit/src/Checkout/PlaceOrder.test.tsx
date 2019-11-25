@@ -181,7 +181,7 @@ describe('PlaceOrder', () => {
     });
   });
 
-  describe('when placing order fail', () => {
+  describe('when placing order fails', () => {
     let wrapper: ReactWrapper<any, any> | null;
     let client: ApolloClient<any>;
 
