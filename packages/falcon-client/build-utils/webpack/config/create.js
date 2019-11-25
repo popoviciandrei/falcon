@@ -218,7 +218,8 @@ module.exports = (target = 'web', options) => {
             /\.html$/,
             /\.(vue)$/,
             /\.(re)$/,
-            /\.(webmanifest|browserconfig)$/
+            /\.(webmanifest|browserconfig)$/,
+            /\.svg$/
           ],
           loader: require.resolve('file-loader'),
           options: {
