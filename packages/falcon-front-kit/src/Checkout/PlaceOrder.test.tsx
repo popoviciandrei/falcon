@@ -97,66 +97,75 @@ const createApolloClient = (resolvers: any) => {
 };
 
 describe('PlaceOrder', () => {
+  let wrapper: ReactWrapper<any, any> | null;
+  let CheckoutContext;
+  let checkoutRenderProps: CheckoutRenderProps;
+  let isLoading: boolean;
+  let checkoutOperation: CheckoutOperationFunction<PlaceOrderResponse, OrderData>;
+  let checkoutOperationResult: MutationResult<PlaceOrderResponse>;
+
+  beforeEach(() => {
+    CheckoutContext = ({ apolloClient }) => (
+      <ApolloProvider client={apolloClient}>
+        <CheckoutProvider>
+          <Checkout>
+            {renderProps => {
+              checkoutRenderProps = renderProps;
+              if (renderProps.isLoading) {
+                isLoading = true;
+              }
+
+              return (
+                <PlaceOrder>
+                  {(operation, result) => {
+                    checkoutOperation = operation;
+                    checkoutOperationResult = result;
+
+                    return <div />;
+                  }}
+                </PlaceOrder>
+              );
+            }}
+          </Checkout>
+        </CheckoutProvider>
+      </ApolloProvider>
+    );
+  });
+
+  afterEach(() => {
+    checkoutRenderProps = undefined;
+    isLoading = false;
+    checkoutOperation = undefined;
+    checkoutOperationResult = undefined;
+
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  });
+
   describe('when placing order', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          placeOrder: () => ({
-            id: 10,
-            referenceNo: '010'
-          })
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should properly set order data and place order result on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<PlaceOrderResponse, OrderData>;
-      let checkoutOperationResult: MutationResult<PlaceOrderResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <PlaceOrder>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </PlaceOrder>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              placeOrder: () => ({
+                id: 10,
+                referenceNo: '010'
+              })
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.result).toBeUndefined();
-      expect(props.values.email).toBeUndefined();
-      expect(props.values.shippingAddress).toBeUndefined();
-      expect(props.values.billingAddress).toBeUndefined();
-      expect(props.values.shippingMethod).toBeUndefined();
-      expect(props.values.paymentMethod).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.result).toBeUndefined();
+      expect(checkoutRenderProps.values.email).toBeUndefined();
+      expect(checkoutRenderProps.values.shippingAddress).toBeUndefined();
+      expect(checkoutRenderProps.values.billingAddress).toBeUndefined();
+      expect(checkoutRenderProps.values.shippingMethod).toBeUndefined();
+      expect(checkoutRenderProps.values.paymentMethod).toBeUndefined();
 
       await act(async () =>
         checkoutOperation({
@@ -169,77 +178,39 @@ describe('PlaceOrder', () => {
       );
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.email).toEqual('test@test.co.uk');
-      expect(props.values.shippingAddress).toEqual(sampleAddress);
-      expect(props.values.billingAddress).toEqual(sampleAddress);
-      expect(props.values.shippingMethod).toEqual(sampleShippingMethod);
-      expect(props.values.paymentMethod).toEqual(samplePaymentMethod);
-      expect(props.isLoading).toBeFalsy();
-      expect(props.result).toBeDefined();
-      expect((props.result as Order).id).toEqual('10');
-      expect((props.result as Order).referenceNo).toEqual('010');
+      expect(checkoutRenderProps.values.email).toEqual('test@test.co.uk');
+      expect(checkoutRenderProps.values.shippingAddress).toEqual(sampleAddress);
+      expect(checkoutRenderProps.values.billingAddress).toEqual(sampleAddress);
+      expect(checkoutRenderProps.values.shippingMethod).toEqual(sampleShippingMethod);
+      expect(checkoutRenderProps.values.paymentMethod).toEqual(samplePaymentMethod);
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.result).toBeDefined();
+      expect((checkoutRenderProps.result as Order).id).toEqual('10');
+      expect((checkoutRenderProps.result as Order).referenceNo).toEqual('010');
     });
   });
 
   describe('when placing order fails', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          placeOrder: () => {
-            throw new Error('placeOrder error');
-          }
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should properly set order data but should not set order result on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<PlaceOrderResponse, OrderData>;
-      let checkoutOperationResult: MutationResult<PlaceOrderResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <PlaceOrder>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </PlaceOrder>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              placeOrder: () => {
+                throw new Error('placeOrder error');
+              }
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.result).toBeUndefined();
-      expect(props.values.email).toBeUndefined();
-      expect(props.values.shippingAddress).toBeUndefined();
-      expect(props.values.billingAddress).toBeUndefined();
-      expect(props.values.shippingMethod).toBeUndefined();
-      expect(props.values.paymentMethod).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.result).toBeUndefined();
+      expect(checkoutRenderProps.values.email).toBeUndefined();
+      expect(checkoutRenderProps.values.shippingAddress).toBeUndefined();
+      expect(checkoutRenderProps.values.billingAddress).toBeUndefined();
+      expect(checkoutRenderProps.values.shippingMethod).toBeUndefined();
+      expect(checkoutRenderProps.values.paymentMethod).toBeUndefined();
 
       await act(async () =>
         checkoutOperation({
@@ -252,15 +223,15 @@ describe('PlaceOrder', () => {
       );
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.email).toEqual('test@test.co.uk');
-      expect(props.values.shippingAddress).toEqual(sampleAddress);
-      expect(props.values.billingAddress).toEqual(sampleAddress);
-      expect(props.values.shippingMethod).toEqual(sampleShippingMethod);
-      expect(props.values.paymentMethod).toEqual(samplePaymentMethod);
+      expect(checkoutRenderProps.values.email).toEqual('test@test.co.uk');
+      expect(checkoutRenderProps.values.shippingAddress).toEqual(sampleAddress);
+      expect(checkoutRenderProps.values.billingAddress).toEqual(sampleAddress);
+      expect(checkoutRenderProps.values.shippingMethod).toEqual(sampleShippingMethod);
+      expect(checkoutRenderProps.values.paymentMethod).toEqual(samplePaymentMethod);
 
-      expect(props.result).toBeUndefined();
+      expect(checkoutRenderProps.result).toBeUndefined();
       expect(checkoutOperationResult.error).toBeDefined();
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 });

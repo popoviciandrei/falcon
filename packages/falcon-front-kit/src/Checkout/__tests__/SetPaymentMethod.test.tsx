@@ -45,133 +45,104 @@ const createApolloClient = (resolvers: any) => {
   });
 };
 
-describe('SetPaymentMethod', () => {
+describe('<Checkout/> SetPaymentMethod', () => {
+  let wrapper: ReactWrapper<any, any> | null;
+  let CheckoutContext;
+  let checkoutOperation: CheckoutOperationFunction<SetPaymentMethodResponse, PaymentMethodData>;
+  let checkoutOperationResult: MutationResult<SetPaymentMethodResponse>;
+  let checkoutRenderProps: CheckoutRenderProps;
+  let isLoading: boolean;
+
+  beforeEach(() => {
+    CheckoutContext = ({ apolloClient }) => (
+      <ApolloProvider client={apolloClient}>
+        <CheckoutProvider>
+          <Checkout>
+            {renderProps => {
+              checkoutRenderProps = renderProps;
+              if (renderProps.isLoading) {
+                isLoading = true;
+              }
+
+              return (
+                <SetPaymentMethod>
+                  {(operation, result) => {
+                    checkoutOperation = operation;
+                    checkoutOperationResult = result;
+
+                    return <div />;
+                  }}
+                </SetPaymentMethod>
+              );
+            }}
+          </Checkout>
+        </CheckoutProvider>
+      </ApolloProvider>
+    );
+  });
+
+  afterEach(() => {
+    checkoutRenderProps = undefined;
+    isLoading = false;
+    checkoutOperation = undefined;
+    checkoutOperationResult = undefined;
+
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  });
+
   describe('when setting payment method', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setPaymentMethod: () => true
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should properly set payment method on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetPaymentMethodResponse, PaymentMethodData>;
-      let checkoutOperationResult: MutationResult<SetPaymentMethodResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetPaymentMethod>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetPaymentMethod>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setPaymentMethod: () => true
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.paymentMethod).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.paymentMethod).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(samplePaymentMethod);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.paymentMethod).toEqual(samplePaymentMethod);
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.paymentMethod).toEqual(samplePaymentMethod);
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 
   describe('when setting shipping address fail', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setPaymentMethod: () => {
-            throw new Error('setPaymentMethod error');
-          }
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should not set payment method on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetPaymentMethodResponse, PaymentMethodData>;
-      let checkoutOperationResult: MutationResult<SetPaymentMethodResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetPaymentMethod>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetPaymentMethod>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setPaymentMethod: () => {
+                throw new Error('setPaymentMethod error');
+              }
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.paymentMethod).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.paymentMethod).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(samplePaymentMethod);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.paymentMethod).toBeUndefined();
+      expect(checkoutRenderProps.values.paymentMethod).toBeUndefined();
       expect(checkoutOperationResult.error).toBeDefined();
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 });

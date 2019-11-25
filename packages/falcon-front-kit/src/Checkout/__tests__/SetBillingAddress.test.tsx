@@ -50,133 +50,104 @@ const createApolloClient = (resolvers: any) => {
   });
 };
 
-describe('SetBillingAddress', () => {
+describe('<Checkout/> SetBillingAddress', () => {
+  let wrapper: ReactWrapper<any, any> | null;
+  let CheckoutContext;
+  let checkoutRenderProps: CheckoutRenderProps;
+  let isLoading: boolean;
+  let checkoutOperation: CheckoutOperationFunction<SetBillingAddressResponse, CheckoutAddress>;
+  let checkoutOperationResult: MutationResult<SetBillingAddressResponse>;
+
+  beforeEach(() => {
+    CheckoutContext = ({ apolloClient }) => (
+      <ApolloProvider client={apolloClient}>
+        <CheckoutProvider>
+          <Checkout>
+            {renderProps => {
+              checkoutRenderProps = renderProps;
+              if (renderProps.isLoading) {
+                isLoading = true;
+              }
+
+              return (
+                <SetBillingAddress>
+                  {(operation, result) => {
+                    checkoutOperation = operation;
+                    checkoutOperationResult = result;
+
+                    return <div />;
+                  }}
+                </SetBillingAddress>
+              );
+            }}
+          </Checkout>
+        </CheckoutProvider>
+      </ApolloProvider>
+    );
+  });
+
+  afterEach(() => {
+    checkoutRenderProps = undefined;
+    isLoading = false;
+    checkoutOperation = undefined;
+    checkoutOperationResult = undefined;
+
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  });
+
   describe('when setting billing address', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setBillingAddress: () => true
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should properly set billing address on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetBillingAddressResponse, CheckoutAddress>;
-      let checkoutOperationResult: MutationResult<SetBillingAddressResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetBillingAddress>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetBillingAddress>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setBillingAddress: () => true
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.billingAddress).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.billingAddress).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(sampleAddress);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.billingAddress).toEqual(sampleAddress);
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.billingAddress).toEqual(sampleAddress);
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 
   describe('when setting shipping address fail', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setBillingAddress: () => {
-            throw new Error('setBillingAddress error');
-          }
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should not set billing address on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetBillingAddressResponse, CheckoutAddress>;
-      let checkoutOperationResult: MutationResult<SetBillingAddressResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetBillingAddress>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetBillingAddress>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setBillingAddress: () => {
+                throw new Error('setBillingAddress error');
+              }
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.billingAddress).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.billingAddress).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(sampleAddress);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.billingAddress).toBeUndefined();
+      expect(checkoutRenderProps.values.billingAddress).toBeUndefined();
       expect(checkoutOperationResult.error).toBeDefined();
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 });

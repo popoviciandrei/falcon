@@ -50,133 +50,99 @@ const createApolloClient = (resolvers: any) => {
   });
 };
 
-describe('SetShippingAddress', () => {
+describe('<Checkout/> SetShippingAddress', () => {
+  let wrapper: ReactWrapper<any, any> | null;
+  let CheckoutContext;
+  let checkoutOperation: CheckoutOperationFunction<SetShippingAddressResponse, CheckoutAddress>;
+  let checkoutOperationResult: MutationResult<SetShippingAddressResponse>;
+  let checkoutRenderProps: CheckoutRenderProps;
+  let isLoading: boolean;
+
+  beforeEach(() => {
+    CheckoutContext = ({ apolloClient }) => (
+      <ApolloProvider client={apolloClient}>
+        <CheckoutProvider>
+          <Checkout>
+            {renderProps => {
+              checkoutRenderProps = renderProps;
+              if (renderProps.isLoading) {
+                isLoading = true;
+              }
+
+              return (
+                <SetShippingAddress>
+                  {(operation, result) => {
+                    checkoutOperation = operation;
+                    checkoutOperationResult = result;
+
+                    return <div />;
+                  }}
+                </SetShippingAddress>
+              );
+            }}
+          </Checkout>
+        </CheckoutProvider>
+      </ApolloProvider>
+    );
+  });
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  });
+
   describe('when setting shipping address', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setShippingAddress: () => true
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should properly set shipping address on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetShippingAddressResponse, CheckoutAddress>;
-      let checkoutOperationResult: MutationResult<SetShippingAddressResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetShippingAddress>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetShippingAddress>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setShippingAddress: () => true
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.shippingAddress).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.shippingAddress).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(sampleAddress);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.shippingAddress).toEqual(sampleAddress);
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.shippingAddress).toEqual(sampleAddress);
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 
   describe('when setting shipping address fail', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setShippingAddress: () => {
-            throw new Error('setShippingAddress error');
-          }
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should not set shipping address on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetShippingAddressResponse, CheckoutAddress>;
-      let checkoutOperationResult: MutationResult<SetShippingAddressResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetShippingAddress>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetShippingAddress>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setShippingAddress: () => {
+                throw new Error('setShippingAddress error');
+              }
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.shippingAddress).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.shippingAddress).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(sampleAddress);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.shippingAddress).toBeUndefined();
+      expect(checkoutRenderProps.values.shippingAddress).toBeUndefined();
       expect(checkoutOperationResult.error).toBeDefined();
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 });

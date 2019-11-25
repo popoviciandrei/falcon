@@ -44,133 +44,104 @@ const createApolloClient = (resolvers: any) => {
   });
 };
 
-describe('SetShippingMethod', () => {
+describe('<Checkout/> SetShippingMethod', () => {
+  let wrapper: ReactWrapper<any, any> | null;
+  let CheckoutContext;
+  let checkoutOperation: CheckoutOperationFunction<SetShippingMethodResponse, ShippingMethod>;
+  let checkoutOperationResult: MutationResult<SetShippingMethodResponse>;
+  let checkoutRenderProps: CheckoutRenderProps;
+  let isLoading: boolean;
+
+  beforeEach(() => {
+    CheckoutContext = ({ apolloClient }) => (
+      <ApolloProvider client={apolloClient}>
+        <CheckoutProvider>
+          <Checkout>
+            {renderProps => {
+              checkoutRenderProps = renderProps;
+              if (renderProps.isLoading) {
+                isLoading = true;
+              }
+
+              return (
+                <SetShippingMethod>
+                  {(operation, result) => {
+                    checkoutOperation = operation;
+                    checkoutOperationResult = result;
+
+                    return <div />;
+                  }}
+                </SetShippingMethod>
+              );
+            }}
+          </Checkout>
+        </CheckoutProvider>
+      </ApolloProvider>
+    );
+  });
+
+  afterEach(() => {
+    checkoutRenderProps = undefined;
+    isLoading = false;
+    checkoutOperation = undefined;
+    checkoutOperationResult = undefined;
+
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  });
+
   describe('when setting shipping method', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setShippingMethod: () => true
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should properly set shipping method on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetShippingMethodResponse, ShippingMethod>;
-      let checkoutOperationResult: MutationResult<SetShippingMethodResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetShippingMethod>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetShippingMethod>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setShippingMethod: () => true
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.shippingMethod).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.shippingMethod).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(sampleShippingMethod);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.shippingMethod).toEqual(sampleShippingMethod);
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.shippingMethod).toEqual(sampleShippingMethod);
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 
   describe('when setting shipping address fail', () => {
-    let wrapper: ReactWrapper<any, any> | null;
-    let client: ApolloClient<any>;
-
-    beforeEach(() => {
-      client = createApolloClient({
-        Mutation: {
-          setShippingMethod: () => {
-            throw new Error('setShipping error');
-          }
-        }
-      });
-    });
-
-    afterEach(() => {
-      if (wrapper) {
-        wrapper.unmount();
-        wrapper = null;
-      }
-    });
-
     it('should not set shipping method on Checkout context', async () => {
-      let checkoutOperation: CheckoutOperationFunction<SetShippingMethodResponse, ShippingMethod>;
-      let checkoutOperationResult: MutationResult<SetShippingMethodResponse>;
-      let props: CheckoutRenderProps;
-      let isLoading: boolean;
       wrapper = mount(
-        <ApolloProvider client={client}>
-          <CheckoutProvider>
-            <Checkout>
-              {renderProps => {
-                props = renderProps;
-                if (renderProps.isLoading) {
-                  isLoading = true;
-                }
-
-                return (
-                  <SetShippingMethod>
-                    {(operation, result) => {
-                      checkoutOperation = operation;
-                      checkoutOperationResult = result;
-
-                      return <div />;
-                    }}
-                  </SetShippingMethod>
-                );
-              }}
-            </Checkout>
-          </CheckoutProvider>
-        </ApolloProvider>
+        <CheckoutContext
+          apolloClient={createApolloClient({
+            Mutation: {
+              setShippingMethod: () => {
+                throw new Error('setShipping error');
+              }
+            }
+          })}
+        />
       );
 
-      expect(props.isLoading).toBeFalsy();
-      expect(props.values.shippingMethod).toBeUndefined();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.values.shippingMethod).toBeUndefined();
 
       await act(async () => {
         return checkoutOperation(sampleShippingMethod);
       });
 
       expect(isLoading).toBeTruthy();
-      expect(props.values.shippingMethod).toBeUndefined();
+      expect(checkoutRenderProps.values.shippingMethod).toBeUndefined();
       expect(checkoutOperationResult.error).toBeDefined();
-      expect(props.isLoading).toBeFalsy();
+      expect(checkoutRenderProps.isLoading).toBeFalsy();
     });
   });
 });
