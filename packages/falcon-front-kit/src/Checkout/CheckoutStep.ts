@@ -1,7 +1,10 @@
+import { RecordEnumLike } from '../RecordEnumLike';
 import { CheckoutValues } from './CheckoutValues';
 
 /** Define basic checkout steps */
-export const CheckoutStep = {
+export const CheckoutStep: RecordEnumLike<
+  'Email' | 'ShippingAddress' | 'BillingAddress' | 'Shipping' | 'Payment' | 'Confirmation'
+> = {
   Email: 'Email',
   ShippingAddress: 'ShippingAddress',
   BillingAddress: 'BillingAddress',
@@ -16,24 +19,24 @@ export const CheckoutStep = {
  */
 export const getNextStepForValues = (values: CheckoutValues): keyof typeof CheckoutStep => {
   if (!values.email) {
-    return 'Email';
+    return CheckoutStep.Email;
   }
 
   if (!values.shippingAddress) {
-    return `ShippingAddress`;
+    return CheckoutStep.ShippingAddress;
   }
 
   if (!values.billingAddress) {
-    return 'BillingAddress';
+    return CheckoutStep.BillingAddress;
   }
 
   if (!values.shippingMethod) {
-    return 'Shipping';
+    return CheckoutStep.Shipping;
   }
 
   if (!values.paymentMethod) {
-    return 'Payment';
+    return CheckoutStep.Payment;
   }
 
-  return 'Confirmation';
+  return CheckoutStep.Confirmation;
 };
