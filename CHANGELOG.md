@@ -20,6 +20,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed custom error `500.html` view resolution ([#662](https://github.com/deity-io/falcon/pull/662))
 - fixed handling of redirects by serviceworker ([#594](https://github.com/deity-io/falcon/pull/594))
 - fixed the `next` value for sign-in redirects ([#689](https://github.com/deity-io/falcon/pull/689))
+- improved a way of processing the `svg` files ([#726](https://github.com/deity-io/falcon/pull/726))
 
 ### Falcon I18n vNext
 
@@ -127,6 +128,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
 - fixed command error messages printing after its done ([#691](https://github.com/deity-io/falcon/pull/691))
+- pinned Node version when compiling packages to support Node 8 ([#725](https://github.com/deity-io/falcon/pull/725))
 
 ### Create Falcon App vNext
 
