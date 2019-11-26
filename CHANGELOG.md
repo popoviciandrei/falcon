@@ -53,6 +53,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed `LocaleSwitcher` which did not take into account `whitelist`ed languages, and `LocaleContext` which hardcoded language fallback instead of taking it from `clientConfig` ([#698](https://github.com/deity-io/falcon/pull/698))
 - extracted `CurrencyProvider` and `Currency` components from `LocaleProvider` and `Locale`, also introduced `useLocale` and `useCurrency` hooks ([#698](https://github.com/deity-io/falcon/pull/698))
 - updated Formik to version 2.0 ([#705](https://github.com/deity-io/falcon/pull/705))
+- added `InBrowserOnly` component ([#728](https://github.com/deity-io/falcon/pull/728))
 
 
 ### Falcon UI Kit v1.0.0
@@ -127,6 +128,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 
 - added regeneration of Type Script definition `d.ts` files for `watch` script ([#558](https://github.com/deity-io/falcon/pull/558))
 - fixed command error messages printing after its done ([#691](https://github.com/deity-io/falcon/pull/691))
+- pinned Node version when compiling packages to support Node 8 ([#725](https://github.com/deity-io/falcon/pull/725))
 
 ### Create Falcon App vNext
 
