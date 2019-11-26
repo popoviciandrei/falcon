@@ -20,7 +20,7 @@ const PaymentMethodItem = loadable(() =>
 );
 
 export const PaymentMethodSection = props => {
-  const { open, onEdit } = props;
+  const { open, onEditRequested } = props;
   const { t } = useI18n();
   const { values } = useCheckout();
   const [state, setState] = useState(values.paymentMethod || {});
@@ -33,7 +33,7 @@ export const PaymentMethodSection = props => {
         complete
         summary={<Text fontWeight="bold">{values.paymentMethod.title}</Text>}
         action={
-          <Button variant="checkout" onClick={onEdit}>
+          <Button variant="checkout" onClick={onEditRequested}>
             {t('edit')}
           </Button>
         }
@@ -97,5 +97,5 @@ export const PaymentMethodSection = props => {
 };
 PaymentMethodSection.propTypes = {
   open: PropTypes.bool,
-  onEdit: PropTypes.func
+  onEditRequested: PropTypes.func
 };

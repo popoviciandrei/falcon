@@ -20,7 +20,7 @@ import {
 } from './components';
 
 export const ShippingAddressSection = props => {
-  const { open, onEdit } = props;
+  const { open, onEditRequested } = props;
   const { t } = useI18n();
   const { values } = useCheckout();
 
@@ -32,7 +32,7 @@ export const ShippingAddressSection = props => {
         complete
         summary={<AddressDetails {...values.shippingAddress} />}
         action={
-          <Button variant="checkout" onClick={onEdit}>
+          <Button variant="checkout" onClick={onEditRequested}>
             {t('edit')}
           </Button>
         }
@@ -57,7 +57,7 @@ export const ShippingAddressSection = props => {
 };
 ShippingAddressSection.propTypes = {
   open: PropTypes.bool,
-  onEdit: PropTypes.func
+  onEditRequested: PropTypes.func
 };
 
 export const ShippingAddressEditor = ({ addresses }) => {

@@ -36,7 +36,7 @@ ShippingSelector.propTypes = {
 };
 
 export const ShippingMethodSection = props => {
-  const { open, onEdit } = props;
+  const { open, onEditRequested } = props;
   const { t } = useI18n();
   const { values } = useCheckout();
   const [state, setState] = useState(values.shippingMethod);
@@ -49,7 +49,7 @@ export const ShippingMethodSection = props => {
         complete
         summary={<ShippingMethodDetails {...values.shippingMethod} />}
         action={
-          <Button variant="checkout" onClick={onEdit}>
+          <Button variant="checkout" onClick={onEditRequested}>
             {t('edit')}
           </Button>
         }
@@ -98,5 +98,5 @@ export const ShippingMethodSection = props => {
 };
 ShippingMethodSection.propTypes = {
   open: PropTypes.bool,
-  onEdit: PropTypes.func
+  onEditRequested: PropTypes.func
 };

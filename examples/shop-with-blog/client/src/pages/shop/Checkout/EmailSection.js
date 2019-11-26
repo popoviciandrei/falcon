@@ -30,7 +30,7 @@ const customerEmailFormLayout = {
 };
 
 export const EmailSection = props => {
-  const { open, onEdit } = props;
+  const { open, onEditRequested } = props;
   const { t } = useI18n();
   const [signOut] = useSignOutMutation();
   const { values, setEmail } = useCheckout();
@@ -50,7 +50,7 @@ export const EmailSection = props => {
                 complete
                 summary={<Text fontWeight="bold">{(customer && customer.email) || values.email}</Text>}
                 action={
-                  <Button variant="checkout" onClick={customer ? signOut : onEdit}>
+                  <Button variant="checkout" onClick={customer ? signOut : onEditRequested}>
                     {t(`customerSelector.${customer ? 'signOut' : 'edit'}`)}
                   </Button>
                 }
@@ -98,6 +98,6 @@ export const EmailSection = props => {
   );
 };
 EmailSection.propTypes = {
-  onEdit: PropTypes.func,
+  onEditRequested: PropTypes.func,
   open: PropTypes.bool
 };
