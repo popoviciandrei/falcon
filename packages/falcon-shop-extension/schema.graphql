@@ -665,7 +665,14 @@ type Region {
   name: String
 }
 
-type AddressCountry {
+interface CountryBase {
+  id: ID!
+  code: String!
+  englishName: String
+  localName: String
+}
+
+type AddressCountry implements CountryBase {
   id: ID!
   # abbreviated form of the country name
   code: String!
@@ -674,7 +681,7 @@ type AddressCountry {
   localName: String
 }
 
-type Country {
+type Country implements CountryBase {
   id: ID!
   # abbreviated form of the country name
   code: String!
