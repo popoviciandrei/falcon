@@ -7,13 +7,23 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "src/index.js",
+  "main": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "jest": {
     "setupFiles": [
       "../../test/nodeEnvSetupFile"
     ]
   },
   "scripts": {
+    "prepare": "npm run clean && npm run build",
+    "clean": "falcon-scripts clean",
+    "build": "falcon-scripts build",
+    "watch": "falcon-scripts watch",
     "test": "falcon-scripts test",
     "test:coverage": "falcon-scripts test:coverage"
   },
@@ -31,6 +41,7 @@
     "qs": "^6.9.0"
   },
   "devDependencies": {
+    "@deity/falcon-data": "^1.0.0-beta.4",
     "@deity/falcon-scripts": "^1.0.0-beta.4",
     "@deity/falcon-server": "^2.0.0-beta.4",
     "@deity/falcon-shop-extension": "^1.0.0-beta.4",

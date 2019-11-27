@@ -5,7 +5,7 @@ import { RouterLink } from '../Router';
 export type NavbarItem = {
   name: string;
   urlPath: string;
-  children: NavbarItem[];
+  children?: NavbarItem[];
 };
 export type MenuNavbarProps = {
   items: NavbarItem[];
@@ -18,7 +18,7 @@ export const MenuNavbar: React.SFC<MenuNavbarProps> = ({ items }) => (
           {item.name}
         </RouterLink>
 
-        {item.children.length > 0 && (
+        {item.children && item.children.length > 0 && (
           <NavbarItemMenu>
             <List>
               {item.children.map(subItem => (

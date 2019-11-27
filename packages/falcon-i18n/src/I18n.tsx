@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import i18next from 'i18next';
 import { I18nContext } from './context';
@@ -17,3 +17,9 @@ export class I18n extends React.Component<I18nProps> {
     return <I18nContext.Consumer>{({ t, i18n }) => children(t, i18n)}</I18nContext.Consumer>;
   }
 }
+
+export const useI18n = () => {
+  const { i18n, t } = useContext(I18nContext);
+
+  return { i18n, t };
+};

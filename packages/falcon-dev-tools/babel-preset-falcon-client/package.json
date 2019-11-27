@@ -20,6 +20,7 @@
     "@loadable/babel-plugin": "5.7.2",
     "babel-plugin-dynamic-import-node": "2.3.0",
     "babel-plugin-graphql-tag": "2.5.0",
+    "babel-plugin-inline-react-svg": "1.1.0",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24"
   }
 }

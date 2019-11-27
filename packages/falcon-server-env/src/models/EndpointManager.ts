@@ -3,8 +3,10 @@ import fetch from 'node-fetch';
 import Logger from '@deity/falcon-logger';
 import { IConfigurableConstructorParams, EndpointEntry, UrlConfig } from '../types';
 import { formatUrl } from '../helpers/url';
+import { Cache } from '..';
 
 export interface EndpointConstructorParams extends IConfigurableConstructorParams<UrlConfig> {
+  cache: Cache;
   entries?: string[];
 }
 
@@ -25,12 +27,15 @@ export abstract class EndpointManager {
 
   protected eventEmitter: EventEmitter2;
 
+  protected cache: Cache;
+
   protected logger: typeof Logger;
 
   constructor(params: EndpointConstructorParams) {
     this.config = params.config || {};
     this.name = params.name || this.constructor.name;
     this.eventEmitter = params.eventEmitter;
+    this.cache = params.cache;
     this.entries = params.entries || [];
     this.baseUrl = formatUrl(this.config);
     this.logger = Logger.getFor(`${this.name}-endpointManager`);

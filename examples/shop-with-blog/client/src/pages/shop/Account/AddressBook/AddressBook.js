@@ -40,10 +40,10 @@ const AddressBook = () => (
                   <T id="addressBook.sectionTitle_other" />
                 </H2>
                 <AddressListLayout gridTemplateColumns={{ md: 'repeat(3, 1fr)' }}>
-                  {rest.map(x => (
-                    <AddressCardLayout key={x.id}>
-                      <AddressDetails {...x} />
-                      <AddressActions addressId={x.id} />
+                  {rest.map(({ id, ...addressRest }) => (
+                    <AddressCardLayout key={id}>
+                      <AddressDetails {...addressRest} />
+                      <AddressActions addressId={id} />
                     </AddressCardLayout>
                   ))}
                 </AddressListLayout>

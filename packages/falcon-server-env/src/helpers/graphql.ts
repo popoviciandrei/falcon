@@ -11,6 +11,7 @@ import {
   isWrappingType,
   ResponsePath
 } from 'graphql';
+import graphqlFields from 'graphql-fields';
 
 export const PATH_SEPARATOR: string = '.';
 export const TAG_SEPARATOR: string = ':';
@@ -225,4 +226,30 @@ export const extractTagsForIdPath = (
   }
 
   return getTagsForField(valueToCheck, typeToCheck as GraphQLOutputType, fieldPathSections, forceTypeName);
+};
+
+export const graphqlFragmentFields = (info: GraphQLResolveInfo, typeName: string) => {
+  const selectionNodes = info.fieldNodes[0].selectionSet.selections;
+  const fragmentFieldNodes = selectionNodes.reduce((result, node) => {
+    if (result) {
+      return result;
+    }
+    if (node.kind === 'InlineFragment' && node.typeCondition.name.value === typeName) {
+      return node;
+    }
+    if (node.kind === 'FragmentSpread' && info.fragments[node.name.value].typeCondition.name.value === typeName) {
+      return info.fragments[node.name.value];
+    }
+    return undefined;
+  }, undefined);
+
+  if (!fragmentFieldNodes) {
+    return {};
+  }
+
+  return graphqlFields(
+    { fieldNodes: [fragmentFieldNodes], fragments: info.fragments },
+    {},
+    { excludedFields: ['__typename'] }
+  );
 };
