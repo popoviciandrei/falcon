@@ -1,6 +1,6 @@
 {
   "name": "@deity/falcon-paypal-plugin",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "license": "OSL-3.0",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/payment/falcon-paypal-plugin",
   "publishConfig": {
@@ -26,8 +26,8 @@
     "core-js": "3.2.1"
   },
   "devDependencies": {
-    "@deity/falcon-payment-plugin": "^1.0.0-beta.4",
-    "@deity/falcon-scripts": "^1.0.0-beta.4",
+    "@deity/falcon-payment-plugin": "^1.0.0-beta.5",
+    "@deity/falcon-scripts": "^1.0.0-beta.5",
     "@types/react": "16.9.11",
     "react": "16.10.2",
     "regenerator-runtime": "0.13.3"

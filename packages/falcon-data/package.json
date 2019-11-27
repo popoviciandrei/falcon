@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-data",
   "license": "OSL-3.0",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-data",
   "publishConfig": {
     "access": "public"
@@ -30,7 +30,7 @@
     "@apollo/react-components": "^3.1.3",
     "@apollo/react-hooks": "^3.1.3",
     "@deity/falcon-errors": "^0.1.3",
-    "@deity/falcon-scripts": "^1.0.0-beta.4",
+    "@deity/falcon-scripts": "^1.0.0-beta.5",
     "@types/react": "16.9.11",
     "apollo-client": "2.6.4",
     "graphql": "^14.5.8",
