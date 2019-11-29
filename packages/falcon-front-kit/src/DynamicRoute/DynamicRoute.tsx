@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, matchPath, match as Match, SwitchProps } from 'react-router-dom';
 import { Location } from 'history';
-import isEqual from 'lodash.isequal';
-import { UrlQuery, ResourceMeta, useUrlLazyQuery, Loader, OperationError } from '@deity/falcon-data';
+import { UrlQuery, ResourceMeta, Loader, OperationError } from '@deity/falcon-data';
 import { Router } from '../Router';
 
 export type DynamicRouteComponentProps = Pick<ResourceMeta, 'id' | 'path'>;
@@ -53,16 +52,8 @@ DynamicRoute.propTypes = {
 };
 
 export const SwitchDynamicURL: React.FC<SwitchProps> = props => {
-  const [processing, setProcessing] = useState<boolean>(false);
   const [previousLocation, setPreviousLocation] = useState<Location<any>>(undefined);
   const [previousResourceMeta, setPreviousResourceMeta] = useState<ResourceMeta>(undefined);
-  const [urlQuery, { loading, error, data }] = useUrlLazyQuery({
-    onCompleted: result => {
-      if (result) {
-        setPreviousResourceMeta(result.url);
-      }
-    }
-  });
 
   const isResourceMetaRequired = (children: React.ReactNode, location: Location): boolean => {
     let result = false;
@@ -122,65 +113,80 @@ export const SwitchDynamicURL: React.FC<SwitchProps> = props => {
     <Router>
       {context => {
         const location = props.location || context.location;
-
-        const shouldQueryUrl =
-          !processing &&
-          !loading &&
-          !isEqual(location, previousLocation) &&
-          isResourceMetaRequired(props.children, location);
-
-        if (shouldQueryUrl) {
-          urlQuery({ variables: { path: location.pathname } });
-          setProcessing(true);
-        }
-
-        if (loading || shouldQueryUrl) {
-          const [previousMatch, previousElement] = previousLocation
-            ? findRouteElement(props.children, previousLocation, previousResourceMeta)
-            : [undefined, undefined];
-
-          if (previousMatch) {
-            if (previousResourceMeta) {
-              previousMatch.params = {
-                ...previousMatch.params,
-                id: previousResourceMeta.id,
-                path: previousResourceMeta.path
-              };
-            }
-
-            return (
-              <React.Fragment>
-                <Loader variant="overlay" />
-                {React.cloneElement(previousElement as any, {
-                  location: previousLocation,
-                  computedMatch: previousMatch
-                })}
-              </React.Fragment>
-            );
+        if (isResourceMetaRequired(props.children, location) === false) {
+          setPreviousLocation(location);
+          const [match, element] = findRouteElement(props.children, location);
+          const computedMatch = match || context.match;
+          if (computedMatch) {
+            return React.cloneElement(element as any, { location, computedMatch });
           }
+        } else {
+          return (
+            <UrlQuery
+              variables={{ path: location.pathname }}
+              passLoading
+              onCompleted={result => {
+                if (result) setPreviousResourceMeta(result.url);
+              }}
+            >
+              {({ data, error, loading }) => {
+                if (loading) {
+                  const [previousMatch, previousElement] = previousLocation
+                    ? findRouteElement(props.children, previousLocation, previousResourceMeta)
+                    : [undefined, undefined];
 
-          return <Loader variant="overlay" />;
-        }
+                  if (previousMatch) {
+                    if (previousResourceMeta) {
+                      previousMatch.params = {
+                        ...previousMatch.params,
+                        id: previousResourceMeta.id,
+                        path: previousResourceMeta.path
+                      };
+                    }
 
-        if (error) {
-          return <OperationError {...error} />;
-        }
+                    return React.cloneElement(previousElement as any, {
+                      location: previousLocation,
+                      computedMatch: previousMatch
+                    });
 
-        setPreviousLocation(location);
-        setProcessing(false);
-        const [match, element] = findRouteElement(props.children, location, data && data.url);
+                    // TODO: decide if want to add loader overlay, or expose this.
+                    // return (
+                    //   <React.Fragment>
+                    //     <Loader variant="overlay" />
+                    //     {React.cloneElement(previousElement as any, {
+                    //       location: previousLocation,
+                    //       computedMatch: previousMatch
+                    //     })}
+                    //   </React.Fragment>
+                    // );
+                  }
 
-        const computedMatch = match || context.match;
-        if (computedMatch) {
-          if (data && data.url) {
-            computedMatch.params = {
-              ...computedMatch.params,
-              id: data.url.id,
-              path: data.url.path
-            };
-          }
+                  return <Loader variant="overlay" />;
+                }
 
-          return React.cloneElement(element as any, { location, computedMatch });
+                if (error) {
+                  return <OperationError {...error} />;
+                }
+
+                setPreviousLocation(location);
+                const [match, element] = findRouteElement(props.children, location, data && data.url);
+                const computedMatch = match || context.match;
+                if (computedMatch) {
+                  if (data && data.url) {
+                    computedMatch.params = {
+                      ...computedMatch.params,
+                      id: data.url.id,
+                      path: data.url.path
+                    };
+                  }
+
+                  return React.cloneElement(element as any, { location, computedMatch });
+                }
+
+                return null;
+              }}
+            </UrlQuery>
+          );
         }
 
         return null;
