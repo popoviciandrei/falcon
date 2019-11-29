@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ThemeProvider, Box, Button } from '@deity/falcon-ui';
 import { AppLayout, Sidebar } from '@deity/falcon-ui-kit';
@@ -12,12 +12,12 @@ import {
   LocaleProvider,
   Locale,
   CurrencyProvider,
-  SearchProvider
+  SearchProvider,
+  SwitchDynamicURL
 } from '@deity/falcon-front-kit';
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
 import loadable from 'src/components/loadable';
 import logo from 'src/assets/logo.png';
-import DynamicRoute from 'src/pages/DynamicRoute';
 import { Header, PageFooter, SidebarContainer, ErrorBoundary } from './components';
 import { deityGreenTheme, globalCss } from './theme';
 
@@ -60,6 +60,10 @@ const SidebarContents = loadable(() =>
   import(/* webpackPrefetch: true, webpackChunkName: "shop/sidebar" */ './pages/shop/Sidebar/SidebarContents')
 );
 
+const BlogPost = loadable(() => import(/* webpackChunkName: "blog/post" */ './pages/blog/Post'));
+const Category = loadable(() => import(/* webpackChunkName: "shop/category" */ './pages/shop/Category/Category'));
+const Product = loadable(() => import(/* webpackChunkName: "shop/product" */ './pages/shop/Product'));
+
 let ThemeEditorComponent;
 // ThemeEditor gets loaded only in dev mode
 // condition below helps with tree shaking of unused exports
@@ -96,18 +100,23 @@ const App = () => (
                       <NetworkStatus>{({ isOnline }) => !isOnline && <Box>you are offline.</Box>}</NetworkStatus>
                       <Header />
                       <ErrorBoundary>
-                        <Switch>
-                          <Route exact path="/" component={Home} />
-                          <Route exact path="/blog/:page?" component={Blog} />
-                          <Route exact path="/cart" component={Cart} />
-                          <Route exact path="/checkout" component={Checkout} />
-                          <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
-                          <Route exact path="/checkout/failure" component={CheckoutFailure} />
-                          <ProtectedRoute path="/account" component={Account} />
-                          <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
-                          <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
-                          <DynamicRoute />
-                        </Switch>
+                        <Box position="relative">
+                          <SwitchDynamicURL>
+                            <Route exact path="/" component={Home} />
+                            <Route exact path="/blog/:page?" component={Blog} />
+                            <Route exact path="/cart" component={Cart} />
+                            <Route exact path="/checkout" component={Checkout} />
+                            <Route exact path="/checkout/confirmation" component={CheckoutConfirmation} />
+                            <Route exact path="/checkout/failure" component={CheckoutFailure} />
+                            <ProtectedRoute path="/account" component={Account} />
+                            <OnlyUnauthenticatedRoute exact path="/sign-in" component={SignIn} />
+                            <OnlyUnauthenticatedRoute exact path="/reset-password" component={ResetPassword} />
+                            <Route exact type="blog-post" component={BlogPost} />
+                            <Route exact type="shop-category" component={Category} />
+                            <Route exact type="shop-product" component={Product} />
+                            <p>not Found</p>
+                          </SwitchDynamicURL>
+                        </Box>
                         <PageFooter />
                         <SidebarContainer>
                           {sidebarProps => (

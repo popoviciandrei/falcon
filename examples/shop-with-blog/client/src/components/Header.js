@@ -1,15 +1,29 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Route } from 'react-router-dom';
 import { MenuQuery, CustomerQuery, CartQuery, SignOutMutation } from '@deity/falcon-shop-data';
 import { T } from '@deity/falcon-i18n';
-import { Link, ListItem, Icon } from '@deity/falcon-ui';
+import { Text, Link, ListItem, Icon } from '@deity/falcon-ui';
 import { RouterLink, MenuNavbar, HeaderBanner, CartIcon, HeaderBarLayout, HeaderBarArea } from '@deity/falcon-ui-kit';
+import { SwitchDynamicURL } from '@deity/falcon-front-kit';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 
 export const Header = withRouter(({ history }) => (
   <CustomerQuery>
     {({ data: { customer } }) => (
       <header>
+        <SwitchDynamicURL>
+          <Route exact path="/" component={() => <Text>HOME</Text>} />
+          <Route
+            exact
+            type="shop-category"
+            component={({ match }) => <Text>{`shop-category: ${match.params.id}`}</Text>}
+          />
+          <Route
+            exact
+            type="shop-product"
+            component={({ match }) => <Text>{`shop-product: ${match.params.id}`}</Text>}
+          />
+        </SwitchDynamicURL>
         <HeaderBanner>
           {customer && (
             <ListItem>

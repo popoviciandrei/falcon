@@ -22,12 +22,12 @@ import { ShowMore, ShowingOutOf } from './components';
 
 const copy = item => item && JSON.parse(JSON.stringify(item));
 
-const CategoryPage = ({ id }) => (
+const CategoryPage = ({ match: { params } }) => (
   <SearchConsumer>
     {({ state }) => (
       <CategoryWithProductListQuery
         variables={{
-          categoryId: id,
+          categoryId: params.id,
           sort: state.sort,
           filters: copy(state.filters)
         }}
@@ -101,7 +101,7 @@ const CategoryPage = ({ id }) => (
 );
 
 CategoryPage.propTypes = {
-  id: PropTypes.string.isRequired
+  match: PropTypes.any.isRequired
 };
 
 export default CategoryPage;
