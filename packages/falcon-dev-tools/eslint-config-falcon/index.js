@@ -73,6 +73,10 @@ module.exports = {
     'react/prop-types': 'off',
     'react/forbid-prop-types': 'off',
     'react/destructuring-assignment': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/jsx-fragments': 'off',
+    'react/static-property-placement': 'off',
+    'react/jsx-curly-newline': 'off', // conflicts with Prettier
     'jsdoc/check-alignment': 1,
     'jsdoc/check-indentation': 'off',
     'jsdoc/check-param-names': 1,
