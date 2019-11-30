@@ -1691,13 +1691,14 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         `/falcon${this.getCartPath()}/paypal-express-cancel`
       )}`;
 
-      input.paymentMethod.additionalData = Object.assign({}, input.paymentMethod.additionalData, {
+      input.paymentMethod.additionalData = {
+        ...input.paymentMethod.additionalData,
         paypal_return_success: paypalReturnSuccess,
         paypal_return_cancel: paypalReturnCancel,
         redirect_failure: 'failure',
         redirect_cancel: 'cancel',
         redirect_success: 'success'
-      });
+      };
     }
 
     const setPaymentInfoResult = await this.setPaymentInfo({}, { input });

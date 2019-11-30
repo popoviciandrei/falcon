@@ -146,6 +146,6 @@ export class GraphQLCacheDirective extends SchemaDirectiveVisitor {
     const fullPath = `${operation.operation}.${getOperationPath(gqlPath)}`;
     const { [fullPath]: operationConfig = {}, default: defaultConfig = {} } = resolversCacheConfig;
 
-    return Object.assign({}, defaultConfig, defaultDirectiveValue, operationConfig);
+    return { ...defaultConfig, ...defaultDirectiveValue, ...operationConfig };
   }
 }

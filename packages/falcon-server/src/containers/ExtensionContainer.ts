@@ -138,22 +138,17 @@ export class ExtensionContainer<T extends GraphQLContext = GraphQLContext> exten
    * @returns {object} resolved configuration
    */
   createGraphQLConfig(defaultConfig: GraphQLConfigDefaults = {}): ApolloServerConfig {
-    const config = Object.assign(
-      {
-        schemas: [],
-        resolvers: [],
-        // contextModifiers will be used as helpers - it will gather all the context functions and we'll invoke
-        // all of them when context will be created. All the results will be merged to produce final context
-        contextModifiers: defaultConfig.context ? [defaultConfig.context] : []
-      },
-      defaultConfig,
-      {
-        resolvers:
-          defaultConfig.rootResolvers && !Array.isArray(defaultConfig.rootResolvers)
-            ? [defaultConfig.rootResolvers]
-            : defaultConfig.rootResolvers || []
-      }
-    );
+    const config = {
+      schemas: [],
+      // contextModifiers will be used as helpers - it will gather all the context functions and we'll invoke
+      // all of them when context will be created. All the results will be merged to produce final context
+      contextModifiers: defaultConfig.context ? [defaultConfig.context] : [],
+      ...defaultConfig,
+      resolvers:
+        defaultConfig.rootResolvers && !Array.isArray(defaultConfig.rootResolvers)
+          ? [defaultConfig.rootResolvers]
+          : defaultConfig.rootResolvers || []
+    };
 
     for (const [extName, extConfig] of this.entries) {
       this.mergeGraphQLConfig(config, extConfig, extName);

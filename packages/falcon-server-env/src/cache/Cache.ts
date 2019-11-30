@@ -187,7 +187,7 @@ export class Cache<V = any> implements KeyValueCache<V> {
           ({ value } = cacheResult);
           const { options: cacheResultOptions = {} } = cacheResult;
           // Merging cache options from the "fetchData" result and passed method argument
-          options = Object.assign({}, options, cacheResultOptions);
+          options = { ...options, ...cacheResultOptions };
         } else {
           value = cacheResult;
         }

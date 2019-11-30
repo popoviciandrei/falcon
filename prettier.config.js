@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable prefer-object-spread */
 const esLint = require('@deity/eslint-config-falcon');
 
 module.exports = Object.assign({}, esLint.rules['prettier/prettier'][1], {

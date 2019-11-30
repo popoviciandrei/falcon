@@ -151,7 +151,7 @@ function pluginRecast() {
       return recast.parse(code, {
         ...opts,
         parser: {
-          parse: source => parser(source, Object.assign({}, opts, { tokens: true }))
+          parse: source => parser(source, { ...opts, tokens: true })
         }
       });
     },
