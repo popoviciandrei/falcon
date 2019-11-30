@@ -63,7 +63,7 @@ type ThemePropMap<TProp extends keyof PropsMappings> = PropsMappings[TProp] exte
   ? Extract<keyof Theme[PropsMappings[TProp]['themeProp']], string>
   : PropsMappings[TProp] extends ResponsivePropMapping
   ? CssProps[PropsMappings[TProp]['cssProp']]
-  : (string | number);
+  : string | number;
 
 export type BaseThemingProps = {
   [TProp in keyof PropsMappings]?:
