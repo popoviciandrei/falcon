@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, no-await-in-loop, import/no-extraneous-dependencies */
+/* eslint-disable no-restricted-syntax, no-await-in-loop, import/no-extraneous-dependencies, max-classes-per-file */
 import 'jest-extended';
 import nock from 'nock';
 import { InMemoryLRUCache } from 'apollo-server-caching';

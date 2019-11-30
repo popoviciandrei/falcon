@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 const codes = require('./codes');
 
 // FalconError is simplified version of ApolloError

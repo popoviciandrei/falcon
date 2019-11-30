@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { ApiDataSource, ApiUrlPriority } from '@deity/falcon-server-env';
 import { EventEmitter2 } from 'eventemitter2';
 import { DynamicRouteResolver } from './DynamicRouteResolver';
