@@ -9,13 +9,13 @@ export type ProtectedRouteProps = {
 } & RouteProps;
 
 export class ProtectedRoute extends React.Component<ProtectedRouteProps> {
-  static defaultProps = {
-    redirectTo: '/sign-in'
-  };
-
   static propTypes = {
     ...(Route as any).propTypes,
     redirectTo: PropTypes.string
+  };
+
+  static defaultProps = {
+    redirectTo: '/sign-in'
   };
 
   render() {

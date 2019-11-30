@@ -9,13 +9,13 @@ export type OnlyUnauthenticatedRouteProps = {
 } & RouteProps;
 
 export class OnlyUnauthenticatedRoute extends React.Component<OnlyUnauthenticatedRouteProps> {
-  static defaultProps = {
-    redirectTo: '/'
-  };
-
   static propTypes = {
     ...(Route as any).propTypes,
     redirectTo: PropTypes.string
+  };
+
+  static defaultProps = {
+    redirectTo: '/'
   };
 
   render() {

@@ -10,6 +10,10 @@ export class ErrorBoundary extends React.Component {
     this.state = {};
   }
 
+  componentDidCatch(error) {
+    this.setState({ error });
+  }
+
   /** @param {Error} error */
   getMessageId(error) {
     if (isNetworkError(error)) {
@@ -31,10 +35,6 @@ export class ErrorBoundary extends React.Component {
     }
 
     return '';
-  }
-
-  componentDidCatch(error) {
-    this.setState({ error });
   }
 
   render() {

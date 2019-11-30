@@ -11,10 +11,6 @@ export type ServiceWorkerRegistrarState = {
   registration?: ServiceWorkerRegistration;
 };
 export class ServiceWorkerRegistrar extends React.Component<ServiceWorkerRegistrarProps, ServiceWorkerRegistrarState> {
-  static defaultProps = {
-    scriptUrl: '/sw.js'
-  };
-
   static propTypes = {
     scriptUrl: PropTypes.string,
     options: PropTypes.shape({
@@ -22,6 +18,10 @@ export class ServiceWorkerRegistrar extends React.Component<ServiceWorkerRegistr
       type: PropTypes.oneOf(['classic', 'module']),
       updateViaCache: PropTypes.oneOf(['imports', 'all', 'none'])
     })
+  };
+
+  static defaultProps = {
+    scriptUrl: '/sw.js'
   };
 
   constructor(props) {
