@@ -1,4 +1,5 @@
 const getPriceFormatter = (locales: string[], numberFormatOptions: Intl.NumberFormatOptions) =>
+  // prettier-ignore
   new Intl.NumberFormat(locales.filter(x => x), { ...numberFormatOptions, style: 'currency' });
 
 export type PriceFormatOptions = {
