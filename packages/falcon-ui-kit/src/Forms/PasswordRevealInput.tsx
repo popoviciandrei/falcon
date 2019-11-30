@@ -2,13 +2,19 @@ import React from 'react';
 import { I18n } from '@deity/falcon-i18n';
 import { Input, Icon, Box, ThemingProps } from '@deity/falcon-ui';
 
-export class PasswordRevealInput extends React.Component<
-  ThemingProps & React.InputHTMLAttributes<HTMLInputElement>,
-  { isRevealed: boolean }
-> {
-  state = {
-    isRevealed: false
-  };
+export type PasswordRevealInputProps = ThemingProps & React.InputHTMLAttributes<HTMLInputElement>;
+
+export type PasswordRevealInputState = {
+  isRevealed: boolean;
+};
+
+export class PasswordRevealInput extends React.Component<PasswordRevealInputProps, PasswordRevealInputState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isRevealed: false
+    };
+  }
 
   toggleInputType = () => {
     this.setState(state => ({

@@ -54,9 +54,12 @@ type ProductConfiguratorState = {
  * Currently only configurable options are supported, in the future that class will handle bundled products as well as custom product attributes.
  */
 export class ProductConfigurator extends React.Component<ProductConfiguratorProps, ProductConfiguratorState> {
-  state: ProductConfiguratorState = {
-    selectedConfigurableOptions: {}
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedConfigurableOptions: {}
+    };
+  }
 
   /**
    * Handler for all configuration changes, based on the type invokes proper type handler

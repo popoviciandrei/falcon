@@ -97,11 +97,14 @@ function getHSLA(hash: number) {
 }
 
 export class ComponentFinder extends React.Component<ComponentFinderProps, ComponentFinderState> {
-  readonly state: ComponentFinderState = {};
-
   currentElementFromPoint?: Element = undefined;
 
   throttledOnChange?: Function = undefined;
+
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
   componentDidMount() {
     this.throttledOnChange = throttle(this.onChange, 50, this);
