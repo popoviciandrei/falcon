@@ -192,7 +192,7 @@ export const ComponentsEditor: React.SFC<ComponentsEditorProps> = ({
   selectedComponents,
   onComponentThemeChange
 }) => (
-  <React.Fragment>
+  <>
     {selectedComponents.map(selectedComponent => {
       const themeKey = Object.keys(selectedComponent.defaultTheme)[0];
 
@@ -231,5 +231,5 @@ export const ComponentsEditor: React.SFC<ComponentsEditorProps> = ({
         </Box>
       );
     })}
-  </React.Fragment>
+  </>
 );

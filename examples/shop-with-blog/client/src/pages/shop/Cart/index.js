@@ -37,13 +37,13 @@ const CartPage = () => (
           <T id="cart.title" />
         </H1>
         {cart.items.length > 0 ? (
-          <React.Fragment>
+          <>
             <CartItemList items={cart.items} />
             <CartSummary totals={cart.totals} couponCode={cart.couponCode} />
             <Button as={RouterLink} to="/checkout" alignSelf="center" px="xxxl">
               <T id="cart.checkout" />
             </Button>
-          </React.Fragment>
+          </>
         ) : (
           <Box display="flex" flexDirection="column" alignItems="center">
             <Text mt="lg">

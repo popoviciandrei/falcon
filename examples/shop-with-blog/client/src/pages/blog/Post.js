@@ -8,7 +8,7 @@ const Post = ({ path }) => (
   <PageLayout>
     <BlogPostQuery variables={{ path }}>
       {({ data: { blogPost } }) => (
-        <React.Fragment>
+        <>
           <Breadcrumbs alignSelf="flex-start">
             <BreadcrumbLink to="/">
               <T id="name" />
@@ -24,7 +24,7 @@ const Post = ({ path }) => (
             <FormattedDate mb="xl" value={blogPost.date} />
             <CMSContent html={blogPost.content} />
           </BlogPostLayout>
-        </React.Fragment>
+        </>
       )}
     </BlogPostQuery>
   </PageLayout>

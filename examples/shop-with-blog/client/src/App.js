@@ -73,7 +73,7 @@ const App = () => (
     <ServiceWorkerRegistrar>
       <ThemeEditorState initial={deityGreenTheme}>
         {({ theme, ...editorRest }) => (
-          <React.Fragment>
+          <>
             <ThemeProvider theme={theme} globalCss={globalCss}>
               <LocaleProvider>
                 <CurrencyProvider>
@@ -123,7 +123,7 @@ const App = () => (
               </LocaleProvider>
             </ThemeProvider>
             {ThemeEditorComponent && <ThemeEditorComponent theme={theme} {...editorRest} side="left" />}
-          </React.Fragment>
+          </>
         )}
       </ThemeEditorState>
     </ServiceWorkerRegistrar>

@@ -20,16 +20,16 @@ const AddressBook = () => (
         const anyRest = rest.length > 0;
 
         return (
-          <React.Fragment>
+          <>
             {anyDefaults && (
               <AddressListLayout my="md">
                 {defaultsEqual ? (
                   <DefaultAddressCard address={billing} />
                 ) : (
-                  <React.Fragment>
+                  <>
                     {billing && <DefaultAddressCard address={billing} />}
                     {shipping && <DefaultAddressCard address={shipping} />}
-                  </React.Fragment>
+                  </>
                 )}
               </AddressListLayout>
             )}
@@ -54,7 +54,7 @@ const AddressBook = () => (
                 <T id="addressBook.addNewButton" />
               </Button>
             </FlexLayout>
-          </React.Fragment>
+          </>
         );
       }}
     </AddressListQuery>
@@ -92,7 +92,7 @@ const RemoveAddressLink = ({ id }) => (
     {(removeAddress, { loading }) => (
       <I18n>
         {t => (
-          <React.Fragment>
+          <>
             <Link
               onClick={() => {
                 if (window.confirm(t('addressBook.removeConfirmationMessage'))) {
@@ -103,7 +103,7 @@ const RemoveAddressLink = ({ id }) => (
               {t('addressBook.removeButton')}
             </Link>
             {loading && <Icon ml="xs" src="loader" size="md" />}
-          </React.Fragment>
+          </>
         )}
       </I18n>
     )}

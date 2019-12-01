@@ -29,7 +29,7 @@ const Blog = ({ match }) => {
         {({ data: { blogPostList } }) => {
           const { items, pagination } = blogPostList;
           return (
-            <React.Fragment>
+            <>
               <BlogPostListLayout>
                 {items.map((x, index) => (
                   <ListItem key={x.slug} gridColumn={index < 2 ? 'span 3' : 'span 2'}>
@@ -49,7 +49,7 @@ const Blog = ({ match }) => {
                   </RouterLink>
                 )}
               </BlogPostListPaginationLayout>
-            </React.Fragment>
+            </>
           );
         }}
       </BlogPostListQuery>

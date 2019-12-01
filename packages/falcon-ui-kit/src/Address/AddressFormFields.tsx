@@ -29,7 +29,7 @@ export const AddressFormFields: React.SFC<AddressFormFieldsProps> = props => {
 
   // the form content, not including default address fields and submit button(s)
   const mainContent = (
-    <React.Fragment>
+    <>
       <GridLayout gridArea={twoColumns ? TwoColumnsLayoutArea.left : null}>
         {askEmail && <FormField name="email" type="email" required />}
         <FormField name="company" autoComplete={getAutoComplete('company')} />
@@ -50,14 +50,14 @@ export const AddressFormFields: React.SFC<AddressFormFieldsProps> = props => {
           )}
         </FormField>
       </GridLayout>
-    </React.Fragment>
+    </>
   );
 
   return (
-    <React.Fragment>
+    <>
       {askDefault && askDefaultFields}
       {twoColumns ? <TwoColumnsLayout>{mainContent}</TwoColumnsLayout> : mainContent}
-    </React.Fragment>
+    </>
   );
 };
 

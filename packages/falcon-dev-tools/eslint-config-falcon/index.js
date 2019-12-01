@@ -46,7 +46,6 @@ module.exports = {
     'no-console': 'off',
     'no-param-reassign': 'off',
     'no-plusplus': 'off',
-    'object-curly-newline': 'off',
     'one-var': 'off',
     'prefer-destructuring': [
       'error',
@@ -74,7 +73,6 @@ module.exports = {
     'react/forbid-prop-types': 'off',
     'react/destructuring-assignment': 'off',
     'react/jsx-props-no-spreading': 'off',
-    'react/jsx-fragments': 'off',
     'react/static-property-placement': 'off',
     'react/jsx-curly-newline': 'off', // conflicts with Prettier
     'jsdoc/check-alignment': 1,

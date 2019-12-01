@@ -11,7 +11,7 @@ export const Sidebar: React.SFC<SidebarProps> = ({ close, isOpen, side, children
   const position = sidebarSideToPosition(side);
 
   return (
-    <React.Fragment>
+    <>
       <FalconSidebar as={Portal} visible={isOpen} side={side}>
         <Box position="relative" flex={1}>
           <Icon src="close" stroke="black" position="absolute" {...position} onClick={() => close && close()} />
@@ -19,7 +19,7 @@ export const Sidebar: React.SFC<SidebarProps> = ({ close, isOpen, side, children
         </Box>
       </FalconSidebar>
       <Backdrop as={Portal} visible={isOpen} onClick={() => close && close()} />
-    </React.Fragment>
+    </>
   );
 };
 Sidebar.propTypes = {

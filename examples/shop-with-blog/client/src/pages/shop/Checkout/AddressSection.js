@@ -115,7 +115,7 @@ class AddressSection extends React.Component {
 
     // lets the user pick an existing address or show the address form
     const addressEditor = (
-      <React.Fragment>
+      <>
         {availableAddresses && (
           <AddressPicker
             addresses={availableAddresses}
@@ -129,13 +129,13 @@ class AddressSection extends React.Component {
             <T id="continue" />
           </Button>
         )}
-      </React.Fragment>
+      </>
     );
 
     if (setUseTheSame) {
       // ask if the same address from a previous step should be used
       content = (
-        <React.Fragment>
+        <>
           <FlexLayout mb="md">
             <Checkbox
               id="use-default"
@@ -155,7 +155,7 @@ class AddressSection extends React.Component {
           ) : (
             addressEditor
           )}
-        </React.Fragment>
+        </>
       );
     } else if (availableAddresses) {
       // let the user pick an existing address or enter another one

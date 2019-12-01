@@ -60,12 +60,12 @@ export const TwoStepWizard: React.SFC<TwoStepWizardProps> = ({ initialState, chi
   const resetOption = () => setOption(null);
 
   return (
-    <React.Fragment>
+    <>
       {children({
         selectedOption,
         selectOption,
         resetOption
       })}
-    </React.Fragment>
+    </>
   );
 };

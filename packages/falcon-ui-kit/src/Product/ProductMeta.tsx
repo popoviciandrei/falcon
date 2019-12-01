@@ -11,7 +11,7 @@ export type ProductMetaProps = {
   activeItem?: MetaItem;
 };
 export const ProductMeta: React.SFC<ProductMetaProps> = ({ meta, onChange, activeItem }) => (
-  <React.Fragment>
+  <>
     {meta.map(item => (
       <Details key={item.name} open={activeItem && activeItem === item}>
         <Summary variant="secondary" onClick={() => onChange && onChange(item)}>
@@ -20,5 +20,5 @@ export const ProductMeta: React.SFC<ProductMetaProps> = ({ meta, onChange, activ
         <DetailsContent>{item.content}</DetailsContent>
       </Details>
     ))}
-  </React.Fragment>
+  </>
 );

@@ -11,7 +11,7 @@ export const InBrowserOnly: React.SFC<InBrowserOnlyProps> = ({ children, fallbac
     setShowChildren(true);
   }, []);
 
-  return <React.Fragment>{showChildren ? children : fallback || null}</React.Fragment>;
+  return <>{showChildren ? children : fallback || null}</>;
 };
 InBrowserOnly.propTypes = {
   children: PropTypes.node.isRequired

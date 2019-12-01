@@ -25,7 +25,7 @@ const ProductPage = ({ id, path }) => (
   <PageLayout>
     <ProductQuery variables={{ id, path }}>
       {({ data: { product } }) => (
-        <React.Fragment>
+        <>
           <Helmet>
             <title>{product.name}</title>
           </Helmet>
@@ -79,7 +79,7 @@ const ProductPage = ({ id, path }) => (
               </AddToCartFormProvider>
             )}
           </OpenSidebarMutation>
-        </React.Fragment>
+        </>
       )}
     </ProductQuery>
   </PageLayout>

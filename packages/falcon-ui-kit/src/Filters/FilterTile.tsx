@@ -11,12 +11,12 @@ export type FilterTileProps = {
 export const FilterTile: React.SFC<FilterTileProps> = ({ title, initiallyOpen, children }) => (
   <FilterDetails initiallyOpen={initiallyOpen}>
     {({ toggle }) => (
-      <React.Fragment>
+      <>
         <FilterDetailsSummaryLayout onClick={toggle}>
           <H4>{title}</H4>
         </FilterDetailsSummaryLayout>
         <DetailsContent>{children}</DetailsContent>
-      </React.Fragment>
+      </>
     )}
   </FilterDetails>
 );

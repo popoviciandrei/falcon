@@ -67,14 +67,14 @@ const CategoryPage = ({ id }) => (
                       ) : (
                         <Toggle initial={false}>
                           {({ on, toggle }) => (
-                            <React.Fragment>
+                            <>
                               <Button onClick={toggle}>Filters</Button>
                               <Sidebar isOpen={on} side="left" close={toggle}>
                                 <SidebarLayout title="Filters">
                                   <Filters data={filtersData} px="md" />
                                 </SidebarLayout>
                               </Sidebar>
-                            </React.Fragment>
+                            </>
                           )}
                         </Toggle>
                       )

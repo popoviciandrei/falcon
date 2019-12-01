@@ -31,10 +31,10 @@ const initialTheme = createTheme({
 export default (props: any) => (
   <ThemeEditorState initial={initialTheme}>
     {({ theme, ...rest }) => (
-      <React.Fragment>
+      <>
         <ThemeProvider theme={theme} {...props} />
         <ThemeEditor theme={theme} {...rest} />
-      </React.Fragment>
+      </>
     )}
   </ThemeEditorState>
 );

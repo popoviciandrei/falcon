@@ -6,7 +6,7 @@ export type ResetPasswordSuccessProps = {
   onSignIn: Function;
 };
 export const ResetPasswordSuccess: React.SFC<ResetPasswordSuccessProps> = ({ onSignIn }) => (
-  <React.Fragment>
+  <>
     <Text fontSize="md" style={{ textAlign: 'center' }}>
       <T id="resetPassword.successMessage" />
     </Text>
@@ -15,5 +15,5 @@ export const ResetPasswordSuccess: React.SFC<ResetPasswordSuccessProps> = ({ onS
         <T id="signIn.submitButton" />
       </Button>
     </Box>
-  </React.Fragment>
+  </>
 );

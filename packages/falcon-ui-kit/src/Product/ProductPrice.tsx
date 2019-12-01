@@ -9,10 +9,10 @@ export type ProductPriceProps = {
 };
 export const ProductPrice: React.SFC<ProductPriceProps & ThemingProps> = ({ regular, special, ...rest }) => {
   return special ? (
-    <React.Fragment>
+    <>
       <Price value={regular} fontSize="md" {...rest} variant="old" mr="xs" />
       <Price value={special} fontSize="md" {...rest} variant="special" />
-    </React.Fragment>
+    </>
   ) : (
     <Price value={regular} fontSize="md" {...rest} />
   );

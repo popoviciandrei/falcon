@@ -43,7 +43,7 @@ type EditorSectionProps = {
 };
 
 const EditorSection: React.SFC<EditorSectionProps> = ({ theme, section, onChange, onFontChange }) => (
-  <React.Fragment>
+  <>
     {Object.keys(theme[section]).map(themeProp => {
       const meta = themeMeta[section];
       if (!meta) return null;
@@ -59,7 +59,7 @@ const EditorSection: React.SFC<EditorSectionProps> = ({ theme, section, onChange
           <Text p="xs">{`"${themeProp}"`}</Text>
 
           {meta.input.type === 'number' && (
-            <React.Fragment>
+            <>
               <NumberInput
                 value={(theme as any)[section][themeProp]}
                 min={meta.input.min}
@@ -78,7 +78,7 @@ const EditorSection: React.SFC<EditorSectionProps> = ({ theme, section, onChange
               <Text p="none" ml="xs" fontSize="sm">
                 px
               </Text>
-            </React.Fragment>
+            </>
           )}
           {meta.input.type === 'dropdown' && (
             <Dropdown onChange={onFontChange(themeProp)} gridColumn="span 3">
@@ -118,7 +118,7 @@ const EditorSection: React.SFC<EditorSectionProps> = ({ theme, section, onChange
         </GridLayout>
       );
     })}
-  </React.Fragment>
+  </>
 );
 
 export const ThemePropsEditor: React.SFC<ThemePropsEditorProps> = ({

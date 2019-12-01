@@ -24,7 +24,7 @@ const PropsTable: SFC<PropsTableProps> = props => {
   const info = props.props;
 
   return (
-    <Fragment>
+    <>
       <H3 py="lg">{props.componentName} specific props</H3>
       <Table mb="lg">
         <Thead>
@@ -62,7 +62,7 @@ const PropsTable: SFC<PropsTableProps> = props => {
           ))}
         </Tbody>
       </Table>
-    </Fragment>
+    </>
   );
 };
 

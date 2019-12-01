@@ -32,7 +32,7 @@ export default ({ contentType, open, close }) => {
       {({ history }) => (
         <I18n>
           {t => (
-            <React.Fragment>
+            <>
               <Deferred type={SIDEBAR_TYPE.cart} until={contentType} css={{ height: '100%' }}>
                 <SidebarLayout title={t('miniCart.title')}>
                   <MiniCartQuery>
@@ -67,7 +67,7 @@ export default ({ contentType, open, close }) => {
                   <ForgotPasswordForm />
                 </SidebarLayout>
               </Deferred>
-            </React.Fragment>
+            </>
           )}
         </I18n>
       )}

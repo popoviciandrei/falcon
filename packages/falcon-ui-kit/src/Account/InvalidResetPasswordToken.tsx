@@ -6,7 +6,7 @@ export type InvalidResetPasswordTokenProps = {
   onRequestAnotherToken: Function;
 };
 export const InvalidResetPasswordToken: React.SFC<InvalidResetPasswordTokenProps> = ({ onRequestAnotherToken }) => (
-  <React.Fragment>
+  <>
     <Text fontSize="md" color="error" style={{ textAlign: 'center' }}>
       <T id="resetPassword.failureMessage" />
     </Text>
@@ -15,5 +15,5 @@ export const InvalidResetPasswordToken: React.SFC<InvalidResetPasswordTokenProps
         <T id="resetPassword.requestAnotherToken" />
       </Button>
     </Box>
-  </React.Fragment>
+  </>
 );
