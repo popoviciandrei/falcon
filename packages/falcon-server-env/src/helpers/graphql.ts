@@ -172,10 +172,10 @@ export const getTagsForField = (
   const rootType = getRootType(fieldType) as GraphQLObjectType;
   if (!fieldPathSections.length) {
     const { name: typeName } = rootType;
-    // prettier-ignore
-    return generateTagNames(forceTypeName || typeName, getFieldValue(sourceValue, findIdFieldName(fieldType)) as
-      | string
-      | string[]);
+    return generateTagNames(
+      forceTypeName || typeName,
+      getFieldValue(sourceValue, findIdFieldName(fieldType)) as string | string[]
+    );
   }
 
   const [currentPath, ...restIdPath] = fieldPathSections;

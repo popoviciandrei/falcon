@@ -1,6 +1,8 @@
 const getDateTimeFormatter = (locales: string[], dateTimeFormatOptions: Intl.DateTimeFormatOptions) =>
-  // prettier-ignore
-  new Intl.DateTimeFormat(locales.filter(x => x), { ...dateTimeFormatOptions });
+  new Intl.DateTimeFormat(
+    locales.filter(x => x),
+    { ...dateTimeFormatOptions }
+  );
 
 export type DateTimeFormatOptions = {
   locale?: string;
