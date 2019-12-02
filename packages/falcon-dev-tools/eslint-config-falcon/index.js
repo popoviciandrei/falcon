@@ -20,7 +20,6 @@ module.exports = {
     'class-methods-use-this': 'off',
     'consistent-return': 'off',
     'global-require': 'off',
-    'id-length': [1, { exceptions: ['_', 'e', 't', 'x', 'p', 'm', 'i', 'j'] }],
     'import/default': 'off',
     'import/extensions': ['off', 'never'],
     'import/no-duplicates': ['error', { includeExports: true }],
