@@ -51,7 +51,33 @@ DynamicRoute.propTypes = {
   notFound: PropTypes.func.isRequired
 };
 
-export const SwitchDynamicURL: React.FC<SwitchProps> = props => {
+export type SwitchDynamicURL = SwitchProps & {
+  /**
+   * invoked when fetching `Url` data
+   * @example 
+   * <SwitchDynamicURL
+      onLoading={({ component }) => (
+        <React.Fragment>
+          <Loader variant="overlay" />
+          {component}
+        </React.Fragment>
+      )}
+    >
+   */
+  onLoading?: (props: { component: React.ReactNode; location?: Location; match: Match<any> }) => React.ReactNode;
+};
+/**
+ * `react-router` `Switch` component which is able to handle dynamically resolved components.
+ * It works with `Url` query.
+ * @example
+ * <SwitchDynamicURL>
+    <Route exact path="/" component={Home} />
+    <Route exact type="shop-product" component={Product} />
+    <p>not Found</p>
+  </SwitchDynamicURL>
+ * @param {SwitchDynamicURL} props
+ */
+export const SwitchDynamicURL: React.FC<SwitchDynamicURL> = props => {
   const [previousLocation, setPreviousLocation] = useState<Location<any>>(undefined);
   const [previousResourceMeta, setPreviousResourceMeta] = useState<ResourceMeta>(undefined);
 
@@ -144,21 +170,19 @@ export const SwitchDynamicURL: React.FC<SwitchProps> = props => {
                       };
                     }
 
-                    return React.cloneElement(previousElement as any, {
+                    const componentProps = {
                       location: previousLocation,
                       computedMatch: previousMatch
-                    });
+                    };
+                    const component = React.cloneElement(previousElement as any, componentProps);
 
-                    // TODO: decide if want to add loader overlay, or expose this.
-                    // return (
-                    //   <React.Fragment>
-                    //     <Loader variant="overlay" />
-                    //     {React.cloneElement(previousElement as any, {
-                    //       location: previousLocation,
-                    //       computedMatch: previousMatch
-                    //     })}
-                    //   </React.Fragment>
-                    // );
+                    return props.onLoading
+                      ? props.onLoading({
+                          component,
+                          location: componentProps.location,
+                          match: componentProps.computedMatch
+                        })
+                      : component;
                   }
 
                   return <Loader variant="overlay" />;
