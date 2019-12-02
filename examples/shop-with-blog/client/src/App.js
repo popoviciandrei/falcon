@@ -18,7 +18,7 @@ import {
 import { ThemeEditor, ThemeEditorState } from '@deity/falcon-theme-editor';
 import loadable from 'src/components/loadable';
 import logo from 'src/assets/logo.png';
-import { Header, PageFooter, SidebarContainer, ErrorBoundary } from './components';
+import { Header, PageFooter, SidebarContainer, ErrorBoundary, LoaderWrapper } from './components';
 import { deityGreenTheme, globalCss } from './theme';
 
 const HeadMetaTags = () => (
@@ -101,7 +101,7 @@ const App = () => (
                       <Header />
                       <ErrorBoundary>
                         <Box position="relative">
-                          <SwitchDynamicURL>
+                          <SwitchDynamicURL onLoading={({ component }) => <LoaderWrapper>{component}</LoaderWrapper>}>
                             <Route exact path="/" component={Home} />
                             <Route exact path="/blog/:page?" component={Blog} />
                             <Route exact path="/cart" component={Cart} />
