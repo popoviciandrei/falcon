@@ -42,6 +42,19 @@ export class Query<TData = any, TVariables = OperationVariables> extends React.C
           const loading =
             networkStatus === NetworkStatus.loading || (networkStatus !== NetworkStatus.fetchMore && result.loading);
           if (!passLoading && loading) {
+            if (data) {
+              return (
+                <React.Fragment>
+                  <Loader variant="overlay" />
+                  {children({
+                    ...result,
+                    data,
+                    fetchMore: fetchMore ? () => fetchMore(data!, result.fetchMore) : apolloFetchMore
+                  })}
+                </React.Fragment>
+              );
+            }
+
             return <Loader />;
           }
 
