@@ -80,8 +80,12 @@ export function searchStateToURL(state: Partial<SearchState>): string {
   }
 
   if (pagination) {
-    parts.pp = pagination.perPage.toString();
-    parts.p = pagination.page.toString();
+    if (pagination.perPage) {
+      parts.pp = pagination.perPage.toString();
+    }
+    if (pagination.page) {
+      parts.p = pagination.page.toString();
+    }
   }
 
   if (term) {
