@@ -31,13 +31,8 @@ const CategoryPage = ({ match: { params } }) => (
           sort: state.sort,
           filters: copy(state.filters)
         }}
-        passLoading
       >
         {({ data: { category }, fetchMore, networkStatus, loading }) => {
-          if (!category && loading) {
-            return <Loader />;
-          }
-
           const { name, productList } = category;
           const { pagination, items, aggregations } = productList;
           const filtersData = getFiltersData(state.filters, aggregations);
