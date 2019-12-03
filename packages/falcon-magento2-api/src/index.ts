@@ -351,7 +351,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     const { sku } = obj;
     let { customAttributes } = obj;
     if (!Object.keys(customAttributes).length) {
-      const data = await this.getForIntegration(`/products/${sku}`, {}, { cacheOptions: { ttl: 86400 } });
+      const data = await this.getForIntegration(`/products/${sku}`);
       this.convertAttributesSet(data);
       const product = this.convertKeys(data);
       ({ customAttributes } = product);
