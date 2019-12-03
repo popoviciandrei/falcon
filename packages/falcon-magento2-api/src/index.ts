@@ -224,23 +224,27 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   convertCategory(data) {
     this.convertAttributesSet(data);
-    const { custom_attributes: customAttributes } = data;
+    const newData = this.convertKeys(data);
+    const { customAttributes } = newData;
+    const { imageUrl, image, metaTitle, metaDescription, metaKeywords, urlPath, ...restAttributes } = customAttributes;
 
-    // for specific category record
-    let urlPath = customAttributes.url_path;
-
-    if (!urlPath) {
+    let categoryUrlPath = urlPath;
+    if (!categoryUrlPath) {
       // in case of categories tree - URL path can be found in data.url_path
-      urlPath = data.url_path;
-      delete data.url_path;
+      categoryUrlPath = newData.urlPath;
+      delete newData.urlPath;
     }
 
-    delete data.created_at;
-    delete data.product_count;
+    newData.image = imageUrl || image; // to use `image` as a fallback value
+    newData.urlPath = this.convertPathToUrl(categoryUrlPath);
+    newData.seo = {
+      title: metaTitle,
+      description: metaDescription,
+      keywords: metaKeywords
+    };
+    newData.attributes = Object.entries(restAttributes).map(([key, value]) => ({ key, value }));
 
-    data.urlPath = this.convertPathToUrl(urlPath);
-
-    return data;
+    return newData;
   }
 
   /**
