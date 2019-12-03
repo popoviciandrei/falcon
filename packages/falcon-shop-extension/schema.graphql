@@ -349,6 +349,7 @@ type Product {
   name: String!
   image: String
   urlPath: String!
+  categories: [Category!]!
   # Full url to resized product image
   thumbnail: String
   price: ProductPrice!
@@ -361,7 +362,7 @@ type Product {
   bundleOptions: [BundleProductOption!]!
   gallery: [GalleryEntry!]!
   breadcrumbs(path: String!): [Breadcrumb] @cache(ttl: 20, idPath: ["$parent"])
-  seo: ProductSeo
+  seo: SEO
 }
 
 type ShippingMethod {
@@ -401,9 +402,13 @@ type MenuItem {
 type Category {
   id: ID! @cacheId
   name: String
+  urlPath: String!
+  image: String
   children: [Category]
   description: String
   breadcrumbs(path: String!): [Breadcrumb!]!
+  attributes: [Attribute!]!
+  seo: SEO
   productList(input: ProductListInput): CategoryProductList! @cache(ttl: 15, idPath: ["$parent", "items"])
 }
 
@@ -420,6 +425,11 @@ input ProductListInput {
   pagination: PaginationInput
 }
 
+type Attribute {
+  key: String!
+  value: String
+}
+
 type ProductList {
   items: [Product!]!
   pagination: Pagination!
@@ -430,7 +440,7 @@ type Stock {
   qty: Float!
 }
 
-type ProductSeo {
+type SEO {
   title: String
   description: String
   keywords: String
