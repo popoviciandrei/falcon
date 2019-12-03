@@ -51,6 +51,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         sortOrderList: apiGetter(api => api.getSortOrderList())
       },
       Product: {
+        categories: apiGetter((api, ...args) => api.productCategories(...args)),
         price: apiGetter((api, ...args) => api.productPrice(...args)),
         tierPrices: apiGetter((api, ...args) => api.productTierPrices(...args)),
         options: apiGetter((api, ...args) => api.productOptions(...args)),
@@ -236,7 +237,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     }
 
     newData.image = imageUrl || image; // to use `image` as a fallback value
-    newData.urlPath = this.convertPathToUrl(categoryUrlPath);
+    newData.urlPath = this.convertPathToUrl(categoryUrlPath) || ''; // Fallback to an empty string for default category with no URL
     newData.seo = {
       title: metaTitle,
       description: metaDescription,
@@ -344,6 +345,20 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       items: response.items.map(x => this.reduceProduct(x, this.session.currency)),
       pagination: this.processPagination(response.total_count, searchCriteria.currentPage, searchCriteria.pageSize)
     };
+  }
+
+  async productCategories(obj) {
+    const { sku } = obj;
+    let { customAttributes } = obj;
+    if (!Object.keys(customAttributes).length) {
+      const data = await this.getForIntegration(`/products/${sku}`, {}, { cacheOptions: { ttl: 86400 } });
+      this.convertAttributesSet(data);
+      const product = this.convertKeys(data);
+      ({ customAttributes } = product);
+    }
+
+    const { categoryIds = [] } = customAttributes || {};
+    return Promise.all(categoryIds.map(categoryId => this.category({}, { id: categoryId })));
   }
 
   /**
