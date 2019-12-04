@@ -7,7 +7,6 @@ import { CategoryWithProductListQuery } from '@deity/falcon-shop-data';
 import { H1, Box, FlexLayout, Divider, Button } from '@deity/falcon-ui';
 import { SearchConsumer, SortOrderPickerProvider, getFiltersData } from '@deity/falcon-front-kit';
 import {
-  Loader,
   CategoryLayout,
   CategoryArea,
   Sidebar,
@@ -22,29 +21,23 @@ import { ShowMore, ShowingOutOf } from './components';
 
 const copy = item => item && JSON.parse(JSON.stringify(item));
 
-const CategoryPage = ({ id }) => (
+const CategoryPage = ({ match: { params } }) => (
   <SearchConsumer>
     {({ state }) => (
       <CategoryWithProductListQuery
         variables={{
-          categoryId: id,
+          categoryId: params.id,
           sort: state.sort,
           filters: copy(state.filters)
         }}
-        passLoading
       >
-        {({ data: { category }, fetchMore, networkStatus, loading }) => {
-          if (!category && loading) {
-            return <Loader />;
-          }
-
+        {({ data: { category }, fetchMore, networkStatus }) => {
           const { name, productList } = category;
           const { pagination, items, aggregations } = productList;
           const filtersData = getFiltersData(state.filters, aggregations);
 
           return (
             <CategoryLayout variant={!filtersData.length && 'noFilters'}>
-              {loading && <Loader variant="overlay" />}
               <Helmet>
                 <title>{name}</title>
               </Helmet>
@@ -101,7 +94,7 @@ const CategoryPage = ({ id }) => (
 );
 
 CategoryPage.propTypes = {
-  id: PropTypes.string.isRequired
+  match: PropTypes.any.isRequired
 };
 
 export default CategoryPage;
