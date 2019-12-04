@@ -29,7 +29,7 @@
     "core-js": "3.2.1",
     "history": "4.9.0",
     "react-credit-card-input": "1.1.5",
-    "react-lazyload": "2.6.2",
+    "react-lazyload": "^2.6.5",
     "react-powerplug": "1.0.0",
     "react-responsive": "6.1.1"
   },
