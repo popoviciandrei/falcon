@@ -33,8 +33,8 @@ export const prettyScrollbars = (theme: Theme): CSSObject => ({
   }
 });
 
-export const noScrollbars = () => ({
-  [`overflow`]: ['auto', 'overlay'],
+export const noScrollbars = (): CSSObject => ({
+  overflow: ['auto', 'overlay'],
   WebkitOverflowScrolling: 'touch',
   scrollbarWidth: 'none',
   '-ms-overflow-style': 'none',
