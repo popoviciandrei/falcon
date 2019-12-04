@@ -8,7 +8,7 @@ import has from 'lodash/has';
 import forEach from 'lodash/forEach';
 import snakeCase from 'lodash/snakeCase';
 import { OperationInput } from '@deity/falcon-data';
-import { ProductListInput } from '@deity/falcon-shop-extension';
+import { ProductListInput, Country, CountryList, Region, RegionList } from '@deity/falcon-shop-extension';
 import { ApiUrlPriority, stripHtml, graphqlFragmentFields } from '@deity/falcon-server-env';
 import { Magento2ApiBase } from './Magento2ApiBase';
 import { tryParseNumber } from './utils/number';
@@ -893,33 +893,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   }
 
   /**
-   * Fetch country list
-   * @returns {CountryList} parsed country list
-   */
-  async countryList() {
-    const countries = await this.getAuth(
-      '/directory/countries',
-      {},
-      {
-        cacheOptions: { ttl: 86400 }, // 24 hours cache
-        context: {
-          isAuthRequired: false,
-          didReceiveResult: result =>
-            result.map(item => ({
-              id: item.id,
-              code: item.two_letter_abbreviation,
-              englishName: item.full_name_english,
-              localName: item.full_name_locale,
-              regions: item.available_regions || []
-            }))
-        }
-      }
-    );
-
-    return { items: countries };
-  }
-
-  /**
    * Make request for customer token
    * @param {object} obj Parent object
    * @param {SignIn} input form data
@@ -1246,27 +1219,69 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     return this.convertAddressData(response);
   }
 
+  /** Fetch country list   */
+  async fetchCountryList(): Promise<(Country & { regions: Region[] })[]> {
+    const countries = await this.getAuth(
+      '/directory/countries',
+      {},
+      {
+        cacheOptions: { ttl: 86400 }, // 24 hours cache
+        context: {
+          isAuthRequired: false,
+          didReceiveResult: result =>
+            result.map(item => ({
+              id: item.id,
+              code: item.two_letter_abbreviation,
+              englishName: item.full_name_english,
+              localName: item.full_name_locale,
+              regions: item.available_regions || []
+            }))
+        }
+      }
+    );
+
+    return countries;
+  }
+
+  async countryList(): Promise<CountryList> {
+    const countries = await this.fetchCountryList();
+
+    return { items: countries.map(({ regions, ...country }) => country) };
+  }
+
   /**
    * Get country details
    * @param {object} obj parent object
    * @param {ID} obj.countryId country ID
-   * @returns {promise<Country>} requested country data
    */
-  async country({ countryId }) {
+  async country({ countryId }): Promise<Country> {
     const countries = await this.countryList();
     return countries.items.find(country => country.id === countryId);
+  }
+
+  /**
+   * Get country regions
+   * @param {object} obj parent object
+   * @param {ID} obj.countryId country ID
+   * @returns {promise<Country>} requested country data
+   */
+  async regionList(obj, { countryId }): Promise<RegionList> {
+    const countries = await this.fetchCountryList();
+    const country = countries.find(x => x.id === countryId);
+
+    return { items: country ? country.regions : [] };
   }
 
   /**
    * Get region details
    * @param {object} obj parent object
    * @param {object} obj.region region object
-   * @returns {promise<Country>} requested region data
    */
-  async addressRegion({ region }) {
+  addressRegion({ region }): Region {
     if (!region || !region.region) {
       return null;
     }
+
     return {
       id: region.regionId,
       code: region.regionCode,
