@@ -518,8 +518,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     this.convertAttributesSet(data);
     data = this.convertKeys(data);
 
-    console.log(data);
-
     const resolveGallery = product => {
       const { extensionAttributes: attrs, mediaGallerySizes } = product;
       if (attrs && attrs.mediaGallerySizes) {
