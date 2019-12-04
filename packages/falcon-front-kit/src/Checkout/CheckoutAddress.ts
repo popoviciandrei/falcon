@@ -14,7 +14,7 @@ export const addressToCheckoutAddressInput = (checkoutAddress: CheckoutAddress):
 
   return {
     ...rest,
-    regionId: region ? region.id : undefined,
-    countryId: country.id
+    countryId: country.id,
+    regionId: region ? region.id : undefined
   };
 };

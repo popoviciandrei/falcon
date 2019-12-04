@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { AddressCountry } from '@deity/falcon-shop-extension';
+import { Country, Region } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
 import { useAddAddressMutation, AddAddressResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
@@ -12,7 +12,8 @@ export type AddAddressFormValues = {
   street2?: string;
   postcode: string;
   city: string;
-  country: AddressCountry;
+  country: Country;
+  region?: Region;
   company?: string;
   telephone?: string;
   defaultBilling?: boolean;
@@ -30,6 +31,7 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
     postcode: '',
     city: '',
     country: undefined,
+    region: undefined,
     company: '',
     telephone: '',
     defaultBilling: false,
@@ -43,13 +45,14 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
     <Formik
       initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
-      onSubmit={({ street1, street2, country, ...values }, { setSubmitting, setStatus }) =>
+      onSubmit={({ street1, street2, country, region, ...values }, { setSubmitting, setStatus }) =>
         addAddress({
           variables: {
             input: {
               ...values,
               street: [street1, street2].filter(Boolean),
-              countryId: country.id
+              countryId: country.id,
+              regionId: region ? region.id : undefined
             }
           }
         })

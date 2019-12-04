@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { AddressCountry, Address } from '@deity/falcon-shop-extension';
+import { Address, Country, Region } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
 import { SetShippingAddressResponse, SetBillingAddressResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
@@ -16,7 +16,8 @@ export type SetCheckoutAddressFormValues = {
   street2?: string;
   postcode: string;
   city: string;
-  country: AddressCountry;
+  country: Country;
+  region?: Region;
   company?: string;
   telephone?: string;
   saveInAddressBook?: boolean;
@@ -31,6 +32,7 @@ const INITIAL_VALUES: SetCheckoutAddressFormValues = {
   postcode: '',
   city: '',
   country: undefined,
+  region: undefined,
   company: '',
   telephone: '',
   saveInAddressBook: false
