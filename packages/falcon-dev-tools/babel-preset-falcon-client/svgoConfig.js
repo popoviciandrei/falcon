@@ -30,4 +30,4 @@ const svgoConfig = {
   ]
 };
 
-module.export = svgoConfig;
+module.exports = svgoConfig;
