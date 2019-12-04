@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-ui-kit",
   "license": "OSL-3.0",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-ui-kit",
   "publishConfig": {
     "access": "public"
@@ -23,9 +23,9 @@
   },
   "dependencies": {
     "@babel/runtime": "7.6.3",
-    "@deity/falcon-data": "^1.0.0-beta.5",
-    "@deity/falcon-i18n": "^1.0.0-beta.5",
-    "@deity/falcon-shop-data": "^1.0.0-beta.5",
+    "@deity/falcon-data": "^1.0.0-beta.6",
+    "@deity/falcon-i18n": "^1.0.0-beta.6",
+    "@deity/falcon-shop-data": "^1.0.0-beta.6",
     "core-js": "3.2.1",
     "history": "4.9.0",
     "react-credit-card-input": "1.1.5",
@@ -34,10 +34,10 @@
     "react-responsive": "6.1.1"
   },
   "devDependencies": {
-    "@deity/falcon-front-kit": "^1.0.0-beta.5",
-    "@deity/falcon-scripts": "^1.0.0-beta.5",
-    "@deity/falcon-shop-extension": "^1.0.0-beta.5",
-    "@deity/falcon-ui": "^1.0.0-beta.5",
+    "@deity/falcon-front-kit": "^1.0.0-beta.6",
+    "@deity/falcon-scripts": "^1.0.0-beta.6",
+    "@deity/falcon-shop-extension": "^1.0.0-beta.6",
+    "@deity/falcon-ui": "^1.0.0-beta.6",
     "@types/history": "4.7.2",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.3",
