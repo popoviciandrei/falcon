@@ -54,7 +54,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - extracted `CurrencyProvider` and `Currency` components from `LocaleProvider` and `Locale`, also introduced `useLocale` and `useCurrency` hooks ([#698](https://github.com/deity-io/falcon/pull/698))
 - updated Formik to version 2.0 ([#705](https://github.com/deity-io/falcon/pull/705))
 - added `InBrowserOnly` component ([#728](https://github.com/deity-io/falcon/pull/728))
-
+- added `SwitchDynamicURL` component in order to define dynamic URL routes in `react`/`react-router` `v4` way ([#738](https://github.com/deity-io/falcon/pull/738))
 
 ### Falcon UI Kit v1.0.0
 

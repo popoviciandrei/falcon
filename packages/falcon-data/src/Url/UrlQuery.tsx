@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
+import { useQuery, useLazyQuery, QueryHookOptions, LazyQueryHookOptions } from '@apollo/react-hooks';
 import { Query } from '../Query/Query';
 
 export const GET_URL = gql`
@@ -40,3 +41,8 @@ export class UrlQuery extends Query<UrlResponse, UrlQueryVariables> {
     })
   };
 }
+
+export const useUrlQuery = (options?: QueryHookOptions<UrlResponse>) => useQuery<UrlResponse>(GET_URL, options);
+
+export const useUrlLazyQuery = (options?: LazyQueryHookOptions<UrlResponse>) =>
+  useLazyQuery<UrlResponse>(GET_URL, options);

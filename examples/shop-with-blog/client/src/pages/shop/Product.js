@@ -21,9 +21,9 @@ import {
 } from '@deity/falcon-ui-kit';
 import { OpenSidebarMutation, SIDEBAR_TYPE } from 'src/components';
 
-const ProductPage = ({ id, path }) => (
+const ProductPage = ({ match: { params } }) => (
   <PageLayout>
-    <ProductQuery variables={{ id, path }}>
+    <ProductQuery variables={{ ...params }}>
       {({ data: { product } }) => (
         <React.Fragment>
           <Helmet>
@@ -85,7 +85,7 @@ const ProductPage = ({ id, path }) => (
   </PageLayout>
 );
 ProductPage.propTypes = {
-  id: PropTypes.string.isRequired
+  match: PropTypes.any.isRequired
 };
 
 export default ProductPage;
