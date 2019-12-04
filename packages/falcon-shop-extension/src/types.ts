@@ -40,16 +40,16 @@ export type AddressBase = {
 
 export type Address = AddressBase & {
   id: ID;
+  country: Country;
   region?: Region;
-  country: AddressCountry;
   fax?: string;
   defaultBilling: boolean;
   defaultShipping: boolean;
 } & GraphQLBase;
 
 export type AddressInputBase = AddressBase & {
-  regionId?: ID;
   countryId: ID;
+  regionId?: ID;
 };
 
 export type CheckoutAddressInput = AddressInputBase & {
@@ -376,21 +376,21 @@ export type CountryList = {
   items: Country[];
 };
 
-export type AddressCountry = {
+export type Country = {
   id: ID;
   code: string;
   englishName?: string;
   localName?: string;
 };
 
-export type Country = AddressCountry & {
-  regions: Region[];
-};
-
 export type Region = {
   id: ID;
   code?: string;
   name?: string;
+};
+
+export type RegionList = {
+  items: Region[];
 };
 
 export type MenuItem = {

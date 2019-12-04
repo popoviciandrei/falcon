@@ -5,6 +5,7 @@ extend type Query {
   productList(input: ProductListInput): ProductList!
   cart: Cart!
   countryList: CountryList!
+  regionList(countryId: ID!): RegionList!
   lastOrder: Order @cacheInvalidator(idPath: [{ path: "items", type: "Product" }])
   order(id: ID!): Order
   orderList(pagination: PaginationInput): OrderList
@@ -233,7 +234,6 @@ input CheckoutAddressInput {
   email: String
   company: String
   countryId: ID!
-  region: String
   regionId: ID
   street: [String!]!
   telephone: String
@@ -250,9 +250,9 @@ input AddAddressInput {
   postcode: String!
   city: String!
   countryId: ID!
+  regionId: ID
   defaultBilling: Boolean
   defaultShipping: Boolean
-  regionId: ID
 }
 
 input EditAddressInput {
@@ -265,9 +265,9 @@ input EditAddressInput {
   postcode: String!
   city: String!
   countryId: ID!
+  regionId: ID
   defaultBilling: Boolean
   defaultShipping: Boolean
-  regionId: ID
 }
 
 input ChangePasswordInput {
@@ -580,7 +580,7 @@ type Address {
   street: [String!]!
   city: String!
   postcode: String!
-  country: AddressCountry!
+  country: Country!
   region: Region
   telephone: String
   fax: String
@@ -656,44 +656,28 @@ type BundleProductOptionLink {
   sku: ID
 }
 
-type Region {
-  # unique identifier of the region
-  id: ID!
-  # abbreviated form of the region name
-  code: String
-  # region name
-  name: String
-}
-
-interface CountryBase {
-  id: ID!
-  code: String!
-  englishName: String
-  localName: String
-}
-
-type AddressCountry implements CountryBase {
+type Country {
   id: ID!
   # abbreviated form of the country name
   code: String!
   englishName: String
   # country name in locale language
   localName: String
-}
-
-type Country implements CountryBase {
-  id: ID!
-  # abbreviated form of the country name
-  code: String!
-  englishName: String
-  # country name in locale language
-  localName: String
-  # regions included in the country
-  regions: [Region!]!
 }
 
 type CountryList {
   items: [Country!]!
+}
+
+type Region {
+  id: ID!
+  # abbreviated form of the region name
+  code: String
+  name: String
+}
+
+type RegionList {
+  items: [Region!]!
 }
 
 type CmsBlock {
