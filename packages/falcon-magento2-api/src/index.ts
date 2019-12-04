@@ -226,8 +226,9 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   convertCategory(data) {
     this.convertAttributesSet(data);
     const newData = this.convertKeys(data);
-    const { customAttributes } = newData;
-    const { imageUrl, image, metaTitle, metaDescription, metaKeywords, urlPath, ...restAttributes } = customAttributes;
+    const { customAttributes, extensionAttributes = {} } = newData;
+    const { image, metaTitle, metaDescription, metaKeywords, urlPath, ...restAttributes } = customAttributes;
+    const { imageUrl } = extensionAttributes;
 
     let categoryUrlPath = urlPath;
     if (!categoryUrlPath) {
@@ -516,6 +517,8 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   reduceProduct(data, currency = null) {
     this.convertAttributesSet(data);
     data = this.convertKeys(data);
+
+    console.log(data);
 
     const resolveGallery = product => {
       const { extensionAttributes: attrs, mediaGallerySizes } = product;
