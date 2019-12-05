@@ -326,8 +326,9 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @returns {Promise<Product[]>}  response with list of products
    */
   async productList(obj, { input }) {
-    const { withAttributeFilters = [] } = input;
-    const searchCriteria = this.createSearchCriteria(input);
+    // It's not being used anymore.
+    const withAttributeFilters = [];
+    const searchCriteria = this.createSearchCriteria(input || {});
 
     this.addSearchFilter(searchCriteria, 'visibility', ProductVisibility.catalogAndSearch, 'eq');
     if (!this.isFilterSet('status', searchCriteria)) {
