@@ -1,3 +1,10 @@
 import React from 'react';
 
-export const Loader = () => <div className="loader">Loading...</div>;
+export type LoaderProps = {
+  variant?: any;
+};
+export const Loader: React.FC<LoaderProps> = props => (
+  <div className="loader" {...props}>
+    Loading...
+  </div>
+);
