@@ -2,7 +2,7 @@ import merge from 'deepmerge';
 import isPlainObject from 'is-plain-object';
 import { keyframes } from '@emotion/core';
 import { themablePropsKeys } from './responsiveprops';
-import { Theme, RecursivePartial } from './index';
+import { Theme } from './index';
 
 export type RecursivePartial<T> = { [key in keyof T]?: RecursivePartial<T[key]> };
 
