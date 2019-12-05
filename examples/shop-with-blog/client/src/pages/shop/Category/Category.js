@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { Toggle } from 'react-powerplug';
 import { CategoryWithProductListQuery } from '@deity/falcon-shop-data';
 import { H1, Box, FlexLayout, Divider, Button } from '@deity/falcon-ui';
-import { SearchConsumer, SortOrderPickerProvider, getFiltersData } from '@deity/falcon-front-kit';
+import { SearchConsumer, SortOrderPickerProvider, SEO, getFiltersData } from '@deity/falcon-front-kit';
 import {
   CategoryLayout,
   CategoryArea,
@@ -41,6 +41,7 @@ const CategoryPage = ({ match: { params } }) => (
               <Helmet>
                 <title>{name}</title>
               </Helmet>
+              <SEO data={category.seo} />
               <Box gridArea={CategoryArea.heading}>
                 <H1>{name}</H1>
                 <FlexLayout justifyContent="space-between" alignItems="center">

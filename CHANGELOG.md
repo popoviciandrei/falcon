@@ -55,6 +55,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - updated Formik to version 2.0 ([#705](https://github.com/deity-io/falcon/pull/705))
 - added `InBrowserOnly` component ([#728](https://github.com/deity-io/falcon/pull/728))
 - added `SwitchDynamicURL` component in order to define dynamic URL routes in `react`/`react-router` `v4` way ([#738](https://github.com/deity-io/falcon/pull/738))
+- added `SEO` component to render `title`, `description` and `keywords` as proper meta-tags ([#743](https://github.com/deity-io/falcon/pull/743))
 
 ### Falcon UI Kit v1.0.0
 
@@ -88,6 +89,8 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 ### Falcon Shop Extension v1.0.0
 
 - introduced Country and Region types to allow fetching more details with address queries ([#609](https://github.com/deity-io/falcon/pull/609))
+- added `@cache` for `Query.productList` query ([#743](https://github.com/deity-io/falcon/pull/743))
+- added `Product.categories` and `Category.{urlPath,image,attributes,seo}` fields ([#743](https://github.com/deity-io/falcon/pull/743))
 
 ### Falcon Server vNext
 
@@ -111,11 +114,6 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added TTL option for cache tags ([#549](https://github.com/deity-io/falcon/pull/549))
 - added optional `ApiDataSource.getExtraResolvers` static method to define extra resolvers ([#557](https://github.com/deity-io/falcon/pull/557))
 - added re-export of all internally used components and helper utils ([#686](https://github.com/deity-io/falcon/pull/686))
-
-### Falcon Shop Extension vNext
-
-- added `@cache` for `Query.productList` query ([#743](https://github.com/deity-io/falcon/pull/743))
-- added `Product.categories` and `Category.{urlPath,image,attributes,seo}` fields ([#743](https://github.com/deity-io/falcon/pull/743))
 
 ### Falcon Logger vNext
 

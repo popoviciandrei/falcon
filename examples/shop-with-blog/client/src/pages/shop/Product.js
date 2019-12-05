@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { T } from '@deity/falcon-i18n';
 import { ProductQuery } from '@deity/falcon-shop-data';
 import { Box, Text, H1, NumberInput, Button, Icon, FlexLayout } from '@deity/falcon-ui';
-import { Field, AddToCartFormProvider } from '@deity/falcon-front-kit';
+import { Field, AddToCartFormProvider, SEO } from '@deity/falcon-front-kit';
 import {
   ProductLayout,
   ProductLayoutArea,
@@ -29,6 +29,7 @@ const ProductPage = ({ match: { params } }) => (
           <Helmet>
             <title>{product.name}</title>
           </Helmet>
+          <SEO data={product.seo} />
           <Breadcrumbs items={product.breadcrumbs} />
           <OpenSidebarMutation>
             {openSidebar => (
