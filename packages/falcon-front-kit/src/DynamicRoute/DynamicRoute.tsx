@@ -1,22 +1,19 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect, matchPath, match as Match, SwitchProps } from 'react-router-dom';
 import { Location } from 'history';
-import { UrlQuery, ResourceMeta } from '@deity/falcon-data';
+import { UrlQuery, ResourceMeta, Loader, OperationError } from '@deity/falcon-data';
 import { Router } from '../Router';
 
 export type DynamicRouteComponentProps = Pick<ResourceMeta, 'id' | 'path'>;
-
 export type ComponentsMap = Record<string, React.ComponentType<DynamicRouteComponentProps> | object>;
-
 export type DynamicRouteProps = {
   location?: Location;
   components: ComponentsMap;
   notFound: React.ComponentType<{ location?: any }>;
 };
-
 export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
-  const { components, notFound } = props;
+  const { components, notFound: NotFound } = props;
 
   return (
     <Router>
@@ -28,8 +25,6 @@ export const DynamicRoute: React.SFC<DynamicRouteProps> = props => {
           <UrlQuery variables={{ path }}>
             {({ data: { url } }) => {
               if (!url) {
-                const NotFound = notFound;
-
                 return <NotFound location={location} />;
               }
 
