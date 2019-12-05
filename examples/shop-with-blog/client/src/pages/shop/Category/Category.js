@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NetworkStatus } from 'apollo-client';
-import { Helmet } from 'react-helmet-async';
 import { Toggle } from 'react-powerplug';
 import { CategoryWithProductListQuery } from '@deity/falcon-shop-data';
 import { H1, Box, FlexLayout, Divider, Button } from '@deity/falcon-ui';
@@ -38,10 +37,7 @@ const CategoryPage = ({ match: { params } }) => (
 
           return (
             <CategoryLayout variant={!filtersData.length && 'noFilters'}>
-              <Helmet>
-                <title>{name}</title>
-              </Helmet>
-              <SEO data={category.seo} />
+              <SEO meta={category.seo} title={name} />
               <Box gridArea={CategoryArea.heading}>
                 <H1>{name}</H1>
                 <FlexLayout justifyContent="space-between" alignItems="center">
