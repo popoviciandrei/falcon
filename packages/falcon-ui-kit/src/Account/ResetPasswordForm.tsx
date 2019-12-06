@@ -9,13 +9,13 @@ export type ResetPasswordFormProps = Partial<FormProps> & {
 };
 export const ResetPasswordForm: React.SFC<ResetPasswordFormProps> = ({ onSuccess, resetToken, ...formProps }) => (
   <ResetPasswordFormProvider initialValues={{ resetToken, password: '' }} onSuccess={onSuccess}>
-    {({ status = {} }) => (
+    {({ status }) => (
       <Form id="reset-password" i18nId="resetPassword" {...formProps}>
         <FormField name="password" required type="password" autoComplete="new-password">
           {({ field }) => <PasswordRevealInput {...field} />}
         </FormField>
         <FormSubmit justifySelf="center" />
-        {status.error && <ErrorSummary errors={status.error} />}
+        <ErrorSummary errors={status.error} />
       </Form>
     )}
   </ResetPasswordFormProvider>

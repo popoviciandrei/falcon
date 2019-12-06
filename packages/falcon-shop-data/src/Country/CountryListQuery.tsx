@@ -6,9 +6,10 @@ export const GET_COUNTRY_LIST = gql`
   query CountryList {
     countryList {
       items {
+        id
+        code
         englishName
         localName
-        code
       }
     }
   }
@@ -16,7 +17,7 @@ export const GET_COUNTRY_LIST = gql`
 
 export type CountryListResponse = {
   countryList: {
-    items: Pick<Country, 'code' | 'localName' | 'englishName'>[];
+    items: Pick<Country, 'id' | 'code' | 'localName' | 'englishName'>[];
   };
 };
 

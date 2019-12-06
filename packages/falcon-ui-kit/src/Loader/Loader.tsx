@@ -15,7 +15,7 @@ export const Loader = themed({
       justifyContent: 'center',
       alignItems: 'center',
       css: {
-        height: '100vh',
+        height: '50vh',
         width: '100%'
       },
       variants: {
