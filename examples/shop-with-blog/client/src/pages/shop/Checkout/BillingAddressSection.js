@@ -9,7 +9,7 @@ import {
   useCheckout,
   isCustomAddress
 } from '@deity/falcon-front-kit';
-import { AddressDetails, Form, FormSubmit, AddressFormFields, ErrorSummary, Loader } from '@deity/falcon-ui-kit';
+import { AddressDetails, Form, AddressFormFields, ErrorSummary } from '@deity/falcon-ui-kit';
 import { CustomerWithAddressesQuery } from '@deity/falcon-shop-data';
 import {
   AddressPicker,
@@ -69,9 +69,8 @@ export const BillingAddressEditor = ({ addresses }) => {
 
   return (
     <SetCheckoutAddressFormProvider setAddress={setBillingAddress} address={address}>
-      {({ isSubmitting, setValues, status: { error } }) => (
+      {({ setValues, status: { error } }) => (
         <Form id="billing-address" i18nId="addressForm" autoSubmit={shouldAutoSubmit}>
-          {isSubmitting && <Loader variant="overlay" />}
           <FlexLayout mb="md">
             <Checkbox
               id="use-the-same-as-shipping"
@@ -100,9 +99,9 @@ export const BillingAddressEditor = ({ addresses }) => {
             <AddressFormFields autoCompleteSection="billing-address" />
           )}
           <CheckoutSectionFooter>
-            <FormSubmit>
+            <Button type="submit">
               <T id="checkout.nextStep" />
-            </FormSubmit>
+            </Button>
             <ErrorSummary errors={error} />
           </CheckoutSectionFooter>
         </Form>

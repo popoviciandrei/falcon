@@ -18,7 +18,7 @@ export const Form: React.SFC<FormProps> = ({ i18nId, autoSubmit, ...restProps })
       return null;
     }
     if (isSubmitting && submitCount <= 1) {
-      return <Loader />;
+      return null;
     }
   }
 

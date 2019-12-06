@@ -76,11 +76,11 @@ const CheckoutWizard = () => {
 
       {step === CheckoutStep.Confirmation && (
         <PlaceOrder>
-          {(placeOrder, { error, loading, data }) => {
+          {(placeOrder, { error, data }) => {
             if (!data) {
               return (
                 <CheckoutSectionFooter p="xxl">
-                  <Button onClick={() => placeOrder(values)} variant={loading && 'loader'}>
+                  <Button onClick={() => placeOrder(values)}>
                     <T id="checkout.placeOrder" />
                   </Button>
                   <ErrorSummary errors={error} />
