@@ -66,6 +66,7 @@ module.exports = {
     ],
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx'] }],
     'react/jsx-one-expression-per-line': 'off',
+    'react/jsx-wrap-multilines': [1, { prop: 'ignore' }],
     'react/no-danger': 'off',
     'react/no-multi-comp': 'off',
     'react/require-default-props': ['off'],

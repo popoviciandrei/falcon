@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { Query } from '@deity/falcon-data';
-import { Address, Region, Country } from '@deity/falcon-shop-extension';
+import { Address, Country, Region } from '@deity/falcon-shop-extension';
 
 export const GET_ADDRESS = gql`
   query Address($id: ID!) {
@@ -18,9 +18,7 @@ export const GET_ADDRESS = gql`
       country {
         id
         code
-        regions {
-          id
-        }
+        localName
       }
       company
       defaultBilling
@@ -44,9 +42,7 @@ export type AddressResponse = {
     | 'defaultShipping'
   > & {
     region: Pick<Region, 'id'>;
-    country: Pick<Country, 'id' | 'code'> & {
-      regions: Pick<Region, 'id'>[];
-    };
+    country: Omit<Country, 'englishName'>;
   };
 };
 export class AddressQuery extends Query<AddressResponse> {

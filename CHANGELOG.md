@@ -36,6 +36,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
   * renamed `ThemedComponentPropsWithVariants` to `ComponentTheme`
   * renamed `ThemedComponentProps` to `ThemingProps`
   * renamed `BaseThemedComponentProps` to `BaseThemingProps`
+- added `noScrollbars` css generation function ([#742](https://github.com/deity-io/falcon/pull/742))
 
 ### Falcon E-commerce UI Kit discontinued
 

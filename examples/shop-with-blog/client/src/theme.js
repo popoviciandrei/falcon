@@ -189,6 +189,9 @@ export const deityGreenTheme = createTheme({
               borderRightColor: props.theme.colors.white
             }
           })
+        },
+        checkout: {
+          fontSize: 'xs'
         }
       }
     },

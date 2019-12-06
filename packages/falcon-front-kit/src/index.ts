@@ -11,6 +11,7 @@ export * from './Forms';
 export * from './Locale';
 export * from './NetworkStatus';
 export * from './Product';
+export * from './RecordEnumLike';
 export * from './Router';
 export * from './Routes';
 export * from './ScrollToTop';
