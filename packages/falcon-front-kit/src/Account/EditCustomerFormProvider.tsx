@@ -2,16 +2,15 @@ import React from 'react';
 import { Formik } from 'formik';
 import { useGetUserError } from '@deity/falcon-data';
 import { EditCustomerInput, Customer } from '@deity/falcon-shop-extension';
-import { useEditCustomerMutation } from '@deity/falcon-shop-data';
+import { useEditCustomerMutation, EditCustomerResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
-export type EditCustomerFormValues = EditCustomerInput;
-export type EditCustomerFormProviderProps = FormProviderProps<EditCustomerFormValues> & {
+export type EditCustomerFormProviderProps = FormProviderProps<EditCustomerInput, EditCustomerResponse> & {
   customer: Pick<Customer, 'websiteId' | 'firstname' | 'lastname' | 'email'>;
 };
 export const EditCustomerFormProvider: React.SFC<EditCustomerFormProviderProps> = props => {
   const { onSuccess, initialValues, customer, ...formikProps } = props;
-  const defaultInitialValues: EditCustomerFormValues = {
+  const defaultInitialValues: EditCustomerInput = {
     websiteId: customer.websiteId,
     email: customer.email,
     firstname: customer.firstname,
@@ -23,12 +22,14 @@ export const EditCustomerFormProvider: React.SFC<EditCustomerFormProviderProps> 
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
         editCustomerMutation({ variables: { input: values } })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);

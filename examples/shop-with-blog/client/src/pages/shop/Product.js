@@ -34,7 +34,7 @@ const ProductPage = ({ match: { params } }) => (
                 product={product}
                 onSuccess={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.cart } })}
               >
-                {({ isSubmitting, status = {} }) => (
+                {({ isSubmitting, status }) => (
                   <ProductLayout as={Form} id="add-to-cart" i18nId="product">
                     <FlexLayout gridArea={ProductLayoutArea.gallery} alignItems="center" justifyContent="center">
                       <ProductGallery items={product.gallery} />
@@ -69,7 +69,7 @@ const ProductPage = ({ match: { params } }) => (
                       </Button>
                     </FlexLayout>
                     <Box gridArea={ProductLayoutArea.error}>
-                      {status.error && <ErrorSummary errors={status.error} />}
+                      <ErrorSummary errors={status.error} />
                     </Box>
                   </ProductLayout>
                 )}

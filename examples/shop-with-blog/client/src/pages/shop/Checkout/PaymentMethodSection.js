@@ -1,114 +1,84 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { I18n, T } from '@deity/falcon-i18n';
-import { TwoStepWizard } from '@deity/falcon-front-kit';
-import { Details, DetailsContent, Text, Button } from '@deity/falcon-ui';
+import { useI18n, T } from '@deity/falcon-i18n';
+import { PaymentMethodListQuery } from '@deity/falcon-shop-data';
+import { SetPaymentMethod, useCheckout } from '@deity/falcon-front-kit';
+import { ErrorSummary } from '@deity/falcon-ui-kit';
+import { Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
-import ErrorList from '../components/ErrorList';
-import SectionHeader from './CheckoutSectionHeader';
+import {
+  CheckoutSection,
+  CheckoutSectionHeader,
+  CheckoutSectionFooter,
+  CheckoutSectionContentLayout
+} from './components';
 
-// Loading "PaymentMethodItem" component via loadable package
-// to avoid premature import of Payment frontend-plugins and their dependencies on SSR
-const PaymentMethodItem = loadable(() =>
-  import(/* webpackChunkName: "checkout/payment-item" */ './components/PaymentMethodItem')
+const PaymentMethodPicker = loadable(() =>
+  import(/* webpackChunkName: "checkout/payments" */ './components/PaymentMethodPicker')
 );
 
-class PaymentSection extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedPayment: null,
-      data: null
-    };
-  }
+export const PaymentMethodSection = props => {
+  const { open, onEditRequested } = props;
+  const { t } = useI18n();
+  const { values } = useCheckout();
+  const [state, setState] = useState(values.paymentMethod || undefined);
 
-  onPaymentSelected = (selectedPayment, data) => this.setState({ selectedPayment, data });
-
-  resetSelected = () => this.setState({ selectedPayment: null, data: null });
-
-  submitPayment = () => {
-    this.props.setPayment({
-      method: this.state.selectedPayment.code,
-      data: this.state.data
-    });
-  };
-
-  render() {
-    const { open, selectedPayment, onEditRequested, availablePaymentMethods, errors } = this.props;
-    let header;
-    if (!open && selectedPayment) {
-      header = (
-        <I18n>
-          {t => (
-            <SectionHeader
-              title={t('checkout.payment')}
-              onActionClick={onEditRequested}
-              editLabel={t('edit')}
-              complete
-              summary={<Text>{selectedPayment.title}</Text>}
-            />
-          )}
-        </I18n>
-      );
-    } else {
-      header = <I18n>{t => <SectionHeader title={t('checkout.payment')} />}</I18n>;
-    }
-
-    return (
-      <Details open={open}>
-        {header}
-        <DetailsContent>
-          {availablePaymentMethods.length === 0 ? (
-            <Text color="error" mb="sm">
-              <T id="checkout.noPaymentMethodsAvailable" />
-            </Text>
-          ) : (
-            <TwoStepWizard>
-              {({ selectedOption, selectOption }) =>
-                availablePaymentMethods.map(payment => (
-                  <PaymentMethodItem
-                    key={payment.code}
-                    {...payment}
-                    selectOption={code => {
-                      this.resetSelected();
-                      selectOption(code);
-                    }}
-                    selectedOption={selectedOption}
-                    onPaymentDetailsReady={data => this.onPaymentSelected(payment, data)}
-                  />
-                ))
-              }
-            </TwoStepWizard>
-          )}
-          <ErrorList errors={errors} />
-          {availablePaymentMethods.length > 0 && (
-            <Button disabled={!this.state.selectedPayment} onClick={this.submitPayment}>
-              <T id="continue" />
-            </Button>
-          )}
-        </DetailsContent>
-      </Details>
+  let header;
+  if (!open && values.paymentMethod) {
+    header = (
+      <CheckoutSectionHeader
+        title={t('checkout.payment')}
+        complete
+        summary={<Text fontWeight="bold">{values.paymentMethod.title}</Text>}
+        action={
+          <Button variant="checkout" onClick={onEditRequested}>
+            {t('edit')}
+          </Button>
+        }
+      />
     );
+  } else {
+    header = <CheckoutSectionHeader title={t('checkout.payment')} open={open} />;
   }
-}
 
-PaymentSection.propTypes = {
-  // flag that indicates if the section is currently open
-  open: PropTypes.bool,
-  // all available payment methods
-  availablePaymentMethods: PropTypes.arrayOf(PropTypes.shape({})),
-  // currently selected payment method
-  selectedPayment: PropTypes.shape({}),
-  // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func,
-  // callback that sets selected payment method
-  setPayment: PropTypes.func,
-  // errors passed from outside that should be displayed for this section
-  errors: PropTypes.arrayOf(
-    PropTypes.shape({
-      message: PropTypes.string
-    })
-  )
+  return (
+    <CheckoutSection open={open}>
+      {header}
+      {open && (
+        <CheckoutSectionContentLayout>
+          <PaymentMethodListQuery>
+            {({ data: { paymentMethodList } }) => {
+              if (paymentMethodList.length === 0) {
+                return (
+                  <Text color="error" mb="sm">
+                    <T id="checkout.noPaymentMethodsAvailable" />
+                  </Text>
+                );
+              }
+
+              return (
+                <SetPaymentMethod>
+                  {(setPayment, { error }) => (
+                    <React.Fragment>
+                      <PaymentMethodPicker options={paymentMethodList} selected={state} onChange={setState} />
+                      <CheckoutSectionFooter>
+                        <Button disabled={!state || !state.code} onClick={() => setPayment(state)}>
+                          <T id="checkout.nextStep" />
+                        </Button>
+                        <ErrorSummary errors={error} />
+                      </CheckoutSectionFooter>
+                    </React.Fragment>
+                  )}
+                </SetPaymentMethod>
+              );
+            }}
+          </PaymentMethodListQuery>
+        </CheckoutSectionContentLayout>
+      )}
+    </CheckoutSection>
+  );
 };
-
-export default PaymentSection;
+PaymentMethodSection.propTypes = {
+  open: PropTypes.bool,
+  onEditRequested: PropTypes.func
+};

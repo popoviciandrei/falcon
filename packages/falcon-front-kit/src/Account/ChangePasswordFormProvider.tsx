@@ -2,14 +2,13 @@ import React from 'react';
 import { Formik } from 'formik';
 import { useGetUserError } from '@deity/falcon-data';
 import { ChangePasswordInput } from '@deity/falcon-shop-extension';
-import { useChangePasswordMutation } from '@deity/falcon-shop-data';
+import { useChangePasswordMutation, ChangePasswordResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
-export type ChangePasswordFormValues = ChangePasswordInput;
-export type ChangePasswordFormProviderProps = FormProviderProps<ChangePasswordFormValues>;
+export type ChangePasswordFormProviderProps = FormProviderProps<ChangePasswordInput, ChangePasswordResponse>;
 export const ChangePasswordFormProvider: React.SFC<ChangePasswordFormProviderProps> = props => {
   const { onSuccess, initialValues, ...formikProps } = props;
-  const defaultInitialValues: ChangePasswordFormValues = {
+  const defaultInitialValues: ChangePasswordInput = {
     currentPassword: '',
     password: ''
   };
@@ -19,12 +18,14 @@ export const ChangePasswordFormProvider: React.SFC<ChangePasswordFormProviderPro
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
         changePasswordMutation({ variables: { input: values } })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);

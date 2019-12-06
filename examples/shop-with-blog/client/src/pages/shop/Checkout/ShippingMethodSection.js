@@ -1,116 +1,102 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { I18n, T } from '@deity/falcon-i18n';
-import { Label, FlexLayout, Details, DetailsContent, Text, Radio, Box, Button } from '@deity/falcon-ui';
-import { Price } from '@deity/falcon-ui-kit';
-import ErrorList from '../components/ErrorList';
-import SectionHeader from './CheckoutSectionHeader';
+import { useI18n, T } from '@deity/falcon-i18n';
+import { ShippingMethodListQuery } from '@deity/falcon-shop-data';
+import { SetShippingMethod, useCheckout } from '@deity/falcon-front-kit';
+import { Label, FlexLayout, Text, Radio, Box, Button } from '@deity/falcon-ui';
+import { ShippingMethodDetails, ErrorSummary } from '@deity/falcon-ui-kit';
+import {
+  CheckoutSection,
+  CheckoutSectionHeader,
+  CheckoutSectionFooter,
+  CheckoutSectionContentLayout
+} from './components';
 
-const ShippingSelector = ({ availableShippingOptions = [], onShippingSelected }) => (
+const ShippingSelector = ({ options = [], onSelect }) => (
   <Box my="md">
-    {availableShippingOptions.map(option => (
+    {options.map(option => (
       <FlexLayout key={option.carrierCode}>
         <Radio
           size="sm"
           id={`opt-${option.carrierCode}`}
           value={option.carrierCode}
           name="shipping"
-          onChange={() => onShippingSelected(option)}
+          onChange={() => onSelect(option)}
         />
-        <Label mx="sm" flex="1" htmlFor={`opt-${option.carrierCode}`}>
-          {`${option.carrierTitle} (${option.methodTitle}):`}
+        <Label fontSize="sm" mx="sm" flex="1" htmlFor={`opt-${option.carrierCode}`}>
+          <ShippingMethodDetails {...option} />
         </Label>
-        <Price value={option.amount} />
       </FlexLayout>
     ))}
   </Box>
 );
-
 ShippingSelector.propTypes = {
-  availableShippingOptions: PropTypes.arrayOf(PropTypes.shape({})),
-  onShippingSelected: PropTypes.func
+  options: PropTypes.arrayOf(PropTypes.shape({})),
+  onSelect: PropTypes.func
 };
 
-class ShippingSection extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedShipping: null
-    };
-  }
+export const ShippingMethodSection = props => {
+  const { open, onEditRequested } = props;
+  const { t } = useI18n();
+  const { values } = useCheckout();
+  const [state, setState] = useState(values.shippingMethod);
 
-  onShippingSelected = selectedShipping => this.setState({ selectedShipping });
-
-  submitShipping = () => {
-    const { methodCode: method, ...data } = this.state.selectedShipping;
-    this.props.setShipping({ method, data });
-  };
-
-  render() {
-    const { open, onEditRequested, availableShippingMethods, selectedShipping, errors } = this.props;
-    let header;
-
-    if (!open && selectedShipping) {
-      header = (
-        <I18n>
-          {t => (
-            <SectionHeader
-              title={t('checkout.shipping')}
-              onActionClick={onEditRequested}
-              editLabel={t('edit')}
-              complete
-              summary={<Text>{selectedShipping.carrierTitle}</Text>}
-            />
-          )}
-        </I18n>
-      );
-    } else {
-      header = <I18n>{t => <SectionHeader title={t('checkout.shipping')} />}</I18n>;
-    }
-
-    return (
-      <Details open={open}>
-        {header}
-        <DetailsContent>
-          {availableShippingMethods.length === 0 ? (
-            <Text color="error" mb="sm">
-              <T id="checkout.noShippingMethodsAvailable" />
-            </Text>
-          ) : (
-            <ShippingSelector
-              availableShippingOptions={availableShippingMethods}
-              onShippingSelected={this.onShippingSelected}
-            />
-          )}
-          <ErrorList errors={errors} />
-          {availableShippingMethods.length > 0 && (
-            <Button disabled={!this.state.selectedShipping} onClick={this.submitShipping}>
-              <T id="continue" />
-            </Button>
-          )}
-        </DetailsContent>
-      </Details>
+  let header;
+  if (!open && values.shippingMethod) {
+    header = (
+      <CheckoutSectionHeader
+        title={t('checkout.shipping')}
+        complete
+        summary={<ShippingMethodDetails {...values.shippingMethod} />}
+        action={
+          <Button variant="checkout" onClick={onEditRequested}>
+            {t('edit')}
+          </Button>
+        }
+      />
     );
+  } else {
+    header = <CheckoutSectionHeader title={t('checkout.shipping')} open={open} />;
   }
-}
 
-ShippingSection.propTypes = {
-  // flag that indicates if the section is currently open
-  open: PropTypes.bool,
-  // all available shipping methods
-  availableShippingMethods: PropTypes.arrayOf(PropTypes.shape({})),
-  // callback that should be called when user requests edit of this particular section
-  onEditRequested: PropTypes.func,
-  // currently selected shipping method
-  selectedShipping: PropTypes.shape({}),
-  // callback that sets selected shipping method
-  setShipping: PropTypes.func,
-  // errors passed from outside that should be displayed for this section
-  errors: PropTypes.arrayOf(
-    PropTypes.shape({
-      message: PropTypes.string
-    })
-  )
+  return (
+    <CheckoutSection open={open}>
+      {header}
+      {open && (
+        <CheckoutSectionContentLayout>
+          <ShippingMethodListQuery>
+            {({ data: { shippingMethodList } }) => {
+              if (shippingMethodList.length === 0) {
+                return (
+                  <Text color="error" mb="sm">
+                    <T id="checkout.noShippingMethodsAvailable" />
+                  </Text>
+                );
+              }
+
+              return (
+                <SetShippingMethod>
+                  {(setShipping, { error }) => (
+                    <React.Fragment>
+                      <ShippingSelector options={shippingMethodList} onSelect={x => setState(x)} />
+                      <CheckoutSectionFooter>
+                        <Button disabled={!state} onClick={() => setShipping(state)}>
+                          <T id="checkout.nextStep" />
+                        </Button>
+                        <ErrorSummary errors={error} />
+                      </CheckoutSectionFooter>
+                    </React.Fragment>
+                  )}
+                </SetShippingMethod>
+              );
+            }}
+          </ShippingMethodListQuery>
+        </CheckoutSectionContentLayout>
+      )}
+    </CheckoutSection>
+  );
 };
-
-export default ShippingSection;
+ShippingMethodSection.propTypes = {
+  open: PropTypes.bool,
+  onEditRequested: PropTypes.func
+};

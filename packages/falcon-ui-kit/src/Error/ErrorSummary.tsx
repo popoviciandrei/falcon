@@ -6,9 +6,13 @@ import { ErrorListLayout, ErrorListLayoutProps } from './ErrorListLayout';
 import { Error } from './Error';
 
 export type ErrorSummaryProps = ErrorListLayoutProps & {
-  errors: ErrorModel | ErrorModel[];
+  errors?: ErrorModel | ErrorModel[];
 };
 export const ErrorSummary: React.SFC<ErrorSummaryProps> = ({ errors, ...rest }) => {
+  if (!errors) {
+    return null;
+  }
+
   errors = Array.isArray(errors) ? errors : [errors];
 
   return (
@@ -24,8 +28,8 @@ export const ErrorSummary: React.SFC<ErrorSummaryProps> = ({ errors, ...rest }) 
 const errorType = PropTypes.shape({
   message: PropTypes.string.isRequired,
   code: PropTypes.string.isRequired
-});
+}).isRequired;
 ErrorSummary.propTypes = {
   // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/34692
-  errors: PropTypes.oneOfType([errorType, PropTypes.arrayOf(errorType)])
+  errors: PropTypes.oneOfType([errorType, PropTypes.arrayOf(errorType).isRequired])
 };

@@ -42,10 +42,16 @@ export const AddressFormFields: React.SFC<AddressFormFieldsProps> = props => {
         <FormField name="street2" autoComplete={getAutoComplete('address-line2')} />
         <FormField name="postcode" required autoComplete={getAutoComplete('postal-code')} />
         <FormField name="city" required autoComplete={getAutoComplete('address-level2')} />
-        <FormField name="countryId" required autoComplete={getAutoComplete('country')}>
-          {({ field }) => (
+        <FormField name="country" required autoComplete={getAutoComplete('country')}>
+          {({ field, form }) => (
             <CountryListQuery passLoading>
-              {({ data: { countryList = {} } }) => <CountryPicker {...field} options={countryList.items || []} />}
+              {({ data: { countryList = { items: [] } } }) => (
+                <CountryPicker
+                  {...field}
+                  options={countryList.items}
+                  onChange={e => form.setFieldValue(field.name, e)}
+                />
+              )}
             </CountryListQuery>
           )}
         </FormField>

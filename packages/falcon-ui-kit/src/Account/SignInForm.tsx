@@ -12,7 +12,7 @@ export type SignInFormProps = Partial<FormProps> & {
 
 export const SignInForm: React.SFC<SignInFormProps> = ({ onSuccess, onForgotPassword, ...formProps }) => (
   <SignInFormProvider onSuccess={onSuccess}>
-    {({ status = {} }) => (
+    {({ status }) => (
       <Form i18nId="signIn" {...formProps}>
         <FormField name="email" type="email" required autoComplete="email" />
         <FormField
@@ -32,7 +32,7 @@ export const SignInForm: React.SFC<SignInFormProps> = ({ onSuccess, onForgotPass
           <FormSubmit />
         </FlexLayout>
 
-        {status.error && <ErrorSummary errors={status.error} />}
+        <ErrorSummary errors={status.error} />
       </Form>
     )}
   </SignInFormProvider>
