@@ -20,7 +20,7 @@ const ChangePassword = ({ history }) => (
     </H1>
     <TwoColumnsLayout>
       <ChangePasswordFormProvider onSuccess={() => history.push('/account')}>
-        {({ status = {} }) => (
+        {({ status }) => (
           <Form id="change-password" i18nId="changePassword" gridArea={TwoColumnsLayoutArea.left}>
             <FormField name="currentPassword" type="password" required validate={[]}>
               {({ field }) => <PasswordRevealInput {...field} />}
@@ -34,7 +34,7 @@ const ChangePassword = ({ history }) => (
               </Button>
               <FormSubmit />
             </FlexLayout>
-            {status.error && <ErrorSummary errors={status.error} />}
+            <ErrorSummary errors={status.error} />
           </Form>
         )}
       </ChangePasswordFormProvider>

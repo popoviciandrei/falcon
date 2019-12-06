@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import { useGetUserError } from '@deity/falcon-data';
 import { Product, ProductOption } from '@deity/falcon-shop-extension';
-import { useAddToCartMutation } from '@deity/falcon-shop-data';
+import { useAddToCartMutation, AddToCartResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 import { ProductOptionsMap, productOptionsToForm, formProductOptionsToInput } from './productOptionMappers';
 
@@ -11,7 +11,7 @@ export type AddToCartFormValues = {
   options: ProductOptionsMap;
   bundleOptions: [];
 };
-export type AddToCartFormProviderProps = FormProviderProps<AddToCartFormValues> & {
+export type AddToCartFormProviderProps = FormProviderProps<AddToCartFormValues, AddToCartResponse> & {
   quantity: number;
   product: Pick<Product, 'sku'> & {
     options?: Pick<ProductOption, 'attributeId'>[];
@@ -31,6 +31,7 @@ export const AddToCartFormProvider: React.SFC<AddToCartFormProviderProps> = prop
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
         addToCart({
@@ -43,9 +44,10 @@ export const AddToCartFormProvider: React.SFC<AddToCartFormProviderProps> = prop
             }
           }
         })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);

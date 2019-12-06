@@ -13,7 +13,7 @@ export type AddAddressFormProps = Partial<FormProps> & {
 
 export const AddAddressForm: React.SFC<AddAddressFormProps> = ({ onSuccess, onCancel, ...formProps }) => (
   <AddAddressFormProvider onSuccess={onSuccess}>
-    {({ isSubmitting, status = {} }) => (
+    {({ isSubmitting, status }) => (
       <Form id="add-address" i18nId="addressForm" {...formProps}>
         <AddressFormFields twoColumns askDefault />
         <FlexLayout justifyContent="flex-end" alignItems="center" mt="md">
@@ -24,7 +24,7 @@ export const AddAddressForm: React.SFC<AddAddressFormProps> = ({ onSuccess, onCa
             <T id="addAddress.submitButton" />
           </Button>
         </FlexLayout>
-        {status.error && <ErrorSummary errors={status.error} />}
+        <ErrorSummary errors={status.error} />
       </Form>
     )}
   </AddAddressFormProvider>

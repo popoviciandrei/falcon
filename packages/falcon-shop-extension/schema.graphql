@@ -2,9 +2,10 @@ extend type Query {
   menu: [MenuItem] @cache(ttl: 15)
   category(id: ID!): Category @cache(ttl: 15)
   product(id: ID!): Product @cache(ttl: 5)
-  productList(input: ProductListInput): ProductList!
+  productList(input: ProductListInput): ProductList! @cache(ttl: 15, idPath: ["items"])
   cart: Cart!
   countryList: CountryList!
+  regionList(countryId: ID!): RegionList!
   lastOrder: Order @cacheInvalidator(idPath: [{ path: "items", type: "Product" }])
   order(id: ID!): Order
   orderList(pagination: PaginationInput): OrderList
@@ -59,7 +60,7 @@ extend type Mutation {
 
   Followed by `Mutation.setBillingAddress`
   """
-  setShippingAddress(input: CheckoutAddressInput!): Boolean!
+  setShippingAddress(input: SetCheckoutAddressInput!): Boolean!
   """
   **Checkout Step 2/7**
 
@@ -68,7 +69,7 @@ extend type Mutation {
   Preceded by `Mutation.setShippingAddress`
   Followed by `Query.shippingMethodList`
   """
-  setBillingAddress(input: CheckoutAddressInput!): Boolean!
+  setBillingAddress(input: SetCheckoutAddressInput!): Boolean!
   """
   **Checkout Step 4/7**
 
@@ -216,6 +217,11 @@ input EditCustomerInput {
   defaultShipping: Boolean
 }
 
+input SetCheckoutAddressInput {
+  address: CheckoutAddressInput!
+  billingSameAsShipping: Boolean
+}
+
 input CheckoutAddressInput {
   id: ID
   firstname: String!
@@ -224,12 +230,10 @@ input CheckoutAddressInput {
   customerId: Int
   customerAddressId: ID
   postcode: String
-  sameAsBilling: Int
-  saveInAddressBook: Int
+  saveInAddressBook: Boolean
   email: String
   company: String
   countryId: ID!
-  region: String
   regionId: ID
   street: [String!]!
   telephone: String
@@ -246,9 +250,9 @@ input AddAddressInput {
   postcode: String!
   city: String!
   countryId: ID!
+  regionId: ID
   defaultBilling: Boolean
   defaultShipping: Boolean
-  regionId: ID
 }
 
 input EditAddressInput {
@@ -261,9 +265,9 @@ input EditAddressInput {
   postcode: String!
   city: String!
   countryId: ID!
+  regionId: ID
   defaultBilling: Boolean
   defaultShipping: Boolean
-  regionId: ID
 }
 
 input ChangePasswordInput {
@@ -349,6 +353,7 @@ type Product {
   name: String!
   image: String
   urlPath: String!
+  categories: [Category!]! @cache(ttl: 15, idPath: ["$parent"])
   # Full url to resized product image
   thumbnail: String
   price: ProductPrice!
@@ -361,7 +366,7 @@ type Product {
   bundleOptions: [BundleProductOption!]!
   gallery: [GalleryEntry!]!
   breadcrumbs(path: String!): [Breadcrumb] @cache(ttl: 20, idPath: ["$parent"])
-  seo: ProductSeo
+  seo: SEO
 }
 
 type ShippingMethod {
@@ -401,9 +406,13 @@ type MenuItem {
 type Category {
   id: ID! @cacheId
   name: String
+  urlPath: String!
+  image: String
   children: [Category]
   description: String
   breadcrumbs(path: String!): [Breadcrumb!]!
+  attributes: [Attribute!]!
+  seo: SEO
   productList(input: ProductListInput): CategoryProductList! @cache(ttl: 15, idPath: ["$parent", "items"])
 }
 
@@ -420,6 +429,11 @@ input ProductListInput {
   pagination: PaginationInput
 }
 
+type Attribute {
+  key: String!
+  value: String
+}
+
 type ProductList {
   items: [Product!]!
   pagination: Pagination!
@@ -430,7 +444,7 @@ type Stock {
   qty: Float!
 }
 
-type ProductSeo {
+type SEO {
   title: String
   description: String
   keywords: String
@@ -652,30 +666,28 @@ type BundleProductOptionLink {
   sku: ID
 }
 
-type Region {
-  # unique identifier of the region
-  id: ID!
-  # abbreviated form of the region name
-  code: String
-  # region name
-  name: String
-}
-
 type Country {
-  # unique identifier of the country
   id: ID!
   # abbreviated form of the country name
   code: String!
-  # country name in English
   englishName: String
   # country name in locale language
   localName: String
-  # regions included in the country
-  regions: [Region!]!
 }
 
 type CountryList {
   items: [Country!]!
+}
+
+type Region {
+  id: ID!
+  # abbreviated form of the region name
+  code: String
+  name: String
+}
+
+type RegionList {
+  items: [Region!]!
 }
 
 type CmsBlock {

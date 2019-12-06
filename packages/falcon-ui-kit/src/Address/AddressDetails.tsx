@@ -12,7 +12,7 @@ export type AddressDetailsProps = {
   city: string;
   country: {
     code: string;
-    englishName?: string;
+    localName?: string;
   };
   telephone?: string;
 };
@@ -35,7 +35,7 @@ export const AddressDetails: React.SFC<AddressDetailsProps> = ({
       // eslint-disable-next-line react/no-array-index-key
       <Text key={i}>{x}</Text>
     ))}
-    <Text>{`${postcode} ${city}, ${country.englishName || country.code}`}</Text>
+    <Text>{`${postcode} ${city}, ${country.localName || country.code}`}</Text>
     {telephone && <Text>{telephone}</Text>}
   </AddressDetailsLayout>
 );
@@ -43,13 +43,13 @@ AddressDetails.propTypes = {
   company: PropTypes.string,
   firstname: PropTypes.string.isRequired,
   lastname: PropTypes.string.isRequired,
-  street: PropTypes.arrayOf(PropTypes.string).isRequired,
-  postcode: PropTypes.string.isRequired,
+  street: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  postcode: PropTypes.string,
   city: PropTypes.string.isRequired,
   // @ts-ignore
   country: PropTypes.shape({
     code: PropTypes.string.isRequired,
-    englishName: PropTypes.string
+    localName: PropTypes.string
   }).isRequired,
   telephone: PropTypes.string
 };

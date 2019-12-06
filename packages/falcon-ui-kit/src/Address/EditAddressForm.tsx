@@ -17,7 +17,7 @@ export const EditAddressForm: React.SFC<EditAddressFormProps> = ({ id, onSuccess
   <AddressQuery variables={{ id }}>
     {({ data: { address } }) => (
       <EditAddressFormProvider address={address} onSuccess={onSuccess}>
-        {({ isSubmitting, status = {} }) => (
+        {({ isSubmitting, status }) => (
           <Form id="edit-address" i18nId="addressForm" {...formProps}>
             <AddressFormFields twoColumns askDefault />
             <FlexLayout justifyContent="flex-end" alignItems="center" mt="md">
@@ -28,7 +28,7 @@ export const EditAddressForm: React.SFC<EditAddressFormProps> = ({ id, onSuccess
                 <T id="editAddress.submitButton" />
               </Button>
             </FlexLayout>
-            {status.error && <ErrorSummary errors={status.error} />}
+            <ErrorSummary errors={status.error} />
           </Form>
         )}
       </EditAddressFormProvider>

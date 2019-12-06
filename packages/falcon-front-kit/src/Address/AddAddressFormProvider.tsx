@@ -1,7 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
+import { Country, Region } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
-import { useAddAddressMutation } from '@deity/falcon-shop-data';
+import { useAddAddressMutation, AddAddressResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
 export type AddAddressFormValues = {
@@ -11,15 +12,15 @@ export type AddAddressFormValues = {
   street2?: string;
   postcode: string;
   city: string;
-  countryId: string;
+  country: Country;
+  region?: Region;
   company?: string;
   telephone?: string;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
 
-export type AddAddressFormProviderProps = FormProviderProps<AddAddressFormValues>;
-
+export type AddAddressFormProviderProps = FormProviderProps<AddAddressFormValues, AddAddressResponse>;
 export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = props => {
   const { onSuccess, initialValues, ...formikProps } = props;
   const defaultInitialValues = {
@@ -29,7 +30,8 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
     street2: '',
     postcode: '',
     city: '',
-    countryId: '',
+    country: undefined,
+    region: undefined,
     company: '',
     telephone: '',
     defaultBilling: false,
@@ -41,19 +43,23 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
-      onSubmit={({ street1, street2, ...values }, { setSubmitting, setStatus }) =>
+      onSubmit={({ street1, street2, country, region, ...values }, { setSubmitting, setStatus }) =>
         addAddress({
           variables: {
             input: {
               ...values,
-              street: [street1, street2].filter(Boolean)
+              street: [street1, street2].filter(Boolean),
+              countryId: country.id,
+              regionId: region ? region.id : undefined
             }
           }
         })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);

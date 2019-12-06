@@ -3,7 +3,7 @@ import { OperationVariables } from '@apollo/react-common';
 import { useQuery as useApolloQuery, QueryHookOptions } from '@apollo/react-hooks';
 import { FetchMore } from './fetchMore';
 
-export type UseQueryOptions<TData, TVariables> = QueryHookOptions<TData, TVariables> & {
+export type UseQueryOptions<TData, TVariables = any> = QueryHookOptions<TData, TVariables> & {
   fetchMore?: FetchMore<TData, TVariables>;
 };
 export function useQuery<TData = any, TVariables = OperationVariables>(

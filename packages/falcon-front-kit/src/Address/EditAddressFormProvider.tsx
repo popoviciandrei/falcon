@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
+import { Address, Country, Region } from '@deity/falcon-shop-extension';
 import { useGetUserError } from '@deity/falcon-data';
-import { useEditAddressMutation, GET_ADDRESS } from '@deity/falcon-shop-data';
-import { Address } from '@deity/falcon-shop-extension';
+import { useEditAddressMutation, EditAddressResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
 export type EditAddressFormValues = {
@@ -12,54 +12,49 @@ export type EditAddressFormValues = {
   street2?: string;
   postcode: string;
   city: string;
-  countryId: string;
+  country: Country;
+  region?: Region;
   company?: string;
   telephone?: string;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
 
-export type EditAddressFormProviderProps = FormProviderProps<EditAddressFormValues> & {
+export type EditAddressFormProviderProps = FormProviderProps<EditAddressFormValues, EditAddressResponse> & {
   address: Address;
 };
-
 export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = props => {
   const { address, onSuccess, initialValues, ...formikProps } = props;
+  const { __typename, street, ...rest } = address;
   const defaultInitialValues = {
-    firstname: address.firstname,
-    lastname: address.lastname,
-    street1: address.street.length > 0 ? address.street[0] : undefined,
-    street2: address.street.length > 1 ? address.street[1] : undefined,
-    postcode: address.postcode,
-    city: address.city,
-    countryId: address.country.id,
-    company: address.company || undefined,
-    telephone: address.telephone,
-    defaultBilling: address.defaultBilling,
-    defaultShipping: address.defaultShipping
+    street1: street.length > 0 ? street[0] : undefined,
+    street2: street.length > 1 ? street[1] : undefined,
+    ...rest
   };
 
-  const [editAddress] = useEditAddressMutation({
-    refetchQueries: ['Addresses', { query: GET_ADDRESS, variables: { id: address.id } }]
-  });
+  const [editAddress] = useEditAddressMutation();
   const [getUserError] = useGetUserError();
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
-      onSubmit={({ street1, street2, ...values }, { setSubmitting, setStatus }) =>
+      onSubmit={({ street1, street2, country, region, ...values }, { setSubmitting, setStatus }) =>
         editAddress({
           variables: {
             input: {
               ...values,
               id: address.id,
-              street: [street1, street2].filter(Boolean)
+              street: [street1, street2].filter(Boolean),
+              countryId: country.id,
+              regionId: region ? region.id : undefined
             }
           }
         })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);

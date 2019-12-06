@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet-async';
 import { T } from '@deity/falcon-i18n';
 import { ProductQuery } from '@deity/falcon-shop-data';
 import { Box, Text, H1, NumberInput, Button, Icon, FlexLayout } from '@deity/falcon-ui';
-import { Field, AddToCartFormProvider } from '@deity/falcon-front-kit';
+import { Field, AddToCartFormProvider, SEO } from '@deity/falcon-front-kit';
 import {
   ProductLayout,
   ProductLayoutArea,
@@ -26,9 +25,7 @@ const ProductPage = ({ match: { params } }) => (
     <ProductQuery variables={{ ...params }}>
       {({ data: { product } }) => (
         <React.Fragment>
-          <Helmet>
-            <title>{product.name}</title>
-          </Helmet>
+          <SEO meta={product.seo} title={product.name} />
           <Breadcrumbs items={product.breadcrumbs} />
           <OpenSidebarMutation>
             {openSidebar => (
@@ -37,7 +34,7 @@ const ProductPage = ({ match: { params } }) => (
                 product={product}
                 onSuccess={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.cart } })}
               >
-                {({ isSubmitting, status = {} }) => (
+                {({ isSubmitting, status }) => (
                   <ProductLayout as={Form} id="add-to-cart" i18nId="product">
                     <FlexLayout gridArea={ProductLayoutArea.gallery} alignItems="center" justifyContent="center">
                       <ProductGallery items={product.gallery} />
@@ -72,7 +69,7 @@ const ProductPage = ({ match: { params } }) => (
                       </Button>
                     </FlexLayout>
                     <Box gridArea={ProductLayoutArea.error}>
-                      {status.error && <ErrorSummary errors={status.error} />}
+                      <ErrorSummary errors={status.error} />
                     </Box>
                   </ProductLayout>
                 )}

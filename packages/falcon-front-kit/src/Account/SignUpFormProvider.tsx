@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { useGetUserError } from '@deity/falcon-data';
-import { useSignUpMutation } from '@deity/falcon-shop-data';
+import { useSignUpMutation, SignUpResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
 export type SignUpFormValues = {
@@ -11,7 +11,7 @@ export type SignUpFormValues = {
   password: string;
   autoSignIn: boolean;
 };
-export type SignUpFormProviderProps = FormProviderProps<SignUpFormValues>;
+export type SignUpFormProviderProps = FormProviderProps<SignUpFormValues, SignUpResponse>;
 export const SignUpFormProvider: React.SFC<SignUpFormProviderProps> = props => {
   const { onSuccess, initialValues, ...formikProps } = props;
   const defaultInitialValues: SignUpFormValues = {
@@ -27,12 +27,14 @@ export const SignUpFormProvider: React.SFC<SignUpFormProviderProps> = props => {
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
         signUp({ variables: { input: values } })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);

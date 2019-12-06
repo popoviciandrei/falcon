@@ -1,6 +1,6 @@
 import React from 'react';
-import { FormikProps } from 'formik';
-import { I18n } from '@deity/falcon-i18n';
+import { useFormikContext, FormikProps } from 'formik';
+import { useI18n } from '@deity/falcon-i18n';
 import { FormContext } from './FormContext';
 
 export type SubmitRenderProps<TValue = any> = {
@@ -16,38 +16,36 @@ export type SubmitRenderProps<TValue = any> = {
 };
 
 export type SubmitProps<TValue = any> = {
-  form: FormikProps<TValue>;
-  value?: string;
   children?: (props: SubmitRenderProps<TValue>) => React.ReactNode;
 };
 
-export const Submit: React.SFC<SubmitProps> = ({ form: formikForm, value, children, ...restProps }) => {
+export const Submit: React.SFC<SubmitProps> = ({ children, ...restProps }) => {
+  const { t } = useI18n();
+  const formik = useFormikContext();
+
   if (!children) {
     return null;
   }
 
   return (
     <FormContext.Consumer>
-      {({ id: formId, i18nId: formI18nId }) => (
-        <I18n>
-          {t => {
-            const valueId = `${formI18nId}.submitButton`;
-            return children({
-              form: {
-                ...formikForm,
-                id: formId
-              },
-              submit: {
-                value: value || t(valueId),
-                ...restProps
-              },
-              i18nIds: {
-                value: valueId
-              }
-            });
-          }}
-        </I18n>
-      )}
+      {({ id: formId, i18nId: formI18nId }) => {
+        const valueId = `${formI18nId}.submitButton`;
+
+        return children({
+          form: {
+            ...formik,
+            id: formId
+          },
+          submit: {
+            value: t(valueId),
+            ...restProps
+          },
+          i18nIds: {
+            value: valueId
+          }
+        });
+      }}
     </FormContext.Consumer>
   );
 };

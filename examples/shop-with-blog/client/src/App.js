@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ThemeProvider, Box, Button } from '@deity/falcon-ui';
-import { AppLayout, Sidebar } from '@deity/falcon-ui-kit';
+import { AppLayout, Sidebar, NotFound } from '@deity/falcon-ui-kit';
 import { ServiceWorkerRegistrar, ServiceWorker } from '@deity/falcon-service-worker';
 import {
   NetworkStatus,
@@ -48,10 +48,12 @@ const HeadMetaTags = () => (
 const Home = loadable(() => import(/* webpackChunkName: "home/home" */ './pages/home/Home'));
 const Account = loadable(() => import(/* webpackChunkName: "account/account" */ './pages/shop/Account/Account'));
 const SignIn = loadable(() => import(/* webpackChunkName: "account/sign-in" */ './pages/account/SignIn'));
-const ResetPassword = loadable(() => import(/* webpackChunkName: "shop/resetpassword" */ './pages/shop/ResetPassword'));
+const ResetPassword = loadable(() =>
+  import(/* webpackChunkName: "shop/reset-password" */ './pages/shop/ResetPassword')
+);
 const Blog = loadable(() => import(/* webpackChunkName: "blog/blog" */ './pages/blog/Blog'));
 const Cart = loadable(() => import(/* webpackChunkName: "shop/cart" */ './pages/shop/Cart'));
-const Checkout = loadable(() => import(/* webpackChunkName: "shop/checkout" */ './pages/shop/Checkout'));
+const Checkout = loadable(() => import(/* webpackChunkName: "shop/checkout" */ './pages/shop/Checkout/Checkout'));
 const CheckoutConfirmation = loadable(() =>
   import(/* webpackChunkName: "shop/checkout" */ './pages/shop/CheckoutConfirmation')
 );
@@ -114,7 +116,7 @@ const App = () => (
                             <Route exact type="blog-post" component={BlogPost} />
                             <Route exact type="shop-category" component={Category} />
                             <Route exact type="shop-product" component={Product} />
-                            <p>not Found</p>
+                            <NotFound />
                           </SwitchDynamicURL>
                         </Box>
                         <PageFooter />

@@ -1,4 +1,5 @@
 import {
+  ID,
   Pagination,
   PaginationInput,
   Aggregation,
@@ -38,33 +39,37 @@ export type AddressBase = {
 };
 
 export type Address = AddressBase & {
-  id: number;
-  region?: Region;
+  id: ID;
   country: Country;
+  region?: Region;
   fax?: string;
   defaultBilling: boolean;
   defaultShipping: boolean;
 } & GraphQLBase;
 
-export type CheckoutAddressInput = AddressBase & {
-  id?: number;
-  regionId?: string;
-  countryId: string;
-  email?: string;
-  saveInAddressBook?: number;
-  sameAsBilling?: number;
+export type AddressInputBase = AddressBase & {
+  countryId: ID;
+  regionId?: ID;
 };
 
-export type AddAddressInput = AddressBase & {
-  regionId?: string;
-  countryId: string;
+export type CheckoutAddressInput = AddressInputBase & {
+  id?: ID;
+  email?: string;
+  saveInAddressBook?: boolean; // TODO: create issue on GH to implement this feature?
+};
+
+export type SetCheckoutAddressInput = {
+  address: CheckoutAddressInput;
+  billingSameAsShipping?: boolean;
+};
+
+export type AddAddressInput = AddressInputBase & {
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
 
-export type EditAddressInput = AddressBase & {
-  id: number;
-  telephone?: string;
+export type EditAddressInput = AddressInputBase & {
+  id: ID;
   defaultBilling?: boolean;
   defaultShipping?: boolean;
 };
@@ -257,6 +262,7 @@ export type Product = {
   name: string;
   image?: string;
   urlPath: string;
+  categories: Category[];
   thumbnail?: string;
   price: ProductPrice;
   tierPrices?: ProductTierPrice[];
@@ -267,7 +273,7 @@ export type Product = {
   options: ProductOption[];
   bundleOptions: BundleProductOption[];
   gallery: GalleryEntry[];
-  seo: ProductSeo;
+  seo: SEO;
   breadcrumbs: Breadcrumb[];
 };
 
@@ -334,7 +340,7 @@ export type ConfigurableProductOptionValue = {
   valueIndex: string;
 };
 
-export type ProductSeo = {
+export type SEO = {
   title: string;
   description: string;
   keywords: string;
@@ -348,10 +354,19 @@ export type Breadcrumb = {
 export type Category = {
   id: string;
   name: string;
+  image: string;
+  urlPath: string;
   children: Category[];
   description: string;
   breadcrumbs: Breadcrumb[];
   productList: CategoryProductList;
+  attributes: Attribute[];
+  seo: SEO;
+};
+
+export type Attribute = {
+  key: string;
+  value: string;
 };
 
 export type SignUpInput = {
@@ -372,17 +387,20 @@ export type CountryList = {
 };
 
 export type Country = {
-  id: number;
+  id: ID;
   code: string;
   englishName?: string;
   localName?: string;
-  regions: Region[];
 };
 
 export type Region = {
-  id: string;
+  id: ID;
   code?: string;
   name?: string;
+};
+
+export type RegionList = {
+  items: Region[];
 };
 
 export type MenuItem = {
@@ -432,15 +450,13 @@ export type OrderItem = {
   parentItem?: OrderItem;
 };
 
-export type PlaceOrderInput = Partial<
-  OperationInput<{
-    email?: String;
-    billingAddress: CheckoutAddressInput;
-    shippingAddress: CheckoutAddressInput;
-    paymentMethod: CheckoutDetailsInput;
-    shippingMethod: CheckoutDetailsInput;
-  }>
->;
+export type PlaceOrderInput = {
+  email?: string;
+  shippingAddress: CheckoutAddressInput;
+  billingAddress: CheckoutAddressInput;
+  shippingMethod: CheckoutDetailsInput;
+  paymentMethod: CheckoutDetailsInput;
+};
 
 export type CheckoutDetailsInput = {
   /** Payment or shipping method name, defined by the backend */
@@ -462,7 +478,6 @@ export type PlaceOrder3dSecureField = {
   value?: string;
 };
 
-export type SetCheckoutAddressInput = OperationInput<CheckoutAddressInput>;
 export type SetCheckoutDetailsInput = OperationInput<CheckoutDetailsInput>;
 
 export type ShippingMethod = {

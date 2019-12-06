@@ -1,6 +1,7 @@
 export * from './Aggregation';
 export * from './BackendConfig';
 export * from './Error';
+export * from './ID';
 export * from './Mutation';
 export * from './Pagination';
 export * from './Query';

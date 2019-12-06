@@ -8,7 +8,7 @@ import has from 'lodash/has';
 import forEach from 'lodash/forEach';
 import snakeCase from 'lodash/snakeCase';
 import { OperationInput } from '@deity/falcon-data';
-import { ProductListInput } from '@deity/falcon-shop-extension';
+import { ProductListInput, Country, CountryList, Region, RegionList } from '@deity/falcon-shop-extension';
 import { ApiUrlPriority, stripHtml, graphqlFragmentFields } from '@deity/falcon-server-env';
 import { Magento2ApiBase } from './Magento2ApiBase';
 import { tryParseNumber } from './utils/number';
@@ -51,6 +51,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         sortOrderList: apiGetter(api => api.getSortOrderList())
       },
       Product: {
+        categories: apiGetter((api, ...args) => api.productCategories(...args)),
         price: apiGetter((api, ...args) => api.productPrice(...args)),
         tierPrices: apiGetter((api, ...args) => api.productTierPrices(...args)),
         options: apiGetter((api, ...args) => api.productOptions(...args)),
@@ -224,23 +225,28 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   convertCategory(data) {
     this.convertAttributesSet(data);
-    const { custom_attributes: customAttributes } = data;
+    const newData = this.convertKeys(data);
+    const { customAttributes, extensionAttributes = {} } = newData;
+    const { image, metaTitle, metaDescription, metaKeywords, urlPath, ...restAttributes } = customAttributes;
+    const { imageUrl } = extensionAttributes;
 
-    // for specific category record
-    let urlPath = customAttributes.url_path;
-
-    if (!urlPath) {
+    let categoryUrlPath = urlPath;
+    if (!categoryUrlPath) {
       // in case of categories tree - URL path can be found in data.url_path
-      urlPath = data.url_path;
-      delete data.url_path;
+      categoryUrlPath = newData.urlPath;
+      delete newData.urlPath;
     }
 
-    delete data.created_at;
-    delete data.product_count;
+    newData.image = imageUrl || image; // to use `image` as a fallback value
+    newData.urlPath = this.convertPathToUrl(categoryUrlPath) || ''; // Fallback to an empty string for default category with no URL
+    newData.seo = {
+      title: metaTitle,
+      description: metaDescription,
+      keywords: metaKeywords
+    };
+    newData.attributes = Object.entries(restAttributes).map(([key, value]) => ({ key, value }));
 
-    data.urlPath = this.convertPathToUrl(urlPath);
-
-    return data;
+    return newData;
   }
 
   /**
@@ -320,8 +326,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @returns {Promise<Product[]>}  response with list of products
    */
   async productList(obj, { input }) {
-    const { withAttributeFilters = [] } = input;
-    const searchCriteria = this.createSearchCriteria(input);
+    const searchCriteria = this.createSearchCriteria(input || {});
 
     this.addSearchFilter(searchCriteria, 'visibility', ProductVisibility.catalogAndSearch, 'eq');
     if (!this.isFilterSet('status', searchCriteria)) {
@@ -332,7 +337,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
 
     const response = await this.getForIntegration('/products', {
       includeSubcategories: true,
-      withAttributeFilters,
+      withAttributeFilters: [],
       searchCriteria
     });
 
@@ -340,6 +345,20 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       items: response.items.map(x => this.reduceProduct(x, this.session.currency)),
       pagination: this.processPagination(response.total_count, searchCriteria.currentPage, searchCriteria.pageSize)
     };
+  }
+
+  async productCategories(obj) {
+    const { sku } = obj;
+    let { customAttributes } = obj;
+    if (!Object.keys(customAttributes).length) {
+      const data = await this.getForIntegration(`/products/${sku}`);
+      this.convertAttributesSet(data);
+      const product = this.convertKeys(data);
+      ({ customAttributes } = product);
+    }
+
+    const { categoryIds = [] } = customAttributes || {};
+    return Promise.all(categoryIds.map(categoryId => this.category({}, { id: categoryId })));
   }
 
   /**
@@ -893,33 +912,6 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   }
 
   /**
-   * Fetch country list
-   * @returns {CountryList} parsed country list
-   */
-  async countryList() {
-    const countries = await this.getAuth(
-      '/directory/countries',
-      {},
-      {
-        cacheOptions: { ttl: 86400 }, // 24 hours cache
-        context: {
-          isAuthRequired: false,
-          didReceiveResult: result =>
-            result.map(item => ({
-              id: item.id,
-              code: item.two_letter_abbreviation,
-              englishName: item.full_name_english,
-              localName: item.full_name_locale,
-              regions: item.available_regions || []
-            }))
-        }
-      }
-    );
-
-    return { items: countries };
-  }
-
-  /**
    * Make request for customer token
    * @param {object} obj Parent object
    * @param {SignIn} input form data
@@ -1246,27 +1238,69 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     return this.convertAddressData(response);
   }
 
+  /** Fetch country list   */
+  async fetchCountryList(): Promise<(Country & { regions: Region[] })[]> {
+    const countries = await this.getAuth(
+      '/directory/countries',
+      {},
+      {
+        cacheOptions: { ttl: 86400 }, // 24 hours cache
+        context: {
+          isAuthRequired: false,
+          didReceiveResult: result =>
+            result.map(item => ({
+              id: item.id,
+              code: item.two_letter_abbreviation,
+              englishName: item.full_name_english,
+              localName: item.full_name_locale,
+              regions: item.available_regions || []
+            }))
+        }
+      }
+    );
+
+    return countries;
+  }
+
+  async countryList(): Promise<CountryList> {
+    const countries = await this.fetchCountryList();
+
+    return { items: countries.map(({ regions, ...country }) => country) };
+  }
+
   /**
    * Get country details
    * @param {object} obj parent object
    * @param {ID} obj.countryId country ID
-   * @returns {promise<Country>} requested country data
    */
-  async country({ countryId }) {
+  async country({ countryId }): Promise<Country> {
     const countries = await this.countryList();
     return countries.items.find(country => country.id === countryId);
+  }
+
+  /**
+   * Get country regions
+   * @param {object} obj parent object
+   * @param {ID} obj.countryId country ID
+   * @returns {promise<Country>} requested country data
+   */
+  async regionList(obj, { countryId }): Promise<RegionList> {
+    const countries = await this.fetchCountryList();
+    const country = countries.find(x => x.id === countryId);
+
+    return { items: country ? country.regions : [] };
   }
 
   /**
    * Get region details
    * @param {object} obj parent object
    * @param {object} obj.region region object
-   * @returns {promise<Country>} requested region data
    */
-  async addressRegion({ region }) {
+  addressRegion({ region }): Region {
     if (!region || !region.region) {
       return null;
     }
+
     return {
       id: region.regionId,
       code: region.regionCode,
@@ -1449,8 +1483,11 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       data.customer_address_id = data.id;
       delete data.id;
     }
+
     delete data.defaultBilling;
     delete data.defaultShipping;
+    delete data.saveInAddressBook; // TODO: implement this
+
     return data;
   }
 
@@ -1486,15 +1523,25 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     };
   }
 
-  async setShippingAddress(root, { input: address }) {
+  async setShippingAddress(root, { input: { address, billingSameAsShipping } }) {
     this.session.cart.shippingAddress = address;
+    if (billingSameAsShipping) {
+      this.session.cart.billingAddress = address;
+    }
+
     this.context.session.save();
+
     return true;
   }
 
-  async setBillingAddress(root, { input: address }) {
+  async setBillingAddress(root, { input: { address, billingSameAsShipping } }) {
     this.session.cart.billingAddress = address;
+    if (billingSameAsShipping) {
+      this.session.cart.shippingAddress = address;
+    }
+
     this.context.session.save();
+
     return true;
   }
 

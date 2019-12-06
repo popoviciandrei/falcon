@@ -2,14 +2,13 @@ import React from 'react';
 import { Formik } from 'formik';
 import { useGetUserError } from '@deity/falcon-data';
 import { ResetPasswordInput } from '@deity/falcon-shop-extension';
-import { useResetPasswordMutation } from '@deity/falcon-shop-data';
+import { useResetPasswordMutation, ResetPasswordResponse } from '@deity/falcon-shop-data';
 import { FormProviderProps } from '../Forms';
 
-export type ResetPasswordFormValues = ResetPasswordInput;
-export type ResetPasswordFormProviderProps = FormProviderProps<ResetPasswordFormValues>;
+export type ResetPasswordFormProviderProps = FormProviderProps<ResetPasswordInput, ResetPasswordResponse>;
 export const ResetPasswordFormProvider: React.SFC<ResetPasswordFormProviderProps> = props => {
   const { onSuccess, initialValues, ...formikProps } = props;
-  const defaultInitialValues: ResetPasswordFormValues = {
+  const defaultInitialValues: ResetPasswordInput = {
     resetToken: '',
     password: ''
   };
@@ -19,12 +18,14 @@ export const ResetPasswordFormProvider: React.SFC<ResetPasswordFormProviderProps
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
         resetPassword({ variables: { input: values } })
-          .then(() => {
+          .then(({ data }) => {
             setSubmitting(false);
-            return onSuccess && onSuccess();
+            setStatus({ data });
+            return onSuccess && onSuccess(data);
           })
           .catch(e => {
             const error = getUserError(e);
