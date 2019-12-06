@@ -147,16 +147,18 @@ export const SwitchDynamicURL: React.FC<SwitchDynamicURL> = props => {
 
                 setPreviousLocation(location);
                 const [match, element] = findRouteElement(props.children, location, data && data.url);
-                if (match) {
+                const computedMatch = match || context.match;
+
+                if (computedMatch) {
                   if (data && data.url) {
-                    match.params = {
-                      ...match.params,
+                    computedMatch.params = {
+                      ...computedMatch.params,
                       id: data.url.id,
                       path: data.url.path
                     };
                   }
 
-                  return React.cloneElement(element as any, { location, computedMatch: match });
+                  return React.cloneElement(element as any, { location, computedMatch });
                 }
 
                 return null;
