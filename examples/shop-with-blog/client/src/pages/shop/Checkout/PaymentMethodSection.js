@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useI18n, T } from '@deity/falcon-i18n';
 import { PaymentMethodListQuery } from '@deity/falcon-shop-data';
-import { TwoStepWizard, SetPaymentMethod, useCheckout } from '@deity/falcon-front-kit';
+import { SetPaymentMethod, useCheckout } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '@deity/falcon-ui-kit';
 import { Text, Button } from '@deity/falcon-ui';
 import loadable from 'src/components/loadable';
@@ -13,17 +13,15 @@ import {
   CheckoutSectionContentLayout
 } from './components';
 
-// Loading "PaymentMethodItem" component via loadable package
-// to avoid premature import of Payment frontend-plugins and their dependencies on SSR
-const PaymentMethodItem = loadable(() =>
-  import(/* webpackChunkName: "checkout/payment-item" */ './components/PaymentMethodItem')
+const PaymentMethodPicker = loadable(() =>
+  import(/* webpackChunkName: "checkout/payments" */ './components/PaymentMethodPicker')
 );
 
 export const PaymentMethodSection = props => {
   const { open, onEditRequested } = props;
   const { t } = useI18n();
   const { values } = useCheckout();
-  const [state, setState] = useState(values.paymentMethod || {});
+  const [state, setState] = useState(values.paymentMethod || undefined);
 
   let header;
   if (!open && values.paymentMethod) {
@@ -62,24 +60,9 @@ export const PaymentMethodSection = props => {
                 <SetPaymentMethod>
                   {(setPayment, { error }) => (
                     <React.Fragment>
-                      <TwoStepWizard initialState={(state && state.code) || undefined}>
-                        {({ selectedOption, selectOption }) =>
-                          paymentMethodList.map(method => (
-                            <PaymentMethodItem
-                              key={method.code}
-                              {...method}
-                              selectOption={code => {
-                                setState({});
-                                selectOption(code);
-                              }}
-                              selectedOption={selectedOption}
-                              onPaymentDetailsReady={data => setState({ ...method, data })}
-                            />
-                          ))
-                        }
-                      </TwoStepWizard>
+                      <PaymentMethodPicker options={paymentMethodList} selected={state} onChange={setState} />
                       <CheckoutSectionFooter>
-                        <Button disabled={!state.code} onClick={() => setPayment(state)}>
+                        <Button disabled={!state || !state.code} onClick={() => setPayment(state)}>
                           <T id="checkout.nextStep" />
                         </Button>
                         <ErrorSummary errors={error} />
