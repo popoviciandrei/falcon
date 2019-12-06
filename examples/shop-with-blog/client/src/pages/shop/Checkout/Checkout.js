@@ -101,7 +101,7 @@ const CheckoutWizard = () => {
           <Test3dSecure {...result} />
         </Box>
       )}
-      {result && !isLoading && result.orderId && <Redirect to="/checkout/confirmation" />}
+      {result && !isLoading && result.id && <Redirect to="/checkout/confirmation" />}
     </Box>
   );
 };
