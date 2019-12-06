@@ -62,7 +62,7 @@ export const PaymentMethodSection = props => {
                 <SetPaymentMethod>
                   {(setPayment, { error }) => (
                     <React.Fragment>
-                      <TwoStepWizard initialState={state}>
+                      <TwoStepWizard initialState={(state && state.code) || undefined}>
                         {({ selectedOption, selectOption }) =>
                           paymentMethodList.map(method => (
                             <PaymentMethodItem
