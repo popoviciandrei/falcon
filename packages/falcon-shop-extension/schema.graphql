@@ -2,7 +2,7 @@ extend type Query {
   menu: [MenuItem] @cache(ttl: 15)
   category(id: ID!): Category @cache(ttl: 15)
   product(id: ID!): Product @cache(ttl: 5)
-  productList(input: ProductListInput): ProductList!
+  productList(input: ProductListInput): ProductList! @cache(ttl: 15, idPath: ["items"])
   cart: Cart!
   countryList: CountryList!
   regionList(countryId: ID!): RegionList!
@@ -353,6 +353,7 @@ type Product {
   name: String!
   image: String
   urlPath: String!
+  categories: [Category!]! @cache(ttl: 15, idPath: ["$parent"])
   # Full url to resized product image
   thumbnail: String
   price: ProductPrice!
@@ -365,7 +366,7 @@ type Product {
   bundleOptions: [BundleProductOption!]!
   gallery: [GalleryEntry!]!
   breadcrumbs(path: String!): [Breadcrumb] @cache(ttl: 20, idPath: ["$parent"])
-  seo: ProductSeo
+  seo: SEO
 }
 
 type ShippingMethod {
@@ -405,9 +406,13 @@ type MenuItem {
 type Category {
   id: ID! @cacheId
   name: String
+  urlPath: String!
+  image: String
   children: [Category]
   description: String
   breadcrumbs(path: String!): [Breadcrumb!]!
+  attributes: [Attribute!]!
+  seo: SEO
   productList(input: ProductListInput): CategoryProductList! @cache(ttl: 15, idPath: ["$parent", "items"])
 }
 
@@ -424,6 +429,11 @@ input ProductListInput {
   pagination: PaginationInput
 }
 
+type Attribute {
+  key: String!
+  value: String
+}
+
 type ProductList {
   items: [Product!]!
   pagination: Pagination!
@@ -434,7 +444,7 @@ type Stock {
   qty: Float!
 }
 
-type ProductSeo {
+type SEO {
   title: String
   description: String
   keywords: String

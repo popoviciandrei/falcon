@@ -14894,7 +14894,7 @@ react-google-tag-manager@2.2.1:
   resolved "https://registry.npmjs.org/react-google-tag-manager/-/react-google-tag-manager-2.2.1.tgz#b0659c7b19d9263c7cb45d3c019f506529af9077"
   integrity sha512-8yPbEE3r2z0OWRvJYg1HegKQktH2fIJ2hHCFzAk7+GeOHIK7Vcq+dA0wo2Wf81oHSPMHiOY7nhXIviSVJFV64w==
 
-react-helmet-async@^1.0.4:
+react-helmet-async@1.0.4, react-helmet-async@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/react-helmet-async/-/react-helmet-async-1.0.4.tgz#079ef10b7fefcaee6240fefd150711e62463cc97"
   integrity sha512-KTGHE9sz8N7+fCkZ2a3vzXH9eIkiTNhL2NhKR7XzzQl3WsGlCHh76arauJUIiGdfhjeMp7DY7PkASAmYFXeJYg==
