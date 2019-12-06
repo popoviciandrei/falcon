@@ -1,5 +1,9 @@
 import { Address } from '@deity/falcon-shop-extension';
 
+/**
+ * Returns basic string representation of `Address`
+ * @param {Address} address
+ */
 export const addressToString = (address: Address) =>
   [
     address.company,

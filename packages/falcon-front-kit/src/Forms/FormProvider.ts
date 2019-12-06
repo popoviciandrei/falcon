@@ -1,7 +1,17 @@
-import { FormikConfig, FormikValues } from 'formik';
+import { FormikProps, FormikValues } from 'formik';
+import { ErrorModel } from '@deity/falcon-data';
 
-export type FormProviderProps<TValues = FormikValues> = {
+export type FormProviderProps<TValues = FormikValues, TResult = any> = {
   /** Invoked when form is successfully submit */
-  onSuccess?: Function;
+  onSuccess?: Function | ((data: TResult) => any);
   initialValues?: TValues;
-} & Pick<FormikConfig<TValues>, 'children'>;
+  children?: ((props: FormProviderRenderProps<TValues, TResult>) => React.ReactNode) | React.ReactNode;
+};
+
+export type FormProviderRenderProps<TValues, TResult> = {
+  status: {
+    [key: string]: any;
+    data?: TResult;
+    error?: ErrorModel | ErrorModel[];
+  };
+} & Omit<FormikProps<TValues>, 'status'>;

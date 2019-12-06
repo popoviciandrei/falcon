@@ -22,7 +22,7 @@ const PersonalInformation = () => (
       <CustomerQuery>
         {({ data: { customer } }) => (
           <EditCustomerFormProvider customer={customer}>
-            {({ status = {} }) => (
+            {({ status }) => (
               <GridLayout as={Form} id="edit-customer" i18nId="editCustomer" gridArea={TwoColumnsLayoutArea.left}>
                 <FormField name="firstname" required />
                 <FormField name="lastname" required />
@@ -33,7 +33,7 @@ const PersonalInformation = () => (
                   </Link>
                   <FormSubmit />
                 </FlexLayout>
-                {status.error && <ErrorSummary errors={status.error} />}
+                <ErrorSummary errors={status.error} />
               </GridLayout>
             )}
           </EditCustomerFormProvider>

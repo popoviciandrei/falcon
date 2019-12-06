@@ -1,3 +1,4 @@
 export * from './AddAddressFormProvider';
-export * from './addressToString';
 export * from './EditAddressFormProvider';
+export * from './isCustomAddress';
+export * from './addressToString';
