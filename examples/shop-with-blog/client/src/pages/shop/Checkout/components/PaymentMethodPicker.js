@@ -26,7 +26,10 @@ const PaymentMethodPicker = ({ options, selected, onChange }) => {
               {options.map(method => {
                 const paymentPlugin = getPaymentPluginFor(method.code);
                 if (!paymentPlugin) {
-                  console.error(`No Payment Method Plugin found for ${method.code}`);
+                  if (process.env.NODE_ENV !== 'production') {
+                    console.error(`No Payment Method Plugin found for ${method.code}`);
+                  }
+
                   return;
                 }
 
@@ -51,12 +54,10 @@ const PaymentMethodPicker = ({ options, selected, onChange }) => {
               })}
             </Box>
             {SelectedPaymentPlugin && (
-              <Box>
-                <SelectedPaymentPlugin
-                  config={selectedOption.config}
-                  onPaymentDetailsReady={details => onChange({ ...selectedOption, data: details })}
-                />
-              </Box>
+              <SelectedPaymentPlugin
+                config={selectedOption.config}
+                onPaymentDetailsReady={details => onChange({ ...selectedOption, data: details })}
+              />
             )}
           </React.Fragment>
         );
