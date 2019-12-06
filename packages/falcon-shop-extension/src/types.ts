@@ -262,6 +262,7 @@ export type Product = {
   name: string;
   image?: string;
   urlPath: string;
+  categories: Category[];
   thumbnail?: string;
   price: ProductPrice;
   tierPrices?: ProductTierPrice[];
@@ -272,7 +273,7 @@ export type Product = {
   options: ProductOption[];
   bundleOptions: BundleProductOption[];
   gallery: GalleryEntry[];
-  seo: ProductSeo;
+  seo: SEO;
   breadcrumbs: Breadcrumb[];
 };
 
@@ -339,7 +340,7 @@ export type ConfigurableProductOptionValue = {
   valueIndex: string;
 };
 
-export type ProductSeo = {
+export type SEO = {
   title: string;
   description: string;
   keywords: string;
@@ -353,10 +354,19 @@ export type Breadcrumb = {
 export type Category = {
   id: string;
   name: string;
+  image: string;
+  urlPath: string;
   children: Category[];
   description: string;
   breadcrumbs: Breadcrumb[];
   productList: CategoryProductList;
+  attributes: Attribute[];
+  seo: SEO;
+};
+
+export type Attribute = {
+  key: string;
+  value: string;
 };
 
 export type SignUpInput = {

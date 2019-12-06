@@ -12,6 +12,11 @@ export const GET_CATEGORY_WITH_PRODUCT_LIST = gql`
     category(id: $categoryId) {
       id
       name
+      seo {
+        title
+        description
+        keywords
+      }
       productList(input: { sort: $sort, pagination: $pagination, filters: $filters }) {
         items {
           id
@@ -44,7 +49,7 @@ export const GET_CATEGORY_WITH_PRODUCT_LIST = gql`
   }
 `;
 
-export type CategoryWithProductListResponse = Pick<Category, 'id' | 'name'> & {
+export type CategoryWithProductListResponse = Pick<Category, 'id' | 'name' | 'seo'> & {
   productList: {
     items: Pick<Product, 'id' | 'name' | 'price' | 'thumbnail' | 'urlPath'>[];
     pagination: Pick<Pagination, 'currentPage' | 'totalItems' | 'nextPage'>;

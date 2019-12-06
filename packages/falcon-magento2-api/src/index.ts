@@ -51,6 +51,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         sortOrderList: apiGetter(api => api.getSortOrderList())
       },
       Product: {
+        categories: apiGetter((api, ...args) => api.productCategories(...args)),
         price: apiGetter((api, ...args) => api.productPrice(...args)),
         tierPrices: apiGetter((api, ...args) => api.productTierPrices(...args)),
         options: apiGetter((api, ...args) => api.productOptions(...args)),
@@ -224,23 +225,28 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    */
   convertCategory(data) {
     this.convertAttributesSet(data);
-    const { custom_attributes: customAttributes } = data;
+    const newData = this.convertKeys(data);
+    const { customAttributes, extensionAttributes = {} } = newData;
+    const { image, metaTitle, metaDescription, metaKeywords, urlPath, ...restAttributes } = customAttributes;
+    const { imageUrl } = extensionAttributes;
 
-    // for specific category record
-    let urlPath = customAttributes.url_path;
-
-    if (!urlPath) {
+    let categoryUrlPath = urlPath;
+    if (!categoryUrlPath) {
       // in case of categories tree - URL path can be found in data.url_path
-      urlPath = data.url_path;
-      delete data.url_path;
+      categoryUrlPath = newData.urlPath;
+      delete newData.urlPath;
     }
 
-    delete data.created_at;
-    delete data.product_count;
+    newData.image = imageUrl || image; // to use `image` as a fallback value
+    newData.urlPath = this.convertPathToUrl(categoryUrlPath) || ''; // Fallback to an empty string for default category with no URL
+    newData.seo = {
+      title: metaTitle,
+      description: metaDescription,
+      keywords: metaKeywords
+    };
+    newData.attributes = Object.entries(restAttributes).map(([key, value]) => ({ key, value }));
 
-    data.urlPath = this.convertPathToUrl(urlPath);
-
-    return data;
+    return newData;
   }
 
   /**
@@ -320,8 +326,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
    * @returns {Promise<Product[]>}  response with list of products
    */
   async productList(obj, { input }) {
-    const { withAttributeFilters = [] } = input;
-    const searchCriteria = this.createSearchCriteria(input);
+    const searchCriteria = this.createSearchCriteria(input || {});
 
     this.addSearchFilter(searchCriteria, 'visibility', ProductVisibility.catalogAndSearch, 'eq');
     if (!this.isFilterSet('status', searchCriteria)) {
@@ -332,7 +337,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
 
     const response = await this.getForIntegration('/products', {
       includeSubcategories: true,
-      withAttributeFilters,
+      withAttributeFilters: [],
       searchCriteria
     });
 
@@ -340,6 +345,20 @@ module.exports = class Magento2Api extends Magento2ApiBase {
       items: response.items.map(x => this.reduceProduct(x, this.session.currency)),
       pagination: this.processPagination(response.total_count, searchCriteria.currentPage, searchCriteria.pageSize)
     };
+  }
+
+  async productCategories(obj) {
+    const { sku } = obj;
+    let { customAttributes } = obj;
+    if (!Object.keys(customAttributes).length) {
+      const data = await this.getForIntegration(`/products/${sku}`);
+      this.convertAttributesSet(data);
+      const product = this.convertKeys(data);
+      ({ customAttributes } = product);
+    }
+
+    const { categoryIds = [] } = customAttributes || {};
+    return Promise.all(categoryIds.map(categoryId => this.category({}, { id: categoryId })));
   }
 
   /**
