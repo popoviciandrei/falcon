@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ThemeProvider, Box, Button } from '@deity/falcon-ui';
-import { AppLayout, Sidebar } from '@deity/falcon-ui-kit';
+import { AppLayout, Sidebar, NotFound } from '@deity/falcon-ui-kit';
 import { ServiceWorkerRegistrar, ServiceWorker } from '@deity/falcon-service-worker';
 import {
   NetworkStatus,
@@ -114,7 +114,7 @@ const App = () => (
                             <Route exact type="blog-post" component={BlogPost} />
                             <Route exact type="shop-category" component={Category} />
                             <Route exact type="shop-product" component={Product} />
-                            <p>not Found</p>
+                            <NotFound />
                           </SwitchDynamicURL>
                         </Box>
                         <PageFooter />
