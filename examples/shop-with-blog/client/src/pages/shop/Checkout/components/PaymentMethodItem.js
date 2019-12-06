@@ -2,15 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FlexLayout, Label, Image, Radio } from '@deity/falcon-ui';
 import { SimplePayment } from '@deity/falcon-payment-plugin';
-import AdyenCCPlugin from '@deity/falcon-adyen-plugin';
-import PayPalExpressPlugin from '@deity/falcon-paypal-plugin';
-import loadable from 'src/components/loadable';
-
-const CreditCardInput = loadable(() => import(/* webpackChunkName: "checkout/payment/credit-card" */ './CreditCard'));
+import PayPal from '@deity/falcon-paypal-plugin';
+import Adyen from './payments/Adyen';
 
 const paymentPlugins = {
-  adyen_cc: AdyenCCPlugin,
-  paypal_express: PayPalExpressPlugin
+  adyen_cc: Adyen,
+  paypal_express: PayPal
 };
 
 class PaymentMethodItem extends React.Component {
@@ -31,22 +28,15 @@ class PaymentMethodItem extends React.Component {
       return null;
     }
 
+    const paymentProps = { config, onPaymentDetailsReady };
     switch (selectedOption) {
       case 'adyen_cc':
-        return (
-          <AdyenCCPlugin config={config} onPaymentDetailsReady={onPaymentDetailsReady}>
-            {({ setCreditCardData }) => (
-              <FlexLayout my="md" css={{ width: '100%' }}>
-                <CreditCardInput onCompletion={setCreditCardData} />
-              </FlexLayout>
-            )}
-          </AdyenCCPlugin>
-        );
+        return <Adyen {...paymentProps} />;
       case 'paypal_express':
-        return <PayPalExpressPlugin config={config} onPaymentDetailsReady={onPaymentDetailsReady} />;
+        return <PayPal {...paymentProps} />;
       default:
         // For the rest unmapped payments - return "SimplePayment" plugin
-        return <SimplePayment onPaymentDetailsReady={onPaymentDetailsReady} />;
+        return <SimplePayment {...paymentProps} />;
     }
   }
 
