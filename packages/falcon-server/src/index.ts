@@ -97,7 +97,10 @@ export class FalconServer {
       this.logger.error(error);
     });
 
-    this.eventEmitter.on(Events.CACHE_TAG_INVALIDATE, async tags => this.cache.delete(tags));
+    this.eventEmitter.on(Events.CACHE_TAG_INVALIDATE, async tags => {
+      this.logger.debug(`Flushing cache for ${tags.join(', ')} tags`);
+      return this.cache.delete(tags);
+    });
 
     if (verboseEvents) {
       this.eventEmitter.onAny(event => {
