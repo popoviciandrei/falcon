@@ -97,6 +97,8 @@ export class FalconServer {
       this.logger.error(error);
     });
 
+    this.eventEmitter.on(Events.CACHE_TAG_INVALIDATE, async tags => this.cache.delete(tags));
+
     if (verboseEvents) {
       this.eventEmitter.onAny(event => {
         this.logger.debug(`Triggering "${event}" event...`);
