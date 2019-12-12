@@ -9,7 +9,7 @@ export type CheckoutProviderProps = {
   billingSameAsShipping?: boolean;
 };
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
-  const { children, initialValues, billingSameAsShipping } = props;
+  const { children, initialValues = {}, billingSameAsShipping } = props;
 
   const [step, setStep] = useState<keyof typeof CheckoutStep>('Email');
   const [isLoading, setLoading] = useState<boolean>(false);
