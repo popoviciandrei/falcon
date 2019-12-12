@@ -11,6 +11,7 @@ import { ApiEntryMap } from '../types';
 import { BaseContainer } from './BaseContainer';
 
 export type ApiDataSourceInitializer = (gqlServerConfig: ApolloServerConfig) => ApiDataSource;
+export type ApiDataSourceMap = Map<string, ApiDataSourceInitializer>;
 
 /**
  * Api Engine acts as a container for API instances:
@@ -18,7 +19,7 @@ export type ApiDataSourceInitializer = (gqlServerConfig: ApolloServerConfig) => 
  * - returns the instances as dataSources (required by Apollo Server)
  */
 export class ApiContainer extends BaseContainer {
-  public dataSources: Map<string, ApiDataSourceInitializer> = new Map();
+  public dataSources: ApiDataSourceMap = new Map();
 
   public resolvers: IResolvers<any, any>[] = [];
 

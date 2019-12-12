@@ -40,7 +40,7 @@ import {
 import { DynamicRouteResolver } from './resolvers';
 import { cacheInvalidatorMiddleware } from './middlewares';
 import { GraphQLCacheDirective, GraphQLCacheInvalidatorDirective } from './schemaDirectives';
-import { Config, BackendConfig } from './types';
+import { Config, BackendConfig, WebServerState, WebServerContext } from './types';
 
 export * from './types';
 
@@ -60,9 +60,9 @@ export class FalconServer {
 
   protected server?: ApolloServer;
 
-  protected app?: Koa;
+  protected app?: Koa<WebServerState, WebServerContext>;
 
-  protected router?: Router;
+  protected router?: Router<WebServerState, WebServerContext>;
 
   protected extensionContainer?: ExtensionContainer;
 
@@ -234,14 +234,15 @@ export class FalconServer {
 
   protected async initializeServerApp() {
     await this.eventEmitter.emitAsync(Events.BEFORE_WEB_SERVER_CREATED, this.config);
-    this.app = new Koa();
+    this.app = new Koa<WebServerState, WebServerContext>();
     // Set signed cookie keys (https://koajs.com/#app-keys-)
     this.app.keys = this.config.session.keys;
 
-    this.router = new Router();
+    this.router = new Router<WebServerState, WebServerContext>();
 
     this.app.context.components = this.componentContainer.components;
     this.app.context.dataSources = this.apiContainer.dataSources;
+    this.app.context.eventEmitter = this.eventEmitter;
     this.app.use(body());
     this.app.use(compress());
     this.app.use(
@@ -344,7 +345,7 @@ export class FalconServer {
           'Consider changing "cache.url" config value with a unique route to secure your Cache endpoint'
         );
       }
-      this.router.post(cacheUrl, cacheInvalidatorMiddleware(this.cache));
+      this.router.post(cacheUrl, cacheInvalidatorMiddleware());
     }
 
     this.app.use(this.router.routes()).use(this.router.allowedMethods());
