@@ -3,24 +3,24 @@ import { CheckoutValues } from './CheckoutValues';
 
 /** Defines basic checkout steps */
 export const CheckoutStep: RecordEnumLike<
-  'Email' | 'ShippingAddress' | 'BillingAddress' | 'Shipping' | 'Payment' | 'Confirmation'
+  'email' | 'shippingAddress' | 'billingAddress' | 'shippingMethod' | 'paymentMethod' | 'placeOrder'
 > = {
-  Email: 'Email',
-  ShippingAddress: 'ShippingAddress',
-  BillingAddress: 'BillingAddress',
-  Shipping: 'Shipping',
-  Payment: 'Payment',
-  Confirmation: 'Confirmation'
+  email: 'email',
+  shippingAddress: 'shippingAddress',
+  billingAddress: 'billingAddress',
+  shippingMethod: 'shippingMethod',
+  paymentMethod: 'paymentMethod',
+  placeOrder: 'placeOrder'
 };
 
 /** Defines default checkout steps order */
 export const CheckoutFlow = [
-  CheckoutStep.Email,
-  CheckoutStep.ShippingAddress,
-  CheckoutStep.BillingAddress,
-  CheckoutStep.Shipping,
-  CheckoutStep.Payment,
-  CheckoutStep.Confirmation
+  CheckoutStep.email,
+  CheckoutStep.shippingAddress,
+  CheckoutStep.billingAddress,
+  CheckoutStep.shippingMethod,
+  CheckoutStep.paymentMethod,
+  CheckoutStep.placeOrder
 ];
 
 /** Returns next possible step for `step` based on available `CheckoutFlow`, or `undefined` when no more steps
@@ -38,24 +38,24 @@ export const getNextStep = (step: keyof typeof CheckoutStep): keyof typeof Check
  */
 export const getNextStepForValues = (values: CheckoutValues): keyof typeof CheckoutStep => {
   if (!values.email) {
-    return CheckoutStep.Email;
+    return CheckoutStep.email;
   }
 
   if (!values.shippingAddress) {
-    return CheckoutStep.ShippingAddress;
+    return CheckoutStep.shippingAddress;
   }
 
   if (!values.billingAddress) {
-    return CheckoutStep.BillingAddress;
+    return CheckoutStep.billingAddress;
   }
 
   if (!values.shippingMethod) {
-    return CheckoutStep.Shipping;
+    return CheckoutStep.shippingMethod;
   }
 
   if (!values.paymentMethod) {
-    return CheckoutStep.Payment;
+    return CheckoutStep.paymentMethod;
   }
 
-  return CheckoutStep.Confirmation;
+  return CheckoutStep.placeOrder;
 };

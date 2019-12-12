@@ -154,14 +154,14 @@ describe('<Checkout/>', () => {
     it('should pass render props correctly to the render function', () => {
       const { getProps } = renderCheckoutLogic();
       expect(getProps().values).toBeDefined();
-      expect(getProps().step).toEqual(CheckoutStep.Email);
+      expect(getProps().step).toEqual(CheckoutStep.email);
     });
 
     it('should update email address when setEmail()', () => {
       const { getProps } = renderCheckoutLogic();
       getProps().setEmail('foo@bar.com');
       expect(getProps().values.email).toBe('foo@bar.com');
-      expect(getProps().step).toBe(CheckoutStep.ShippingAddress);
+      expect(getProps().step).toBe(CheckoutStep.shippingAddress);
     });
 
     it('should properly set shipping address when address is passed to setShippingAddress()', () => {
@@ -174,7 +174,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(undefined);
       expect(getProps().values.shippingMethod).toEqual(undefined);
       expect(getProps().values.paymentMethod).toEqual(undefined);
-      expect(getProps().step).toBe(CheckoutStep.BillingAddress);
+      expect(getProps().step).toBe(CheckoutStep.billingAddress);
     });
 
     it('should properly set billing address when address is passed to setBillingAddress()', () => {
@@ -187,7 +187,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
       expect(getProps().values.shippingMethod).toEqual(undefined);
       expect(getProps().values.paymentMethod).toEqual(undefined);
-      expect(getProps().step).toBe(CheckoutStep.ShippingAddress);
+      expect(getProps().step).toBe(CheckoutStep.shippingAddress);
     });
 
     it('should properly set billing and shipping address when isBillingSameAsShipping is true and setShippingAddress()', () => {
@@ -202,7 +202,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
       expect(getProps().values.shippingMethod).toEqual(undefined);
       expect(getProps().values.paymentMethod).toEqual(undefined);
-      expect(getProps().step).toBe(CheckoutStep.Shipping);
+      expect(getProps().step).toBe(CheckoutStep.shippingMethod);
     });
 
     it('should properly set shipping and billing address when isBillingSameAsShipping is true and setBillingAddress()', () => {
@@ -217,7 +217,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
       expect(getProps().values.shippingMethod).toEqual(undefined);
       expect(getProps().values.paymentMethod).toEqual(undefined);
-      expect(getProps().step).toBe(CheckoutStep.Shipping);
+      expect(getProps().step).toBe(CheckoutStep.shippingMethod);
     });
 
     it('should properly set shipping method when setShippingMethod()', () => {
@@ -233,7 +233,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
       expect(getProps().values.shippingMethod).toEqual(sampleShippingMethod);
       expect(getProps().values.paymentMethod).toEqual(undefined);
-      expect(getProps().step).toBe(CheckoutStep.Payment);
+      expect(getProps().step).toBe(CheckoutStep.paymentMethod);
     });
 
     it('should properly set payment method when setPaymentMethod()', () => {
@@ -250,7 +250,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
       expect(getProps().values.shippingMethod).toEqual(sampleShippingMethod);
       expect(getProps().values.paymentMethod).toEqual(samplePaymentMethod);
-      expect(getProps().step).toBe(CheckoutStep.Confirmation);
+      expect(getProps().step).toBe(CheckoutStep.placeOrder);
     });
 
     it('should not override OrderData when placeOrder() without arguments', () => {
@@ -269,7 +269,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
       expect(getProps().values.shippingMethod).toEqual(sampleShippingMethod);
       expect(getProps().values.paymentMethod).toEqual(samplePaymentMethod);
-      expect(getProps().step).toBe(CheckoutStep.Confirmation);
+      expect(getProps().step).toBe(CheckoutStep.placeOrder);
     });
 
     it('should properly override OrderData when placeOrder() with arguments', () => {
@@ -296,7 +296,7 @@ describe('<Checkout/>', () => {
       expect(getProps().values.billingAddress).toEqual(sampleAddress);
       expect(getProps().values.shippingMethod).toEqual(sampleShippingMethod);
       expect(getProps().values.paymentMethod).toEqual(overriddenPaymentMethod);
-      expect(getProps().step).toBe(CheckoutStep.Confirmation);
+      expect(getProps().step).toBe(CheckoutStep.placeOrder);
     });
   });
 });
