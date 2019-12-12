@@ -1,5 +1,4 @@
 import { RecordEnumLike } from '../RecordEnumLike';
-import { CheckoutValues } from './CheckoutValues';
 
 export type CheckoutStepType =
   | 'email'
@@ -28,31 +27,3 @@ export const CheckoutFlow = [
   CheckoutStep.paymentMethod,
   CheckoutStep.placeOrder
 ];
-
-/**
- * Returns next step for checkout wizard based on checkout values
- * @param values
- */
-export const getNextStepForValues = (values: CheckoutValues): CheckoutStepType => {
-  if (!values.email) {
-    return CheckoutStep.email;
-  }
-
-  if (!values.shippingAddress) {
-    return CheckoutStep.shippingAddress;
-  }
-
-  if (!values.billingAddress) {
-    return CheckoutStep.billingAddress;
-  }
-
-  if (!values.shippingMethod) {
-    return CheckoutStep.shippingMethod;
-  }
-
-  if (!values.paymentMethod) {
-    return CheckoutStep.paymentMethod;
-  }
-
-  return CheckoutStep.placeOrder;
-};
