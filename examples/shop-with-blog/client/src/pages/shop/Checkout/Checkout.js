@@ -51,30 +51,30 @@ const CheckoutWizard = () => {
     <Box position="relative">
       {isLoading && <Loader variant="overlay" />}
 
-      <EmailSection open={step === CheckoutStep.Email} onEditRequested={() => setStep(CheckoutStep.Email)} />
+      <EmailSection open={step === CheckoutStep.email} onEditRequested={() => setStep(CheckoutStep.email)} />
       <Divider my="md" />
       <ShippingAddressSection
-        open={step === CheckoutStep.ShippingAddress}
-        onEditRequested={() => setStep(CheckoutStep.ShippingAddress)}
+        open={step === CheckoutStep.shippingAddress}
+        onEditRequested={() => setStep(CheckoutStep.shippingAddress)}
       />
       <Divider my="md" />
       <BillingAddressSection
-        open={step === CheckoutStep.BillingAddress}
-        onEditRequested={() => setStep(CheckoutStep.BillingAddress)}
+        open={step === CheckoutStep.billingAddress}
+        onEditRequested={() => setStep(CheckoutStep.billingAddress)}
       />
       <Divider my="md" />
       <ShippingMethodSection
-        open={step === CheckoutStep.Shipping}
-        onEditRequested={() => setStep(CheckoutStep.Shipping)}
+        open={step === CheckoutStep.shippingMethod}
+        onEditRequested={() => setStep(CheckoutStep.shippingMethod)}
       />
       <Divider my="md" />
       <PaymentMethodSection
-        open={step === CheckoutStep.Payment}
-        onEditRequested={() => setStep(CheckoutStep.Payment)}
+        open={step === CheckoutStep.paymentMethod}
+        onEditRequested={() => setStep(CheckoutStep.paymentMethod)}
       />
       <Divider my="md" />
 
-      {step === CheckoutStep.Confirmation && (
+      {step === CheckoutStep.placeOrder && (
         <PlaceOrder>
           {(placeOrder, { error, data }) => {
             if (!data) {
