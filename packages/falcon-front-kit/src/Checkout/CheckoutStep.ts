@@ -1,7 +1,7 @@
 import { RecordEnumLike } from '../RecordEnumLike';
 import { CheckoutValues } from './CheckoutValues';
 
-/** Define basic checkout steps */
+/** Defines basic checkout steps */
 export const CheckoutStep: RecordEnumLike<
   'Email' | 'ShippingAddress' | 'BillingAddress' | 'Shipping' | 'Payment' | 'Confirmation'
 > = {
@@ -11,6 +11,25 @@ export const CheckoutStep: RecordEnumLike<
   Shipping: 'Shipping',
   Payment: 'Payment',
   Confirmation: 'Confirmation'
+};
+
+/** Defines default checkout steps order */
+export const CheckoutFlow = [
+  CheckoutStep.Email,
+  CheckoutStep.ShippingAddress,
+  CheckoutStep.BillingAddress,
+  CheckoutStep.Shipping,
+  CheckoutStep.Payment,
+  CheckoutStep.Confirmation
+];
+
+/** Returns next possible step for `step` based on available `CheckoutFlow`, or `undefined` when no more steps
+ * @param step
+ */
+export const getNextStep = (step: keyof typeof CheckoutStep): keyof typeof CheckoutStep | undefined => {
+  const currentStepIndex = CheckoutFlow.findIndex(x => x === step);
+
+  return currentStepIndex === CheckoutFlow.length - 1 ? CheckoutFlow[currentStepIndex + 1] : undefined;
 };
 
 /**
