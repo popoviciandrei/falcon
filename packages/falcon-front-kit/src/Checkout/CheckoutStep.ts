@@ -29,20 +29,6 @@ export const CheckoutFlow = [
   CheckoutStep.placeOrder
 ];
 
-export const getNextStepFactory = <TCheckoutStep extends CheckoutStepType = CheckoutStepType>(
-  stepsOrder: TCheckoutStep[]
-) => {
-  /**
-   * Returns next possible step for `step` based on available `CheckoutFlow`, or `undefined` when no more steps
-   * @param step
-   */
-  return (step: CheckoutStepType): CheckoutStepType | undefined => {
-    const currentStepIndex = stepsOrder.findIndex(x => x === step);
-
-    return currentStepIndex < stepsOrder.length ? stepsOrder[currentStepIndex + 1] : undefined;
-  };
-};
-
 /**
  * Returns next step for checkout wizard based on checkout values
  * @param values

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { PlaceOrderResult } from '@deity/falcon-shop-extension';
 import { CheckoutValues, SetCheckoutValues } from './CheckoutValues';
-import { CheckoutStep, CheckoutStepType, CheckoutFlow, getNextStepForValues, getNextStepFactory } from './CheckoutStep';
+import { CheckoutStep, CheckoutStepType, CheckoutFlow, getNextStepForValues } from './CheckoutStep';
 import { CheckoutContext } from './CheckoutContext';
 
 export type CheckoutProviderProps<TCheckoutStep extends CheckoutStepType = CheckoutStepType> = {
@@ -12,7 +12,16 @@ export type CheckoutProviderProps<TCheckoutStep extends CheckoutStepType = Check
 };
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const { children, initialValues = {}, billingSameAsShipping, stepsOrder, autoStepForward } = props;
-  const getNextStep = useCallback(getNextStepFactory(stepsOrder), [stepsOrder]);
+
+  /**
+   * Returns next possible step for `step` based on available `CheckoutFlow`, or `undefined` when no more steps
+   * @param step
+   */
+  const getNextStep = (step: CheckoutStepType): CheckoutStepType | undefined => {
+    const currentStepIndex = stepsOrder.findIndex(x => x === step);
+
+    return currentStepIndex < stepsOrder.length ? stepsOrder[currentStepIndex + 1] : undefined;
+  };
 
   const [step, setStep] = useState<keyof typeof CheckoutStep>(getNextStepForValues(initialValues));
   const [isLoading, setLoading] = useState<boolean>(false);
