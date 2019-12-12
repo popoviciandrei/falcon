@@ -1,10 +1,16 @@
 import { RecordEnumLike } from '../RecordEnumLike';
 import { CheckoutValues } from './CheckoutValues';
 
+export type CheckoutStepType =
+  | 'email'
+  | 'shippingAddress'
+  | 'billingAddress'
+  | 'shippingMethod'
+  | 'paymentMethod'
+  | 'placeOrder';
+
 /** Defines basic checkout steps */
-export const CheckoutStep: RecordEnumLike<
-  'email' | 'shippingAddress' | 'billingAddress' | 'shippingMethod' | 'paymentMethod' | 'placeOrder'
-> = {
+export const CheckoutStep: RecordEnumLike<CheckoutStepType> = {
   email: 'email',
   shippingAddress: 'shippingAddress',
   billingAddress: 'billingAddress',
@@ -23,20 +29,25 @@ export const CheckoutFlow = [
   CheckoutStep.placeOrder
 ];
 
-/** Returns next possible step for `step` based on available `CheckoutFlow`, or `undefined` when no more steps
- * @param step
- */
-export const getNextStep = (step: keyof typeof CheckoutStep): keyof typeof CheckoutStep | undefined => {
-  const currentStepIndex = CheckoutFlow.findIndex(x => x === step);
+export const getNextStepFactory = <TCheckoutStep extends CheckoutStepType = CheckoutStepType>(
+  stepsOrder: TCheckoutStep[]
+) => {
+  /**
+   * Returns next possible step for `step` based on available `CheckoutFlow`, or `undefined` when no more steps
+   * @param step
+   */
+  return (step: CheckoutStepType): CheckoutStepType | undefined => {
+    const currentStepIndex = stepsOrder.findIndex(x => x === step);
 
-  return currentStepIndex === CheckoutFlow.length - 1 ? CheckoutFlow[currentStepIndex + 1] : undefined;
+    return currentStepIndex < stepsOrder.length ? stepsOrder[currentStepIndex + 1] : undefined;
+  };
 };
 
 /**
  * Returns next step for checkout wizard based on checkout values
  * @param values
  */
-export const getNextStepForValues = (values: CheckoutValues): keyof typeof CheckoutStep => {
+export const getNextStepForValues = (values: CheckoutValues): CheckoutStepType => {
   if (!values.email) {
     return CheckoutStep.email;
   }
