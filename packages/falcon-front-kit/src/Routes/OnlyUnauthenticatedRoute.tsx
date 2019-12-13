@@ -27,7 +27,7 @@ export class OnlyUnauthenticatedRoute extends React.Component<OnlyUnauthenticate
       <Route
         {...rest}
         render={props => (
-          <IsAuthenticatedQuery fetchPolicy="network-only" passLoading>
+          <IsAuthenticatedQuery passLoading>
             {({ data, loading }) => {
               if (loading) {
                 // we can not render anything until we do not known if customer is authenticated or not
