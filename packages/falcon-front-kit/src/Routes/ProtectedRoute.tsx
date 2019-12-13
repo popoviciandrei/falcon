@@ -30,7 +30,7 @@ export class ProtectedRoute extends React.Component<ProtectedRouteProps> {
           <IsAuthenticatedQuery passLoading>
             {({ data, loading }) => {
               if (loading) {
-                // we can not render anything until we do not known if customer is authenticated or not
+                // we can not render anything until we get know if the customer is authenticated or not
                 return <Loader />;
               }
 
