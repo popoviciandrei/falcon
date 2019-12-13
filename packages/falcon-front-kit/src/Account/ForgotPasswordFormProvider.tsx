@@ -10,7 +10,7 @@ export type ForgotPasswordFormProviderProps = FormProviderProps<
   RequestPasswordResetResponse
 >;
 export const ForgotPasswordFormProvider: React.SFC<ForgotPasswordFormProviderProps> = props => {
-  const { onSuccess, initialValues, ...formikProps } = props;
+  const { onSuccess, initialValues, mutationOptions, ...formikProps } = props;
   const defaultInitialValues: RequestPasswordResetInput = {
     email: ''
   };
@@ -23,7 +23,7 @@ export const ForgotPasswordFormProvider: React.SFC<ForgotPasswordFormProviderPro
       initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
-        requestPasswordReset({ variables: { input: values } })
+        requestPasswordReset({ variables: { input: values }, ...(mutationOptions || {}) })
           .then(({ data }) => {
             setSubmitting(false);
             setStatus({ data });

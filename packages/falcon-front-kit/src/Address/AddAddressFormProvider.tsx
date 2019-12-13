@@ -22,7 +22,7 @@ export type AddAddressFormValues = {
 
 export type AddAddressFormProviderProps = FormProviderProps<AddAddressFormValues, AddAddressResponse>;
 export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = props => {
-  const { onSuccess, initialValues, ...formikProps } = props;
+  const { onSuccess, initialValues, mutationOptions, ...formikProps } = props;
   const defaultInitialValues = {
     firstname: '',
     lastname: '',
@@ -54,7 +54,8 @@ export const AddAddressFormProvider: React.SFC<AddAddressFormProviderProps> = pr
               countryId: country.id,
               regionId: region ? region.id : undefined
             }
-          }
+          },
+          ...(mutationOptions || {})
         })
           .then(({ data }) => {
             setSubmitting(false);

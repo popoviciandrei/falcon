@@ -1,17 +1,23 @@
 import React from 'react';
 import { FlexLayout, Link } from '@deity/falcon-ui';
 import { T } from '@deity/falcon-i18n';
-import { SignInFormProvider } from '@deity/falcon-front-kit';
+import { SignInFormProvider, FormProviderProps } from '@deity/falcon-front-kit';
 import { ErrorSummary } from '../Error';
 import { FormField, Form, FormProps, PasswordRevealInput, FormSubmit } from '../Forms';
 
 export type SignInFormProps = Partial<FormProps> & {
   onSuccess?: () => Promise<void>;
   onForgotPassword: Function;
+  mutationOptions?: FormProviderProps['mutationOptions'];
 };
 
-export const SignInForm: React.SFC<SignInFormProps> = ({ onSuccess, onForgotPassword, ...formProps }) => (
-  <SignInFormProvider onSuccess={onSuccess}>
+export const SignInForm: React.SFC<SignInFormProps> = ({
+  onSuccess,
+  onForgotPassword,
+  mutationOptions,
+  ...formProps
+}) => (
+  <SignInFormProvider onSuccess={onSuccess} mutationOptions={mutationOptions}>
     {({ status }) => (
       <Form i18nId="signIn" {...formProps}>
         <FormField name="email" type="email" required autoComplete="email" />

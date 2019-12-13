@@ -7,7 +7,7 @@ import { FormProviderProps } from '../Forms';
 
 export type ChangePasswordFormProviderProps = FormProviderProps<ChangePasswordInput, ChangePasswordResponse>;
 export const ChangePasswordFormProvider: React.SFC<ChangePasswordFormProviderProps> = props => {
-  const { onSuccess, initialValues, ...formikProps } = props;
+  const { onSuccess, initialValues, mutationOptions, ...formikProps } = props;
   const defaultInitialValues: ChangePasswordInput = {
     currentPassword: '',
     password: ''
@@ -21,7 +21,7 @@ export const ChangePasswordFormProvider: React.SFC<ChangePasswordFormProviderPro
       initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
-        changePasswordMutation({ variables: { input: values } })
+        changePasswordMutation({ variables: { input: values }, ...(mutationOptions || {}) })
           .then(({ data }) => {
             setSubmitting(false);
             setStatus({ data });
