@@ -51,6 +51,7 @@ export default ({ contentType, open, close }) => {
                   <SignInForm
                     id="sign-in-sidebar"
                     onSuccess={close}
+                    mutationOptions={{ awaitRefetchQueries: true }}
                     onForgotPassword={() => open({ variables: { contentType: SIDEBAR_TYPE.forgotPassword } })}
                   />
                   <Divider my="lg" />
