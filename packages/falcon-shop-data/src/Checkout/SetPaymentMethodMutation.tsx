@@ -16,6 +16,7 @@ export type SetPaymentMethodResponse = {
 export class SetPaymentMethodMutation extends Mutation<SetPaymentMethodResponse, SetCheckoutDetailsInput> {
   static defaultProps = {
     mutation: SET_PAYMENT_METHOD,
+    awaitRefetchQueries: true,
     refetchQueries: ['Cart']
   };
 }
@@ -25,5 +26,6 @@ export const useSetPaymentMethodMutation = (
 ) =>
   useMutation<SetPaymentMethodResponse, SetCheckoutDetailsInput>(SET_PAYMENT_METHOD, {
     refetchQueries: ['Cart'],
+    awaitRefetchQueries: true,
     ...(options || {})
   });

@@ -16,7 +16,8 @@ export type SetShippingMethodResponse = {
 export class SetShippingMethodMutation extends Mutation<SetShippingMethodResponse, SetCheckoutDetailsInput> {
   static defaultProps = {
     mutation: SET_SHIPPING_METHOD,
-    refetchQueries: ['Cart']
+    refetchQueries: ['Cart'],
+    awaitRefetchQueries: true
   };
 }
 
@@ -25,5 +26,6 @@ export const useSetShippingMethodMutation = (
 ) =>
   useMutation<SetShippingMethodResponse, SetCheckoutDetailsInput>(SET_SHIPPING_METHOD, {
     refetchQueries: ['Cart'],
+    awaitRefetchQueries: true,
     ...(options || {})
   });
