@@ -1,6 +1,7 @@
 import React from 'react';
-import { Route, Redirect, RouteProps, RouteComponentProps } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Route, Redirect, RouteProps, RouteComponentProps } from 'react-router-dom';
+import { Loader } from '@deity/falcon-data';
 import { IsAuthenticatedQuery } from '@deity/falcon-shop-data';
 
 export type ProtectedRouteProps = {
@@ -26,8 +27,13 @@ export class ProtectedRoute extends React.Component<ProtectedRouteProps> {
       <Route
         {...rest}
         render={props => (
-          <IsAuthenticatedQuery fetchPolicy="network-only">
-            {({ data }) => {
+          <IsAuthenticatedQuery fetchPolicy="network-only" passLoading>
+            {({ data, loading }) => {
+              if (loading) {
+                // we can not render anything until we do not known if customer is authenticated or not
+                return <Loader />;
+              }
+
               if (data.customer) {
                 return <Component {...props} />;
               }
