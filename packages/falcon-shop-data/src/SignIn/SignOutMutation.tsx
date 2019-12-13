@@ -13,12 +13,14 @@ export type SignOutResponse = { signOut: boolean };
 export class SignOutMutation extends Mutation<SignOutResponse> {
   static defaultProps = {
     mutation: SIGN_OUT,
-    refetchQueries: ['Customer', 'Cart']
+    refetchQueries: ['Customer', 'Cart'],
+    awaitRefetchQueries: false
   };
 }
 
 export const useSignOutMutation = (options: MutationHookOptions<SignOutResponse> = {}) =>
   useMutation(SIGN_OUT, {
     refetchQueries: ['Customer', 'Cart'],
+    awaitRefetchQueries: false,
     ...options
   });

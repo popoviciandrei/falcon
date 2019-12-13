@@ -14,12 +14,14 @@ export type SignInResponse = { signIn: boolean };
 export class SignInMutation extends Mutation<SignInResponse, OperationInput<SignInInput>> {
   static defaultProps = {
     mutation: SIGN_IN,
-    refetchQueries: ['Cart', 'CustomerWithAddresses', 'Customer']
+    refetchQueries: ['Cart', 'CustomerWithAddresses', 'Customer'],
+    awaitRefetchQueries: false
   };
 }
 
 export const useSignInMutation = (options: MutationHookOptions<SignInResponse, OperationInput<SignInInput>> = {}) =>
   useMutation(SIGN_IN, {
     refetchQueries: ['Cart', 'CustomerWithAddresses', 'Customer'],
+    awaitRefetchQueries: false,
     ...options
   });
