@@ -1,5 +1,18 @@
 import { ExtensionInstance } from '@deity/falcon-server-env';
 import Logger from '@deity/falcon-logger';
+import { EventEmitter2 } from 'eventemitter2';
+import { DefaultContext, DefaultState, Middleware } from 'koa';
+import { ApiDataSourceMap, ComponentMap } from './containers';
+
+export { DefaultState as WebServerState };
+
+export interface WebServerContext extends DefaultContext {
+  components: ComponentMap;
+  dataSources: ApiDataSourceMap;
+  eventEmitter: EventEmitter2;
+}
+
+export type WebServerMiddleware<TState = DefaultState, TContext = WebServerContext> = Middleware<TState, TContext>;
 
 export type Config = {
   appName?: string;

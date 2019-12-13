@@ -7,7 +7,7 @@ import { FormProviderProps } from '../Forms';
 
 export type ResetPasswordFormProviderProps = FormProviderProps<ResetPasswordInput, ResetPasswordResponse>;
 export const ResetPasswordFormProvider: React.SFC<ResetPasswordFormProviderProps> = props => {
-  const { onSuccess, initialValues, ...formikProps } = props;
+  const { onSuccess, initialValues, mutationOptions, ...formikProps } = props;
   const defaultInitialValues: ResetPasswordInput = {
     resetToken: '',
     password: ''
@@ -21,7 +21,7 @@ export const ResetPasswordFormProvider: React.SFC<ResetPasswordFormProviderProps
       initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
-        resetPassword({ variables: { input: values } })
+        resetPassword({ variables: { input: values }, ...(mutationOptions || {}) })
           .then(({ data }) => {
             setSubmitting(false);
             setStatus({ data });

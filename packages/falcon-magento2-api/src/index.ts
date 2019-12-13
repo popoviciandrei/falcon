@@ -952,8 +952,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         await this.ensureCart();
       }
 
-      // true when user signed in correctly
-      return true;
+      return this.customer();
     } catch (e) {
       // todo: use new version of error handler
       // wrong password or login is not an internal error.

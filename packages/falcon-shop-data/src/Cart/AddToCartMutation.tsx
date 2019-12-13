@@ -23,7 +23,8 @@ export type AddToCartResponse = {
 export class AddToCartMutation extends Mutation<AddToCartResponse, OperationInput<AddToCartInput>> {
   static defaultProps = {
     mutation: ADD_TO_CART,
-    refetchQueries: ['MiniCart', 'Cart']
+    refetchQueries: ['MiniCart', 'Cart'],
+    awaitRefetchQueries: true
   };
 }
 
@@ -32,5 +33,6 @@ export const useAddToCartMutation = (
 ) =>
   useMutation(ADD_TO_CART, {
     refetchQueries: ['MiniCart', 'Cart'],
+    awaitRefetchQueries: true,
     ...options
   });

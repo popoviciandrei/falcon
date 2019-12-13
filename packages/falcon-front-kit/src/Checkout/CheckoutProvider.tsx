@@ -1,17 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { PlaceOrderResult } from '@deity/falcon-shop-extension';
 import { CheckoutValues, SetCheckoutValues } from './CheckoutValues';
-import { CheckoutStep, getNextStepForValues } from './CheckoutStep';
+import { CheckoutStep, CheckoutStepType, CheckoutFlow } from './CheckoutStep';
 import { CheckoutContext } from './CheckoutContext';
 
-export type CheckoutProviderProps = {
+export type CheckoutProviderProps<TCheckoutStep extends CheckoutStepType = CheckoutStepType> = {
   initialValues?: CheckoutValues;
   billingSameAsShipping?: boolean;
+  stepsOrder?: TCheckoutStep[];
+  autoStepForward?: boolean;
 };
 export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
-  const { children, initialValues, billingSameAsShipping } = props;
+  const { children, initialValues = {}, billingSameAsShipping, stepsOrder, autoStepForward } = props;
 
-  const [step, setStep] = useState<keyof typeof CheckoutStep>('Email');
+  /**
+   * Returns next possible step for `step` based on available `CheckoutFlow`, or `undefined` when no more steps
+   * @param step
+   */
+  const getNextStep = (step: CheckoutStepType): CheckoutStepType | undefined => {
+    const currentStepIndex = stepsOrder.findIndex(x => x === step);
+
+    return currentStepIndex < stepsOrder.length ? stepsOrder[currentStepIndex + 1] : undefined;
+  };
+
+  /**
+   * Returns next step for checkout wizard based on checkout values
+   * @param values
+   */
+  const getNextStepForValues = (values: CheckoutValues): CheckoutStepType =>
+    stepsOrder.find(x => !values[x]) || CheckoutStep.placeOrder;
+
+  const [step, setStep] = useState<keyof typeof CheckoutStep>(getNextStepForValues(initialValues));
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isBillingSameAsShipping, setBillingSameAsShipping] = useState<boolean>(billingSameAsShipping || false);
   const [values, setValues] = useState<CheckoutValues>({
@@ -22,7 +41,9 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const setEmail: SetCheckoutValues['setEmail'] = email =>
     setValues(x => {
       const newValues = { ...x, email };
-      setStep(getNextStepForValues(newValues));
+      if (autoStepForward) {
+        setStep(getNextStepForValues(newValues));
+      }
 
       return newValues;
     });
@@ -36,7 +57,9 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
         shippingMethod: undefined,
         paymentMethod: undefined
       };
-      setStep(getNextStepForValues(newValues));
+      if (autoStepForward) {
+        setStep(getNextStepForValues(newValues));
+      }
 
       return newValues;
     });
@@ -50,7 +73,9 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
         shippingMethod: isBillingSameAsShipping ? undefined : x.shippingMethod,
         paymentMethod: undefined
       };
-      setStep(getNextStepForValues(newValues));
+      if (autoStepForward) {
+        setStep(getNextStepForValues(newValues));
+      }
 
       return newValues;
     });
@@ -62,7 +87,9 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
         shippingMethod,
         paymentMethod: undefined
       };
-      setStep(getNextStepForValues(newValues));
+      if (autoStepForward) {
+        setStep(getNextStepForValues(newValues));
+      }
 
       return newValues;
     });
@@ -70,7 +97,9 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
   const setPaymentMethod: SetCheckoutValues['setPaymentMethod'] = paymentMethod =>
     setValues(x => {
       const newValues = { ...x, paymentMethod };
-      setStep(getNextStepForValues(newValues));
+      if (autoStepForward) {
+        setStep(getNextStepForValues(newValues));
+      }
 
       return newValues;
     });
@@ -81,7 +110,9 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
    */
   const setOrderData: SetCheckoutValues['setOrderData'] = order => {
     if (order) {
-      setStep(getNextStepForValues(order));
+      if (autoStepForward) {
+        setStep(getNextStepForValues(order));
+      }
       setValues({ ...order });
     }
   };
@@ -90,6 +121,8 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
     <CheckoutContext.Provider
       value={{
         step,
+        nextStep: getNextStep(step),
+        stepForward: () => setStep(getNextStep(step)),
         setStep,
         isLoading,
         setLoading,
@@ -109,4 +142,10 @@ export const CheckoutProvider: React.SFC<CheckoutProviderProps> = props => {
       {children}
     </CheckoutContext.Provider>
   );
+};
+CheckoutProvider.defaultProps = {
+  stepsOrder: CheckoutFlow,
+  autoStepForward: true,
+  billingSameAsShipping: false,
+  initialValues: {}
 };
