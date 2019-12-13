@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect, matchPath, match as Match, SwitchProps } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Location } from 'history';
-import { UrlQuery, ResourceMeta, Loader, OperationError } from '@deity/falcon-data';
+import { UrlQuery, ResourceMeta } from '@deity/falcon-data';
 import { Router } from '../Router';
 
 export type DynamicRouteComponentProps = Pick<ResourceMeta, 'id' | 'path'>;
