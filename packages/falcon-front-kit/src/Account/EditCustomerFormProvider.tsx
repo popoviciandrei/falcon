@@ -9,7 +9,7 @@ export type EditCustomerFormProviderProps = FormProviderProps<EditCustomerInput,
   customer: Pick<Customer, 'websiteId' | 'firstname' | 'lastname' | 'email'>;
 };
 export const EditCustomerFormProvider: React.SFC<EditCustomerFormProviderProps> = props => {
-  const { onSuccess, initialValues, customer, ...formikProps } = props;
+  const { onSuccess, initialValues, customer, mutationOptions, ...formikProps } = props;
   const defaultInitialValues: EditCustomerInput = {
     websiteId: customer.websiteId,
     email: customer.email,
@@ -25,7 +25,7 @@ export const EditCustomerFormProvider: React.SFC<EditCustomerFormProviderProps> 
       initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
-        editCustomerMutation({ variables: { input: values } })
+        editCustomerMutation({ variables: { input: values }, ...(mutationOptions || {}) })
           .then(({ data }) => {
             setSubmitting(false);
             setStatus({ data });

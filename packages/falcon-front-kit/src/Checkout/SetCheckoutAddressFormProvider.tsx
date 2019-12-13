@@ -43,7 +43,7 @@ export type SetCheckoutAddressFormProviderProps = FormProviderProps<SetCheckoutA
   address?: CheckoutAddress | Address;
 };
 export const SetCheckoutAddressFormProvider: React.SFC<SetCheckoutAddressFormProviderProps> = props => {
-  const { initialValues, setAddress, address, onSuccess, ...formikProps } = props;
+  const { initialValues, setAddress, address, onSuccess, mutationOptions, ...formikProps } = props;
   const isMounted = React.useRef(true);
   const [getUserError] = useGetUserError();
 
@@ -60,10 +60,13 @@ export const SetCheckoutAddressFormProvider: React.SFC<SetCheckoutAddressFormPro
       initialValues={address ? checkoutAddressToSetCheckoutAddressFormValues(address) : initialValues}
       enableReinitialize
       onSubmit={({ street1, street2, ...values }, { setSubmitting, setStatus }) =>
-        setAddress({
-          ...values,
-          street: [street1, street2].filter(Boolean)
-        })
+        setAddress(
+          {
+            ...values,
+            street: [street1, street2].filter(Boolean)
+          },
+          mutationOptions
+        )
           .then(() => {
             const successData = {
               ...values,

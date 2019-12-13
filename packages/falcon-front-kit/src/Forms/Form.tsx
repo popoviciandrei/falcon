@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form as FormikForm, FormikFormProps, useFormikContext } from 'formik';
-import { Loader } from '@deity/falcon-data';
 import { FormContext, FormContextValue } from './FormContext';
 
 export type FormProps = FormContextValue &

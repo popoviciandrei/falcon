@@ -10,7 +10,7 @@ export type SignInFormValues = {
 };
 export type SignInFormProvider = FormProviderProps<SignInFormValues, SignInResponse>;
 export const SignInFormProvider: React.SFC<SignInFormProvider> = props => {
-  const { onSuccess, initialValues, ...formikProps } = props;
+  const { onSuccess, initialValues, mutationOptions, ...formikProps } = props;
   const defaultInitialValues = {
     email: '',
     password: ''
@@ -24,7 +24,7 @@ export const SignInFormProvider: React.SFC<SignInFormProvider> = props => {
       initialStatus={{}}
       initialValues={initialValues || defaultInitialValues}
       onSubmit={(values, { setSubmitting, setStatus }) =>
-        signIn({ variables: { input: values } })
+        signIn({ variables: { input: values }, ...(mutationOptions || {}) })
           .then(({ data }) => {
             setSubmitting(false);
             setStatus({ data });
