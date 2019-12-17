@@ -1,15 +1,19 @@
 import React from 'react';
-import { themed, Box, H3 } from '@deity/falcon-ui';
+import { themed, Box, H3, FlexLayout, Icon } from '@deity/falcon-ui';
 
-const SidebarLayoutInnerDOM: React.SFC<SidebarLayoutProps> = ({ title, children, ...rest }) => (
+const SidebarLayoutInnerDOM: React.SFC<SidebarLayoutProps> = ({ title, onClose, children, ...rest }) => (
   <Box {...rest}>
-    {title && <H3>{title}</H3>}
+    <FlexLayout>
+      <Box flex={1}>{!!title && <H3>{title}</H3>}</Box>
+      <Icon src="close" stroke="black" onClick={onClose} />
+    </FlexLayout>
     <SidebarContentLayout>{children}</SidebarContentLayout>
   </Box>
 );
 
 export type SidebarLayoutProps = {
   title?: string;
+  onClose?: (...args: any) => void;
 };
 export const SidebarLayout = themed<SidebarLayoutProps, any>({
   tag: SidebarLayoutInnerDOM,

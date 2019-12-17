@@ -34,7 +34,7 @@ export default ({ contentType, open, close }) => {
           {t => (
             <React.Fragment>
               <Deferred type={SIDEBAR_TYPE.cart} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('miniCart.title')}>
+                <SidebarLayout title={t('miniCart.title')} onClose={close}>
                   <MiniCartQuery>
                     {({ data: { cart = { items: [] } } }) =>
                       cart.items.length > 0 ? (
@@ -47,7 +47,7 @@ export default ({ contentType, open, close }) => {
                 </SidebarLayout>
               </Deferred>
               <Deferred type={SIDEBAR_TYPE.account} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('signIn.title')}>
+                <SidebarLayout title={t('signIn.title')} onClose={close}>
                   <SignInForm
                     id="sign-in-sidebar"
                     onSuccess={close}
@@ -59,12 +59,12 @@ export default ({ contentType, open, close }) => {
                 </SidebarLayout>
               </Deferred>
               <Deferred type={SIDEBAR_TYPE.signUp} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('signUp.title')}>
+                <SidebarLayout title={t('signUp.title')} onClose={close}>
                   <SignUpForm onSuccess={() => open({ variables: { contentType: SIDEBAR_TYPE.account } })} />
                 </SidebarLayout>
               </Deferred>
               <Deferred type={SIDEBAR_TYPE.forgotPassword} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('forgotPassword.title')}>
+                <SidebarLayout title={t('forgotPassword.title')} onClose={close}>
                   <ForgotPasswordForm />
                 </SidebarLayout>
               </Deferred>
