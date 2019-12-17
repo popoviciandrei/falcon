@@ -23,6 +23,7 @@ export const SidebarLayout = themed<SidebarLayoutProps, any>({
       gridRowGap: 'md',
       gridTemplate: 'auto 1fr / 100%',
       css: {
+        width: '100%',
         height: '100%'
       }
     }
