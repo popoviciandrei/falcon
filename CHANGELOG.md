@@ -33,9 +33,9 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed incompatible `css` prop typings ([#645](https://github.com/deity-io/falcon/pull/645))
 - added `console.error` when an icon is not defined in the theme during development ([#682](https://github.com/deity-io/falcon/pull/682))
 - improved typings ([#669](https://github.com/deity-io/falcon/pull/669))
-  * renamed `ThemedComponentPropsWithVariants` to `ComponentTheme`
-  * renamed `ThemedComponentProps` to `ThemingProps`
-  * renamed `BaseThemedComponentProps` to `BaseThemingProps`
+  - renamed `ThemedComponentPropsWithVariants` to `ComponentTheme`
+  - renamed `ThemedComponentProps` to `ThemingProps`
+  - renamed `BaseThemedComponentProps` to `BaseThemingProps`
 - added `noScrollbars` css generation function ([#742](https://github.com/deity-io/falcon/pull/742))
 
 ### Falcon E-commerce UI Kit discontinued
@@ -68,6 +68,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - fixed `ProductCard` component which should not require `thumbnail` ([#685](https://github.com/deity-io/falcon/pull/685))
 - integrated `FormSubmit` with Formik, which allows it to hook into form state ([#548](https://github.com/deity-io/falcon/pull/548))
 - updated Formik to version 2.0 ([#705](https://github.com/deity-io/falcon/pull/705))
+- moved sidebar close icon from `Sidebar` to `SidebarLayout` ([#753](https://github.com/deity-io/falcon/pull/753))
 
 ### Falcon Data v1.0.0
 
