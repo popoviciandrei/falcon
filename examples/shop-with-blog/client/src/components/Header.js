@@ -55,9 +55,7 @@ export const Header = withRouter(({ history }) => (
                 gridArea={HeaderBarArea.cart}
                 onClick={() => openSidebar({ variables: { contentType: SIDEBAR_TYPE.cart } })}
               >
-                <CartQuery ssr={false}>
-                  {({ data: { cart } }) => <CartIcon itemsQty={cart && cart.itemsQty} />}
-                </CartQuery>
+                <CartQuery>{({ data: { cart } }) => <CartIcon itemsQty={cart && cart.itemsQty} />}</CartQuery>
               </Link>
             </HeaderBarLayout>
           )}
