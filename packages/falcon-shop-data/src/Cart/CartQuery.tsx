@@ -40,6 +40,7 @@ export type CartResponse = {
 
 export class CartQuery extends Query<CartResponse> {
   static defaultProps = {
-    query: GET_CART
+    query: GET_CART,
+    ssr: false
   };
 }
