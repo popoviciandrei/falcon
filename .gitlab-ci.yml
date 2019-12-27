@@ -31,10 +31,6 @@ before_script:
     - yarn test
     - yarn coverage
 
-Node 8:
-  <<: *job_definition
-  image: node:8
-
 Node 10:
   <<: *job_definition
   image: node:10
