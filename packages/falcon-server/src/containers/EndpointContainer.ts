@@ -20,7 +20,10 @@ export class EndpointContainer extends BaseContainer {
       if (Object.prototype.hasOwnProperty.call(config, endpointKey)) {
         const endpointManagerConfig = config[endpointKey];
 
-        const EndpointManagerClass = this.importModule<EndpointConstructor>(endpointManagerConfig.package);
+        const EndpointManagerClass = this.importModule<EndpointConstructor>(
+          endpointManagerConfig.package,
+          'EndpointManager'
+        );
         if (!EndpointManagerClass) {
           this.logger.warn(`Could not load ${endpointManagerConfig.package}`);
           return;
