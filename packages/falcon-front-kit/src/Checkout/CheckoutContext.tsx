@@ -5,6 +5,8 @@ import { CheckoutValues, SetCheckoutValues } from './CheckoutValues';
 
 export type CheckoutContextType = SetCheckoutValues & {
   step: keyof typeof CheckoutStep;
+  nextStep?: keyof typeof CheckoutStep;
+  stepForward: () => void;
   setStep(step: keyof typeof CheckoutStep): void;
   values: CheckoutValues;
   isLoading: boolean;

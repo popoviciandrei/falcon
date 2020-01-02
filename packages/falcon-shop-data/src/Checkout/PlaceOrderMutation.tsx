@@ -30,7 +30,8 @@ export type PlaceOrderResponse = {
 export class PlaceOrderMutation extends Mutation<PlaceOrderResponse, OperationInput<PlaceOrderInput>> {
   static defaultProps = {
     mutation: PLACE_ORDER,
-    refetchQueries: ['Cart', 'OrderList']
+    refetchQueries: ['Cart', 'OrderList'],
+    awaitRefetchQueries: true
   };
 }
 
@@ -39,5 +40,6 @@ export const usePlaceOrderMutation = (
 ) =>
   useMutation<PlaceOrderResponse, OperationInput<PlaceOrderInput>>(PLACE_ORDER, {
     refetchQueries: ['Cart', 'OrderList'],
+    awaitRefetchQueries: true,
     ...(options || {})
   });

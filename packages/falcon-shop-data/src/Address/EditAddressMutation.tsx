@@ -18,7 +18,8 @@ export type EditAddressResponse = {
 export class EditAddressMutation extends Mutation<EditAddressResponse, OperationInput<EditAddressInput>> {
   static defaultProps = {
     mutation: EDIT_ADDRESS,
-    refetchQueries: ['AddressList']
+    refetchQueries: ['AddressList'],
+    awaitRefetchQueries: true
   };
 }
 
@@ -27,5 +28,6 @@ export const useEditAddressMutation = (
 ) =>
   useMutation(EDIT_ADDRESS, {
     refetchQueries: ['AddressList'],
+    awaitRefetchQueries: true,
     ...options
   });

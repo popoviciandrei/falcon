@@ -24,7 +24,7 @@ export type EditAddressFormProviderProps = FormProviderProps<EditAddressFormValu
   address: Address;
 };
 export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = props => {
-  const { address, onSuccess, initialValues, ...formikProps } = props;
+  const { address, onSuccess, initialValues, mutationOptions, ...formikProps } = props;
   const { __typename, street, ...rest } = address;
   const defaultInitialValues = {
     street1: street.length > 0 ? street[0] : undefined,
@@ -49,7 +49,8 @@ export const EditAddressFormProvider: React.SFC<EditAddressFormProviderProps> = 
               countryId: country.id,
               regionId: region ? region.id : undefined
             }
-          }
+          },
+          ...(mutationOptions || {})
         })
           .then(({ data }) => {
             setSubmitting(false);

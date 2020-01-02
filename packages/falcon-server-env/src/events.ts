@@ -7,6 +7,8 @@ export enum Events {
   BEFORE_STARTED = 'falcon-server.before-started',
   AFTER_STARTED = 'falcon-server.after-started',
 
+  CACHE_TAG_INVALIDATE = 'falcon-server.cache.invalidate-tag',
+
   BEFORE_WEB_SERVER_CREATED = 'falcon-server.before-web-server-created',
   AFTER_WEB_SERVER_CREATED = 'falcon-server.after-web-server-created',
 

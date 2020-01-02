@@ -18,7 +18,8 @@ export type EditCustomerResponse = {
 export class EditCustomerMutation extends Mutation<EditCustomerResponse, OperationInput<EditCustomerInput>> {
   static defaultProps = {
     mutation: EDIT_CUSTOMER,
-    refetchQueries: ['Customer', 'CustomerWithAddresses']
+    refetchQueries: ['Customer', 'CustomerWithAddresses'],
+    awaitRefetchQueries: true
   };
 }
 
@@ -27,5 +28,6 @@ export const useEditCustomerMutation = (
 ) =>
   useMutation(EDIT_CUSTOMER, {
     refetchQueries: ['Customer', 'CustomerWithAddresses'],
+    awaitRefetchQueries: true,
     ...options
   });

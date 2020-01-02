@@ -17,6 +17,7 @@ export type UpdateCartItemResponse = {
 export class UpdateCartItemMutation extends Mutation<UpdateCartItemResponse, OperationInput<UpdateCartItemInput>> {
   static defaultProps = {
     mutation: UPDATE_CART_ITEM,
-    refetchQueries: ['MiniCart', 'Cart']
+    refetchQueries: ['MiniCart', 'Cart'],
+    awaitRefetchQueries: true
   };
 }
