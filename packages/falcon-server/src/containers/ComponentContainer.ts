@@ -21,8 +21,8 @@ export class ComponentContainer extends BaseContainer {
       if (Object.prototype.hasOwnProperty.call(components, componentKey)) {
         const component = components[componentKey];
 
-        const { package: pkg, config = {} } = component;
-        const ComponentClass = this.importModule<IComponent>(pkg);
+        const { config = {} } = component;
+        const ComponentClass = this.importModule<IComponent>(component.package, 'Component');
         if (!ComponentClass) {
           return;
         }
