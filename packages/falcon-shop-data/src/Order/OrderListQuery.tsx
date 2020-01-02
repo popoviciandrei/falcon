@@ -41,10 +41,10 @@ export type OrderListResponse = {
   };
 };
 
-const fetchMore: FetchMore<OrderListResponse, PaginationQuery> = (data: any, apolloFetchMore: any) =>
+const fetchMore: FetchMore<OrderListResponse, PaginationQuery> = (data: OrderListResponse, apolloFetchMore: any) =>
   apolloFetchMore({
-    variables: { pagination: { ...data.orders.pagination, page: data.orders.pagination.nextPage } },
-    updateQuery: (prev, { fetchMoreResult }) => {
+    variables: { pagination: { ...data.orderList.pagination, page: data.orderList.pagination.nextPage } },
+    updateQuery: (prev: OrderListResponse, { fetchMoreResult }: { fetchMoreResult: OrderListResponse }) => {
       if (!fetchMoreResult) {
         return prev;
       }
@@ -53,9 +53,9 @@ const fetchMore: FetchMore<OrderListResponse, PaginationQuery> = (data: any, apo
         ...prev,
         ...{
           orderList: {
-            ...prev.orders,
-            items: [...prev.orders.items, ...fetchMoreResult.orders.items],
-            pagination: { ...fetchMoreResult.orders.pagination }
+            ...prev.orderList,
+            items: [...prev.orderList.items, ...fetchMoreResult.orderList.items],
+            pagination: { ...fetchMoreResult.orderList.pagination }
           }
         }
       };
