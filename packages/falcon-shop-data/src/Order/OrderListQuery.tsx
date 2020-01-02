@@ -43,7 +43,11 @@ export type OrderListResponse = {
 
 const fetchMore: FetchMore<OrderListResponse, PaginationQuery> = (data: OrderListResponse, apolloFetchMore: any) =>
   apolloFetchMore({
-    variables: { pagination: { ...data.orderList.pagination, page: data.orderList.pagination.nextPage } },
+    variables: {
+      pagination: {
+        page: data.orderList.pagination.nextPage
+      }
+    },
     updateQuery: (prev: OrderListResponse, { fetchMoreResult }: { fetchMoreResult: OrderListResponse }) => {
       if (!fetchMoreResult) {
         return prev;
