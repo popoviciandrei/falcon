@@ -11,8 +11,15 @@ declare type TryRequireResult<T> = {
 const tryRequire = <T>(moduleName: string, key: string): TryRequireResult<T> => {
   try {
     const moduleResult = require(moduleName); // eslint-disable-line import/no-dynamic-require
+    // Handling `module.exports` and named exports
+    let mdl = typeof moduleResult[key] === 'function' ? moduleResult[key] : moduleResult;
+    // Handling `export default` exports
+    if (key !== 'default' && mdl.default) {
+      mdl = mdl.default;
+    }
+
     return {
-      module: typeof moduleResult[key] === 'function' ? moduleResult[key] : moduleResult,
+      module: mdl,
       exists: true,
       error: undefined
     };
