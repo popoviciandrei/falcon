@@ -33,7 +33,7 @@ export class ApiContainer extends BaseContainer {
         const api = apis[apiKey];
 
         const { package: pkg, config = {} } = api;
-        const ApiClass = this.importModule<ApiDataSourceConstructor>(pkg);
+        const ApiClass = this.importModule<ApiDataSourceConstructor>(pkg, 'ApiDataSource');
         if (!ApiClass) {
           return;
         }
