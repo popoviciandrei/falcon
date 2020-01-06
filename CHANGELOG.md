@@ -82,6 +82,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - initial release
 - added Apollo hooks support (upgrade `apollo-client` to version `2.6.x`) ([#596](https://github.com/deity-io/falcon/pull/596))
 - fixed response types of `AddressQuery` and `CountryListQuery` ([#624](https://github.com/deity-io/falcon/pull/624))
+- set `ssr: false` for `CartQuery` by default ([#754](https://github.com/deity-io/falcon/pull/754))
 
 ### Falcon Blog Data v1.0.0
 
