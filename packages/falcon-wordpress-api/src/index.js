@@ -345,7 +345,7 @@ module.exports = class WordpressApi extends ApiDataSource {
    * @returns {boolean}
    */
   isEntityRedirect(dataPath, requestedPath) {
-    return (dataPath !== requestedPath && !this.isDraft(dataPath));
+    return dataPath !== requestedPath && !this.isDraft(dataPath);
   }
 
   getFetchUrlPriority() {
