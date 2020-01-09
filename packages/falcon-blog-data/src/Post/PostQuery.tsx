@@ -8,12 +8,16 @@ const GET_BLOG_POST = gql`
       title
       date
       content
+      image {
+        url
+        description
+      }
     }
   }
 `;
 
 export type BlogPostResponse = {
-  blogPost: Pick<BlogPost, 'title' | 'date' | 'content'>;
+  blogPost: Pick<BlogPost, 'title' | 'date' | 'content' | 'image'>;
 };
 
 export type BlogPostQueryVariables = {
