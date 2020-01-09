@@ -12,7 +12,7 @@
     "prepare": "node scripts/prepublish.js"
   },
   "engines": {
-    "node": ">=8.10"
+    "node": ">=10.15"
   },
   "dependencies": {
     "chalk": "2.4.2",

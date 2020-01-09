@@ -18,7 +18,7 @@
     "lint": "eslint --ext js,jsx,ts,tsx ."
   },
   "engines": {
-    "node": ">=8.10"
+    "node": ">=10.15"
   },
   "dependencies": {
     "@deity/falcon-logger": "^1.0.3-beta.8",
@@ -48,7 +48,7 @@
     "config": "^2.0.1",
     "eslint": "6.1.0",
     "formik": "2.0.4",
-    "full-icu": "^1.2.1",
+    "full-icu": "^1.3.0",
     "graphql": "^14.5.8",
     "graphql-tag": "2.10.1",
     "i18next": "^12.1.0",
