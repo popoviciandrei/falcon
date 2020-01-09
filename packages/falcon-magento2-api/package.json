@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-magento2-api",
   "license": "OSL-3.0",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "homepage": "https://falcon.deity.io/docs/falcon-server/api-providers#falcon-magento-2-api",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-magento2-api",
   "publishConfig": {
@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@deity/falcon-errors": "^0.1.3",
-    "@deity/falcon-logger": "^1.0.3-beta.8",
-    "@deity/falcon-server-env": "^1.0.0-beta.8",
+    "@deity/falcon-logger": "^1.0.3-beta.9",
+    "@deity/falcon-server-env": "^1.0.0-beta.9",
     "apollo-server-env": "2.2.0",
     "date-fns": "1.30.1",
     "deepmerge": "^2.2.1",
@@ -41,10 +41,10 @@
     "qs": "^6.9.0"
   },
   "devDependencies": {
-    "@deity/falcon-data": "^1.0.0-beta.8",
-    "@deity/falcon-scripts": "^1.0.0-beta.8",
-    "@deity/falcon-server": "^2.0.0-beta.8",
-    "@deity/falcon-shop-extension": "^1.0.0-beta.8",
+    "@deity/falcon-data": "^1.0.0-beta.9",
+    "@deity/falcon-scripts": "^1.0.0-beta.9",
+    "@deity/falcon-server": "^2.0.0-beta.9",
+    "@deity/falcon-shop-extension": "^1.0.0-beta.9",
     "eventemitter2": "5.0.1",
     "graphql": "^14.5.8",
     "nock": "^11.6.0"
