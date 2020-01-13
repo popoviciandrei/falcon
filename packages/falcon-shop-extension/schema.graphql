@@ -42,7 +42,7 @@ extend type Mutation {
   updateCartItem(input: UpdateCartItemInput!): CartItemPayload
   removeCartItem(input: RemoveCartItemInput!): RemoveCartItemPayload
   applyCoupon(input: CouponInput!): Boolean
-  cancelCoupon(input: CouponInput): Boolean!
+  cancelCoupon(input: CouponInput!): Boolean!
   signUp(input: SignUpInput!): Boolean!
   signIn(input: SignInInput!): Customer!
   signOut: Boolean!
