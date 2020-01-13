@@ -147,8 +147,14 @@ export type Cart = {
   totals: CartTotal[];
   /** @deprecated Use ShopConfig.activeCurrency */
   quoteCurrency: string;
-  couponCode: string;
+  coupons: Coupon[];
   billingAddress: Address;
+};
+
+export type Coupon = {
+  code: string;
+  name?: string;
+  discount?: number;
 };
 
 export type CartItem = {
@@ -194,7 +200,7 @@ export type CartTotal = {
 } & GraphQLBase;
 
 export type CouponInput = {
-  couponCode: string;
+  code: string;
 };
 
 export type CartItemPayload = {
@@ -430,7 +436,7 @@ export type Order = {
   billingAddress?: Address;
   shippingDescription?: string;
   shippingAddress?: Address;
-  couponCode?: string;
+  coupons?: Coupon[];
 };
 
 export type OrderItem = {
