@@ -36,7 +36,7 @@
     "yarn-deduplicate": "1.1.1"
   },
   "engines": {
-    "node": ">=8.10",
+    "node": ">=10.15",
     "yarn": ">=1.12"
   },
   "workspaces": [
