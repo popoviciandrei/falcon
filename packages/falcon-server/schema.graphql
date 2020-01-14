@@ -8,8 +8,6 @@ schema {
   subscription: Subscription
 }
 
-scalar JSON
-
 type Mutation {
   """
   Sets the locale (for example, "en-US")

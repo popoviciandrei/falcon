@@ -468,7 +468,7 @@ type Cart {
 type Coupon {
   name: String
   code: String!
-  discount: Float
+  discount: NegativeFloat
 }
 
 type CartItem {
