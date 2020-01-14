@@ -57,6 +57,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added `InBrowserOnly` component ([#728](https://github.com/deity-io/falcon/pull/728))
 - added `SwitchDynamicURL` component in order to define dynamic URL routes in `react`/`react-router` `v4` way ([#738](https://github.com/deity-io/falcon/pull/738))
 - added `SEO` component to render `title`, `description` and `keywords` as proper meta-tags ([#743](https://github.com/deity-io/falcon/pull/743))
+- added support for url with query string provided to `<ProtectedRoute />` component via `redirectTo` prop ([#765](https://github.com/deity-io/falcon/pull/765))
 
 ### Falcon UI Kit v1.0.0
 
@@ -93,6 +94,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - introduced Country and Region types to allow fetching more details with address queries ([#609](https://github.com/deity-io/falcon/pull/609))
 - added `@cache` for `Query.productList` query ([#743](https://github.com/deity-io/falcon/pull/743))
 - added `Product.categories` and `Category.{urlPath,image,attributes,seo}` fields ([#743](https://github.com/deity-io/falcon/pull/743))
+- introduced `Coupon` type to be used throughout the Extension ([#764](https://github.com/deity-io/falcon/pull/764))
 
 ### Falcon Server vNext
 

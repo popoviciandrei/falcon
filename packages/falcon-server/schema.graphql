@@ -9,6 +9,7 @@ schema {
 }
 
 scalar JSON
+scalar NegativeFloat
 
 type Mutation {
   """

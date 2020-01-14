@@ -873,7 +873,16 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     quoteData.active = quoteData.isActive;
     quoteData.virtual = quoteData.isVirtual;
     quoteData.quoteCurrency = totalsData.quoteCurrencyCode;
-    quoteData.couponCode = totalsData.couponCode;
+
+    if (totalsData.couponCode) {
+      quoteData.coupons = [
+        {
+          code: totalsData.couponCode,
+          name: totalsData.couponCode,
+          discount: totalsData.totalSegments.find(({ code }) => code === 'discount').value
+        }
+      ];
+    }
 
     // prepare totals
     quoteData.totals = totalsData.totalSegments.map(segment => ({
@@ -1111,10 +1120,20 @@ module.exports = class Magento2Api extends Magento2ApiBase {
   reduceOrder(response) {
     const order = this.convertKeys(response);
     const { extensionAttributes = {}, payment = {}, entityId, incrementId, items, ...orderRest } = order;
+    const coupons = [];
+
+    if (order.discountAmount) {
+      coupons.push({
+        code: order.discountDescription,
+        name: order.discountDescription,
+        discount: order.discountAmount
+      });
+    }
 
     const result = {
       ...orderRest,
       id: entityId,
+      coupons,
       referenceNo: incrementId,
       items: this.convertItemsResponse(items),
       shippingAddress: extensionAttributes.shippingAddress,
@@ -1443,7 +1462,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
     }
 
     try {
-      return this.putAuth(`${route}/coupons/${input.couponCode}`);
+      return this.putAuth(`${route}/coupons/${input.code}`);
     } catch (e) {
       if (e.statusCode === 404) {
         e.userMessage = true;
