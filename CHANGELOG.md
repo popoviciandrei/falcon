@@ -93,6 +93,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - introduced Country and Region types to allow fetching more details with address queries ([#609](https://github.com/deity-io/falcon/pull/609))
 - added `@cache` for `Query.productList` query ([#743](https://github.com/deity-io/falcon/pull/743))
 - added `Product.categories` and `Category.{urlPath,image,attributes,seo}` fields ([#743](https://github.com/deity-io/falcon/pull/743))
+- introduced `Coupon` type to be used throughout the Extension ([#764](https://github.com/deity-io/falcon/pull/764))
 
 ### Falcon Server vNext
 
