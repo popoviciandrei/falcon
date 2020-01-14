@@ -41,11 +41,17 @@ export class ProtectedRoute extends React.Component<ProtectedRouteProps> {
               const { location } = props;
               const { pathname, search } = location;
 
+              const hasRedirectToQueryPart = redirectTo.indexOf('?') > -1;
+              const query = new URLSearchParams(
+                hasRedirectToQueryPart ? redirectTo.substring(redirectTo.indexOf('?') + 1) : ''
+              );
+              query.append('next', `${pathname}${search}`);
+
               return (
                 <Redirect
                   to={{
-                    pathname: redirectTo,
-                    search: `?${new URLSearchParams({ next: `${pathname}${search}` })}`,
+                    pathname: hasRedirectToQueryPart ? redirectTo.substring(0, redirectTo.indexOf('?')) : redirectTo,
+                    search: `?${query}`,
                     state: { nextLocation: location }
                   }}
                 />

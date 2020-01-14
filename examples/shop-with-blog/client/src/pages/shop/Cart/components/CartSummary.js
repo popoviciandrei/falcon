@@ -56,7 +56,7 @@ const ApplyCouponForm = adopt({
           applyCouponMutation.applyCoupon({
             variables: {
               input: {
-                ...values
+                code: values.couponCode
               }
             }
           });
