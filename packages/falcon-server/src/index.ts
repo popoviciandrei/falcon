@@ -17,7 +17,7 @@ import { ApolloServer } from 'apollo-server-koa';
 import { KeyValueCache } from 'apollo-server-caching';
 import { ApolloError } from 'apollo-server-errors';
 import { EventEmitter2 } from 'eventemitter2';
-import { JSONResolver, JSONDefinition, NegativeFloatResolver, NegativeFloatTypeDefinition } from 'graphql-scalars';
+import { JSONResolver, NegativeFloatResolver } from 'graphql-scalars';
 import Cookies from 'cookies';
 import cors from '@koa/cors';
 import Koa from 'koa';
@@ -143,7 +143,7 @@ export class FalconServer {
     const dynamicRouteResolver = new DynamicRouteResolver();
 
     return {
-      schemas: [JSONDefinition, NegativeFloatTypeDefinition, BaseSchema],
+      schemas: [BaseSchema],
       dataSources: () => {
         this.logger.debug('Instantiating GraphQL DataSources');
         const dataSources = {};
