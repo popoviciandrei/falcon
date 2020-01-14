@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-blog-extension",
   "license": "OSL-3.0",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "homepage": "https://falcon.deity.io/docs/falcon-server/extensions#blog-extension",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-blog-extension",
   "publishConfig": {
@@ -25,11 +25,11 @@
   },
   "dependencies": {
     "@babel/runtime": "7.6.3",
-    "@deity/falcon-data": "^1.0.0-beta.9",
+    "@deity/falcon-data": "^1.0.0-beta.10",
     "core-js": "3.2.1"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^1.0.0-beta.9",
+    "@deity/falcon-scripts": "^1.0.0-beta.10",
     "regenerator-runtime": "0.13.3"
   },
   "gitHead": "d8cd5eede81220aa29563275dcf35448611cc194"
