@@ -17,7 +17,7 @@ import { ApolloServer } from 'apollo-server-koa';
 import { KeyValueCache } from 'apollo-server-caching';
 import { ApolloError } from 'apollo-server-errors';
 import { EventEmitter2 } from 'eventemitter2';
-import { JSONResolver } from 'graphql-scalars';
+import { JSONResolver, NegativeFloatResolver } from 'graphql-scalars';
 import Cookies from 'cookies';
 import cors from '@koa/cors';
 import Koa from 'koa';
@@ -190,7 +190,8 @@ export class FalconServer {
           BackendConfig: {
             activeLocale: this.activeLocaleResolver()
           },
-          JSON: JSONResolver
+          JSON: JSONResolver,
+          NegativeFloat: NegativeFloatResolver
         }
       ],
       extraResolvers: [...this.apiContainer.resolvers],

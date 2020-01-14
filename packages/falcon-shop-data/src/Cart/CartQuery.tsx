@@ -7,7 +7,11 @@ export const GET_CART = gql`
     cart {
       itemsQty
       quoteCurrency
-      couponCode
+      coupons {
+        name
+        code
+        discount
+      }
       totals {
         code
         title
@@ -31,7 +35,7 @@ export const GET_CART = gql`
 `;
 
 export type CartResponse = {
-  cart: Pick<Cart, 'itemsQty' | 'itemsCount' | 'quoteCurrency' | 'couponCode' | 'totals'> & {
+  cart: Pick<Cart, 'itemsQty' | 'itemsCount' | 'quoteCurrency' | 'coupons' | 'totals'> & {
     items: Pick<CartItem, 'itemId' | 'sku' | 'qty' | 'name' | 'price' | 'rowTotalInclTax' | 'thumbnailUrl'> & {
       itemOptions: Pick<CartItemOption, 'label' | 'value'>[];
     };
