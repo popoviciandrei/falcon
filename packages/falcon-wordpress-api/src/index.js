@@ -342,14 +342,10 @@ module.exports = class WordpressApi extends ApiDataSource {
    * Based on api response check if requested pathname contains redirect
    * @param {string} dataPath pathname from wordpress api response
    * @param {string} requestedPath pathname requested by client
-   * @returns {string|boolean} - pathname if has redirect or false
+   * @returns {boolean}
    */
   isEntityRedirect(dataPath, requestedPath) {
-    if (dataPath !== requestedPath && !this.isDraft(dataPath)) {
-      return dataPath;
-    }
-
-    return false;
+    return dataPath !== requestedPath && !this.isDraft(dataPath);
   }
 
   getFetchUrlPriority() {
