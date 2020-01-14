@@ -879,7 +879,7 @@ module.exports = class Magento2Api extends Magento2ApiBase {
         {
           code: totalsData.couponCode,
           name: totalsData.couponCode,
-          discount: totalsData.discountAmount
+          discount: totalsData.totalSegments.find(({ code }) => code === 'discount').value
         }
       ];
     }
