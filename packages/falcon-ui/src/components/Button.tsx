@@ -27,9 +27,6 @@ export const Button = themed({
         textDecoration: 'none',
         appearance: 'none',
         cursor: 'pointer',
-        ':focus': {
-          outline: 'none'
-        },
         // define transform that scales on active
         transitionProperty: 'transform',
         ':active': {
