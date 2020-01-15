@@ -22,6 +22,7 @@ function triggerChange(element: any, value: any) {
 type NumberInputInnerDOMProps = {
   invalid?: boolean;
   min?: number;
+  max?: number | undefined;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
