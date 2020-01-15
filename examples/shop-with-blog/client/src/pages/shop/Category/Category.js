@@ -60,7 +60,7 @@ const CategoryPage = ({ match: { params } }) => (
                             <React.Fragment>
                               <Button onClick={toggle}>Filters</Button>
                               <Sidebar isOpen={on} side="left" close={toggle}>
-                                <SidebarLayout title="Filters">
+                                <SidebarLayout title="Filters" onClose={toggle}>
                                   <Filters data={filtersData} px="md" />
                                 </SidebarLayout>
                               </Sidebar>
