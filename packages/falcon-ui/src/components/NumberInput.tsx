@@ -84,13 +84,13 @@ class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
 
     return (
       <Box {...themableProps} className={className}>
-        <button type="button" aria-hidden onClick={this.stepDown} className="-inner-input-step-down-element">
+        <button type="button" onClick={this.stepDown} aria-label="Decrease quantity" className="-inner-input-step-down-element">
           <Icon src="numberInputDown" fallback="−" />
         </button>
 
         <input ref={this.inputRef} min={5} type="number" {...rest} />
 
-        <button type="button" aria-hidden onClick={this.stepUp} className="-inner-input-step-up-element">
+        <button type="button" onClick={this.stepUp} aria-label="Increase quantity" className="-inner-input-step-up-element">
           <Icon src="numberInputUp" fallback="+" />
         </button>
       </Box>
@@ -103,7 +103,7 @@ export const NumberInput = themed({
 
   defaultProps: {
     invalid: false,
-    readOnly: true
+    readOnly: false
   },
 
   defaultTheme: {
