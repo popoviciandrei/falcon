@@ -21,8 +21,6 @@ function triggerChange(element: any, value: any) {
 
 type NumberInputInnerDOMProps = {
   invalid?: boolean;
-  min?: number;
-  max?: number | undefined;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
@@ -82,9 +80,9 @@ class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
   };
 
   render() {
-    const { className, invalid, min, max, ...remaining } = this.props;
+    const { className, invalid, min, max, value, ...remaining } = this.props;
     const { themableProps, rest } = extractThemableProps(remaining);
-    const currentValue = this.inputRef.current.value;
+    const currentValue = this.inputRef.current ? this.inputRef.current.value : value;
 
     return (
       <I18n>
@@ -95,19 +93,19 @@ class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
               onClick={this.stepDown}
               aria-label={t('quantity.decrease')}
               className="-inner-input-step-down-element"
-              disabled={parseInt(currentValue, 2) <= min}
+              disabled={currentValue <= min}
             >
               <Icon src="numberInputDown" fallback="−" />
             </button>
 
-            <input ref={this.inputRef} min={min} type="number" {...rest} />
+            <input ref={this.inputRef} min={min} value={value} type="number" {...rest} />
 
             <button
               type="button"
               onClick={this.stepUp}
               aria-label={t('quantity.increase')}
               className="-inner-input-step-up-element"
-              disabled={max && parseInt(currentValue, 2) >= max}
+              disabled={max && currentValue >= max}
             >
               <Icon src="numberInputUp" fallback="+" />
             </button>
