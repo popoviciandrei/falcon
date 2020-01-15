@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.6.3",
+    "@deity/falcon-i18n": "^1.0.0",
     "@emotion/cache": "10.0.19",
     "@emotion/core": "10.0.21",
     "@emotion/is-prop-valid": "0.8.3",

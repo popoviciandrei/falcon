@@ -1,4 +1,5 @@
 import React from 'react';
+import { I18n } from '@deity/falcon-i18n';
 import { themed, extractThemableProps } from '../theme';
 import { Box } from './Box';
 import { Icon } from './Icon';
@@ -20,6 +21,7 @@ function triggerChange(element: any, value: any) {
 
 type NumberInputInnerDOMProps = {
   invalid?: boolean;
+  min?: number;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
@@ -79,21 +81,38 @@ class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
   };
 
   render() {
-    const { className, invalid, ...remaining } = this.props;
+    const { className, invalid, min, max, ...remaining } = this.props;
     const { themableProps, rest } = extractThemableProps(remaining);
+    const currentValue = this.inputRef.current.value;
 
     return (
-      <Box {...themableProps} className={className}>
-        <button type="button" onClick={this.stepDown} aria-label="Decrease quantity" className="-inner-input-step-down-element">
-          <Icon src="numberInputDown" fallback="−" />
-        </button>
+      <I18n>
+        {t => (
+          <Box {...themableProps} className={className}>
+            <button
+              type="button"
+              onClick={this.stepDown}
+              aria-label={t('quantity.decrease')}
+              className="-inner-input-step-down-element"
+              disabled={parseInt(currentValue, 2) <= min}
+            >
+              <Icon src="numberInputDown" fallback="−" />
+            </button>
 
-        <input ref={this.inputRef} min={5} type="number" {...rest} />
+            <input ref={this.inputRef} min={min} type="number" {...rest} />
 
-        <button type="button" onClick={this.stepUp} aria-label="Increase quantity" className="-inner-input-step-up-element">
-          <Icon src="numberInputUp" fallback="+" />
-        </button>
-      </Box>
+            <button
+              type="button"
+              onClick={this.stepUp}
+              aria-label={t('quantity.increase')}
+              className="-inner-input-step-up-element"
+              disabled={max && parseInt(currentValue, 2) >= max}
+            >
+              <Icon src="numberInputUp" fallback="+" />
+            </button>
+          </Box>
+        )}
+      </I18n>
     );
   }
 }
@@ -103,7 +122,7 @@ export const NumberInput = themed({
 
   defaultProps: {
     invalid: false,
-    readOnly: false
+    min: 1
   },
 
   defaultTheme: {
@@ -158,6 +177,9 @@ export const NumberInput = themed({
           lineHeight: 1,
           ':hover': {
             background: theme.colors.secondary
+          },
+          ':disabled': {
+            opacity: '0.5'
           }
         },
         '.-inner-input-step-down-element': {
