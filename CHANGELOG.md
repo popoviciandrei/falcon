@@ -119,6 +119,7 @@ Versions marked with a number and date (e.g. Falcon Client v0.1.0 (2018-10-05)) 
 - added TTL option for cache tags ([#549](https://github.com/deity-io/falcon/pull/549))
 - added optional `ApiDataSource.getExtraResolvers` static method to define extra resolvers ([#557](https://github.com/deity-io/falcon/pull/557))
 - added re-export of all internally used components and helper utils ([#686](https://github.com/deity-io/falcon/pull/686))
+- fixed the issue with the Cache queue and its error handling ([#767](https://github.com/deity-io/falcon/pull/767))
 
 ### Falcon Logger vNext
 

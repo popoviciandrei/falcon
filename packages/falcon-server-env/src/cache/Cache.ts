@@ -51,9 +51,14 @@ export class Cache<V = any> implements KeyValueCache<V> {
       return this.activeGetRequests.get(key) as Promise<V>;
     }
 
-    this.activeGetRequests.set(key, this.createGetRequest(key, setOptions));
-    const result = await this.activeGetRequests.get(key);
-    this.activeGetRequests.delete(key);
+    let result: V;
+
+    try {
+      this.activeGetRequests.set(key, this.createGetRequest(key, setOptions));
+      result = await this.activeGetRequests.get(key);
+    } finally {
+      this.activeGetRequests.delete(key);
+    }
 
     return result as V;
   }
