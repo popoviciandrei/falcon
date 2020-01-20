@@ -97,7 +97,7 @@ class NumberInputInnerDOM extends React.Component<NumberInputInnerDOMProps> {
           <Icon src="numberInputDown" fallback="−" />
         </button>
 
-        <input ref={this.inputRef} min={min} value={value} type="number" {...rest} />
+        <input ref={this.inputRef} min={min} max={max} value={value} type="number" {...rest} />
 
         <button
           type="button"
