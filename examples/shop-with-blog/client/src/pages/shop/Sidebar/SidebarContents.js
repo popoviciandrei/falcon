@@ -33,8 +33,8 @@ export default ({ contentType, open, close }) => {
         <I18n>
           {t => (
             <React.Fragment>
-              <Deferred type={SIDEBAR_TYPE.cart} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('miniCart.title')}>
+              <Deferred type={SIDEBAR_TYPE.cart} until={contentType} flex={1}>
+                <SidebarLayout title={t('miniCart.title')} onClose={close}>
                   <MiniCartQuery>
                     {({ data: { cart = { items: [] } } }) =>
                       cart.items.length > 0 ? (
@@ -46,8 +46,8 @@ export default ({ contentType, open, close }) => {
                   </MiniCartQuery>
                 </SidebarLayout>
               </Deferred>
-              <Deferred type={SIDEBAR_TYPE.account} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('signIn.title')}>
+              <Deferred type={SIDEBAR_TYPE.account} until={contentType} flex={1}>
+                <SidebarLayout title={t('signIn.title')} onClose={close}>
                   <SignInForm
                     id="sign-in-sidebar"
                     onSuccess={close}
@@ -58,13 +58,13 @@ export default ({ contentType, open, close }) => {
                   <NewAccount onCreateNewAccount={() => open({ variables: { contentType: SIDEBAR_TYPE.signUp } })} />
                 </SidebarLayout>
               </Deferred>
-              <Deferred type={SIDEBAR_TYPE.signUp} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('signUp.title')}>
+              <Deferred type={SIDEBAR_TYPE.signUp} until={contentType} flex={1}>
+                <SidebarLayout title={t('signUp.title')} onClose={close}>
                   <SignUpForm onSuccess={() => open({ variables: { contentType: SIDEBAR_TYPE.account } })} />
                 </SidebarLayout>
               </Deferred>
-              <Deferred type={SIDEBAR_TYPE.forgotPassword} until={contentType} css={{ height: '100%' }}>
-                <SidebarLayout title={t('forgotPassword.title')}>
+              <Deferred type={SIDEBAR_TYPE.forgotPassword} until={contentType} flex={1}>
+                <SidebarLayout title={t('forgotPassword.title')} onClose={close}>
                   <ForgotPasswordForm />
                 </SidebarLayout>
               </Deferred>
