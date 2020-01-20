@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-theme-editor",
   "license": "OSL-3.0",
-  "version": "1.0.0-beta.10",
+  "version": "1.0.0-beta.11",
   "homepage": "https://falcon-ui.docs.deity.io/",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-theme-editor",
   "publishConfig": {
@@ -29,7 +29,7 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
-    "@deity/falcon-scripts": "^1.0.0-beta.10",
+    "@deity/falcon-scripts": "^1.0.0-beta.11",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.3",
     "react": "16.10.2",

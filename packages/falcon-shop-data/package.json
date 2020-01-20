@@ -1,7 +1,7 @@
 {
   "name": "@deity/falcon-shop-data",
   "license": "OSL-3.0",
-  "version": "1.0.0-beta.10",
+  "version": "1.0.0-beta.11",
   "repository": "https://github.com/deity-io/falcon/tree/master/packages/falcon-shop-data",
   "publishConfig": {
     "access": "public"
@@ -23,15 +23,15 @@
   },
   "dependencies": {
     "@babel/runtime": "7.6.3",
-    "@deity/falcon-data": "^1.0.0-beta.10",
-    "@deity/falcon-shop-extension": "^1.0.0-beta.10",
+    "@deity/falcon-data": "^1.0.0-beta.11",
+    "@deity/falcon-shop-extension": "^1.0.0-beta.11",
     "core-js": "3.2.1"
   },
   "devDependencies": {
     "@apollo/react-common": "^3.1.3",
     "@apollo/react-components": "^3.1.3",
     "@apollo/react-hooks": "^3.1.3",
-    "@deity/falcon-scripts": "^1.0.0-beta.10",
+    "@deity/falcon-scripts": "^1.0.0-beta.11",
     "@types/react": "16.9.11",
     "apollo-client": "2.6.4",
     "graphql-tag": "2.10.1",
