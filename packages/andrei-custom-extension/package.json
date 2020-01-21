@@ -1,0 +1,10 @@
+{
+  "name": "@deity/andrei-custom-extension",
+  "license": "OSL-3.0",
+  "main": "index.js",
+  "version": "0.0.1",
+  "repository": "https://github.com/popoviciandrei/falcon/tree/master/packages/andrei-custom-extension",
+  "publishConfig": {
+    "access": "public"
+  }
+}

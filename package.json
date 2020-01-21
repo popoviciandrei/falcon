@@ -69,7 +69,8 @@
     "packages/falcon-blog-data",
     "packages/falcon-ui-kit",
     "packages/falcon-front-kit",
-    "packages/falcon-data"
+    "packages/falcon-data",
+    "packages/andrei-custom-extension"
   ],
   "husky": {
     "hooks": {
